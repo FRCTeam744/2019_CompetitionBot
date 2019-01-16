@@ -12,14 +12,19 @@
 #include <RobotDrive.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+bool driveWithXbox;
+const frc::XboxController::JoystickHand leftHand = frc::XboxController::kLeftHand;
+const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightHand;
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
   m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
-  rightStick = new frc::Joystick(0);
-  leftStick = new frc::Joystick(1);
+  leftStick = new frc::Joystick(0);
+  rightStick = new frc::Joystick(1);
 
+  xbox = new frc::XboxController(2);
 
   leftFront = new WPI_TalonSRX(23);
   leftBack = new WPI_TalonSRX(27);
@@ -29,6 +34,7 @@ void Robot::RobotInit() {
   driveTrain = new frc::RobotDrive(leftFront, leftBack, rightFront, rightBack);
 
   preferences = frc::Preferences::GetInstance();
+  driveWithXbox = preferences->GetBoolean("Drive with Xbox", false);
 
 }
 
@@ -78,7 +84,12 @@ void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
 
-  driveTrain->ArcadeDrive(rightStick->GetY(), leftStick->GetX(), true);
+  if (driveWithXbox) {
+    driveTrain->ArcadeDrive(xbox->GetY(leftHand), xbox->GetX(rightHand), false);
+  }
+  else {
+    driveTrain->ArcadeDrive(leftStick->GetY(), rightStick->GetX(), false);
+  }
 
 }
 
