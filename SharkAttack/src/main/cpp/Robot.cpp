@@ -6,15 +6,28 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
+#include "Objects.h"
 
 #include <iostream>
-
+#include <RobotDrive.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit() {
-  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
+  m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+
+  rightStick = new frc::Joystick(0);
+  leftStick = new frc::Joystick(1);
+
+
+  leftFront = new WPI_TalonSRX(23);
+  leftBack = new WPI_TalonSRX(27);
+  rightFront = new WPI_TalonSRX(22);
+  rightBack = new WPI_TalonSRX(26);
+
+  driveTrain = new frc::RobotDrive(leftFront, leftBack, rightFront, rightBack);
+
 }
 
 /**
@@ -44,7 +57,7 @@ void Robot::AutonomousInit() {
   //     kAutoNameDefault);
   std::cout << "Auto selected: " << m_autoSelected << std::endl;
 
-  if (m_autoSelected == kAutoNameCustom) {
+  if (m_autoSelected == kAutoDrive2) {
     // Custom Auto goes here
   } else {
     // Default Auto goes here
@@ -52,7 +65,7 @@ void Robot::AutonomousInit() {
 }
 
 void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoNameCustom) {
+  if (m_autoSelected == kAutoDrive2) {
     // Custom Auto goes here
   } else {
     // Default Auto goes here
@@ -61,7 +74,11 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+
+  driveTrain->ArcadeDrive(rightStick->GetY(), leftStick->GetX(), true);
+
+}
 
 void Robot::TestPeriodic() {}
 
