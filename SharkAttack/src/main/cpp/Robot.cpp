@@ -28,6 +28,8 @@ void Robot::RobotInit() {
 
   driveTrain = new frc::RobotDrive(leftFront, leftBack, rightFront, rightBack);
 
+  preferences = frc::Preferences::GetInstance();
+
 }
 
 /**
