@@ -12,21 +12,36 @@
 #include <RobotDrive.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+bool driveWithXbox;
+bool arcadeDrive;
+const frc::XboxController::JoystickHand leftHand = frc::XboxController::kLeftHand;
+const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightHand;
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
   m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
-  rightStick = new frc::Joystick(0);
-  leftStick = new frc::Joystick(1);
+  leftStick = new frc::Joystick(0);
+  rightStick = new frc::Joystick(1);
 
+  xbox = new frc::XboxController(2);
 
   leftFront = new WPI_TalonSRX(23);
   leftBack = new WPI_TalonSRX(27);
   rightFront = new WPI_TalonSRX(22);
   rightBack = new WPI_TalonSRX(26);
 
+  leftFront->SetInverted(true);
+  leftBack->SetInverted(true);
+  rightFront->SetInverted(true);
+  rightBack->SetInverted(true);
+
   driveTrain = new frc::RobotDrive(leftFront, leftBack, rightFront, rightBack);
+
+  preferences = frc::Preferences::GetInstance();
+  driveWithXbox = preferences->GetBoolean("drive with xbox", false);
+  arcadeDrive = preferences->GetBoolean("arcade drive", false);
 
 }
 
@@ -76,8 +91,40 @@ void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
 
-  driveTrain->ArcadeDrive(rightStick->GetY(), leftStick->GetX(), true);
+  if(!arcadeDrive) {
+    if (driveWithXbox) {
+      driveTrain->TankDrive(xbox->GetY(leftHand), xbox->GetY(rightHand), false);
+    }
+    else {
+      driveTrain->TankDrive(leftStick->GetY(), rightStick->GetY(), false);
+    }
+  }
 
+  else {
+    if (driveWithXbox) {
+      driveTrain->ArcadeDrive(xbox->GetY(leftHand), xbox->GetX(rightHand), false);
+    }
+    else {
+      driveTrain->ArcadeDrive(leftStick->GetY(), rightStick->GetX(), false);
+    }
+  }
+
+  if(xbox->GetAButtonPressed()){
+    driveWithXbox = true;
+    preferences->PutBoolean("drive with xbox", true);
+  }
+  if(xbox->GetBButtonPressed()){
+    driveWithXbox = false;
+    preferences->PutBoolean("drive with xbox", false);
+  }
+  if(xbox->GetXButtonPressed()){
+    arcadeDrive = true;
+    preferences->PutBoolean("arcade drive", true);
+  }
+  if(xbox->GetYButtonPressed()){
+    arcadeDrive = false;
+    preferences->PutBoolean("arcade drive", false);
+  }
 }
 
 void Robot::TestPeriodic() {}
