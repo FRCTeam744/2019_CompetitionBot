@@ -7,15 +7,18 @@
 
 #include "Robot.h"
 #include "Objects.h"
+#include "AutoTune.h"
 
 #include <iostream>
 #include <RobotDrive.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+
 bool driveWithXbox;
 bool arcadeDrive;
 const frc::XboxController::JoystickHand leftHand = frc::XboxController::kLeftHand;
 const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightHand;
+
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
@@ -43,6 +46,8 @@ void Robot::RobotInit() {
   driveWithXbox = preferences->GetBoolean("drive with xbox", false);
   arcadeDrive = preferences->GetBoolean("arcade drive", false);
 
+  table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  
 }
 
 /**
@@ -53,7 +58,15 @@ void Robot::RobotInit() {
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() {
+
+  targetOffsetAngle_Horizontal = table->GetNumber("tx",0.0);
+  targetOffsetAngle_Vertical = table->GetNumber("ty",0.0);
+  targetArea = table->GetNumber("ta",0.0);
+  targetSkew = table->GetNumber("ts",0.0);
+
+  frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
+}
 
 /**
  * This autonomous (along with the chooser code above) shows how to select
@@ -91,7 +104,30 @@ void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
 
-  if(!arcadeDrive) {
+  if (xbox->GetStartButton()){
+    
+    // if (targetOffsetAngle_Horizontal <= 0.8 && targetOffsetAngle_Horizontal >= -0.8){
+    //   adjust = 0;
+    // }
+    //Target is to the left of the Robot
+    if (targetOffsetAngle_Horizontal < -1.0){
+      adjust = kP*targetOffsetAngle_Horizontal - minCommmand;
+    }
+    //Target is to the right of the Robot
+    else if (targetOffsetAngle_Horizontal > 1.0){
+      adjust = kP*targetOffsetAngle_Horizontal + minCommmand;
+    }
+    
+    leftPower = -adjust;
+    rightPower = adjust;
+    
+    frc::SmartDashboard::PutNumber("Left Power", leftPower);
+    frc::SmartDashboard::PutNumber("Right Power", rightPower);
+
+    driveTrain->TankDrive(leftPower, rightPower, false);
+    
+  }
+  else if (!arcadeDrive) {
     if (driveWithXbox) {
       driveTrain->TankDrive(xbox->GetY(leftHand), xbox->GetY(rightHand), false);
     }
