@@ -9,6 +9,7 @@
 #include <ctre/Phoenix.h>
 #include <frc/RobotDrive.h>
 #include <frc/Preferences.h>
+#include <cscore_oo.h>
 #include "frc/smartdashboard/Smartdashboard.h"
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTable.h"
@@ -17,10 +18,12 @@ frc::Joystick *rightStick, *leftStick;
 
 frc::XboxController *xbox;
 
-WPI_TalonSRX *leftFront, *leftBack, *rightFront, *rightBack;
+TalonSRX *leftFront, *leftBack, *rightFront, *rightBack;
 
 frc::RobotDrive *driveTrain;
 
 frc::Preferences *preferences;
 
 std::shared_ptr<NetworkTable> table;
+
+cs::HttpCamera *camera;
