@@ -23,6 +23,12 @@ const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightH
 double rightSpeed = 0.0;
 double leftSpeed = 0.0;
 
+double desiredRightFPS = 0.0;
+double desiredLeftFPS = 0.0;
+
+double realRightSpeedNUPer100ms = 0.0;
+double realLeftSpeedNUPer100ms = 0.0;
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
   m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
@@ -45,6 +51,17 @@ void Robot::RobotInit() {
 
   leftBack->SetSensorPhase(true);
   rightBack->SetSensorPhase(true);
+
+  leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
+  rightBack->Config_kF(0, kFeedForwardGain, talonTimeout);
+  leftBack->Config_kP(0, kP_SPEED, talonTimeout);
+  rightBack->Config_kP(0, kP_SPEED, talonTimeout);
+  leftBack->Config_kD(0, kD_SPEED_LEFT, talonTimeout);
+  rightBack->Config_kD(0, kD_SPEED_RIGHT, talonTimeout);
+  leftBack->Config_kI(0, kI_SPEED, talonTimeout);
+  rightBack->Config_kI(0, kI_SPEED, talonTimeout);
+  leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
+  rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
 
   // driveTrain = new frc::RobotDrive(leftFront, leftBack, rightFront, rightBack);
 
@@ -77,8 +94,12 @@ void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
   frc::SmartDashboard::PutNumber("Skew", targetSkew);
 
-  rightSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * NOF_100MS_PER_SECOND;
-  leftSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * NOF_100MS_PER_SECOND;
+  rightSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
+  leftSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
+
+  frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightSpeed);
+  frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftSpeed);
+
   frc::SmartDashboard::PutNumber("Ft-Sec-Right", rightSpeed);
   frc::SmartDashboard::PutNumber("Ft-Sec-Left", leftSpeed);
   frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
@@ -129,11 +150,11 @@ void Robot::TeleopPeriodic() {
     // }
     //Target is to the left of the Robot
     if (targetOffsetAngle_Horizontal < -1.0){
-      adjust = kP*targetOffsetAngle_Horizontal - minCommmand;
+      adjust = kP_ANGLE*targetOffsetAngle_Horizontal - minCommmand;
     }
     //Target is to the right of the Robot
     else if (targetOffsetAngle_Horizontal > 1.0){
-      adjust = kP*targetOffsetAngle_Horizontal + minCommmand;
+      adjust = kP_ANGLE*targetOffsetAngle_Horizontal + minCommmand;
     }
     
     leftPower = adjust;
@@ -148,10 +169,12 @@ void Robot::TeleopPeriodic() {
   }
 
   if(xbox->GetBackButton()){
-    double ftToTravel = 6;
-    leftBack->Set(ControlMode::Velocity, ftToTravel * FEET_TO_NU / NOF_SECOND_PER_100MS);
+
+    desiredLeftFPS = desiredRightFPS = 6.0;
+    
+    leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
     leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-    rightBack->Set(ControlMode::Velocity, ftToTravel * FEET_TO_NU / NOF_SECOND_PER_100MS);
+    rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
     rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
   }
 
@@ -182,10 +205,10 @@ void Robot::TeleopPeriodic() {
 
   else {
     if (driveWithXbox) {
-      driveTrain->ArcadeDrive(xbox->GetY(leftHand), xbox->GetX(rightHand), false);
+      // driveTrain->ArcadeDrive(xbox->GetY(leftHand), xbox->GetX(rightHand), false);
     }
     else {
-      driveTrain->ArcadeDrive(leftStick->GetY(), rightStick->GetX(), false);
+      // driveTrain->ArcadeDrive(leftStick->GetY(), rightStick->GetX(), false);
     }
   }
 
@@ -203,12 +226,14 @@ void Robot::TeleopPeriodic() {
     // table->PutNumber("camMode", 0.0);
   }
   if(xbox->GetXButtonPressed()){
-    arcadeDrive = true;
-    preferences->PutBoolean("arcade drive", true);
+    // arcadeDrive = true;
+    // preferences->PutBoolean("arcade drive", true);
+    table->PutNumber("ledMode", 1);
   }
   if(xbox->GetYButtonPressed()){
-    arcadeDrive = false;
-    preferences->PutBoolean("arcade drive", false);
+    // arcadeDrive = false;
+    // preferences->PutBoolean("arcade drive", false);
+    table->PutNumber("ledMode", 0);
   }
 }
 
