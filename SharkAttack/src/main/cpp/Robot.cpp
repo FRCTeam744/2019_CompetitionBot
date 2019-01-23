@@ -104,6 +104,7 @@ void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("Ft-Sec-Left", leftSpeed);
   frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
   frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
+  frc::SmartDashboard::PutNumber("Target Area", targetArea);
 
 }
 
@@ -150,60 +151,55 @@ void Robot::TeleopPeriodic() {
     // }
     //Target is to the left of the Robot
     if (targetOffsetAngle_Horizontal < -1.0){
-      adjust = kP_ANGLE*targetOffsetAngle_Horizontal - minCommmand;
-    }
-    //Target is to the right of the Robot
-    else if (targetOffsetAngle_Horizontal > 1.0){
-      adjust = kP_ANGLE*targetOffsetAngle_Horizontal + minCommmand;
-    }
-    
-    leftPower = adjust;
-    rightPower = -adjust;
+      adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
+      }
+      //Target is to the right of the Robot
+      else if (targetOffsetAngle_Horizontal > 1.0){
+        adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
+      }
 
-    leftBack->Set(ControlMode::PercentOutput, leftPower);
+      leftPower = adjust + DIST_MULTIPLIER * (targetArea - DESIRED_AREA);
+      rightPower = -adjust + DIST_MULTIPLIER * (targetArea - DESIRED_AREA);
+
+    leftBack->Set(ControlMode::Velocity, leftPower);
     leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-    rightBack->Set(ControlMode::PercentOutput, rightPower);
+    rightBack->Set(ControlMode::Velocity, rightPower);
     rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
     // driveTrain->TankDrive(leftPower, rightPower, false);
     
-  }
+  } else if(xbox->GetBackButton()){
 
-  if(xbox->GetBackButton()){
-
-    desiredLeftFPS = desiredRightFPS = 6.0;
+    desiredLeftFPS = desiredRightFPS = 2.0;
     
     leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
     leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
     rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
     rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
-  }
 
-  else if (!arcadeDrive) {
-    if (driveWithXbox) {
-      
-      leftPower = -xbox->GetY(leftHand);
-      rightPower = -xbox->GetY(rightHand);
+  } else if (!arcadeDrive) {
+      if (driveWithXbox) {
+        
+        leftPower = -xbox->GetY(leftHand);
+        rightPower = -xbox->GetY(rightHand);
 
-      // speedTankDrive(xbox->GetY(leftHand), xbox->GetY(rightHand));
-      leftBack->Set(ControlMode::PercentOutput, leftPower);
-      leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-      rightBack->Set(ControlMode::PercentOutput, rightPower);
-      rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
-    }
-    else {
+        // speedTankDrive(xbox->GetY(leftHand), xbox->GetY(rightHand));
+        leftBack->Set(ControlMode::PercentOutput, leftPower);
+        leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
+        rightBack->Set(ControlMode::PercentOutput, rightPower);
+        rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
+      }
+      else {
 
-      leftPower = -leftStick->GetY();
-      rightPower = -rightStick->GetY();
+        leftPower = -leftStick->GetY();
+        rightPower = -rightStick->GetY();
 
-      // speedTankDrive(leftStick->GetY(), rightStick->GetY());
-      leftBack->Set(ControlMode::PercentOutput, leftPower);
-      leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-      rightBack->Set(ControlMode::PercentOutput, rightPower);
-      rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
-    }
-  }
-
-  else {
+        // speedTankDrive(leftStick->GetY(), rightStick->GetY());
+        leftBack->Set(ControlMode::PercentOutput, leftPower);
+        leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
+        rightBack->Set(ControlMode::PercentOutput, rightPower);
+        rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
+      }
+  } else {
     if (driveWithXbox) {
       // driveTrain->ArcadeDrive(xbox->GetY(leftHand), xbox->GetX(rightHand), false);
     }
