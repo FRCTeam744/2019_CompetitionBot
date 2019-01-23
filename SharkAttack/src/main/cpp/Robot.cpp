@@ -9,6 +9,7 @@
 #include "Objects.h"
 #include "AutoTune.h"
 #include "Functions.h"
+#include "Autonomous.h"
 
 #include <iostream>
 #include <RobotDrive.h>
