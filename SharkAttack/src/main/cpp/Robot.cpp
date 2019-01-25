@@ -10,6 +10,7 @@
 #include "AutoTune.h"
 #include "Functions.h"
 
+#include <math.h>
 #include <iostream>
 #include <RobotDrive.h>
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -22,6 +23,8 @@ const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightH
 
 double rightSpeed = 0.0;
 double leftSpeed = 0.0;
+
+double currentDistanceInches = 0.0;
 
 double desiredRightFPS = 0.0;
 double desiredLeftFPS = 0.0;
@@ -106,6 +109,9 @@ void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
   frc::SmartDashboard::PutNumber("Target Area", targetArea);
 
+  currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+  frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
+
 }
 
 /**
@@ -145,26 +151,28 @@ void Robot::TeleopInit() {}
 void Robot::TeleopPeriodic() {
 
   if (xbox->GetStartButton()){
-    
-    // if (targetOffsetAngle_Horizontal <= 0.8 && targetOffsetAngle_Horizontal >= -0.8){
-    //   adjust = 0;
-    // }
+    double p_dist_loop = 0;
+    // double currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+
     //Target is to the left of the Robot
     if (targetOffsetAngle_Horizontal < -1.0){
       adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
-      }
-      //Target is to the right of the Robot
-      else if (targetOffsetAngle_Horizontal > 1.0){
-        adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
-      }
+    }
+    //Target is to the right of the Robot
+    else if (targetOffsetAngle_Horizontal > 1.0){
+      adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
+    }
+    
+    p_dist_loop = kP_DIST * (DESIRED_DISTANCE_INCHES - currentDistanceInches);
 
-      leftPower = adjust + DIST_MULTIPLIER * (targetArea - DESIRED_AREA);
-      rightPower = -adjust + DIST_MULTIPLIER * (targetArea - DESIRED_AREA);
+    leftPower = adjust + p_dist_loop;
+    rightPower = -adjust + p_dist_loop;
 
     leftBack->Set(ControlMode::Velocity, leftPower);
     leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
     rightBack->Set(ControlMode::Velocity, rightPower);
     rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
+    // frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     // driveTrain->TankDrive(leftPower, rightPower, false);
     
   } else if(xbox->GetBackButton()){
