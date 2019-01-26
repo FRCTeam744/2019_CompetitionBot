@@ -26,11 +26,11 @@ const double MEASURED_SPEED_NU = 800.0;
 
 double talonTimeout = 10; //number of ms before the talon stops trying to configure a specific value
 
-const double DESIRED_DISTANCE_INCHES = 40; //desired distance from target
+const double DESIRED_DISTANCE_INCHES = 65; //desired distance from target
 
-const double VELOCITY_MODIFIER = -0.11; //modifies the velocity for the limelight distance formula
+//const double VELOCITY_MODIFIER = -0.11; //modifies the velocity for the limelight distance formula
 //const double kP_DIST = VELOCITY_MODIFIER * 13.0 * FEET_TO_NU * SECONDS_TO_100MS; //distance error multiplier
-const double kP_DIST = -.12 * FEET_TO_NU * SECONDS_TO_100MS;
+const double kP_DIST = -.05 * FEET_TO_NU * SECONDS_TO_100MS;
 const double TARGET_LOW_HEIGHT_INCHES = 28.84;
 const double TARGET_HIGH_HEIGHT_INCHES = 28.84;
 const double LIMELIGHT_HEIGHT_INCHES = 20.625;
@@ -41,7 +41,7 @@ double rightPower = 0.0;
 double adjust = 0.0;
 
 const double MIN_COMMAND = 0.23;
-const double kP_ANGLE = 0.025 * 13.0 * FEET_TO_NU * SECONDS_TO_100MS; //FOR ANGLE CORRECTION TODO
+const double kP_ANGLE = 0.02 * 13.0 * FEET_TO_NU * SECONDS_TO_100MS; //FOR ANGLE CORRECTION TODO
 const double kP_SPEED = 0.1; //FOR SPEED CONTROL
 const double kD_SPEED_RIGHT = kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
 const double kD_SPEED_LEFT = kP_SPEED * 20.0 * 1.0; //FOR SPEED CONTROL
