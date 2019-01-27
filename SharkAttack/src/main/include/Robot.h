@@ -15,8 +15,9 @@
 const double LEFT_TALON_MASTER = 27.0;
 const double RIGHT_TALON_MASTER = 26.0;
 
-class Robot : public frc::TimedRobot {
- public:
+class Robot : public frc::TimedRobot
+{
+public:
   void RobotInit() override;
   void RobotPeriodic() override;
   void AutonomousInit() override;
@@ -25,10 +26,9 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void TestPeriodic() override;
 
- private:
+private:
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoDrive1 = "Drive Off Level 1";
   const std::string kAutoDrive2 = "Drive Off Level 2";
   std::string m_autoSelected;
-
 };

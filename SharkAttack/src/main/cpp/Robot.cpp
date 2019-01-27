@@ -7,14 +7,12 @@
 
 #include "Robot.h"
 #include "Objects.h"
-#include "AutoTune.h"
-#include "Functions.h"
+#include "OI.h"
 
 #include <math.h>
 #include <iostream>
 #include <RobotDrive.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-
 
 bool driveWithXbox;
 bool arcadeDrive;
@@ -32,7 +30,8 @@ double desiredLeftFPS = 0.0;
 double realRightSpeedNUPer100ms = 0.0;
 double realLeftSpeedNUPer100ms = 0.0;
 
-void Robot::RobotInit() {
+void Robot::RobotInit()
+{
   m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
   m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
@@ -76,7 +75,6 @@ void Robot::RobotInit() {
 
   // wpi::Twine cameraName = wpi::Twine::Twine("http://10.7.44.11:5800");
   // camera = new cs::HttpCamera::HttpCamera("limelight", "10.7.44.11:5800", cs::HttpCamera::kMJPGStreamer);
-
 }
 
 /**
@@ -87,31 +85,9 @@ void Robot::RobotInit() {
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {
-
-  targetOffsetAngle_Horizontal = table->GetNumber("tx",0.0);
-  targetOffsetAngle_Vertical = table->GetNumber("ty",0.0);
-  targetArea = table->GetNumber("ta",0.0);
-  targetSkew = table->GetNumber("ts",0.0);
-
-  frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
-  frc::SmartDashboard::PutNumber("Skew", targetSkew);
-
-  rightSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
-  leftSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
-
-  frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightSpeed);
-  frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftSpeed);
-
-  frc::SmartDashboard::PutNumber("Ft-Sec-Right", rightSpeed);
-  frc::SmartDashboard::PutNumber("Ft-Sec-Left", leftSpeed);
-  frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
-  frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
-  frc::SmartDashboard::PutNumber("Target Area", targetArea);
-
-  currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
-  frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
-
+void Robot::RobotPeriodic()
+{
+  OI::SelectRobotDrive();
 }
 
 /**
@@ -125,44 +101,56 @@ void Robot::RobotPeriodic() {
  * if-else structure below with additional strings. If using the SendableChooser
  * make sure to add them to the chooser code above as well.
  */
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit()
+{
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   //     kAutoNameDefault);
   std::cout << "Auto selected: " << m_autoSelected << std::endl;
 
-  if (m_autoSelected == kAutoDrive2) {
+  if (m_autoSelected == kAutoDrive2)
+  {
     // Custom Auto goes here
-  } else {
+  }
+  else
+  {
     // Default Auto goes here
   }
 }
 
-void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoDrive2) {
+void Robot::AutonomousPeriodic()
+{
+  if (m_autoSelected == kAutoDrive2)
+  {
     // Custom Auto goes here
-  } else {
+  }
+  else
+  {
     // Default Auto goes here
   }
 }
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic() {
+void Robot::TeleopPeriodic()
+{
 
-  if (xbox->GetStartButton()){
+  if (xbox->GetStartButton())
+  {
     double p_dist_loop = 0;
     // double currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
 
     //Target is to the left of the Robot
-    if (targetOffsetAngle_Horizontal < -1.0){
-      adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
+    if (targetOffsetAngle_Horizontal < -1.0)
+    {
+      adjust = kP_ANGLE * targetOffsetAngle_Horizontal;
     }
     //Target is to the right of the Robot
-    else if (targetOffsetAngle_Horizontal > 1.0){
-      adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
+    else if (targetOffsetAngle_Horizontal > 1.0)
+    {
+      adjust = kP_ANGLE * targetOffsetAngle_Horizontal;
     }
-    
+
     p_dist_loop = kP_DIST * (DESIRED_DISTANCE_INCHES - currentDistanceInches);
 
     leftPower = adjust + p_dist_loop;
@@ -174,44 +162,52 @@ void Robot::TeleopPeriodic() {
     rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
     // frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     // driveTrain->TankDrive(leftPower, rightPower, false);
-    
-  } else if(xbox->GetBackButton()){
+  }
+  else if (xbox->GetBackButton())
+  {
 
     desiredLeftFPS = desiredRightFPS = 2.0;
-    
+
     leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
     leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
     rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
     rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
+  }
+  else if (!arcadeDrive)
+  {
+    if (driveWithXbox)
+    {
 
-  } else if (!arcadeDrive) {
-      if (driveWithXbox) {
-        
-        leftPower = -xbox->GetY(leftHand);
-        rightPower = -xbox->GetY(rightHand);
+      leftPower = -xbox->GetY(leftHand);
+      rightPower = -xbox->GetY(rightHand);
 
-        // speedTankDrive(xbox->GetY(leftHand), xbox->GetY(rightHand));
-        leftBack->Set(ControlMode::PercentOutput, leftPower);
-        leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-        rightBack->Set(ControlMode::PercentOutput, rightPower);
-        rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
-      }
-      else {
+      // speedTankDrive(xbox->GetY(leftHand), xbox->GetY(rightHand));
+      leftBack->Set(ControlMode::PercentOutput, leftPower);
+      leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
+      rightBack->Set(ControlMode::PercentOutput, rightPower);
+      rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
+    }
+    else
+    {
 
-        leftPower = -leftStick->GetY();
-        rightPower = -rightStick->GetY();
+      leftPower = -leftStick->GetY();
+      rightPower = -rightStick->GetY();
 
-        // speedTankDrive(leftStick->GetY(), rightStick->GetY());
-        leftBack->Set(ControlMode::PercentOutput, leftPower);
-        leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-        rightBack->Set(ControlMode::PercentOutput, rightPower);
-        rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
-      }
-  } else {
-    if (driveWithXbox) {
+      // speedTankDrive(leftStick->GetY(), rightStick->GetY());
+      leftBack->Set(ControlMode::PercentOutput, leftPower);
+      leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
+      rightBack->Set(ControlMode::PercentOutput, rightPower);
+      rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
+    }
+  }
+  else
+  {
+    if (driveWithXbox)
+    {
       // driveTrain->ArcadeDrive(xbox->GetY(leftHand), xbox->GetX(rightHand), false);
     }
-    else {
+    else
+    {
       // driveTrain->ArcadeDrive(leftStick->GetY(), rightStick->GetX(), false);
     }
   }
@@ -219,22 +215,26 @@ void Robot::TeleopPeriodic() {
   frc::SmartDashboard::PutNumber("Left Power", leftPower);
   frc::SmartDashboard::PutNumber("Right Power", rightPower);
 
-  if(xbox->GetAButtonPressed()){
+  if (xbox->GetAButtonPressed())
+  {
     driveWithXbox = true;
     preferences->PutBoolean("drive with xbox", true);
     // table->PutNumber("camMode", 1.0);
   }
-  if(xbox->GetBButtonPressed()){
+  if (xbox->GetBButtonPressed())
+  {
     driveWithXbox = false;
     preferences->PutBoolean("drive with xbox", false);
     // table->PutNumber("camMode", 0.0);
   }
-  if(xbox->GetXButtonPressed()){
+  if (xbox->GetXButtonPressed())
+  {
     // arcadeDrive = true;
     // preferences->PutBoolean("arcade drive", true);
     table->PutNumber("ledMode", 1);
   }
-  if(xbox->GetYButtonPressed()){
+  if (xbox->GetYButtonPressed())
+  {
     // arcadeDrive = false;
     // preferences->PutBoolean("arcade drive", false);
     table->PutNumber("ledMode", 0);
@@ -244,11 +244,14 @@ void Robot::TeleopPeriodic() {
 void Robot::TestPeriodic() {}
 
 #ifndef RUNNING_FRC_TESTS
-int main() { return frc::StartRobot<Robot>(); }
+int main()
+{
+  return frc::StartRobot<Robot>();
+}
 #endif
 
 // void speedTankDrive(double leftSpeed, double rightSpeed, bool squared){
-  
+
 //   if(!squared){
 //     leftFront->Set(ControlMode::Velocity, leftSpeed);
 //     leftBack->Set(ControlMode::Follower, 23);

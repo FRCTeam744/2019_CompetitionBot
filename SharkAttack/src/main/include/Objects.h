@@ -3,7 +3,7 @@
 //All new objects are pointed to here, then the objects are instantiated in Robot.cpp
 
 /*----------------------------------------------------------------------------------*/
-
+#pragma once
 #include <frc/Joystick.h>
 #include <frc/XboxController.h>
 #include <ctre/Phoenix.h>
