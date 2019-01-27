@@ -13,6 +13,7 @@ const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightH
 
 class OI
 {
+	//TODO: Go through each button and assign variable in cpp file in functions
 	public:
 		void SelectRobotDrive();
 

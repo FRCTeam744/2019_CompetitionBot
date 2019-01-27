@@ -16,10 +16,6 @@
 //you'll always be in our <3's
 
 class OI {
-    enum HAND {
-        left,
-        right
-    };
     //Constants
 
 
@@ -29,11 +25,7 @@ class OI {
     frc::XboxController *xbox;
 
     //Public Methods
-    double getDriveValue(HAND hand){
-        if(hand == left){
-            
-        }
-    }
+    
     void OI::SelectRobotDrive(){
         if (xbox->GetAButtonPressed())
         {
