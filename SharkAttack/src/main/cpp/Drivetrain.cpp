@@ -5,7 +5,6 @@
 #include "Objects.h"
 #include "Drivetrain.h"
 
-
 double rightSpeed = 0.0;
 double leftSpeed = 0.0;
 double leftPower = 0.0;
@@ -83,7 +82,8 @@ void Drivetrain::Periodic()
   frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
 }
 
-void Drivetrain::Limelight(){
+void Drivetrain::Limelight()
+{
   if (xbox->GetStartButton())
   {
     double p_dist_loop = 0;
@@ -163,15 +163,14 @@ void Drivetrain::Limelight(){
 
   frc::SmartDashboard::PutNumber("Left Power", leftPower);
   frc::SmartDashboard::PutNumber("Right Power", rightPower);
-
-  
 }
 
 void Drivetrain::SetSensorPhase()
 {
+  if (constants.NU_PER_REV == 10)
+  {
+
+  }
 }
-
-
-
 
 //Private Methods

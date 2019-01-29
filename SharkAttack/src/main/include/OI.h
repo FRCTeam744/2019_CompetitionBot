@@ -13,7 +13,7 @@
 #include <frc/XboxController.h>
 #include <frc/Preferences.h>
 #include <cscore.h>
-#include <frc/cameraserver/CameraServer.h>
+#include <CameraServer.h>
 
 class OI
 {
@@ -44,6 +44,5 @@ class OI
 		cs::UsbCamera *camera;
 
 		bool driveWithXbox = false;
-  
 };
 
