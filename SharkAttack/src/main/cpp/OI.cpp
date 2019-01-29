@@ -1,31 +1,29 @@
 /*----------------------------------------------------------------------------------*/
 
-//Use this to access and read encoder values as well as controller inputs
+//Methods for the OI class (any and all things driver station/operator interface)
 
 /*----------------------------------------------------------------------------------*/
 
 
-//Inlcude all libraries that are necessary for reading input values
 #include "OI.h"
 
-#include <frc/Joystick.h>
-#include <frc/XboxController.h>
-
-//Wish you were here babe <3
-//It's been 3 and a half years, still waiting for you
-//you'll always be in our <3's
-
-class OI {
-    //Constants
-
-
-    //Instance Variables
-    frc::Joystick *rightStick;
-    frc::Joystick *leftStick;
-    frc::XboxController *xbox;
 
     //Public Methods
-    
+    void OI::OI_Init(){
+        
+        preferences = frc::Preferences::GetInstance();
+        driveWithXbox = preferences->GetBoolean("driveWithXbox", false);
+        
+        //Intantiates the controller objects for the drivers
+        leftStick = new frc::Joystick(0);
+        rightStick = new frc::Joystick(1);
+        xbox = new frc::XboxController(2);
+
+        //Caps the camera quality to allow for driver vision
+        
+        
+    }
+
     void OI::SelectRobotDrive(){
         if (xbox->GetAButtonPressed())
         {
@@ -51,7 +49,7 @@ class OI {
             // preferences->PutBoolean("arcade drive", false);
             table->PutNumber("ledMode", 0);
         }
-    }
+    
     
     
 }
