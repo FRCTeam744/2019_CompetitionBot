@@ -20,10 +20,11 @@ class OI
 	//TODO: Go through each button and assign variable in cpp file in functions
 	public:
 		void OI_Init();
-		void SelectRobotDrive();
+		void TurnOffLEDs();
 
 	private:
 
+		//Auto Methods (will probably not be used in favor of teleop control during sandstorm)
 		frc::SendableChooser<std::string> m_chooser;
 		const std::string kAutoDrive1 = "Drive Off Level 1";
 		const std::string kAutoDrive2 = "Drive Off Level 2";
@@ -33,16 +34,16 @@ class OI
 		const frc::XboxController::JoystickHand leftHand = frc::XboxController::kLeftHand;
 		const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightHand;
 
-		//Private Instance Variables for OI.cpp
+		//Private Objects in OI.cpp
 		frc::Joystick *rightStick;
     	frc::Joystick *leftStick;
     	frc::XboxController *xbox;
 
 		frc::Preferences *preferences;
+		
+		cs::UsbCamera *camera; //Untested to see if usb camera works for limelight
 
-		//Untested to see if usb camera works for limelight
-		cs::UsbCamera *camera;
-
+		//Private Instance Variables
 		bool driveWithXbox = false;
 };
 

@@ -5,34 +5,16 @@
 #include "Objects.h"
 #include "Drivetrain.h"
 
-double rightSpeed = 0.0;
-double leftSpeed = 0.0;
-double leftPower = 0.0;
-double rightPower = 0.0;
-double desiredRightFPS = 0.0;
-double desiredLeftFPS = 0.0;
-
-double realRightSpeedNUPer100ms = 0.0;
-double realLeftSpeedNUPer100ms = 0.0;
-
-double targetOffsetAngle_Horizontal;
-double targetOffsetAngle_Vertical;
-double targetArea;
-double targetSkew;
-
-double adjust = 0.0;
-
-double currentDistanceInches = 0.0;
-
 //Public Methods
 void Drivetrain::Init()
 {
-
+  //Establish Talons according to ID's
   leftFront = new TalonSRX(23);
   leftBack = new TalonSRX(27);
   rightFront = new TalonSRX(22);
   rightBack = new TalonSRX(26);
 
+  //Set Talons to be in same direction
   leftFront->SetInverted(false);
   leftBack->SetInverted(false);
   rightFront->SetInverted(true);
@@ -41,6 +23,7 @@ void Drivetrain::Init()
   leftBack->SetSensorPhase(true);
   rightBack->SetSensorPhase(true);
 
+  //
   leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
   rightBack->Config_kF(0, kFeedForwardGain, talonTimeout);
   leftBack->Config_kP(0, kP_SPEED, talonTimeout);
@@ -57,7 +40,7 @@ void Drivetrain::Init()
 
 void Drivetrain::Periodic()
 {
-
+//Set limelight and drivetrain variables to SD
   targetOffsetAngle_Horizontal = table->GetNumber("tx", 0.0);
   targetOffsetAngle_Vertical = table->GetNumber("ty", 0.0);
   targetArea = table->GetNumber("ta", 0.0);
@@ -66,14 +49,14 @@ void Drivetrain::Periodic()
   frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
   frc::SmartDashboard::PutNumber("Skew", targetSkew);
 
-  rightSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
-  leftSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
+  rightDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
+  leftDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
 
-  frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightSpeed);
-  frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftSpeed);
+  frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
+  frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
 
-  frc::SmartDashboard::PutNumber("Ft-Sec-Right", rightSpeed);
-  frc::SmartDashboard::PutNumber("Ft-Sec-Left", leftSpeed);
+  frc::SmartDashboard::PutNumber("Ft-Sec-Right", rightDashboardSpeed);
+  frc::SmartDashboard::PutNumber("Ft-Sec-Left", leftDashboardSpeed);
   frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
   frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
   frc::SmartDashboard::PutNumber("Target Area", targetArea);
@@ -122,6 +105,8 @@ void Drivetrain::Limelight()
     rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
     rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
   }
+  
+  //looking at what type of drive system is active based on buttons
   else if (!arcadeDrive)
   {
     if (driveWithXbox)
@@ -163,14 +148,6 @@ void Drivetrain::Limelight()
 
   frc::SmartDashboard::PutNumber("Left Power", leftPower);
   frc::SmartDashboard::PutNumber("Right Power", rightPower);
-}
-
-void Drivetrain::SetSensorPhase()
-{
-  if (constants.NU_PER_REV == 10)
-  {
-
-  }
 }
 
 //Private Methods

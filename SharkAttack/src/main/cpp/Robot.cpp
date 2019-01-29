@@ -87,7 +87,6 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
-  
 }
 
 /**

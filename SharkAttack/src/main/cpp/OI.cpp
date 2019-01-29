@@ -20,9 +20,10 @@ void OI::OI_Init() {
     //Caps the camera quality to allow for driver vision
     cs::UsbCamera camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
     camera.SetResolution(160, 120);
+    camera.SetFPS(30);
 }
 
-void OI::SelectRobotDrive() {
+void OI::TurnOffLEDs() {
     if (xbox->GetAButtonPressed())
     {
         driveWithXbox = true;
