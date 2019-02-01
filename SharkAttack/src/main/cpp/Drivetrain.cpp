@@ -19,6 +19,7 @@ void Drivetrain::DrivetrainInit() {
   leftBack->SetSensorPhase(true);
   rightBack->SetSensorPhase(true);
 
+
   //Config for the Talon internal PID loop for speedControl
   /*
   leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
@@ -33,7 +34,8 @@ void Drivetrain::DrivetrainInit() {
   rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
   */
 
-  table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+
 }
 
 void Drivetrain::Periodic()
@@ -63,7 +65,7 @@ void Drivetrain::Periodic()
   frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
 }
 
-void Drivetrain::Limelight()
+void Drivetrain::AutoDrive()
 {
   if (xbox->GetStartButton())
   {
@@ -146,6 +148,17 @@ void Drivetrain::Limelight()
 
   frc::SmartDashboard::PutNumber("Left Power", leftPower);
   frc::SmartDashboard::PutNumber("Right Power", rightPower);
+}
+
+//Use these methods in other classes to interact with the limelight
+void Drivetrain::LimelightPut(std::string key, int value) {
+
+  limelight->PutNumber(key, value);
+}
+
+double Drivetrain::LimelightGet(std::string key){
+
+  limelight->GetNumber(key, 0.0);
 }
 
 //Private Methods

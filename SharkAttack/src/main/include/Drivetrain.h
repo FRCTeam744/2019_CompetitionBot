@@ -1,14 +1,21 @@
 #pragma once
 
 #include "math.h"
+#include <string>
+#include "networktables/NetworkTableInstance.h"
+#include "frc/smartdashboard/Smartdashboard.h"
 #include <ctre/Phoenix.h>
+
+
 
 class Drivetrain
 {
   public:
 	void DrivetrainInit();
 	void Periodic();
-	void Limelight();
+	void AutoDrive();
+	void LimelightPut(std::string key, int value);
+	double LimelightGet(std::string key);
 
   private:
 	//Private Instance Objects
@@ -19,7 +26,7 @@ class Drivetrain
 	TalonSRX *rightMid;
 	TalonSRX *rightBack;
 
-	
+	std::shared_ptr<NetworkTable> limelight;
 
 	//CAN Talon IDs for each of the drivetrain motors
 	const int rightFrontID = 22;
