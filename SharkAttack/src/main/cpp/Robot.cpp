@@ -7,11 +7,9 @@
 
 #include "Robot.h"
 #include "Objects.h"
-#include "OI.h"
 
 #include <math.h>
 #include <iostream>
-#include <RobotDrive.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
 bool driveWithXbox;
@@ -64,8 +62,6 @@ void Robot::RobotInit()
   rightBack->Config_kI(0, kI_SPEED, talonTimeout);
   leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
   rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
-
-  // driveTrain = new frc::RobotDrive(leftFront, leftBack, rightFront, rightBack);
 
   preferences = frc::Preferences::GetInstance();
   driveWithXbox = preferences->GetBoolean("drive with xbox", false);

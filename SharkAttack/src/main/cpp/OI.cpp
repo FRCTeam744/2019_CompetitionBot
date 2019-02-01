@@ -6,8 +6,8 @@
 
 #include "OI.h"
 
-//Public Methods
-void OI::OI_Init() {
+//Constructor
+OI::OI() {
 
     preferences = frc::Preferences::GetInstance();
     driveWithXbox = preferences->GetBoolean("driveWithXbox", false);
@@ -18,12 +18,13 @@ void OI::OI_Init() {
     xbox = new frc::XboxController(2);
 
     //Caps the camera quality to allow for driver vision
-    cs::UsbCamera camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+    camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
     camera.SetResolution(resolutionWidth, resolutionHeight);
     camera.SetFPS(framerate);
 }
 
-void OI::CheckDriveWithXboxButton(){
+//Public Methods
+void OI::SwitchDriveMode(){
     if (xbox->GetStickButtonPressed(rightHand)){
         if (!driveWithXbox){
             driveWithXbox = true;
@@ -54,29 +55,13 @@ double OI::GetRightDriveInput(){
     }
 }
 
-void OI::TurnOffLEDs() {
-    if (xbox->GetAButtonPressed())
-    {
-        driveWithXbox = true;
-        preferences->PutBoolean("drive with xbox", true);
-        // table->PutNumber("camMode", 1.0);
+void OI::SwitchLED_Mode(Drivetrain drivetrain) {
+
+    if (drivetrain.LimelightGet("ledMode") == 0){
+
+        drivetrain.LimelightPut("ledMode", 1);
     }
-    if (xbox->GetBButtonPressed())
-    {
-        driveWithXbox = false;
-        preferences->PutBoolean("drive with xbox", false);
-        // table->PutNumber("camMode", 0.0);
-    }
-    if (xbox->GetXButtonPressed())
-    {
-        // arcadeDrive = true;
-        // preferences->PutBoolean("arcade drive", true);
-        table->PutNumber("ledMode", 1);
-    }
-    if (xbox->GetYButtonPressed())
-    {
-        // arcadeDrive = false;
-        // preferences->PutBoolean("arcade drive", false);
-        table->PutNumber("ledMode", 0);
+    else {
+        drivetrain.LimelightPut("ledMode", 0);
     }
 }

@@ -15,15 +15,17 @@
 #include <cscore.h>
 #include <CameraServer.h>
 
+#include "Drivetrain.h"
+
 class OI
 {
 	//TODO: Go through each button and assign variable in cpp file in functions
 	public:
-		void OI_Init();
-		void CheckDriveWithXboxButton();
+		OI();
+		void SwitchDriveMode();
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
-		void TurnOffLEDs();
+		void SwitchLED_Mode(Drivetrain drivetrain);
 
 	private:
 
@@ -40,7 +42,7 @@ class OI
 		//Camera Constants (change these to change camera quality in SmartDashboard)
 		const int resolutionWidth = 160;
 		const int resolutionHeight = 120;
-		const int framerate = 30;
+		const int framerate = 10;
 
 		//Private Objects in OI.cpp
 		frc::Joystick *rightStick;
@@ -49,7 +51,7 @@ class OI
 
 		frc::Preferences *preferences;
 		
-		cs::UsbCamera *camera; //Untested to see if usb camera works for limelight
+		cs::UsbCamera camera; //Untested to see if usb camera class works for limelight
 
 		//Private Instance Variables
 		bool driveWithXbox = false;

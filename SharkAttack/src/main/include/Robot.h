@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include "Drivetrain.h"
+#include "OI.h"
+
 #include <string>
 
 #include <frc/TimedRobot.h>
@@ -31,4 +34,8 @@ private:
   const std::string kAutoDrive1 = "Drive Off Level 1";
   const std::string kAutoDrive2 = "Drive Off Level 2";
   std::string m_autoSelected;
+
+  Drivetrain drivetrain;
+  OI oi;
+
 };
