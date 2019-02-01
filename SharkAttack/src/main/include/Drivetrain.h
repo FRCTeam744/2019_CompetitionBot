@@ -1,15 +1,35 @@
 #pragma once
 
 #include "math.h"
+#include <ctre/Phoenix.h>
 
 class Drivetrain
 {
   public:
-	void Init();
+	void DrivetrainInit();
 	void Periodic();
 	void Limelight();
 
   private:
+	//Private Instance Objects
+	TalonSRX *leftFront;
+	TalonSRX *leftMid;
+	TalonSRX *leftBack;
+	TalonSRX *rightFront;
+	TalonSRX *rightMid;
+	TalonSRX *rightBack;
+
+	
+
+	//CAN Talon IDs for each of the drivetrain motors
+	const int rightFrontID = 22;
+	const int rightMidID = 24;
+	const int rightBackID = 26;
+	const int leftFrontID = 23;
+	const int leftMidID = 25;
+	const int leftBackID = 27;
+
+
 	double leftDashboardSpeed = 0.0;
 	double rightDashboardSpeed = 0.0;
 	double leftPower = 0.0;

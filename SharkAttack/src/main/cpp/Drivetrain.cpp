@@ -1,18 +1,13 @@
-#include <ctre/phoenix.h>
 
-#include "Tunables.h"
-#include "Constants.h"
-#include "Objects.h"
 #include "Drivetrain.h"
 
 //Public Methods
-void Drivetrain::Init()
-{
+void Drivetrain::DrivetrainInit() {
   //Establish Talons according to ID's
-  leftFront = new TalonSRX(23);
-  leftBack = new TalonSRX(27);
-  rightFront = new TalonSRX(22);
-  rightBack = new TalonSRX(26);
+  leftFront = new TalonSRX(leftFrontID);
+  leftBack = new TalonSRX(leftBackID);
+  rightFront = new TalonSRX(rightFrontID);
+  rightBack = new TalonSRX(rightBackID);
 
   //Set Talons to be in same direction
   leftFront->SetInverted(false);
@@ -20,10 +15,12 @@ void Drivetrain::Init()
   rightFront->SetInverted(true);
   rightBack->SetInverted(true);
 
+  //Set the sign of the encoder (true means switch sign)
   leftBack->SetSensorPhase(true);
   rightBack->SetSensorPhase(true);
 
-  //
+  //Config for the Talon internal PID loop for speedControl
+  /*
   leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
   rightBack->Config_kF(0, kFeedForwardGain, talonTimeout);
   leftBack->Config_kP(0, kP_SPEED, talonTimeout);
@@ -34,6 +31,7 @@ void Drivetrain::Init()
   rightBack->Config_kI(0, kI_SPEED, talonTimeout);
   leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
   rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
+  */
 
   table = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 }

@@ -20,6 +20,9 @@ class OI
 	//TODO: Go through each button and assign variable in cpp file in functions
 	public:
 		void OI_Init();
+		void CheckDriveWithXboxButton();
+		double GetLeftDriveInput();
+		double GetRightDriveInput();
 		void TurnOffLEDs();
 
 	private:
@@ -33,6 +36,11 @@ class OI
 		//Use leftHand and rightHand constants to designate left and right sides of XboxController in OI.cpp
 		const frc::XboxController::JoystickHand leftHand = frc::XboxController::kLeftHand;
 		const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightHand;
+
+		//Camera Constants (change these to change camera quality in SmartDashboard)
+		const int resolutionWidth = 160;
+		const int resolutionHeight = 120;
+		const int framerate = 30;
 
 		//Private Objects in OI.cpp
 		frc::Joystick *rightStick;

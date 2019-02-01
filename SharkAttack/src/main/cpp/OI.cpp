@@ -19,8 +19,39 @@ void OI::OI_Init() {
 
     //Caps the camera quality to allow for driver vision
     cs::UsbCamera camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
-    camera.SetResolution(160, 120);
-    camera.SetFPS(30);
+    camera.SetResolution(resolutionWidth, resolutionHeight);
+    camera.SetFPS(framerate);
+}
+
+void OI::CheckDriveWithXboxButton(){
+    if (xbox->GetStickButtonPressed(rightHand)){
+        if (!driveWithXbox){
+            driveWithXbox = true;
+            preferences->PutBoolean("driveWithXbox", true);
+        }
+        else {
+            driveWithXbox = false;
+            preferences->PutBoolean("driveWithXbox", false);
+        }
+    }
+}
+
+double OI::GetLeftDriveInput(){
+    if (driveWithXbox) {
+        xbox->GetY(leftHand);
+    }
+    else {
+        leftStick->GetY();
+    }
+}
+
+double OI::GetRightDriveInput(){
+    if (driveWithXbox) {
+        xbox->GetY(rightHand);
+    }
+    else {
+        rightStick->GetY();
+    }
 }
 
 void OI::TurnOffLEDs() {
