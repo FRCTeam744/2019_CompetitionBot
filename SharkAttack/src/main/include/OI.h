@@ -24,6 +24,7 @@ class OI {
 		static OI* getInstance();
 
 		void SwitchDriveMode();
+		void SwitchGears();
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
@@ -43,6 +44,7 @@ class OI {
 		//Use leftHand and rightHand constants to designate left and right sides of XboxController in OI.cpp
 		const frc::XboxController::JoystickHand leftHand = frc::XboxController::kLeftHand;
 		const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightHand;
+		bool lowGear, highGear = 0;
 
 		//Camera Constants (change these to change camera quality in SmartDashboard)
 		const int resolutionWidth = 160;
@@ -60,5 +62,6 @@ class OI {
 
 		//Private Instance Variables
 		bool driveWithXbox = false;
+		bool isInLowGear;
 };
 

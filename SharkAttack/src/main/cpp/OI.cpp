@@ -46,6 +46,17 @@ void OI::SwitchDriveMode(){
     }
 }
 
+void OI::SwitchGears(){
+    if (xbox->GetBumperPressed(frc::XboxController::kLeftHand)){
+        lowGear = true;
+        highGear = false;
+    }
+    if (xbox->GetBumperPressed(frc::XboxController::kRightHand)){
+        highGear = true;
+        lowGear = false;
+    }
+}
+
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput(){
     if (driveWithXbox) {

@@ -1,5 +1,5 @@
-
 #include "Drivetrain.h"
+#include "frc/DoubleSolenoid.h"
 
 Drivetrain* Drivetrain::s_instance = 0;
 
@@ -21,16 +21,23 @@ Drivetrain::Drivetrain() {
   rightMid = new TalonSRX(rightMidID);
   rightBack = new TalonSRX(rightBackID);
 
+  //Establish Double Solenoid
+  //frc::DoubleSolenoid *gearShifter;
+  //gearShifter = new frc::DoubleSolenoid(0, 1);
+  frc::DoubleSolenoid gearShifter {lowGear, highGear};
+
+  //Establish Limelight
+  limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+
   //Set Talons to be in same direction
   leftFront->SetInverted(false);
   leftBack->SetInverted(false);
   rightFront->SetInverted(true);
   rightBack->SetInverted(true);
 
-  // //Set the sign of the encoder (true means switch sign)
+  //Set the sign of the encoder (true means switch sign)
   leftBack->SetSensorPhase(true);
   rightBack->SetSensorPhase(true);
-
 
   //Config for the Talon internal PID loop for speedControl
   leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
@@ -43,8 +50,6 @@ Drivetrain::Drivetrain() {
   rightBack->Config_kI(0, kI_SPEED, talonTimeout);
   leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
   rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
-
-  limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 
 }
 

@@ -47,6 +47,9 @@ class Drivetrain {
 	const int leftMidID = 25;
 	const int leftBackID = 27;
 
+	//DoubleSolenoid gearShirter forward and reverse channels
+	const int lowGear = 0;
+	const int highGear = 1; 
 
 	double leftDashboardSpeed = 0.0;
 	double rightDashboardSpeed = 0.0;

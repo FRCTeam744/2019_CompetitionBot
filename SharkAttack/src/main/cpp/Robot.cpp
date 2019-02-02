@@ -20,6 +20,9 @@ void Robot::RobotInit()
 
   drivetrain = Drivetrain::getInstance();
   oi = OI::getInstance();
+
+  lowGear = true;
+  highGear = false;
 }
 
 /**
@@ -81,6 +84,12 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
 
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+  if (lowGear == true) {
+    gearShifter.Set(frc::DoubleSolenoid::Value::kForward);
+  }
+  if (highGear == true) {
+    gearShifter.Set(frc::DoubleSolenoid::Value::kReverse);
+  }
 }
 
 void Robot::TestPeriodic() {
