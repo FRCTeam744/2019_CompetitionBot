@@ -1,3 +1,5 @@
+
+
 #pragma once
 
 #include "math.h"
@@ -8,10 +10,10 @@
 
 
 
-class Drivetrain
-{
+class Drivetrain {
+
   public:
-	void DrivetrainInit();
+	Drivetrain();
 	void Periodic();
 	void AutoDrive();
 	void LimelightPut(std::string key, int value);
@@ -27,7 +29,7 @@ class Drivetrain
 	TalonSRX *rightBack;
 
 	std::shared_ptr<NetworkTable> limelight;
-
+	
 	//CAN Talon IDs for each of the drivetrain motors
 	const int rightFrontID = 22;
 	const int rightMidID = 24;
@@ -86,4 +88,17 @@ class Drivetrain
 	const double kP_ANGLE = 0.02 * 13.0 * FEET_TO_NU * SECONDS_TO_100MS; //FOR ANGLE CORRECTION TODO
 
 	const double MIN_COMMAND = 0.23;
-}
+
+	//Constants for the PID of talon
+	const double kP_SPEED = 0.1; //FOR SPEED CONTROL
+	const double kD_SPEED_RIGHT = kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
+	const double kD_SPEED_LEFT = kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
+
+	const double kI_SPEED = kP_SPEED / 100.0;
+	const double kI_ZONE = (0.4 * 2.0) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS;
+
+	double kFeedForwardGain = (TEST_PERCENT_OUTPUT * MAX_TALON_OUTPUT) / MEASURED_SPEED_NU;
+
+	const double talonTimeout = 10; //number of ms before the talon stops trying to configure a specific value
+
+};

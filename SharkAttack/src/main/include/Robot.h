@@ -7,16 +7,14 @@
 
 #pragma once
 
-#include "Drivetrain.h"
-#include "OI.h"
+// #include "Drivetrain.h"
+// #include "OI.h"
 
 #include <string>
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 
-const double LEFT_TALON_MASTER = 27.0;
-const double RIGHT_TALON_MASTER = 26.0;
 
 class Robot : public frc::TimedRobot
 {
@@ -35,7 +33,7 @@ private:
   const std::string kAutoDrive2 = "Drive Off Level 2";
   std::string m_autoSelected;
 
-  Drivetrain drivetrain;
-  OI oi;
+  // Drivetrain drivetrain;
+  // OI oi;
 
 };

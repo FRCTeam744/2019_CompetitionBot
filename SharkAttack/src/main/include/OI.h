@@ -15,17 +15,16 @@
 #include <cscore.h>
 #include <CameraServer.h>
 
-#include "Drivetrain.h"
+// #include "Drivetrain.h"
 
-class OI
-{
+class OI {
 	//TODO: Go through each button and assign variable in cpp file in functions
 	public:
 		OI();
 		void SwitchDriveMode();
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
-		void SwitchLED_Mode(Drivetrain drivetrain);
+		// void SwitchLED_Mode(Drivetrain drivetrain);
 
 	private:
 

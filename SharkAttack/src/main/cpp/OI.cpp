@@ -6,7 +6,7 @@
 
 #include "OI.h"
 
-//Constructor
+// Constructor
 OI::OI() {
 
     preferences = frc::Preferences::GetInstance();
@@ -18,9 +18,9 @@ OI::OI() {
     xbox = new frc::XboxController(2);
 
     //Caps the camera quality to allow for driver vision
-    camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
-    camera.SetResolution(resolutionWidth, resolutionHeight);
-    camera.SetFPS(framerate);
+    // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+    // camera.SetResolution(resolutionWidth, resolutionHeight);
+    // camera.SetFPS(framerate);
 }
 
 //Public Methods
@@ -55,13 +55,13 @@ double OI::GetRightDriveInput(){
     }
 }
 
-void OI::SwitchLED_Mode(Drivetrain drivetrain) {
+// void OI::SwitchLED_Mode(Drivetrain drivetrain) {
 
-    if (drivetrain.LimelightGet("ledMode") == 0){
+//     if (drivetrain.LimelightGet("ledMode") == 0){
 
-        drivetrain.LimelightPut("ledMode", 1);
-    }
-    else {
-        drivetrain.LimelightPut("ledMode", 0);
-    }
-}
+//         drivetrain.LimelightPut("ledMode", 1);
+//     }
+//     else {
+//         drivetrain.LimelightPut("ledMode", 0);
+//     }
+// }

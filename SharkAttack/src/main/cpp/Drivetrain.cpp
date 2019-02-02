@@ -1,13 +1,13 @@
 
 #include "Drivetrain.h"
-
 //Public Methods
-void Drivetrain::DrivetrainInit() {
+
+Drivetrain::Drivetrain() {
   //Establish Talons according to ID's
-  leftFront = new TalonSRX(leftFrontID);
-  leftBack = new TalonSRX(leftBackID);
-  rightFront = new TalonSRX(rightFrontID);
-  rightBack = new TalonSRX(rightBackID);
+  leftFront = new TalonSRX(23);
+  leftBack = new TalonSRX(27);
+  rightFront = new TalonSRX(12);
+  rightBack = new TalonSRX(22);
 
   //Set Talons to be in same direction
   leftFront->SetInverted(false);
@@ -15,13 +15,12 @@ void Drivetrain::DrivetrainInit() {
   rightFront->SetInverted(true);
   rightBack->SetInverted(true);
 
-  //Set the sign of the encoder (true means switch sign)
+  // //Set the sign of the encoder (true means switch sign)
   leftBack->SetSensorPhase(true);
   rightBack->SetSensorPhase(true);
 
 
   //Config for the Talon internal PID loop for speedControl
-  /*
   leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
   rightBack->Config_kF(0, kFeedForwardGain, talonTimeout);
   leftBack->Config_kP(0, kP_SPEED, talonTimeout);
@@ -32,19 +31,17 @@ void Drivetrain::DrivetrainInit() {
   rightBack->Config_kI(0, kI_SPEED, talonTimeout);
   leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
   rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
-  */
 
   limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 
 }
 
-void Drivetrain::Periodic()
-{
-//Set limelight and drivetrain variables to SD
-  targetOffsetAngle_Horizontal = table->GetNumber("tx", 0.0);
-  targetOffsetAngle_Vertical = table->GetNumber("ty", 0.0);
-  targetArea = table->GetNumber("ta", 0.0);
-  targetSkew = table->GetNumber("ts", 0.0);
+void Drivetrain::Periodic() {
+// Set limelight and drivetrain variables to SD
+  targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);
+  targetOffsetAngle_Vertical = limelight->GetNumber("ty", 0.0);
+  targetArea = limelight->GetNumber("ta", 0.0);
+  targetSkew = limelight->GetNumber("ts", 0.0);
 
   frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
   frc::SmartDashboard::PutNumber("Skew", targetSkew);
@@ -65,8 +62,8 @@ void Drivetrain::Periodic()
   frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
 }
 
-void Drivetrain::AutoDrive()
-{
+void Drivetrain::AutoDrive() {
+  /*
   if (xbox->GetStartButton())
   {
     double p_dist_loop = 0;
@@ -148,17 +145,19 @@ void Drivetrain::AutoDrive()
 
   frc::SmartDashboard::PutNumber("Left Power", leftPower);
   frc::SmartDashboard::PutNumber("Right Power", rightPower);
+  */
+ \
 }
 
-//Use these methods in other classes to interact with the limelight
+// Use these methods in other classes to interact with the limelight
 void Drivetrain::LimelightPut(std::string key, int value) {
 
-  limelight->PutNumber(key, value);
+  limelight->PutNumber(key, 0.0);
 }
 
 double Drivetrain::LimelightGet(std::string key){
 
-  limelight->GetNumber(key, 0.0);
+  return limelight->GetNumber(key, 0.0);
 }
 
-//Private Methods
+// Private Methods
