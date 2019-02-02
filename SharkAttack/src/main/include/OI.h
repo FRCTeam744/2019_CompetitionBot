@@ -20,13 +20,19 @@
 class OI {
 	//TODO: Go through each button and assign variable in cpp file in functions
 	public:
-		OI();
+
+		static OI* getInstance();
+
 		void SwitchDriveMode();
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
 
 	private:
+
+		static OI* s_instance;
+
+		OI();
 
 		//Auto Methods (will probably not be used in favor of teleop control during sandstorm)
 		frc::SendableChooser<std::string> m_chooser;

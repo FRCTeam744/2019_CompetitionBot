@@ -13,14 +13,22 @@
 class Drivetrain {
 
   public:
-	Drivetrain();
+
+	static Drivetrain* getInstance();
+
 	void Periodic();
 	void AutoDrive();
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
 
+
   private:
+
+	static Drivetrain* s_instance;
+
+	Drivetrain();
+
 	//Private Instance Objects
 	TalonSRX *leftFront;
 	TalonSRX *leftMid;

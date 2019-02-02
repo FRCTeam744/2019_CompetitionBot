@@ -15,6 +15,9 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 
+#include "Drivetrain.h"
+#include "OI.h"
+
 
 class Robot : public frc::TimedRobot
 {
@@ -33,5 +36,7 @@ private:
   const std::string kAutoDrive2 = "Drive Off Level 2";
   std::string m_autoSelected;
 
+  Drivetrain *drivetrain;
+  OI *oi;
 
 };

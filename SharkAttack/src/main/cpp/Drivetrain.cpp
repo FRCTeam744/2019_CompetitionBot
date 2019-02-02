@@ -1,6 +1,16 @@
 
 #include "Drivetrain.h"
+
+Drivetrain* Drivetrain::s_instance = 0;
+
 //Public Methods
+
+Drivetrain* Drivetrain::getInstance() {
+  if (s_instance == 0){
+    s_instance = new Drivetrain();
+  }
+  return s_instance;
+}
 
 Drivetrain::Drivetrain() {
   //Establish Talons according to ID's
