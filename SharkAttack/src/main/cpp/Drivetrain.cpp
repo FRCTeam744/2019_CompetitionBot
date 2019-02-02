@@ -14,10 +14,12 @@ Drivetrain* Drivetrain::getInstance() {
 
 Drivetrain::Drivetrain() {
   //Establish Talons according to ID's
-  leftFront = new TalonSRX(23);
-  leftBack = new TalonSRX(27);
-  rightFront = new TalonSRX(12);
-  rightBack = new TalonSRX(22);
+  leftFront = new TalonSRX(leftFrontID);
+  leftMid = new TalonSRX(leftMidID);
+  leftBack = new TalonSRX(leftBackID);
+  rightFront = new TalonSRX(rightFrontID);
+  rightMid = new TalonSRX(rightMidID);
+  rightBack = new TalonSRX(rightBackID);
 
   //Set Talons to be in same direction
   leftFront->SetInverted(false);
@@ -162,10 +164,10 @@ void Drivetrain::TankDrive (double leftValue, double rightValue) {
 
   leftBack->Set(ControlMode::PercentOutput, leftValue);
   rightBack->Set(ControlMode::PercentOutput, rightValue);
-  leftMid->Set(ControlMode::Follower, 27);
-  rightMid->Set(ControlMode::Follower, 26);
-  leftFront->Set(ControlMode::Follower, 27);
-  rightFront->Set(ControlMode::Follower, 26);
+  leftMid->Set(ControlMode::Follower, 27.0);
+  rightMid->Set(ControlMode::Follower, 26.0);
+  leftFront->Set(ControlMode::Follower, 27.0);
+  rightFront->Set(ControlMode::Follower, 26.0);
 }
 
 // Use these methods in other classes to interact with the limelight

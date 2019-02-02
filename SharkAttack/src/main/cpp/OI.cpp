@@ -46,21 +46,22 @@ void OI::SwitchDriveMode(){
     }
 }
 
+//Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput(){
     if (driveWithXbox) {
-        xbox->GetY(leftHand);
+        return -(xbox->GetY(leftHand));
     }
     else {
-        leftStick->GetY();
+        return -(leftStick->GetY());
     }
 }
 
 double OI::GetRightDriveInput(){
     if (driveWithXbox) {
-        xbox->GetY(rightHand);
+        return -(xbox->GetY(rightHand));
     }
     else {
-        rightStick->GetY();
+        return -(rightStick->GetY());
     }
 }
 
