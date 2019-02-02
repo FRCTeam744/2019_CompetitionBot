@@ -16,6 +16,7 @@ class Drivetrain {
 	Drivetrain();
 	void Periodic();
 	void AutoDrive();
+	void TankDrive(double leftValue, double rightValue);
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
 

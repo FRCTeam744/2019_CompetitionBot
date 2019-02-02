@@ -146,7 +146,16 @@ void Drivetrain::AutoDrive() {
   frc::SmartDashboard::PutNumber("Left Power", leftPower);
   frc::SmartDashboard::PutNumber("Right Power", rightPower);
   */
- \
+}
+
+void Drivetrain::TankDrive (double leftValue, double rightValue) {
+
+  leftBack->Set(ControlMode::PercentOutput, leftValue);
+  rightBack->Set(ControlMode::PercentOutput, rightValue);
+  leftMid->Set(ControlMode::Follower, 27);
+  rightMid->Set(ControlMode::Follower, 26);
+  leftFront->Set(ControlMode::Follower, 27);
+  rightFront->Set(ControlMode::Follower, 26);
 }
 
 // Use these methods in other classes to interact with the limelight

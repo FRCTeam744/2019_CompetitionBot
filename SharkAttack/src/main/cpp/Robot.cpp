@@ -11,6 +11,8 @@
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+#include "Drivetrain.h"
+#include "OI.h"
 
 void Robot::RobotInit()
 {
@@ -18,6 +20,7 @@ void Robot::RobotInit()
   m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
+  
 }
 
 /**
@@ -78,6 +81,7 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 
+  
 }
 
 void Robot::TestPeriodic() {

@@ -33,7 +33,5 @@ private:
   const std::string kAutoDrive2 = "Drive Off Level 2";
   std::string m_autoSelected;
 
-  // Drivetrain drivetrain;
-  // OI oi;
 
 };
