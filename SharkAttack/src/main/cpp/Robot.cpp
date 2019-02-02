@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-
+#include "OI.h"
 #include <math.h>
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -21,8 +21,8 @@ void Robot::RobotInit()
   drivetrain = Drivetrain::getInstance();
   oi = OI::getInstance();
 
-  lowGear = true;
-  highGear = false;
+  oi->lowGear = true;
+  oi->highGear = false;
 }
 
 /**
@@ -84,11 +84,11 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
 
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
-  if (lowGear == true) {
-    gearShifter.Set(frc::DoubleSolenoid::Value::kForward);
+  if (oi->lowGear == true) {
+    drivetrain->gearShifter.Set(frc::DoubleSolenoid::Value::kForward);
   }
-  if (highGear == true) {
-    gearShifter.Set(frc::DoubleSolenoid::Value::kReverse);
+  if (oi->highGear == true) {
+    drivetrain->gearShifter.Set(frc::DoubleSolenoid::Value::kReverse);
   }
 }
 
