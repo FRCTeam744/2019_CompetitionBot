@@ -46,6 +46,14 @@ void OI::SwitchDriveMode(){
     }
 }
 
+void PutOnSmartDashboard(){
+    SmartDashboard::PutNumber("test number value", 25);
+    SmartDashboard::PutBoolean("Using Limelight?", true);
+    // SmartDashboard::PutString(StringTestHere, //here)
+    // SmartDashboard::PutNumber("test val", leftPower);
+    // Shuffleboard::PutNumber("test val2", rightPower);
+    }
+
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput(){
     if (driveWithXbox) {
