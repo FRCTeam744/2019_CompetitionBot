@@ -7,7 +7,7 @@
 #include "networktables/NetworkTableInstance.h"
 #include "frc/smartdashboard/Smartdashboard.h"
 #include <ctre/Phoenix.h>
-
+#include "frc/DoubleSolenoid.h"
 
 
 class Drivetrain {
@@ -22,6 +22,7 @@ class Drivetrain {
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
 
+	frc::DoubleSolenoid *gearShifter;
 
   private:
 

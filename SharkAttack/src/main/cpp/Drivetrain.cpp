@@ -1,5 +1,5 @@
 #include "Drivetrain.h"
-#include "frc/DoubleSolenoid.h"
+
 
 Drivetrain* Drivetrain::s_instance = 0;
 
@@ -23,8 +23,8 @@ Drivetrain::Drivetrain() {
 
   //Establish Double Solenoid
   //frc::DoubleSolenoid *gearShifter;
-  //gearShifter = new frc::DoubleSolenoid(0, 1);
-  frc::DoubleSolenoid gearShifter {lowGear, highGear};
+  gearShifter = new frc::DoubleSolenoid(0, 1);
+  //frc::DoubleSolenoid gearShifter {lowGear, highGear};
 
   //Establish Limelight
   limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
