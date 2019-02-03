@@ -82,8 +82,15 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TeleopPeriodic() {
+  //drivetrain->leftBack->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
+  //drivetrain->rightBack->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
+  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput()); //Should be inverted
+  //drivetrain->rightMid->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
+  //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
+  //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
 
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+
   if (oi->lowGear == true) {
     drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
   }

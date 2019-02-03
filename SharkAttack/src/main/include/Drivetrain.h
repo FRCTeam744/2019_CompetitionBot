@@ -22,6 +22,13 @@ class Drivetrain {
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
 
+	TalonSRX *leftFront;
+	TalonSRX *leftMid;
+	TalonSRX *leftBack;
+	TalonSRX *rightFront;
+	TalonSRX *rightMid;
+	TalonSRX *rightBack;
+
 	frc::DoubleSolenoid *gearShifter;
 
   private:
@@ -31,13 +38,13 @@ class Drivetrain {
 	Drivetrain();
 
 	//Private Instance Objects
-	TalonSRX *leftFront;
+	/*TalonSRX *leftFront;
 	TalonSRX *leftMid;
 	TalonSRX *leftBack;
 	TalonSRX *rightFront;
 	TalonSRX *rightMid;
 	TalonSRX *rightBack;
-
+*/
 	std::shared_ptr<NetworkTable> limelight;
 	
 	//CAN Talon IDs for each of the drivetrain motors

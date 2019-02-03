@@ -34,6 +34,8 @@ Drivetrain::Drivetrain() {
   leftBack->SetInverted(false);
   rightFront->SetInverted(true);
   rightBack->SetInverted(true);
+  rightMid->SetInverted(false);
+  leftMid->SetInverted(true);
 
   //Set the sign of the encoder (true means switch sign)
   leftBack->SetSensorPhase(true);
@@ -167,12 +169,20 @@ void Drivetrain::AutoDrive() {
 
 void Drivetrain::TankDrive (double leftValue, double rightValue) {
 
+  // leftFront->SetInverted(false);
+  // leftBack->SetInverted(false);
+  // rightFront->SetInverted(true);
+  // rightBack->SetInverted(true);
+  // rightMid->SetInverted(false);
+  // leftMid->SetInverted(true);
+
   leftBack->Set(ControlMode::PercentOutput, leftValue);
   rightBack->Set(ControlMode::PercentOutput, rightValue);
   leftMid->Set(ControlMode::Follower, 27.0);
   rightMid->Set(ControlMode::Follower, 26.0);
   leftFront->Set(ControlMode::Follower, 27.0);
   rightFront->Set(ControlMode::Follower, 26.0);
+
 }
 
 // Use these methods in other classes to interact with the limelight
