@@ -14,6 +14,8 @@
 #include <frc/Preferences.h>
 #include <cscore.h>
 #include <CameraServer.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+//#include <ShuffleBoard.h>
 
 // #include "Drivetrain.h"
 
@@ -27,6 +29,7 @@ class OI {
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
+		void PutOnSmartDashboard();
 
 	private:
 
