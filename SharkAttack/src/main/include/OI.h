@@ -14,6 +14,7 @@
 #include <frc/Preferences.h>
 #include <cscore.h>
 #include <CameraServer.h>
+#include <frc/smartdashboard/Smartdashboard.h>
 
 // #include "Drivetrain.h"
 

@@ -90,6 +90,8 @@ void Robot::TeleopPeriodic() {
   if (oi->highGear == true) {
     drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
   }
+
+  oi->SwitchGears();
 }
 
 void Robot::TestPeriodic() {

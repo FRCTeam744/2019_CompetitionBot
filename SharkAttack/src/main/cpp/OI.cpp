@@ -50,10 +50,14 @@ void OI::SwitchGears(){
     if (xbox->GetBumperPressed(frc::XboxController::kLeftHand)){
         lowGear = true;
         highGear = false;
+        frc::SmartDashboard::PutBoolean ("Low Gear", true);
+        frc::SmartDashboard::PutBoolean("High Gear", false);
     }
     if (xbox->GetBumperPressed(frc::XboxController::kRightHand)){
         highGear = true;
         lowGear = false;
+        frc::SmartDashboard::PutBoolean("High Gear", true);
+        frc::SmartDashboard::PutBoolean("Low Gear", false);
     }
 }
 
