@@ -1,10 +1,10 @@
-#include "Drivetrain.h"
 
+
+#include "Drivetrain.h"
 
 Drivetrain* Drivetrain::s_instance = 0;
 
-//Public Methods
-
+//Static Singleton Method
 Drivetrain* Drivetrain::getInstance() {
   if (s_instance == 0){
     s_instance = new Drivetrain();
@@ -12,6 +12,7 @@ Drivetrain* Drivetrain::getInstance() {
   return s_instance;
 }
 
+//Constructor
 Drivetrain::Drivetrain() {
   //Establish Talons according to ID's
   leftFront = new TalonSRX(leftFrontID);
@@ -55,6 +56,7 @@ Drivetrain::Drivetrain() {
 
 }
 
+//Public Methods
 void Drivetrain::Periodic() {
 // Set limelight and drivetrain variables to SD
   targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);

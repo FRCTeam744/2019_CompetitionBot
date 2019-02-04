@@ -8,6 +8,7 @@
 
 OI* OI::s_instance = 0;
 
+//Static Singleton Method
 OI* OI::getInstance() {
     if (s_instance == 0) {
         s_instance = new OI();

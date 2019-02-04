@@ -7,13 +7,13 @@
 
 #pragma once
 
-// #include "Drivetrain.h"
-// #include "OI.h"
-
 #include <string>
+#include <math.h>
+#include <iostream>
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "Drivetrain.h"
 #include "OI.h"

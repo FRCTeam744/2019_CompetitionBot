@@ -6,10 +6,6 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-#include "OI.h"
-#include <math.h>
-#include <iostream>
-#include <frc/smartdashboard/SmartDashboard.h>
 
 
 void Robot::RobotInit()
@@ -33,7 +29,7 @@ void Robot::RobotInit()
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic(){
+void Robot::RobotPeriodic() {
 
 }
 
