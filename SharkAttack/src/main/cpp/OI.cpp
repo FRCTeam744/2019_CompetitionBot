@@ -50,14 +50,23 @@ void OI::SwitchDriveMode(){
     }
 }
 
-void OI::PutOnSmartDashboard(){
-    frc::SmartDashboard::PutNumber("test number value", 25);
-    frc::SmartDashboard::PutBoolean("Using Limelight?", true);
-    frc::SmartDashboard::PutNumber("test val", 7);
-    frc::SmartDashboard::PutNumber("test22", 3.2);
-    frc::SmartDashboard::PutString("Hello", "dog");
-    frc::SmartDashboard::PutBoolean("poke", false);
-    frc::SmartDashboard::PutBoolean("Using gyro?", false);
+void OI::PutOnShuffleboardTest(){
+    frc::SmartDashboard::GetBoolean("DriverView/CatDog", true);
+
+frc::ShuffleboardTab& elevatorTab = frc::Shuffleboard::GetTab("Elevator");
+    elevatorTab.Add("Motor", m_elevatorMotor);
+
+// //making tab
+//     frc::ShuffleboardTab& testTab = frc::Shuffleboard::GetTab("Test1");
+//     testTab.Add("Max Speed", 1)
+    
+
+
+//     //encoder list test
+//     // //frc::ShuffleboardLayout& encoders =
+//     // frc::Shuffleboard::SelectTab("SmartDashboard");
+
+
    }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
