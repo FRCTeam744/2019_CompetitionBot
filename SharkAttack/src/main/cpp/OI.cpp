@@ -6,6 +6,8 @@
 
 #include "OI.h"
 #include "frc/smartdashboard/Smartdashboard.h"
+#include <frc/shuffleboard/Shuffleboard.h>
+
 
 
 OI* OI::s_instance = 0;
@@ -51,9 +53,11 @@ void OI::SwitchDriveMode(){
 void OI::PutOnSmartDashboard(){
     frc::SmartDashboard::PutNumber("test number value", 25);
     frc::SmartDashboard::PutBoolean("Using Limelight?", true);
-    // SmartDashboard::PutString(StringTestHere, //here)
-    // SmartDashboard::PutNumber("test val", leftPower);
-    // Shuffleboard::PutNumber("test val2", rightPower);
+    frc::SmartDashboard::PutNumber("test val", 7);
+    frc::SmartDashboard::PutNumber("test22", 3.2);
+    frc::SmartDashboard::PutString("Hello", "dog");
+    frc::SmartDashboard::PutBoolean("poke", false);
+    frc::SmartDashboard::PutBoolean("Using gyro?", false);
    }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it

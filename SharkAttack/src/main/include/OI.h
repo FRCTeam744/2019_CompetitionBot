@@ -15,7 +15,7 @@
 #include <cscore.h>
 #include <CameraServer.h>
 #include <frc/smartdashboard/SmartDashboard.h>
-//#include <ShuffleBoard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
 
 // #include "Drivetrain.h"
 
