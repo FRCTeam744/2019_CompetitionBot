@@ -21,7 +21,7 @@ void Robot::RobotInit()
   drivetrain = Drivetrain::getInstance();
   oi = OI::getInstance();
 
-  oi->PutOnSmartDashboard();
+  oi->PutOnShuffleboardTest();
 }
 
 /**

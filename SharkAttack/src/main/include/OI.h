@@ -29,7 +29,7 @@ class OI {
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
-		void PutOnSmartDashboard();
+		void PutOnShuffleboardTest();
 
 	private:
 
