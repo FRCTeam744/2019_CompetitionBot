@@ -1,35 +1,24 @@
 /*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
+/* Copyright (c) 2017-2019 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
-#include "Objects.h"
 
-#include <iostream>
-#include <RobotDrive.h>
-#include <frc/smartdashboard/SmartDashboard.h>
 
-void Robot::RobotInit() {
+void Robot::RobotInit()
+{
   m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
   m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
-  rightStick = new frc::Joystick(0);
-  leftStick = new frc::Joystick(1);
+  drivetrain = Drivetrain::getInstance();
+  oi = OI::getInstance();
 
-
-  leftFront = new WPI_TalonSRX(23);
-  leftBack = new WPI_TalonSRX(27);
-  rightFront = new WPI_TalonSRX(22);
-  rightBack = new WPI_TalonSRX(26);
-
-  driveTrain = new frc::RobotDrive(leftFront, leftBack, rightFront, rightBack);
-
-  preferences = frc::Preferences::GetInstance();
-
+  oi->lowGear = true;
+  oi->highGear = false;
 }
 
 /**
@@ -40,7 +29,9 @@ void Robot::RobotInit() {
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() {
+
+}
 
 /**
  * This autonomous (along with the chooser code above) shows how to select
@@ -53,37 +44,67 @@ void Robot::RobotPeriodic() {}
  * if-else structure below with additional strings. If using the SendableChooser
  * make sure to add them to the chooser code above as well.
  */
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit()
+{
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   //     kAutoNameDefault);
   std::cout << "Auto selected: " << m_autoSelected << std::endl;
 
-  if (m_autoSelected == kAutoDrive2) {
+  if (m_autoSelected == kAutoDrive2)
+  {
     // Custom Auto goes here
-  } else {
+  }
+  else
+  {
     // Default Auto goes here
   }
 }
 
-void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoDrive2) {
+void Robot::AutonomousPeriodic()
+{
+  if (m_autoSelected == kAutoDrive2)
+  {
     // Custom Auto goes here
-  } else {
+  }
+  else
+  {
     // Default Auto goes here
   }
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+
+}
 
 void Robot::TeleopPeriodic() {
+  //drivetrain->leftBack->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
+  //drivetrain->rightBack->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
+  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput()); //Should be inverted
+  //drivetrain->rightMid->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
+  //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
+  //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
 
-  driveTrain->ArcadeDrive(rightStick->GetY(), leftStick->GetX(), true);
+  drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
+  if (oi->lowGear == true) {
+    drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
+  }
+  if (oi->highGear == true) {
+    drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
+  }
+
+  oi->SwitchGears();
 }
 
-void Robot::TestPeriodic() {}
+void Robot::TestPeriodic() {
+  
+}
+
 
 #ifndef RUNNING_FRC_TESTS
-int main() { return frc::StartRobot<Robot>(); }
+int main()
+{
+  return frc::StartRobot<Robot>();
+}
 #endif
