@@ -7,7 +7,7 @@
 #include "OI.h"
 #include "frc/smartdashboard/Smartdashboard.h"
 #include <frc/shuffleboard/Shuffleboard.h>
-
+#include "Robot.h"
 
 
 OI* OI::s_instance = 0;
@@ -50,15 +50,16 @@ void OI::SwitchDriveMode(){
     }
 }
 
+
 void OI::PutOnShuffleboardTest(){
     frc::SmartDashboard::GetBoolean("DriverView/CatDog", true);
 
 frc::ShuffleboardTab& elevatorTab = frc::Shuffleboard::GetTab("Elevator");
-    elevatorTab.Add("Motor", m_elevatorMotor);
+    elevatorTab.Add("test", rightBack);
 
 // //making tab
 //     frc::ShuffleboardTab& testTab = frc::Shuffleboard::GetTab("Test1");
-//     testTab.Add("Max Speed", 1)
+//     testTab.Add("Max Speed", 1);
     
 
 
