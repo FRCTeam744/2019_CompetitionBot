@@ -14,7 +14,7 @@ class Drivetrain {
 
   public:
 
-	static Drivetrain* getInstance();
+	static Drivetrain* GetInstance();
 
 	void Periodic();
 	void AutoDrive();
@@ -22,6 +22,13 @@ class Drivetrain {
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
 
+  private:
+
+	static Drivetrain* s_instance;
+
+	Drivetrain();
+
+	//Private Instance Objects
 	TalonSRX *leftFront;
 	TalonSRX *leftMid;
 	TalonSRX *leftBack;
@@ -31,20 +38,6 @@ class Drivetrain {
 
 	frc::DoubleSolenoid *gearShifter;
 
-  private:
-
-	static Drivetrain* s_instance;
-
-	Drivetrain();
-
-	//Private Instance Objects
-	/*TalonSRX *leftFront;
-	TalonSRX *leftMid;
-	TalonSRX *leftBack;
-	TalonSRX *rightFront;
-	TalonSRX *rightMid;
-	TalonSRX *rightBack;
-*/
 	std::shared_ptr<NetworkTable> limelight;
 	
 	//CAN Talon IDs for each of the drivetrain motors
@@ -56,8 +49,8 @@ class Drivetrain {
 	const int leftBackID = 27;
 
 	//DoubleSolenoid gearShirter forward and reverse channels
-	const int lowGear = 0;
-	const int highGear = 1; 
+	const int LOW_GEAR = 0;
+	const int HIGH_GEAR = 1; 
 
 	double leftDashboardSpeed = 0.0;
 	double rightDashboardSpeed = 0.0;

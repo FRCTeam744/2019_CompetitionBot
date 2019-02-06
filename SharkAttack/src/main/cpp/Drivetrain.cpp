@@ -5,7 +5,7 @@
 Drivetrain* Drivetrain::s_instance = 0;
 
 //Static Singleton Method
-Drivetrain* Drivetrain::getInstance() {
+Drivetrain* Drivetrain::GetInstance() {
   if (s_instance == 0){
     s_instance = new Drivetrain();
   }

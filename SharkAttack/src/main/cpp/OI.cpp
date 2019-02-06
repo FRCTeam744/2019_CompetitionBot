@@ -9,7 +9,7 @@
 OI* OI::s_instance = 0;
 
 //Static Singleton Method
-OI* OI::getInstance() {
+OI* OI::GetInstance() {
     if (s_instance == 0) {
         s_instance = new OI();
     }
@@ -35,7 +35,7 @@ OI::OI() {
 
 //Public Methods
 void OI::SwitchDriveMode(){
-    if (xbox->GetStickButtonPressed(rightHand)){
+    if (xbox->GetStickButtonPressed(RIGHT_HAND)){
         if (!driveWithXbox){
             driveWithXbox = true;
             preferences->PutBoolean("driveWithXbox", true);
@@ -48,13 +48,13 @@ void OI::SwitchDriveMode(){
 }
 
 void OI::SwitchGears(){
-    if (xbox->GetBumperPressed(frc::XboxController::kLeftHand)){
+    if (xbox->GetBumperPressed(LEFT_HAND)){
         lowGear = true;
         highGear = false;
         frc::SmartDashboard::PutBoolean ("Low Gear", true);
         frc::SmartDashboard::PutBoolean("High Gear", false);
     }
-    if (xbox->GetBumperPressed(frc::XboxController::kRightHand)){
+    if (xbox->GetBumperPressed(RIGHT_HAND)){
         highGear = true;
         lowGear = false;
         frc::SmartDashboard::PutBoolean("High Gear", true);
@@ -65,7 +65,7 @@ void OI::SwitchGears(){
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput(){
     if (driveWithXbox) {
-        return -(xbox->GetY(leftHand));
+        return -(xbox->GetY(LEFT_HAND));
     }
     else {
         return -(leftStick->GetY());
@@ -74,7 +74,7 @@ double OI::GetLeftDriveInput(){
 
 double OI::GetRightDriveInput(){
     if (driveWithXbox) {
-        return -(xbox->GetY(rightHand));
+        return -(xbox->GetY(RIGHT_HAND));
     }
     else {
         return -(rightStick->GetY());

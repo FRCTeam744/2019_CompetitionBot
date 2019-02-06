@@ -14,8 +14,8 @@ void Robot::RobotInit()
   m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
-  drivetrain = Drivetrain::getInstance();
-  oi = OI::getInstance();
+  drivetrain = Drivetrain::GetInstance();
+  oi = OI::GetInstance();
 
   oi->lowGear = true;
   oi->highGear = false;
