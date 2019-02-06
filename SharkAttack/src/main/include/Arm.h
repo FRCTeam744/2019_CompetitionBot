@@ -17,6 +17,8 @@ class Arm {
         void ManualRotateArm(double input);
         void ManualRotateWrist(double input);
         void Intake(bool buttonIsPressed);
+        void AutoRotateArm(double position); //Doesnt do anything yet
+        void AutoRotateWrist(double position); //Doesnt do anything yet
     
     private:
     

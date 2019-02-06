@@ -54,3 +54,12 @@ void Arm::Intake(bool buttonIsPressed){
 
   intake->Set(INTAKE_SPEED);
 }
+
+void AutoRotateArm(double position){
+  
+  
+}
+
+void AutoRotateWrist(double position){
+
+}
