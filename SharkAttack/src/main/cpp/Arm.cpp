@@ -24,6 +24,9 @@ Arm::Arm() {
   wrist = new rev::CANSparkMax(32, BRUSHLESS);
   intake = new rev::CANSparkMax(33, BRUSHLESS);
 
+  //Initialize encoders
+  armEncoder = new Encoder(0, 1, false, Encoder::EncodingType::k2X);
+
   //Set inverted
   arm1->SetInverted(false);
   arm2->SetInverted(true);
