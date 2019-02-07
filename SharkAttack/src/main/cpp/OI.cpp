@@ -58,8 +58,8 @@ frc::ShuffleboardTab& elevatorTab = frc::Shuffleboard::GetTab("Elevator");
     elevatorTab.Add("test", rightBack);
 
 // //making tab
-//     frc::ShuffleboardTab& testTab = frc::Shuffleboard::GetTab("Test1");
-//     testTab.Add("Max Speed", 1);
+frc::ShuffleboardTab& testTab = frc::Shuffleboard::GetTab("Test1");
+testTab.Add("Max Speed", 1);
     
 
 
