@@ -53,13 +53,20 @@ void OI::SwitchDriveMode(){
 
 void OI::PutOnShuffleboardTest(){
     frc::SmartDashboard::GetBoolean("DriverView/CatDog", true);
+    frc::SmartDashboard::GetNumber("Smartdashboard/test1", 25);
+    frc::SmartDashboard::GetNumber("Smartdashboard/test2", 55);
+    frc::SmartDashboard::GetNumber("Smartdashboard/test3", 6);
+    frc::SmartDashboard::GetNumber("Smartdashboard/test4", 72);
+    frc::SmartDashboard::GetBoolean("Smartdashboard/using gyro?", false);
 
-frc::ShuffleboardTab& elevatorTab = frc::Shuffleboard::GetTab("Elevator");
-    elevatorTab.Add("test", rightBack);
 
-// //making tab
-frc::ShuffleboardTab& testTab = frc::Shuffleboard::GetTab("Test1");
-testTab.Add("Max Speed", 1);
+
+// frc::ShuffleboardTab& elevatorTab = frc::Shuffleboard::GetTab("Elevator");
+//    // elevatorTab.Add("test", rightBack);
+
+// // //making tab
+// frc::ShuffleboardTab& testTab = frc::Shuffleboard::GetTab("Test1");
+// testTab.Add("Max Speed", 1);
     
 
 
