@@ -33,7 +33,7 @@ void Robot::RobotInit()
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic(){
-
+oi->PutOnShuffleboardTest();
 
 }
 

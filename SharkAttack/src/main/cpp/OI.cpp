@@ -52,12 +52,12 @@ void OI::SwitchDriveMode(){
 
 
 void OI::PutOnShuffleboardTest(){
-    frc::SmartDashboard::GetBoolean("DriverView/CatDog", true);
-    frc::SmartDashboard::GetNumber("Smartdashboard/test1", 25);
-    frc::SmartDashboard::GetNumber("Smartdashboard/test2", 55);
-    frc::SmartDashboard::GetNumber("Smartdashboard/test3", 6);
-    frc::SmartDashboard::GetNumber("Smartdashboard/test4", 72);
-    frc::SmartDashboard::GetBoolean("Smartdashboard/using gyro?", false);
+    frc::SmartDashboard::PutBoolean("DriverView/CatDog", true);
+    frc::SmartDashboard::PutNumber("Smartdashboard/test1", 25);
+    frc::SmartDashboard::PutNumber("Smartdashboard/test2", 55);
+    frc::SmartDashboard::PutNumber("Smartdashboard/test3", 6);
+    frc::SmartDashboard::PutNumber("Smartdashboard/test4", 72);
+    frc::SmartDashboard::PutBoolean("Smartdashboard/using gyro?", false);
 
 
 
