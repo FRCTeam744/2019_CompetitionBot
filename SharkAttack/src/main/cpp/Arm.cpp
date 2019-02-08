@@ -27,7 +27,7 @@ Arm::Arm()
     wrist = new rev::CANSparkMax(32, BRUSHLESS);
     intake = new rev::CANSparkMax(33, BRUSHLESS);
 
-    //Initialize encoders
+    /* //Initialize encoders
     armEncoder = new Encoder(0, 1, false, Encoder::EncodingType::k2X);
 
     //Set Encoder Parameters
@@ -35,7 +35,7 @@ Arm::Arm()
     armEncoder->SetMinRate(10);
     armEncoder->SetDistancePerPulse(5);
     armEncoder->SetReverseDirection(true);
-    armEncoder->SetSamplesToAverage(7);
+    armEncoder->SetSamplesToAverage(7); */
 
     //Set arm Sparks invertions
     arm1->SetInverted(false);

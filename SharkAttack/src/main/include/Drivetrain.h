@@ -21,6 +21,8 @@ class Drivetrain {
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
+	
+	frc::DoubleSolenoid *gearShifter;
 
   private:
 
@@ -35,8 +37,6 @@ class Drivetrain {
 	TalonSRX *rightFront;
 	TalonSRX *rightMid;
 	TalonSRX *rightBack;
-
-	frc::DoubleSolenoid *gearShifter;
 
 	std::shared_ptr<NetworkTable> limelight;
 	

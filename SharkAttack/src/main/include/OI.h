@@ -13,7 +13,7 @@
 #include <frc/XboxController.h>
 #include <frc/Preferences.h>
 #include <cscore.h>
-#include <CameraServer.h>
+#include <cameraserver/CameraServer.h>
 #include <frc/smartdashboard/Smartdashboard.h>
 
 // #include "Drivetrain.h"
