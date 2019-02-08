@@ -15,7 +15,7 @@
 #include <cscore.h>
 #include <cameraserver/CameraServer.h>
 #include <frc/smartdashboard/Smartdashboard.h>
-
+#include "Drivetrain.h"
 // #include "Drivetrain.h"
 
 class OI {
@@ -26,10 +26,13 @@ class OI {
 
 		void SwitchDriveMode();
 		void SwitchGears();
+		void PrintToSmartDashboard(double encoderValue);
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
 		double GetArmInput();
 		double GetWristInput();
+		bool GetFourbarExtend();
+		bool GetFourbarRetract();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
 		bool lowGear, highGear = 0;
 

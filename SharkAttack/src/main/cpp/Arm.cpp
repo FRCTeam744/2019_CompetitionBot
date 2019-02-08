@@ -27,6 +27,7 @@ Arm::Arm()
     wrist = new rev::CANSparkMax(32, BRUSHLESS);
     intake = new rev::CANSparkMax(33, BRUSHLESS);
 
+
     /* //Initialize encoders
     armEncoder = new Encoder(0, 1, false, Encoder::EncodingType::k2X);
 

@@ -2,6 +2,7 @@
 
 #include "Drivetrain.h"
 
+
 Drivetrain* Drivetrain::s_instance = 0;
 
 //Static Singleton Method
@@ -41,6 +42,10 @@ Drivetrain::Drivetrain() {
   //Set the sign of the encoder (true means switch sign)
   leftBack->SetSensorPhase(true);
   rightBack->SetSensorPhase(true);
+  
+  //configure Talon encoder
+  armEncoderTalon = leftFront;
+  armEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute,0,0);
 
   //Config for the Talon internal PID loop for speedControl
   leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
@@ -198,4 +203,7 @@ double Drivetrain::LimelightGet(std::string key){
   return limelight->GetNumber(key, 0.0);
 }
 
+double Drivetrain::GetArmEncoderValue(){
+  return armEncoderTalon->GetSelectedSensorPosition();
+}
 // Private Methods

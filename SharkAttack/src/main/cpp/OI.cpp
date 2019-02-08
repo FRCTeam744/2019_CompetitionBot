@@ -93,6 +93,18 @@ double OI::GetRightDriveInput(){
     }
 }
 
+void OI::PrintToSmartDashboard(double encoderValue){
+    frc::SmartDashboard::PutNumber("Arm Encoder Value: ", encoderValue);
+}
+
+bool OI::GetFourbarExtend(){
+    return xbox->GetPOV(0);
+}
+
+bool OI::GetFourbarRetract(){
+    return xbox->GetPOV(180);
+}
+
 // void OI::SwitchLED_Mode(Drivetrain drivetrain) {
 
 //     if (drivetrain.LimelightGet("ledMode") == 0){
