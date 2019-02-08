@@ -10,6 +10,9 @@
 #include <math.h>
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+
+#include <OI.h>
 
 
 void Robot::RobotInit()
