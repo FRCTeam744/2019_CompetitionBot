@@ -16,6 +16,7 @@ void Robot::RobotInit()
 
   drivetrain = Drivetrain::GetInstance();
   oi = OI::GetInstance();
+  arm = Arm::GetInstance();
 
   oi->lowGear = true;
   oi->highGear = false;
@@ -80,11 +81,14 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
   //drivetrain->leftBack->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightBack->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
-  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput()); //Should be inverted
+  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightMid->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
   //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
-
+  
+  arm->ManualRotateArm(oi->GetArmInput());
+  arm->ManualRotateWrist(oi->GetWristInput());
+  
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
   if (oi->lowGear == true) {

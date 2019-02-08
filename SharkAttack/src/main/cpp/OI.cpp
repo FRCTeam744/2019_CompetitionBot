@@ -62,6 +62,18 @@ void OI::SwitchGears(){
     }
 }
 
+double OI::GetArmInput() {
+    armPowerOutput = 0.0;
+    armPowerOutput = xbox->GetY(LEFT_HAND) * ARM_POWER_SCALE;
+    return armPowerOutput;
+}
+
+double OI::GetWristInput() {
+    wristPowerOutput = 0.0;
+    wristPowerOutput = xbox->GetY(RIGHT_HAND) * WRIST_POWER_SCALE;
+    return wristPowerOutput;
+}
+
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput(){
     if (driveWithXbox) {

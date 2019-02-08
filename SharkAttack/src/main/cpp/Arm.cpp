@@ -54,14 +54,13 @@ Arm::Arm()
 void Arm::ManualRotateArm(double input)
 {
 
-    arm1->Set(input / 2);
-    arm2->Set(input / 2);
+    arm1->Set(input);
+    arm2->Set(input);
 }
 
 void Arm::ManualRotateWrist(double input)
 {
-
-    wrist->Set(input / 2);
+    wrist->Set(input);
 }
 
 void Arm::Intake(bool buttonIsPressed)

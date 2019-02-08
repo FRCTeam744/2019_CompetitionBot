@@ -17,6 +17,7 @@
 
 #include "Drivetrain.h"
 #include "OI.h"
+#include "Arm.h"
 
 
 class Robot : public frc::TimedRobot
@@ -38,5 +39,6 @@ private:
   
   Drivetrain *drivetrain;
   OI *oi;
+  Arm *arm;
 
 };
