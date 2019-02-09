@@ -7,6 +7,7 @@
 #pragma once
 #include <ctre/Phoenix.h>
 #include <rev/CANSparkMax.h>
+//#include <ctre/Encoder.h>
 
 
 class Arm {

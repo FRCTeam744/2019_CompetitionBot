@@ -15,7 +15,7 @@
 #include <cscore.h>
 #include <cameraserver/CameraServer.h>
 #include <frc/smartdashboard/Smartdashboard.h>
-
+#include "Drivetrain.h"
 // #include "Drivetrain.h"
 
 class OI {
@@ -26,8 +26,13 @@ class OI {
 
 		void SwitchDriveMode();
 		void SwitchGears();
+		void PrintToSmartDashboard(double encoderValue);
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
+		double GetArmInput();
+		double GetWristInput();
+		bool GetFourbarExtend();
+		bool GetFourbarRetract();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
 		bool lowGear, highGear = 0;
 
@@ -52,6 +57,10 @@ class OI {
 		const int resolutionHeight = 120;
 		const int framerate = 10;
 
+		//Arm Constants
+		const double ARM_POWER_SCALE = 0.2;
+		const double WRIST_POWER_SCALE = 0.2;
+
 		//Private Objects in OI.cpp
 		frc::Joystick *rightStick;
     	frc::Joystick *leftStick;
@@ -64,5 +73,7 @@ class OI {
 		//Private Instance Variables
 		bool driveWithXbox = false;
 		bool isInLowGear;
+		double armPowerOutput = 0.0;
+		double wristPowerOutput = 0.0;
 };
 

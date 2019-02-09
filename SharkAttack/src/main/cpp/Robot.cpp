@@ -16,6 +16,10 @@ void Robot::RobotInit()
 
   drivetrain = Drivetrain::GetInstance();
   oi = OI::GetInstance();
+  arm = Arm::GetInstance();
+  fourbar = Fourbar::GetInstance();
+
+  frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
   oi->lowGear = true;
   oi->highGear = false;
@@ -30,7 +34,7 @@ void Robot::RobotInit()
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
-
+    fourbar->UpdateFourbarSpeed(frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1));
 }
 
 /**
@@ -80,11 +84,18 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
   //drivetrain->leftBack->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightBack->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
-  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput()); //Should be inverted
+  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightMid->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
   //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
+  
+  arm->ManualRotateArm(oi->GetArmInput());
+  arm->ManualRotateWrist(oi->GetWristInput());
+  
+  fourbar->ExtendBar(oi->GetFourbarExtend());
+  fourbar->RetractBar(oi->GetFourbarRetract());
 
+  oi->PrintToSmartDashboard(drivetrain->GetArmEncoderValue());
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
   if (oi->lowGear == true) {

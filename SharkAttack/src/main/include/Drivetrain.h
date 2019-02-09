@@ -21,6 +21,9 @@ class Drivetrain {
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
+	double GetArmEncoderValue();
+
+	frc::DoubleSolenoid *gearShifter;
 
   private:
 
@@ -29,6 +32,8 @@ class Drivetrain {
 	Drivetrain();
 
 	//Private Instance Objects
+	//left back and right back encoder used for drivetrain
+	//left front encoder used for arm
 	TalonSRX *leftFront;
 	TalonSRX *leftMid;
 	TalonSRX *leftBack;
@@ -36,7 +41,7 @@ class Drivetrain {
 	TalonSRX *rightMid;
 	TalonSRX *rightBack;
 
-	frc::DoubleSolenoid *gearShifter;
+	TalonSRX *armEncoderTalon;
 
 	std::shared_ptr<NetworkTable> limelight;
 	
