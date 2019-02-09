@@ -9,6 +9,9 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include "Robot.h"
 
+#define SMARTDASHBOARD
+
+
 
 OI* OI::s_instance = 0;
 
@@ -52,20 +55,30 @@ void OI::SwitchDriveMode(){
 
 
 void OI::PutOnShuffleboardTest(){
-    frc::SmartDashboard::PutBoolean("DriverView/CatDog", true);
-    frc::SmartDashboard::PutNumber("Smartdashboard/test1", 25);
-    frc::SmartDashboard::PutNumber("Smartdashboard/test2", 55);
-    frc::SmartDashboard::PutNumber("Smartdashboard/test3", 6);
+#if 0   
+    frc::SmartDashboard::PutBoolean("CatDog", true);
+    frc::SmartDashboard::PutNumber("test1", 25);
+    frc::SmartDashboard::PutNumber("test2", 55);
+    frc::SmartDashboard::PutNumber("test3", 6);
     frc::SmartDashboard::PutNumber("Smartdashboard/test4", 72);
-    frc::SmartDashboard::PutBoolean("Smartdashboard/using gyro?", false);
+    frc::SmartDashboard::PutBoolean("using_gyro?", false);
+#endif
 
-    frc::SmartDashboard::GetBoolean("DriverView/CatDog", true);
+#if 1
+ //   frc::Shuffleboard::
+ //frc::Shuffleboard::GetInstance().;
+ 
+    //frc::Shuffleboard::GetInstance().
+
+    frc::Shuffleboard::GetInstance().PutBoolean("DriverView/CatDog", true);
     frc::SmartDashboard::GetNumber("Smartdashboard/test1", 25);
+    frc::SmartDashboard::PutBoolean("DriverView/bool", true);
+    frc::SmartDashboard::GetBoolean("DriverView/bool2", true);
     frc::SmartDashboard::GetNumber("Smartdashboard/test2", 55);
     frc::SmartDashboard::GetNumber("Smartdashboard/test3", 6);
     frc::SmartDashboard::GetNumber("Smartdashboard/test4", 72);
     frc::SmartDashboard::GetBoolean("Smartdashboard/using gyro?", false);
-
+#endif
 
 // frc::ShuffleboardTab& elevatorTab = frc::Shuffleboard::GetTab("Elevator");
 //    // elevatorTab.Add("test", rightBack);

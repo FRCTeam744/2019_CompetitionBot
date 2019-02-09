@@ -24,7 +24,8 @@ void Robot::RobotInit()
   drivetrain = Drivetrain::getInstance();
   oi = OI::getInstance();
 
-  oi->PutOnShuffleboardTest();
+printf("%s\n","Hi, if you see this, the SD/SB method is working apparently!");
+  //oi->PutOnShuffleboardTest();x
 }
 
 /**

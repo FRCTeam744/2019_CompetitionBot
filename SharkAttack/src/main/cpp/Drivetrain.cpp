@@ -1,4 +1,3 @@
-
 #include "Drivetrain.h"
 
 Drivetrain* Drivetrain::s_instance = 0;
