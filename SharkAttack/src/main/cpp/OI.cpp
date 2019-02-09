@@ -55,7 +55,7 @@ void OI::SwitchDriveMode(){
 
 
 void OI::PutOnShuffleboardTest(){
-#if 0   
+#if 1
     frc::SmartDashboard::PutBoolean("CatDog", true);
     frc::SmartDashboard::PutNumber("test1", 25);
     frc::SmartDashboard::PutNumber("test2", 55);
@@ -70,14 +70,18 @@ void OI::PutOnShuffleboardTest(){
  
     //frc::Shuffleboard::GetInstance().
 
-    frc::Shuffleboard::GetInstance().PutBoolean("DriverView/CatDog", true);
-    frc::SmartDashboard::GetNumber("Smartdashboard/test1", 25);
+    frc::ShuffleboardTab& Drivertab = frc::Shuffleboard::GetTab("DriverView");
+    //private NetworkTableEntry distanceEntry = tab.AddPersistent("Dist. to target", 0).getEntry();
+    Drivertab.Add("Pi3", 3.14).GetEntry();
+   // Drivertab.AddPersistent("pi2",3.14);
+
+    Drivertab.AddPersistent("Smartdashboard/test4", 25);
     frc::SmartDashboard::PutBoolean("DriverView/bool", true);
-    frc::SmartDashboard::GetBoolean("DriverView/bool2", true);
-    frc::SmartDashboard::GetNumber("Smartdashboard/test2", 55);
-    frc::SmartDashboard::GetNumber("Smartdashboard/test3", 6);
-    frc::SmartDashboard::GetNumber("Smartdashboard/test4", 72);
-    frc::SmartDashboard::GetBoolean("Smartdashboard/using gyro?", false);
+    frc::SmartDashboard::PutBoolean("DriverView/bool2", true);
+    frc::SmartDashboard::PutNumber("Smartdashboard/test5", 55);
+    frc::SmartDashboard::PutNumber("Smartdashboard/test6", 6);
+    frc::SmartDashboard::PutNumber("Smartdashboard/test7", 72);
+    frc::SmartDashboard::PutBoolean("Smartdashboard/using gyro2?", false);
 #endif
 
 // frc::ShuffleboardTab& elevatorTab = frc::Shuffleboard::GetTab("Elevator");
