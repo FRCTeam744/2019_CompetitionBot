@@ -7,7 +7,6 @@
 #pragma once
 #include <ctre/Phoenix.h>
 #include <rev/CANSparkMax.h>
-#include <ctre/Encoder.h>
 
 
 class Arm {
@@ -28,7 +27,7 @@ class Arm {
 
         //Private Objects
         rev::CANSparkMax *arm1, *arm2, *wrist, *intake;
-        Encoder *armEncoder;
+        // Encoder *armEncoder;
 
         //Tunables
         const double INTAKE_SPEED = 0.5;

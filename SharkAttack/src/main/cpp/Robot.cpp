@@ -88,10 +88,10 @@ void Robot::TeleopPeriodic() {
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
   if (oi->lowGear == true) {
-    drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
+    // drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
   }
   if (oi->highGear == true) {
-    drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
+    // drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
   }
 
   oi->SwitchGears();

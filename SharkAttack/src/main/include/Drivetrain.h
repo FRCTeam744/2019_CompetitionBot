@@ -5,7 +5,7 @@
 #include "math.h"
 #include <string>
 #include "networktables/NetworkTableInstance.h"
-#include "frc/smartdashboard/Smartdashboard.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 #include "frc/DoubleSolenoid.h"
 
