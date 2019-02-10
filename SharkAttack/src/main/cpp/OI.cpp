@@ -5,6 +5,13 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "OI.h"
+#include "frc/smartdashboard/Smartdashboard.h"
+#include <frc/shuffleboard/Shuffleboard.h>
+#include "Robot.h"
+
+#define SMARTDASHBOARD
+
+
 
 OI* OI::s_instance = 0;
 
@@ -79,6 +86,25 @@ double OI::GetWristInput() {
     wristPowerOutput = 0.0;
     wristPowerOutput = xbox->GetY(RIGHT_HAND) * WRIST_POWER_SCALE;
     return wristPowerOutput;
+}
+void OI::PutOnShuffleboard(){
+
+    if(isInitialized == false){
+        frc::ShuffleboardTab& Drivertab = frc::Shuffleboard::GetTab("DriverView");
+        // Drivertab.Add("Pi4", 3.14).GetEntry();
+        // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
+        isInitialized = true;
+    
+    }
+   
+//    //test variables
+//     frc::SmartDashboard::PutBoolean("DriverView/bool", true);
+//     frc::SmartDashboard::PutBoolean("DriverView/bool2", true);
+//     frc::SmartDashboard::PutNumber("Smartdashboard/test5", 55);
+//     frc::SmartDashboard::PutNumber("Smartdashboard/test6", 6);
+//     frc::SmartDashboard::PutNumber("Smartdashboard/test7", 72);
+//     frc::SmartDashboard::PutBoolean("Smartdashboard/using gyro2?", false);
+
 }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it

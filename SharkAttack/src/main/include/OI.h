@@ -16,6 +16,8 @@
 #include <cameraserver/CameraServer.h>
 #include <frc/smartdashboard/Smartdashboard.h>
 #include "Drivetrain.h"
+#include <frc/shuffleboard/Shuffleboard.h>
+
 // #include "Drivetrain.h"
 
 class OI {
@@ -35,6 +37,7 @@ class OI {
 		bool GetFourbarExtend();
 		bool GetFourbarRetract();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
+		void PutOnShuffleboard();
 
 	private:
 
@@ -65,6 +68,7 @@ class OI {
 		frc::Joystick *rightStick;
     	frc::Joystick *leftStick;
     	frc::XboxController *xbox;
+		bool isInitialized = false;
 
 		frc::Preferences *preferences;
 		

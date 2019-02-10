@@ -7,6 +7,22 @@
 
 #include "Robot.h"
 
+#include <math.h>
+#include <iostream>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+
+#include "WPILib.h"
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
+#include <OI.h>
+
+static void VisionThread(){
+  cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+  USBCam.SetResolution(640,480);
+  USBCam.SetFPS(12);
+}
 
 void Robot::RobotInit()
 {
@@ -20,7 +36,10 @@ void Robot::RobotInit()
   fourbar = Fourbar::GetInstance();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
+  std::thread vision(VisionThread);
+  vision.detach();
 
+  printf("%s\n","Hi, if you see this, the SD/SB method is working apparently!");
 }
 
 /**
@@ -33,6 +52,8 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic() {
     fourbar->UpdateFourbarSpeed(frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1));
+    oi->PutOnShuffleboard();
+
 }
 
 /**
