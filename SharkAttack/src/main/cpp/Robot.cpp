@@ -87,6 +87,8 @@ void Robot::TeleopPeriodic() {
   //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
   
+  drivetrain->Periodic();
+
   arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());
   
