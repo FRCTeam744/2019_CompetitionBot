@@ -5,7 +5,7 @@
 #include "math.h"
 #include <string>
 #include "networktables/NetworkTableInstance.h"
-#include "frc/smartdashboard/Smartdashboard.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <ctre/Phoenix.h>
 #include "frc/DoubleSolenoid.h"
 
@@ -21,6 +21,8 @@ class Drivetrain {
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
+	double GetArmEncoderValue();
+	void CheckSwitchGears(bool isHighGear);
 
   private:
 
@@ -29,12 +31,16 @@ class Drivetrain {
 	Drivetrain();
 
 	//Private Instance Objects
+	//left back and right back encoder used for drivetrain
+	//left front encoder used for arm
 	TalonSRX *leftFront;
 	TalonSRX *leftMid;
 	TalonSRX *leftBack;
 	TalonSRX *rightFront;
 	TalonSRX *rightMid;
 	TalonSRX *rightBack;
+
+	TalonSRX *armEncoderTalon;
 
 	frc::DoubleSolenoid *gearShifter;
 
@@ -71,13 +77,15 @@ class Drivetrain {
 
 	double currentDistanceInches = 0.0;
 
+	const double RADIUS_INCHES = 2.0;
+
 	//CONSTANTS FOR DRIVE
 	const double NU_PER_REV = 4096.0;
 	const double CIRCUMFERENCE_INCHES = RADIUS_INCHES * 2 * M_PI;
 	const double INCHES_PER_REV = CIRCUMFERENCE_INCHES;
 	const double NU_TO_FEET = (1.0 / NU_PER_REV) * INCHES_PER_REV * (1.0 / 12.0);
 	const double FEET_TO_NU = 1.0 / NU_TO_FEET;
-	const double SECONDS_TO_100MS = .10;
+	const double SECONDS_TO_100MS = 10;
 	const double CONVERT_100MS_TO_SECONDS = 0.1;
 
 	const double MAX_TALON_OUTPUT = 1023.0; //instead of 0-100% power it is now 0-1023'%' where 1023 is the new 100%
@@ -88,7 +96,7 @@ class Drivetrain {
 
 	//TUNABLES FOR DRIVE
 	//Robot mechanical specifications & drivetrain variables
-	const double RADIUS_INCHES = 3.0;
+	//const double RADIUS_INCHES = 3.0;
 	const double TEST_PERCENT_OUTPUT = 0.25; //this is the percent output we used to test the feed forward gain
 	const double MEASURED_SPEED_NU = 800.0;  //this is the result of the test above in
 
