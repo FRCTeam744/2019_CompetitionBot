@@ -2,18 +2,21 @@
 
 #include "Drivetrain.h"
 
-Drivetrain* Drivetrain::s_instance = 0;
+Drivetrain *Drivetrain::s_instance = 0;
 
 //Static Singleton Method
-Drivetrain* Drivetrain::getInstance() {
-  if (s_instance == 0){
+Drivetrain *Drivetrain::getInstance()
+{
+  if (s_instance == 0)
+  {
     s_instance = new Drivetrain();
   }
   return s_instance;
 }
 
 //Constructor
-Drivetrain::Drivetrain() {
+Drivetrain::Drivetrain()
+{
   //Establish Talons according to ID's
   leftFront = new TalonSRX(leftFrontID);
   leftMid = new TalonSRX(leftMidID);
@@ -53,12 +56,12 @@ Drivetrain::Drivetrain() {
   rightBack->Config_kI(0, kI_SPEED, talonTimeout);
   leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
   rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
-
 }
 
 //Public Methods
-void Drivetrain::Periodic() {
-// Set limelight and drivetrain variables to SD
+void Drivetrain::Periodic()
+{
+  // Set limelight and drivetrain variables to SD
   targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);
   targetOffsetAngle_Vertical = limelight->GetNumber("ty", 0.0);
   targetArea = limelight->GetNumber("ta", 0.0);
@@ -83,7 +86,8 @@ void Drivetrain::Periodic() {
   frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
 }
 
-void Drivetrain::AutoDrive() {
+void Drivetrain::AutoDrive()
+{
   /*
   if (xbox->GetStartButton())
   {
@@ -169,7 +173,8 @@ void Drivetrain::AutoDrive() {
   */
 }
 
-void Drivetrain::TankDrive (double leftValue, double rightValue) {
+void Drivetrain::TankDrive(double leftValue, double rightValue)
+{
 
   // leftFront->SetInverted(false);
   // leftBack->SetInverted(false);
@@ -180,20 +185,39 @@ void Drivetrain::TankDrive (double leftValue, double rightValue) {
 
   leftBack->Set(ControlMode::PercentOutput, leftValue);
   rightBack->Set(ControlMode::PercentOutput, rightValue);
-  leftMid->Set(ControlMode::Follower, 27.0);
-  rightMid->Set(ControlMode::Follower, 26.0);
-  leftFront->Set(ControlMode::Follower, 27.0);
-  rightFront->Set(ControlMode::Follower, 26.0);
+
+  leftFront->Set(ControlMode::Follower, leftBackID);
+  rightFront->Set(ControlMode::Follower, rightBackID);
+
+  if (leftValue >= 0) && (rightValue <= 0))
+    {
+      leftMid->Set(ControlMode::PercentOutput, 0);
+      rightMid->Set(ControlMode::PercentOutput, 0);
+    }
+
+  else if (leftValue <= 0) && (rightValue >= 0))
+    {
+      leftMid->Set(ControlMode::PercentOutput, 0);
+      rightMid->Set(ControlMode::PercentOutput, 0);
+    }
+
+  else
+  {
+    leftMid->Set(ControlMode::Follower, leftBackID);
+    rightMid->Set(ControlMode::Follower, rightBackID);
+  }
 
 }
 
 // Use these methods in other classes to interact with the limelight
-void Drivetrain::LimelightPut(std::string key, int value) {
+void Drivetrain::LimelightPut(std::string key, int value)
+{
 
   limelight->PutNumber(key, 0.0);
 }
 
-double Drivetrain::LimelightGet(std::string key){
+double Drivetrain::LimelightGet(std::string key)
+{
 
   return limelight->GetNumber(key, 0.0);
 }
