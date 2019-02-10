@@ -54,49 +54,23 @@ void OI::SwitchDriveMode(){
 }
 
 
-void OI::PutOnShuffleboardTest(){
-#if 1
-    frc::SmartDashboard::PutBoolean("CatDog", true);
-    frc::SmartDashboard::PutNumber("test1", 25);
-    frc::SmartDashboard::PutNumber("test2", 55);
-    frc::SmartDashboard::PutNumber("test3", 6);
-    frc::SmartDashboard::PutNumber("Smartdashboard/test4", 72);
-    frc::SmartDashboard::PutBoolean("using_gyro?", false);
-#endif
+void OI::PutOnShuffleboard(){
 
-#if 1
- //   frc::Shuffleboard::
- //frc::Shuffleboard::GetInstance().;
- 
-    //frc::Shuffleboard::GetInstance().
-
+if(isInitialized == false){
     frc::ShuffleboardTab& Drivertab = frc::Shuffleboard::GetTab("DriverView");
-    //private NetworkTableEntry distanceEntry = tab.AddPersistent("Dist. to target", 0).getEntry();
-    Drivertab.Add("Pi3", 3.14).GetEntry();
-   // Drivertab.AddPersistent("pi2",3.14);
-
-    Drivertab.AddPersistent("Smartdashboard/test4", 25);
-    frc::SmartDashboard::PutBoolean("DriverView/bool", true);
-    frc::SmartDashboard::PutBoolean("DriverView/bool2", true);
-    frc::SmartDashboard::PutNumber("Smartdashboard/test5", 55);
-    frc::SmartDashboard::PutNumber("Smartdashboard/test6", 6);
-    frc::SmartDashboard::PutNumber("Smartdashboard/test7", 72);
-    frc::SmartDashboard::PutBoolean("Smartdashboard/using gyro2?", false);
-#endif
-
-// frc::ShuffleboardTab& elevatorTab = frc::Shuffleboard::GetTab("Elevator");
-//    // elevatorTab.Add("test", rightBack);
-
-// // //making tab
-// frc::ShuffleboardTab& testTab = frc::Shuffleboard::GetTab("Test1");
-// testTab.Add("Max Speed", 1);
+    // Drivertab.Add("Pi4", 3.14).GetEntry();
+    // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
+    isInitialized = true;
     
-
-
-//     //encoder list test
-//     // //frc::ShuffleboardLayout& encoders =
-//     // frc::Shuffleboard::SelectTab("SmartDashboard");
-
+}
+   
+//    //test variables
+//     frc::SmartDashboard::PutBoolean("DriverView/bool", true);
+//     frc::SmartDashboard::PutBoolean("DriverView/bool2", true);
+//     frc::SmartDashboard::PutNumber("Smartdashboard/test5", 55);
+//     frc::SmartDashboard::PutNumber("Smartdashboard/test6", 6);
+//     frc::SmartDashboard::PutNumber("Smartdashboard/test7", 72);
+//     frc::SmartDashboard::PutBoolean("Smartdashboard/using gyro2?", false);
 
    }
 

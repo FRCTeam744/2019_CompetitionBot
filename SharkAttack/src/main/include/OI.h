@@ -29,7 +29,7 @@ class OI {
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
-		void PutOnShuffleboardTest();
+		void PutOnShuffleboard();
 
 	private:
 
@@ -56,6 +56,7 @@ class OI {
 		frc::Joystick *rightStick;
     	frc::Joystick *leftStick;
     	frc::XboxController *xbox;
+		bool isInitialized = false;
 
 		frc::Preferences *preferences;
 		
