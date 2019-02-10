@@ -183,6 +183,16 @@ void Drivetrain::TankDrive(double leftValue, double rightValue)
   // rightMid->SetInverted(false);
   // leftMid->SetInverted(true);
 
+  //Use this if there are NO noticeable power drain issues when spinning
+  leftBack->Set(ControlMode::PercentOutput, leftValue);
+  rightBack->Set(ControlMode::PercentOutput, rightValue);
+  leftMid->Set(ControlMode::Follower, leftBackID);
+  rightMid->Set(ControlMode::Follower, rightBackID);
+  leftFront->Set(ControlMode::Follower, leftBackID);
+  rightFront->Set(ControlMode::Follower, rightBackID);
+
+  //Switch to this if noticing power drain issues when spinning
+  /*
   leftBack->Set(ControlMode::PercentOutput, leftValue);
   rightBack->Set(ControlMode::PercentOutput, rightValue);
 
@@ -206,7 +216,7 @@ void Drivetrain::TankDrive(double leftValue, double rightValue)
     leftMid->Set(ControlMode::Follower, leftBackID);
     rightMid->Set(ControlMode::Follower, rightBackID);
   }
-
+*/
 }
 
 // Use these methods in other classes to interact with the limelight
