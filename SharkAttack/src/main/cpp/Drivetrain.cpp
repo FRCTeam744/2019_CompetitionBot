@@ -206,4 +206,13 @@ double Drivetrain::LimelightGet(std::string key){
 double Drivetrain::GetArmEncoderValue(){
   return armEncoderTalon->GetSelectedSensorPosition();
 }
-// Private Methods
+
+void Drivetrain::CheckSwitchGears(bool isHighGear){
+  
+  if(isHighGear){
+    gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
+  }
+  else if (!isHighGear){
+    gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
+  }
+}

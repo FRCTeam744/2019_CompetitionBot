@@ -25,7 +25,8 @@ class OI {
 		static OI* GetInstance();
 
 		void SwitchDriveMode();
-		void SwitchGears();
+		bool SwitchGears();
+		bool GetIsHighGear();
 		void PrintToSmartDashboard(double encoderValue);
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
@@ -34,7 +35,6 @@ class OI {
 		bool GetFourbarExtend();
 		bool GetFourbarRetract();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
-		bool lowGear, highGear = 0;
 
 	private:
 
@@ -72,7 +72,7 @@ class OI {
 
 		//Private Instance Variables
 		bool driveWithXbox = false;
-		bool isInLowGear;
+		bool isHighGear;
 		double armPowerOutput = 0.0;
 		double wristPowerOutput = 0.0;
 };

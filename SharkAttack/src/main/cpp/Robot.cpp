@@ -21,8 +21,6 @@ void Robot::RobotInit()
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
-  oi->lowGear = true;
-  oi->highGear = false;
 }
 
 /**
@@ -98,14 +96,9 @@ void Robot::TeleopPeriodic() {
   oi->PrintToSmartDashboard(drivetrain->GetArmEncoderValue());
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
-  if (oi->lowGear == true) {
-    // drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
+  if (oi->SwitchGears()){
+    drivetrain->CheckSwitchGears(oi->GetIsHighGear());
   }
-  if (oi->highGear == true) {
-    // drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
-  }
-
-  oi->SwitchGears();
 }
 
 void Robot::TestPeriodic() {

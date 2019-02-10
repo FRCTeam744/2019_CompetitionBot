@@ -22,8 +22,7 @@ class Drivetrain {
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
 	double GetArmEncoderValue();
-
-	frc::DoubleSolenoid *gearShifter;
+	void CheckSwitchGears(bool isHighGear);
 
   private:
 
@@ -42,6 +41,8 @@ class Drivetrain {
 	TalonSRX *rightBack;
 
 	TalonSRX *armEncoderTalon;
+
+	frc::DoubleSolenoid *gearShifter;
 
 	std::shared_ptr<NetworkTable> limelight;
 	
