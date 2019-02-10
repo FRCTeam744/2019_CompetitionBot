@@ -29,6 +29,8 @@ class OI {
 		void SwitchDriveMode();
 		bool SwitchGears();
 		bool GetIsHighGear();
+		bool SwitchGripper();
+		bool GetIsGripperClosed();
 		void PrintToSmartDashboard(double encoderValue);
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
@@ -77,6 +79,7 @@ class OI {
 		//Private Instance Variables
 		bool driveWithXbox = false;
 		bool isHighGear;
+		bool isGripperClosed;
 		double armPowerOutput = 0.0;
 		double wristPowerOutput = 0.0;
 };

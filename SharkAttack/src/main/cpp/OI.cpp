@@ -35,6 +35,7 @@ OI::OI() {
     xbox = new frc::XboxController(2);
 
      isHighGear = true;
+     isGripperClosed = true;
 
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
@@ -74,6 +75,24 @@ bool OI::SwitchGears(){
 
 bool OI::GetIsHighGear() {
     return isHighGear;
+}
+
+bool OI::SwitchGripper(){
+    if (xbox->GetBumper(RIGHT_HAND)){
+        isGripperClosed = false;
+        frc::SmartDashboard::PutBoolean("isGripperClosed", false);
+        return true;
+    }
+    if (xbox->GetBumper(LEFT_HAND)){
+        isGripperClosed = true;
+        frc::SmartDashboard::PutBoolean("isGripperClosed", true);
+        return true;
+    }
+    return false;
+}
+
+bool OI::GetIsGripperClosed() {
+    return isGripperClosed;
 }
 
 double OI::GetArmInput() {

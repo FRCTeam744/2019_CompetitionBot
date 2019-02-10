@@ -122,9 +122,22 @@ void Robot::TeleopPeriodic() {
   if (oi->SwitchGears()){
     drivetrain->CheckSwitchGears(oi->GetIsHighGear());
   }
+
+  if (oi->SwitchGripper()){
+    arm->CheckHatchGripper(oi->GetIsGripperClosed());
+  }
 }
 
 void Robot::TestPeriodic() {
+  
+}
+
+void Robot::DisabledInit() {
+
+}
+
+void Robot::DisabledPeriodic() {
+
   
 }
 

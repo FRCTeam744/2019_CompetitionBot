@@ -223,9 +223,9 @@ double Drivetrain::GetArmEncoderValue(){
 void Drivetrain::CheckSwitchGears(bool isHighGear){
   
   if(isHighGear){
-    gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
+    gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
   }
   else if (!isHighGear){
-    gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
+    gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
   }
 }

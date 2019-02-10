@@ -7,6 +7,7 @@
 #pragma once
 #include <ctre/Phoenix.h>
 #include <rev/CANSparkMax.h>
+#include <frc/DoubleSolenoid.h>
 //#include <ctre/Encoder.h>
 
 
@@ -20,6 +21,8 @@ class Arm {
         void Intake(bool buttonIsPressed);
         void AutoRotateArm(double position); //Doesn't do anything yet
         void AutoRotateWrist(double position); //Doesn't do anything yet
+
+        void CheckHatchGripper(bool isClosed);
     
     private:
     
@@ -29,6 +32,8 @@ class Arm {
         //Private Objects
         rev::CANSparkMax *arm1, *arm2, *wrist, *intake;
         // Encoder *armEncoder;
+
+        frc::DoubleSolenoid *hatchGripper;
 
         //Tunables
         const double INTAKE_SPEED = 0.5;

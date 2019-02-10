@@ -27,6 +27,8 @@ Arm::Arm()
     wrist = new rev::CANSparkMax(32, BRUSHLESS);
     intake = new rev::CANSparkMax(33, BRUSHLESS);
 
+    hatchGripper = new frc::DoubleSolenoid(2,3);
+
     //Initialize encoders
     // armEncoder = new Encoder(0, 1, false, Encoder::EncodingType::k2X);
 
@@ -75,4 +77,13 @@ void AutoRotateArm(double position)
 
 void AutoRotateWrist(double position)
 {
+}
+
+void Arm::CheckHatchGripper(bool isClosed){
+if(isClosed){
+    hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
+  }
+  else if (!isClosed){
+    hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
+  }
 }
