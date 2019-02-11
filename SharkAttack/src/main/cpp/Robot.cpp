@@ -128,16 +128,16 @@ void Robot::TeleopPeriodic() {
   }
 }
 
-void Robot::TestPeriodic() {
-  
-}
-
 void Robot::DisabledInit() {
 
 }
 
 void Robot::DisabledPeriodic() {
 
+  
+}
+
+void Robot::TestPeriodic() {
   
 }
 
