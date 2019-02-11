@@ -7,16 +7,6 @@
 
 #include "Robot.h"
 
-#include <math.h>
-#include <iostream>
-#include <frc/smartdashboard/SmartDashboard.h>
-#include <frc/shuffleboard/Shuffleboard.h>
-
-#include "WPILib.h"
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-
-#include <OI.h>
 
 static void VisionThread(){
   cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();

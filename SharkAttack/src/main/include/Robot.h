@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "frc/WPILib.h"
+
 #include <string>
 #include <math.h>
 #include <iostream>
@@ -14,6 +16,9 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include "Drivetrain.h"
 #include "OI.h"
