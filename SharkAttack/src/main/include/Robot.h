@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "frc/WPILib.h"
+
 #include <string>
 #include <math.h>
 #include <iostream>
@@ -14,9 +16,14 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include "Drivetrain.h"
 #include "OI.h"
+#include "Arm.h"
+#include "Fourbar.h"
 
 
 class Robot : public frc::TimedRobot
@@ -28,7 +35,10 @@ public:
   void AutonomousPeriodic() override;
   void TeleopInit() override;
   void TeleopPeriodic() override;
+  void DisabledInit() override;
+  void DisabledPeriodic() override;
   void TestPeriodic() override;
+
 
 private:
   frc::SendableChooser<std::string> m_chooser;
@@ -38,5 +48,7 @@ private:
   
   Drivetrain *drivetrain;
   OI *oi;
+  Arm *arm;
+  Fourbar *fourbar;
 
 };

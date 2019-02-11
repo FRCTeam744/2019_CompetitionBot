@@ -8,6 +8,12 @@
 #include "Robot.h"
 
 
+static void VisionThread(){
+  cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+  USBCam.SetResolution(640,480);
+  USBCam.SetFPS(12);
+}
+
 void Robot::RobotInit()
 {
   m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
@@ -16,9 +22,14 @@ void Robot::RobotInit()
 
   drivetrain = Drivetrain::GetInstance();
   oi = OI::GetInstance();
+  arm = Arm::GetInstance();
+  fourbar = Fourbar::GetInstance();
 
-  oi->lowGear = true;
-  oi->highGear = false;
+  frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
+  std::thread vision(VisionThread);
+  vision.detach();
+
+  printf("%s\n","Hi, if you see this, the SD/SB method is working apparently!");
 }
 
 /**
@@ -30,6 +41,8 @@ void Robot::RobotInit()
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
+    fourbar->UpdateFourbarSpeed(frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1));
+    oi->PutOnShuffleboard();
 
 }
 
@@ -80,21 +93,38 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
   //drivetrain->leftBack->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightBack->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
-  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput()); //Should be inverted
+  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightMid->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
   //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
+  
+  drivetrain->Periodic();
 
+  arm->ManualRotateArm(oi->GetArmInput());
+  arm->ManualRotateWrist(oi->GetWristInput());
+  
+  fourbar->ExtendBar(oi->GetFourbarExtend());
+  fourbar->RetractBar(oi->GetFourbarRetract());
+
+  oi->PrintToSmartDashboard(drivetrain->GetArmEncoderValue());
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
-  if (oi->lowGear == true) {
-    drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
-  }
-  if (oi->highGear == true) {
-    drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
+  if (oi->SwitchGears()){
+    drivetrain->CheckSwitchGears(oi->GetIsHighGear());
   }
 
-  oi->SwitchGears();
+  if (oi->SwitchGripper()){
+    arm->CheckHatchGripper(oi->GetIsGripperClosed());
+  }
+}
+
+void Robot::DisabledInit() {
+
+}
+
+void Robot::DisabledPeriodic() {
+
+  
 }
 
 void Robot::TestPeriodic() {

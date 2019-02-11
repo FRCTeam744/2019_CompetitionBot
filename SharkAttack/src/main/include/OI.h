@@ -13,8 +13,10 @@
 #include <frc/XboxController.h>
 #include <frc/Preferences.h>
 #include <cscore.h>
-#include <CameraServer.h>
+#include <cameraserver/CameraServer.h>
 #include <frc/smartdashboard/Smartdashboard.h>
+#include "Drivetrain.h"
+#include <frc/shuffleboard/Shuffleboard.h>
 
 // #include "Drivetrain.h"
 
@@ -25,11 +27,19 @@ class OI {
 		static OI* GetInstance();
 
 		void SwitchDriveMode();
-		void SwitchGears();
+		bool SwitchGears();
+		bool GetIsHighGear();
+		bool SwitchGripper();
+		bool GetIsGripperClosed();
+		void PrintToSmartDashboard(double encoderValue);
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
+		double GetArmInput();
+		double GetWristInput();
+		bool GetFourbarExtend();
+		bool GetFourbarRetract();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
-		bool lowGear, highGear = 0;
+		void PutOnShuffleboard();
 
 	private:
 
@@ -52,10 +62,15 @@ class OI {
 		const int resolutionHeight = 120;
 		const int framerate = 10;
 
+		//Arm Constants
+		const double ARM_POWER_SCALE = 0.2;
+		const double WRIST_POWER_SCALE = 0.2;
+
 		//Private Objects in OI.cpp
 		frc::Joystick *rightStick;
     	frc::Joystick *leftStick;
     	frc::XboxController *xbox;
+		bool isInitialized = false;
 
 		frc::Preferences *preferences;
 		
@@ -63,6 +78,9 @@ class OI {
 
 		//Private Instance Variables
 		bool driveWithXbox = false;
-		bool isInLowGear;
+		bool isHighGear;
+		bool isGripperClosed;
+		double armPowerOutput = 0.0;
+		double wristPowerOutput = 0.0;
 };
 
