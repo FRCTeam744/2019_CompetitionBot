@@ -41,9 +41,10 @@ void Robot::RobotInit()
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
-    fourbar->UpdateFourbarSpeed(frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1));
-    oi->PutOnShuffleboard();
+  fourbar->UpdateFourbarSpeed(frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1));
+  oi->PutOnShuffleboard();
 
+  drivetrain->LimelightSet(oi->SetLimelight());
 }
 
 /**
@@ -98,7 +99,7 @@ void Robot::TeleopPeriodic() {
   //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
   
-  drivetrain->Periodic();
+  drivetrain->PutData();
 
   arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());

@@ -6,7 +6,6 @@
 #include <string>
 #include "networktables/NetworkTableInstance.h"
 #include "frc/smartdashboard/Smartdashboard.h"
-//#include "frc/shuffleboard"
 #include <ctre/Phoenix.h>
 #include "frc/DoubleSolenoid.h"
 
@@ -17,10 +16,10 @@ class Drivetrain {
 
 	static Drivetrain* GetInstance();
 
-	void Periodic();
+	void PutData();
 	void AutoDrive();
 	void TankDrive(double leftValue, double rightValue);
-	void LimelightPut(std::string key, int value);
+	void LimelightSet(std::tuple<bool, std::string, double>);
 	double LimelightGet(std::string key);
 	double GetArmEncoderValue();
 	void CheckSwitchGears(bool isHighGear);

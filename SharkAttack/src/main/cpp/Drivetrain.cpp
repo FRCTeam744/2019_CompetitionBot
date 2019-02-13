@@ -23,12 +23,10 @@ Drivetrain::Drivetrain() {
   rightMid = new TalonSRX(rightMidID);
   rightBack = new TalonSRX(rightBackID);
 
-  //Establish Double Solenoid
-  //frc::DoubleSolenoid *gearShifter;
+  //Initialize Double Solenoid
   gearShifter = new frc::DoubleSolenoid(0, 1);
-  //frc::DoubleSolenoid gearShifter {lowGear, highGear};
 
-  //Establish Limelight
+  //Initialize Limelight
   limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 
   //Set Talons to be in same direction
@@ -62,8 +60,8 @@ Drivetrain::Drivetrain() {
 }
 
 //Public Methods
-void Drivetrain::Periodic() {
-// Set limelight and drivetrain variables to SD
+void Drivetrain::PutData() {
+//Send limelight and drivetrain variables to SD
   targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);
   targetOffsetAngle_Vertical = limelight->GetNumber("ty", 0.0);
   targetArea = limelight->GetNumber("ta", 0.0);
@@ -74,19 +72,6 @@ void Drivetrain::Periodic() {
 
   rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
   leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
-
-  //rightDashboardSpeed = NU_TO_FEET;
-  //leftDashboardSpeed = SECONDS_TO_100MS;
-
-  frc::SmartDashboard::PutNumber("NU_PER_REV", NU_PER_REV);
-	frc::SmartDashboard::PutNumber("CIRCUMFERENCE_INCHES", CIRCUMFERENCE_INCHES);
-
-  frc::SmartDashboard::PutNumber("RADIUS_INCHES", RADIUS_INCHES);
-	frc::SmartDashboard::PutNumber("INCHES_PER_REV", INCHES_PER_REV);
-	frc::SmartDashboard::PutNumber("NU_TO_FEET", NU_TO_FEET);
-	frc::SmartDashboard::PutNumber("FEET_TO_NU", FEET_TO_NU);
-	frc::SmartDashboard::PutNumber("SECONDS_TO_100MS", SECONDS_TO_100MS);
-	frc::SmartDashboard::PutNumber("CONVERT_100MS_TO_SECONDS", CONVERT_100MS_TO_SECONDS);
 
   frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
   frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
@@ -206,13 +191,13 @@ void Drivetrain::TankDrive (double leftValue, double rightValue) {
 }
 
 // Use these methods in other classes to interact with the limelight
-void Drivetrain::LimelightPut(std::string key, int value) {
-
-  limelight->PutNumber(key, 0.0);
+void Drivetrain::LimelightSet(std::tuple <bool, std::string, double> data) {
+  if (std::get<0>(data)){
+    limelight->PutNumber(std::get<1>(data), std::get<2>(data));
+  }
 }
 
 double Drivetrain::LimelightGet(std::string key){
-
   return limelight->GetNumber(key, 0.0);
 }
 

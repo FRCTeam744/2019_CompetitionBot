@@ -5,12 +5,6 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "OI.h"
-#include "frc/smartdashboard/Smartdashboard.h"
-#include <frc/shuffleboard/Shuffleboard.h>
-#include "Robot.h"
-
-#define SMARTDASHBOARD
-
 
 
 OI* OI::s_instance = 0;
@@ -34,8 +28,8 @@ OI::OI() {
     rightStick = new frc::Joystick(1);
     xbox = new frc::XboxController(2);
 
-     isHighGear = true;
-     isGripperClosed = true;
+    isHighGear = true;
+    isGripperClosed = true;
 
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
@@ -57,8 +51,6 @@ void OI::SwitchDriveMode(){
     }
 }
 
-
-
 bool OI::SwitchGears(){
     if (leftStick->GetRawButtonPressed(1)){
         isHighGear = false;
@@ -78,12 +70,12 @@ bool OI::GetIsHighGear() {
 }
 
 bool OI::SwitchGripper(){
-    if (xbox->GetBumper(RIGHT_HAND)){
+    if (xbox->GetBumperPressed(RIGHT_HAND)){
         isGripperClosed = false;
         frc::SmartDashboard::PutBoolean("isGripperClosed", false);
         return true;
     }
-    if (xbox->GetBumper(LEFT_HAND)){
+    if (xbox->GetBumperPressed(LEFT_HAND)){
         isGripperClosed = true;
         frc::SmartDashboard::PutBoolean("isGripperClosed", true);
         return true;
@@ -157,13 +149,19 @@ bool OI::GetFourbarRetract(){
     return xbox->GetPOV(180);
 }
 
-// void OI::SwitchLED_Mode(Drivetrain drivetrain) {
-
-//     if (drivetrain.LimelightGet("ledMode") == 0){
-
-//         drivetrain.LimelightPut("ledMode", 1);
-//     }
-//     else {
-//         drivetrain.LimelightPut("ledMode", 0);
-//     }
-// }
+std::tuple<bool, std::string, double> OI::SetLimelight() {
+    if (leftStick->GetRawButtonPressed(5)){
+        return std::make_tuple(true, "ledMode", 0.0);
+    }
+    else if (leftStick->GetRawButtonPressed(10)){
+        return std::make_tuple(true, "ledMode", 1.0);
+    }
+    else if (leftStick->GetRawButtonPressed(6)){
+        return std::make_tuple(true, "camMode", 0.0);
+    }
+    else if (leftStick->GetRawButtonPressed(9)){
+        return std::make_tuple(true, "camMode", 1.0);
+    }
+    
+    return std::make_tuple(false, "", 0.0);
+}

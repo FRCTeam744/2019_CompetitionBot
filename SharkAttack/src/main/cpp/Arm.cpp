@@ -71,19 +71,17 @@ void Arm::Intake(bool buttonIsPressed)
     intake->Set(INTAKE_SPEED);
 }
 
-void AutoRotateArm(double position)
-{
+void AutoRotateArm(double position) {
 }
 
-void AutoRotateWrist(double position)
-{
+void AutoRotateWrist(double position) {
 }
 
 void Arm::CheckHatchGripper(bool isClosed){
-if(isClosed){
-    hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
-  }
-  else if (!isClosed){
-    hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
-  }
+    if(isClosed){
+        hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
+    }
+    else if (!isClosed){
+        hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
+    }
 }
