@@ -55,13 +55,18 @@ void OI::SwitchDriveMode(){
 
 
 void OI::PutOnShuffleboard(){
-
 if(isInitialized == false){
-    frc::ShuffleboardTab& Drivertab = frc::Shuffleboard::GetTab("DriverView");
-    // Drivertab.Add("Pi4", 3.14).GetEntry();
-    // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
-    isInitialized = true;
+    frc::ShuffleboardTab& DriverTab = frc::Shuffleboard::GetTab("Competition View");
+    // DriverTab.Add("Pi4", 3.14).GetEntry();
+    // DriverTab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
     
+    frc::ShuffleboardTab& PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
+
+    frc::ShuffleboardTab& ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+
+    frc::ShuffleboardTab& Visiontab = frc::Shuffleboard::GetTab("Vision Testing");
+
+    isInitialized = true;
 }
    
 //    //test variables
