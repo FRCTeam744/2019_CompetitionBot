@@ -21,10 +21,16 @@ void Robot::RobotInit()
   m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
-  drivetrain = Drivetrain::getInstance();
-  oi = OI::getInstance();
+  drivetrain = Drivetrain::GetInstance();
+  oi = OI::GetInstance();
+  arm = Arm::GetInstance();
+  fourbar = Fourbar::GetInstance();
 
-  oi->PutOnShuffleboardTest();
+    oi->PutOnShuffleboard();
+
+
+  frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
+
 }
 
 /**
@@ -35,9 +41,14 @@ void Robot::RobotInit()
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
+<<<<<<< HEAD
 void Robot::RobotPeriodic(){
 oi->PutOnShuffleboardTest();
 
+=======
+void Robot::RobotPeriodic() {
+    fourbar->UpdateFourbarSpeed(frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1));
+>>>>>>> origin/Arm-Overlord
 }
 
 /**
@@ -85,8 +96,27 @@ void Robot::TeleopInit() {
 }
 
 void Robot::TeleopPeriodic() {
+  //drivetrain->leftBack->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
+  //drivetrain->rightBack->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
+  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
+  //drivetrain->rightMid->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
+  //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
+  //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
+  
+  drivetrain->Periodic();
 
+  arm->ManualRotateArm(oi->GetArmInput());
+  arm->ManualRotateWrist(oi->GetWristInput());
+  
+  fourbar->ExtendBar(oi->GetFourbarExtend());
+  fourbar->RetractBar(oi->GetFourbarRetract());
+
+  oi->PrintToSmartDashboard(drivetrain->GetArmEncoderValue());
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+
+  if (oi->SwitchGears()){
+    drivetrain->CheckSwitchGears(oi->GetIsHighGear());
+  }
 }
 
 void Robot::TestPeriodic() {

@@ -1,17 +1,19 @@
 
+
 #include "Drivetrain.h"
+
 
 Drivetrain* Drivetrain::s_instance = 0;
 
-//Public Methods
-
-Drivetrain* Drivetrain::getInstance() {
+//Static Singleton Method
+Drivetrain* Drivetrain::GetInstance() {
   if (s_instance == 0){
     s_instance = new Drivetrain();
   }
   return s_instance;
 }
 
+//Constructor
 Drivetrain::Drivetrain() {
   //Establish Talons according to ID's
   leftFront = new TalonSRX(leftFrontID);
@@ -21,16 +23,29 @@ Drivetrain::Drivetrain() {
   rightMid = new TalonSRX(rightMidID);
   rightBack = new TalonSRX(rightBackID);
 
+  //Establish Double Solenoid
+  //frc::DoubleSolenoid *gearShifter;
+  gearShifter = new frc::DoubleSolenoid(0, 1);
+  //frc::DoubleSolenoid gearShifter {lowGear, highGear};
+
+  //Establish Limelight
+  limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+
   //Set Talons to be in same direction
   leftFront->SetInverted(false);
   leftBack->SetInverted(false);
   rightFront->SetInverted(true);
   rightBack->SetInverted(true);
+  rightMid->SetInverted(false);
+  leftMid->SetInverted(true);
 
-  // //Set the sign of the encoder (true means switch sign)
+  //Set the sign of the encoder (true means switch sign)
   leftBack->SetSensorPhase(true);
   rightBack->SetSensorPhase(true);
-
+  
+  //configure Talon encoder
+  armEncoderTalon = leftFront;
+  armEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute,0,0);
 
   //Config for the Talon internal PID loop for speedControl
   leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
@@ -44,10 +59,9 @@ Drivetrain::Drivetrain() {
   leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
   rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
 
-  limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
-
 }
 
+//Public Methods
 void Drivetrain::Periodic() {
 // Set limelight and drivetrain variables to SD
   targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);
@@ -58,8 +72,21 @@ void Drivetrain::Periodic() {
   frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
   frc::SmartDashboard::PutNumber("Skew", targetSkew);
 
-  rightDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
-  leftDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
+  rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
+  leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
+
+  //rightDashboardSpeed = NU_TO_FEET;
+  //leftDashboardSpeed = SECONDS_TO_100MS;
+
+  frc::SmartDashboard::PutNumber("NU_PER_REV", NU_PER_REV);
+	frc::SmartDashboard::PutNumber("CIRCUMFERENCE_INCHES", CIRCUMFERENCE_INCHES);
+
+  frc::SmartDashboard::PutNumber("RADIUS_INCHES", RADIUS_INCHES);
+	frc::SmartDashboard::PutNumber("INCHES_PER_REV", INCHES_PER_REV);
+	frc::SmartDashboard::PutNumber("NU_TO_FEET", NU_TO_FEET);
+	frc::SmartDashboard::PutNumber("FEET_TO_NU", FEET_TO_NU);
+	frc::SmartDashboard::PutNumber("SECONDS_TO_100MS", SECONDS_TO_100MS);
+	frc::SmartDashboard::PutNumber("CONVERT_100MS_TO_SECONDS", CONVERT_100MS_TO_SECONDS);
 
   frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
   frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
@@ -162,12 +189,20 @@ void Drivetrain::AutoDrive() {
 
 void Drivetrain::TankDrive (double leftValue, double rightValue) {
 
+  // leftFront->SetInverted(false);
+  // leftBack->SetInverted(false);
+  // rightFront->SetInverted(true);
+  // rightBack->SetInverted(true);
+  // rightMid->SetInverted(false);
+  // leftMid->SetInverted(true);
+
   leftBack->Set(ControlMode::PercentOutput, leftValue);
   rightBack->Set(ControlMode::PercentOutput, rightValue);
   leftMid->Set(ControlMode::Follower, 27.0);
   rightMid->Set(ControlMode::Follower, 26.0);
   leftFront->Set(ControlMode::Follower, 27.0);
   rightFront->Set(ControlMode::Follower, 26.0);
+
 }
 
 // Use these methods in other classes to interact with the limelight
@@ -181,4 +216,16 @@ double Drivetrain::LimelightGet(std::string key){
   return limelight->GetNumber(key, 0.0);
 }
 
-// Private Methods
+double Drivetrain::GetArmEncoderValue(){
+  return armEncoderTalon->GetSelectedSensorPosition();
+}
+
+void Drivetrain::CheckSwitchGears(bool isHighGear){
+  
+  if(isHighGear){
+    gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
+  }
+  else if (!isHighGear){
+    gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
+  }
+}

@@ -13,21 +13,28 @@
 #include <frc/XboxController.h>
 #include <frc/Preferences.h>
 #include <cscore.h>
-#include <CameraServer.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
-
+#include <cameraserver/CameraServer.h>
+#include "Drivetrain.h"
 // #include "Drivetrain.h"
 
 class OI {
 	//TODO: Go through each button and assign variable in cpp file in functions
 	public:
 
-		static OI* getInstance();
+		static OI* GetInstance();
 
 		void SwitchDriveMode();
+		bool SwitchGears();
+		bool GetIsHighGear();
+		void PrintToSmartDashboard(double encoderValue);
 		double GetLeftDriveInput();
 		double GetRightDriveInput();
+		double GetArmInput();
+		double GetWristInput();
+		bool GetFourbarExtend();
+		bool GetFourbarRetract();
 		// void SwitchLED_Mode(Drivetrain drivetrain);
 		void PutOnShuffleboardTest();
 
@@ -44,13 +51,17 @@ class OI {
 		std::string m_autoSelected;
 
 		//Use leftHand and rightHand constants to designate left and right sides of XboxController in OI.cpp
-		const frc::XboxController::JoystickHand leftHand = frc::XboxController::kLeftHand;
-		const frc::XboxController::JoystickHand rightHand = frc::XboxController::kRightHand;
+		const frc::XboxController::JoystickHand LEFT_HAND = frc::XboxController::kLeftHand;
+		const frc::XboxController::JoystickHand RIGHT_HAND = frc::XboxController::kRightHand;
 
 		//Camera Constants (change these to change camera quality in SmartDashboard)
 		const int resolutionWidth = 160;
 		const int resolutionHeight = 120;
 		const int framerate = 10;
+
+		//Arm Constants
+		const double ARM_POWER_SCALE = 0.2;
+		const double WRIST_POWER_SCALE = 0.2;
 
 		//Private Objects in OI.cpp
 		frc::Joystick *rightStick;
@@ -63,5 +74,8 @@ class OI {
 
 		//Private Instance Variables
 		bool driveWithXbox = false;
+		bool isHighGear;
+		double armPowerOutput = 0.0;
+		double wristPowerOutput = 0.0;
 };
 

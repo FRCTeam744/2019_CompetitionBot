@@ -7,16 +7,18 @@
 
 #pragma once
 
-// #include "Drivetrain.h"
-// #include "OI.h"
-
 #include <string>
+#include <math.h>
+#include <iostream>
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 #include "Drivetrain.h"
 #include "OI.h"
+#include "Arm.h"
+#include "Fourbar.h"
 
 
 class Robot : public frc::TimedRobot
@@ -35,8 +37,10 @@ private:
   const std::string kAutoDrive1 = "Drive Off Level 1";
   const std::string kAutoDrive2 = "Drive Off Level 2";
   std::string m_autoSelected;
-
+  
   Drivetrain *drivetrain;
   OI *oi;
+  Arm *arm;
+  Fourbar *fourbar;
 
 };
