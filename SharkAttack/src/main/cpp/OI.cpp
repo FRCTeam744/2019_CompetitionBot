@@ -61,7 +61,7 @@ if(isInitialized == false){
     // DriverTab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
     
     frc::ShuffleboardTab& PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
-        PreCompTab.Add("Arm", )
+        //PreCompTab.Add("Arm", )
 
     frc::ShuffleboardTab& ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
 
