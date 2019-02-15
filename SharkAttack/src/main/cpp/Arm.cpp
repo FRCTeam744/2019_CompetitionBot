@@ -71,14 +71,14 @@ void Arm::Intake(bool buttonIsPressed)
     intake->Set(INTAKE_SPEED);
 }
 
-void AutoRotateArm(double targetPosition, double armCurrentPosition)
+void Arm::AutoRotateArm(double targetPosition, double armCurrentPosition)
 {
     double delta = (targetPosition - armCurrentPosition) / ARM_ADJUSTER;
     arm1->Set(delta);
     arm2->Set(delta);
 }
 
-void AutoRotateWrist(double targetPosition, double wristCurrentPosition, double armCurrentPosition)
+void Arm::AutoRotateWrist(double targetPosition, double wristCurrentPosition, double armCurrentPosition)
 {
     double delta;
     if ((armCurrentPosition > DANGER_ZONE_LIMIT) && (armCurrentPosition < -DANGER_ZONE_LIMIT))

@@ -216,7 +216,7 @@ void Drivetrain::LimelightPut(std::string key, int value)
 
   limelight->PutNumber(key, 0.0);
 }
-
+/*
 double Drivetrain::LimelightGet(std::string key)
 {
 
@@ -225,14 +225,7 @@ double Drivetrain::LimelightGet(std::string key)
   leftFront->Set(ControlMode::Follower, 27.0);
   rightFront->Set(ControlMode::Follower, 26.0);
 }
-
-// Use these methods in other classes to interact with the limelight
-void Drivetrain::LimelightPut(std::string key, int value)
-{
-
-  limelight->PutNumber(key, 0.0);
-}
-
+*/
 double Drivetrain::LimelightGet(std::string key)
 {
 
