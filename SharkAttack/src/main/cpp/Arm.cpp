@@ -27,7 +27,7 @@ Arm::Arm()
     wrist = new rev::CANSparkMax(32, BRUSHLESS);
     intake = new rev::CANSparkMax(33, BRUSHLESS);
 
-    hatchGripper = new frc::DoubleSolenoid(2,3);
+    hatchGripper = new frc::DoubleSolenoid(2, 3);
 
     //Initialize encoders
     // armEncoder = new Encoder(0, 1, false, Encoder::EncodingType::k2X);
@@ -71,19 +71,37 @@ void Arm::Intake(bool buttonIsPressed)
     intake->Set(INTAKE_SPEED);
 }
 
-void AutoRotateArm(double position)
+void AutoRotateArm(double targetPosition, double armCurrentPosition)
 {
+    double delta = (targetPosition - armCurrentPosition) / ARM_ADJUSTER;
+    arm1->Set(delta);
+    arm2->Set(delta);
 }
 
-void AutoRotateWrist(double position)
+void AutoRotateWrist(double targetPosition, double wristCurrentPosition, double armCurrentPosition)
 {
+    double delta;
+    if ((armCurrentPosition > DANGER_ZONE_LIMIT) && (armCurrentPosition < -DANGER_ZONE_LIMIT))
+    {
+        //normal operations
+    }
+    else
+    {
+        //Inside DANGER Z O N E
+        targetPosition = 0;
+    }
+    delta = (targetPosition - wristCurrentPosition) / WRIST_ADJUSTER;
+    wrist->Set(delta);
 }
 
-void Arm::CheckHatchGripper(bool isClosed){
-if(isClosed){
-    hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
-  }
-  else if (!isClosed){
-    hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
-  }
+void Arm::CheckHatchGripper(bool isClosed)
+{
+    if (isClosed)
+    {
+        hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
+    }
+    else if (!isClosed)
+    {
+        hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
+    }
 }

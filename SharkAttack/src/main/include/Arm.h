@@ -10,37 +10,40 @@
 #include <frc/DoubleSolenoid.h>
 //#include <ctre/Encoder.h>
 
+class Arm
+{
+  public:
+    static Arm *GetInstance();
 
-class Arm {
-    public:
+    void ManualRotateArm(double input);
+    void ManualRotateWrist(double input);
+    void Intake(bool buttonIsPressed);
+    //one button per preset : total of 8 buttons
+    //2 buttons to switch between ball and panel
+    //struct for different wrist and panel 
+    void AutoRotateArm(double targetPosition, double armCurrentPosition);   //Degrees
+    void AutoRotateWrist(double targetPosition, double wristCurrentPosition, double armCurrentPosition); //Degrees
+    void CheckHatchGripper(bool isClosed);
 
-        static Arm* GetInstance();
+  private:
+    static Arm *s_instance;
+    Arm();
 
-        void ManualRotateArm(double input);
-        void ManualRotateWrist(double input);
-        void Intake(bool buttonIsPressed);
-        void AutoRotateArm(double position); //Doesn't do anything yet
-        void AutoRotateWrist(double position); //Doesn't do anything yet
+    //Private Objects
+    rev::CANSparkMax *arm1, *arm2, *wrist, *intake;
+    // Encoder *armEncoder;
 
-        void CheckHatchGripper(bool isClosed);
-    
-    private:
-    
-        static Arm* s_instance;
-        Arm();
+    frc::DoubleSolenoid *hatchGripper;
 
-        //Private Objects
-        rev::CANSparkMax *arm1, *arm2, *wrist, *intake;
-        // Encoder *armEncoder;
+    //Tunables
+    const double INTAKE_SPEED = 0.5;
+    const double ARM_ADJUSTER = 400;
+    const double WRIST_ADJUSTER = 400;
+    const double DANGER_ZONE_LIMIT = 50;
 
-        frc::DoubleSolenoid *hatchGripper;
-
-        //Tunables
-        const double INTAKE_SPEED = 0.5;
-
-        //Constants
-        const rev::CANSparkMax::MotorType BRUSHLESS = rev::CANSparkMax::MotorType::kBrushless;
-        const rev::CANSparkMax::MotorType BRUSHED = rev::CANSparkMax::MotorType::kBrushed;
-        const rev::CANSparkMax::IdleMode COAST = rev::CANSparkMax::IdleMode::kCoast;
-        const rev::CANSparkMax::IdleMode BRAKE = rev::CANSparkMax::IdleMode::kBrake;
+    //Constants
+    const rev::CANSparkMax::MotorType BRUSHLESS = rev::CANSparkMax::MotorType::kBrushless;
+    const rev::CANSparkMax::MotorType BRUSHED = rev::CANSparkMax::MotorType::kBrushed;
+    const rev::CANSparkMax::IdleMode COAST = rev::CANSparkMax::IdleMode::kCoast;
+    const rev::CANSparkMax::IdleMode BRAKE = rev::CANSparkMax::IdleMode::kBrake;
 };

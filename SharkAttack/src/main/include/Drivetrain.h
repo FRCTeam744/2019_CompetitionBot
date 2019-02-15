@@ -23,6 +23,7 @@ class Drivetrain {
 	void LimelightPut(std::string key, int value);
 	double LimelightGet(std::string key);
 	double GetArmEncoderValue();
+	double GetWristEncoderValue();
 	void CheckSwitchGears(bool isHighGear);
 
   private:
@@ -33,7 +34,7 @@ class Drivetrain {
 
 	//Private Instance Objects
 	//left back and right back encoder used for drivetrain
-	//left front encoder used for arm
+	//left front and right front encoder used for arm and wrist respectively
 	TalonSRX *leftFront;
 	TalonSRX *leftMid;
 	TalonSRX *leftBack;
@@ -42,6 +43,7 @@ class Drivetrain {
 	TalonSRX *rightBack;
 
 	TalonSRX *armEncoderTalon;
+	TalonSRX *wristEncoderTalon;
 
 	frc::DoubleSolenoid *gearShifter;
 
