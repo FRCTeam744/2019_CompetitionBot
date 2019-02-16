@@ -13,7 +13,7 @@ Fourbar* Fourbar::GetInstance() {
 
 Fourbar::Fourbar()
 {
-    fourbarExtender = new rev::CANSparkMax(36, rev::CANSparkMaxLowLevel::MotorType::kBrushless);
+    fourbarExtender = new rev::CANSparkMax(36, revxq::CANSparkMaxLowLevel::MotorType::kBrushless);
     fourbarSpeed = 0.1;
 }
 
