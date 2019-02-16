@@ -138,13 +138,18 @@ double OI::ArmPresetHigh()
 
 void OI::PutOnShuffleboard()
 {
-
     if (isInitialized == false)
     {
         frc::ShuffleboardTab &Drivertab = frc::Shuffleboard::GetTab("DriverView");
         // Drivertab.Add("Pi4", 3.14).GetEntry();
         // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
-        isInitialized = true;
+
+        frc::ShuffleboardTab& PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
+
+        frc::ShuffleboardTab& ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+
+        frc::ShuffleboardTab& Visiontab = frc::Shuffleboard::GetTab("Vision Testing");
+    isInitialized = true;
     }
 
     //    //test variables
@@ -188,13 +193,18 @@ void OI::PrintToSmartDashboard(double encoderValue)
 
 bool OI::GetFourbarExtend()
 {
-    return xbox->GetPOV(0);
+    return xbox->GetPOV(0); //up
 }
 
 bool OI::GetFourbarRetract()
 {
-    return xbox->GetPOV(180);
+    return xbox->GetPOV(180); //down
 }
+
+bool OI::SetPresetToAButton(){
+    return xbox->GetAButton();
+}
+
 
 // void OI::SwitchLED_Mode(Drivetrain drivetrain) {
 

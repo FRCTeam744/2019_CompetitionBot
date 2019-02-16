@@ -116,6 +116,17 @@ void Robot::TeleopPeriodic() {
   if (oi->SwitchGripper()){
     arm->CheckHatchGripper(oi->GetIsGripperClosed());
   }
+
+  if(oi->GetFourbarRetract()){
+    fourbar->RetractBar();
+  }
+
+  if(oi->GetFourbarExtend()){
+    fourbar->ExtendBar();
+  }
+  if(oi->SetPresetToAButton()){
+    arm->MoveArmToPosition();
+  }
 }
 
 void Robot::DisabledInit() {
