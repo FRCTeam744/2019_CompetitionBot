@@ -17,8 +17,8 @@ Fourbar::Fourbar()
     fourbarSpeed = 0.1;
 }
 
-void Fourbar::ExtendBar(bool inputBut) {
-    if(inputBut == true){
+void Fourbar::ExtendBar(bool inputBar) {
+    if(inputBar == true){
         fourbarExtender->Set(fourbarSpeed);
     } else {
         fourbarExtender->Set(0.0);
@@ -26,8 +26,8 @@ void Fourbar::ExtendBar(bool inputBut) {
     
 }
 
-void Fourbar::RetractBar(bool inputBut) {
-    if(inputBut == true){
+void Fourbar::RetractBar(bool inputBar) {
+    if(inputBar == true){
         fourbarExtender->Set(-fourbarSpeed);
     } else {
         fourbarExtender->Set(0.0);

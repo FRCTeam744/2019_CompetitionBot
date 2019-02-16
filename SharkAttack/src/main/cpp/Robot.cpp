@@ -103,8 +103,8 @@ void Robot::TeleopPeriodic() {
   arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());
   
-  fourbar->ExtendBar(oi->GetFourbarExtend());
-  fourbar->RetractBar(oi->GetFourbarRetract());
+  //fourbar->ExtendBar(oi->GetFourbarExtend());
+  //fourbar->RetractBar(oi->GetFourbarRetract());
 
   oi->PrintToSmartDashboard(drivetrain->GetArmEncoderValue());
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
@@ -117,16 +117,16 @@ void Robot::TeleopPeriodic() {
     arm->CheckHatchGripper(oi->GetIsGripperClosed());
   }
 
-  if(oi->GetFourbarRetract()){
-    fourbar->RetractBar();
-  }
+  // if(oi->GetFourbarRetract()){
+  //   fourbar->RetractBar();
+  // }
 
-  if(oi->GetFourbarExtend()){
-    fourbar->ExtendBar();
-  }
-  if(oi->SetPresetToAButton()){
-    arm->MoveArmToPosition();
-  }
+  // if(oi->GetFourbarExtend()){
+  //   fourbar->ExtendBar();
+  // }
+  // // if(oi->SetPresetToAButton()){
+  // //   arm->MoveArmToPosition();
+  // // }
 }
 
 void Robot::DisabledInit() {
