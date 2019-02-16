@@ -25,6 +25,8 @@ class Arm
     void AutoRotateWrist(double targetPosition, double wristCurrentPosition, double armCurrentPosition); //Degrees
     void CheckHatchGripper(bool isClosed);
 
+    void MoveArmToPosition();
+
   private:
     static Arm *s_instance;
     Arm();

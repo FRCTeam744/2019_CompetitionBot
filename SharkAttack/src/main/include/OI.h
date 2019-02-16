@@ -48,6 +48,7 @@ class OI
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();
+	bool SetPresetToAButton;
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	void PutOnShuffleboard();
 

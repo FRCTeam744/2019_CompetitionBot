@@ -105,3 +105,12 @@ void Arm::CheckHatchGripper(bool isClosed)
         hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
     }
 }
+
+void Arm::MoveArmToPosition(){
+    if(SetPresetToAButton(){
+        Drivetrain::GetArmEncoderValue();
+    }
+    
+    
+    //add other buttons
+}
