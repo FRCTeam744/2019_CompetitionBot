@@ -201,9 +201,9 @@ bool OI::GetFourbarRetract()
     return xbox->GetPOV(180); //down
 }
 
-bool OI::SetPresetToAButton(){
-    return xbox->GetAButton();
-}
+// bool OI::SetPresetToAButton(){
+//     return xbox->GetAButton();
+// }
 
 
 // void OI::SwitchLED_Mode(Drivetrain drivetrain) {
