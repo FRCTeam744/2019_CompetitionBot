@@ -7,6 +7,13 @@
 
 #include "Robot.h"
 
+#include <math.h>
+#include <iostream>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+
+#include <OI.h>
+
 
 void Robot::RobotInit()
 {
@@ -18,6 +25,9 @@ void Robot::RobotInit()
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
+
+    oi->PutOnShuffleboard();
+
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
@@ -31,8 +41,9 @@ void Robot::RobotInit()
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {
-    fourbar->UpdateFourbarSpeed(frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1));
+void Robot::RobotPeriodic(){
+oi->PutOnShuffleboardTest();
+
 }
 
 /**
