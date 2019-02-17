@@ -107,7 +107,7 @@ void Robot::TeleopPeriodic() {
   //fourbar->RetractBar(oi->GetFourbarRetract());
 
   oi->PrintToSmartDashboard(drivetrain->GetArmEncoderValue());
-  drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+  //drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
   if (oi->SwitchGears()){
     drivetrain->CheckSwitchGears(oi->GetIsHighGear());
