@@ -192,12 +192,12 @@ void OI::PrintToSmartDashboard(double encoderValue)
 
 bool OI::GetFourbarExtend()
 {
-    return xbox->GetStartButtonPressed;
+    return xbox->GetStartButtonPressed();
 }
 
 bool OI::GetFourbarRetract()
 {
-    return xbox->GetBackButtonPressed;
+    return xbox->GetBackButtonPressed();
 }
 
 bool OI::SetPresetToAButton(){
