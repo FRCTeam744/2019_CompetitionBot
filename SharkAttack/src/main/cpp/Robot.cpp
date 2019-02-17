@@ -124,6 +124,18 @@ void Robot::TeleopPeriodic() {
   if(oi->SetPresetToAButton()){
     arm->MoveArmToPosition(oi->ArmPresetLow(), drivetrain->GetArmEncoderValue());
   }
+
+  if(oi->SetPresetToBButton()){
+    arm->MoveArmToPosition(oi->ArmPresetMid(), drivetrain->GetArmEncoderValue());
+  }
+
+  if(oi->SetPresetToXButton()){
+    arm->MoveArmToPosition(oi->ArmPresetHigh(), drivetrain->GetArmEncoderValue());
+  }
+
+  if(oi->SetPresetToYButton()){
+    arm->MoveArmToPosition(oi->ArmPresetPickupCargo(), drivetrain->GetArmEncoderValue());
+  }
 }
 
 void Robot::DisabledInit() {
