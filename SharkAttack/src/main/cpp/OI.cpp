@@ -161,29 +161,29 @@ void OI::PutOnShuffleboard()
 }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
-// double OI::GetLeftDriveInput()
-// {
-//     if (driveWithXbox)
-//     {
-//         return -(xbox->GetY(LEFT_HAND));
-//     }
-//     else
-//     {
-//         return -(leftStick->GetY());
-//     }
-// }
+double OI::GetLeftDriveInput()
+{
+    if (driveWithXbox)
+    {
+        return -(xbox->GetY(LEFT_HAND));
+    }
+    else
+    {
+        return -(leftStick->GetY());
+    }
+}
 
-// double OI::GetRightDriveInput()
-// {
-//     if (driveWithXbox)
-//     {
-//         return -(xbox->GetY(RIGHT_HAND));
-//     }
-//     else
-//     {
-//         return -(rightStick->GetY());
-//     }
-// }
+double OI::GetRightDriveInput()
+{
+    if (driveWithXbox)
+    {
+        return -(xbox->GetY(RIGHT_HAND));
+    }
+    else
+    {
+        return -(rightStick->GetY());
+    }
+}
 
 void OI::PrintToSmartDashboard(double encoderValue)
 {

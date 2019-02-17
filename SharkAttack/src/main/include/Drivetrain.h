@@ -53,7 +53,7 @@ class Drivetrain {
 	const int rightFrontID = 22;
 	const int rightMidID = 24;
 	const int rightBackID = 26;
-	const int leftFrontID = 23;
+	const int leftFrontID = 27; //CHANGED: SHOULD BE 23
 	const int leftMidID = 25;
 	const int leftBackID = 27;
 
