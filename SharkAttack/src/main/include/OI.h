@@ -45,6 +45,10 @@ class OI
 	double ArmPresetLow();
 	double ArmPresetMid();
 	double ArmPresetHigh();
+	double ArmPresetNegPickupCargo();
+	double ArmPresetNegLow();
+	double ArmPresetNegMid();
+	double ArmPresetNegHigh();
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();
@@ -88,6 +92,10 @@ class OI
 	const double ARM_PICKUP_LOW_DEG = 45; //A
 	const double ARM_PICKUP_MID_DEG = 90; //B
 	const double ARM_PICKUP_HIGH_DEG = 135; //X
+	const double ARM_PICKUP_NEG_CARGO_PRESET_DEG = -35; //UP
+	const double ARM_PICKUP_NEG_LOW_DEG = -45; //RIGHT
+	const double ARM_PICKUP_NEG_MID_DEG = -90; //DOWN
+	const double ARM_PICKUP_NEG_HIGH_DEG = -135; //LEFT
 
 	//Private Objects in OI.cpp
 	frc::Joystick *rightStick;

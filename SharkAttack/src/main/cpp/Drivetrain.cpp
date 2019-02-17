@@ -1,6 +1,6 @@
-
-
 #include "Drivetrain.h"
+//#include <frc/shuffleboard/Shuffleboard.h>
+
 
 Drivetrain *Drivetrain::s_instance = 0;
 
@@ -254,3 +254,15 @@ void Drivetrain::CheckSwitchGears(bool isHighGear)
     gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
   }
 }
+
+// void Drivetrain::PutOnShuffleboard()
+// {
+//   if (isInitialized == false)
+//   {
+//     frc::ShuffleboardTab &PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
+//     frc::ShuffleboardTab &ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+//     //PreCompTab.Add("Arm Encoder Val", drivetrain->GetArmEncoderValue());
+
+//     isInitialized = true;
+//   }
+// }

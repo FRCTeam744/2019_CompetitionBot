@@ -122,19 +122,35 @@ void Robot::TeleopPeriodic() {
     fourbar->ExtendBar(oi->GetFourbarExtend());
 
   if(oi->SetPresetToAButton()){
-    arm->MoveArmToPosition(oi->ArmPresetLow(), drivetrain->GetArmEncoderValue());
+    arm->MoveArmToPosition(oi->ArmPresetLow(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
   }
 
   if(oi->SetPresetToBButton()){
-    arm->MoveArmToPosition(oi->ArmPresetMid(), drivetrain->GetArmEncoderValue());
+    arm->MoveArmToPosition(oi->ArmPresetMid(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
   }
 
   if(oi->SetPresetToXButton()){
-    arm->MoveArmToPosition(oi->ArmPresetHigh(), drivetrain->GetArmEncoderValue());
+    arm->MoveArmToPosition(oi->ArmPresetHigh(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
   }
 
   if(oi->SetPresetToYButton()){
-    arm->MoveArmToPosition(oi->ArmPresetPickupCargo(), drivetrain->GetArmEncoderValue());
+    arm->MoveArmToPosition(oi->ArmPresetPickupCargo(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  }
+
+  if(oi->SetPresetToDPadUp()){
+    arm->MoveArmToPosition(oi->ArmPresetNegLow(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  }
+
+  if(oi->SetPresetToDPadDown()){
+    arm->MoveArmToPosition(oi->ArmPresetNegMid(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  }
+
+  if(oi->SetPresetToDPadLeft()){
+    arm->MoveArmToPosition(oi->ArmPresetNegHigh(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  }
+
+  if(oi->SetPresetToDPadRight()){
+    arm->MoveArmToPosition(oi->ArmPresetNegPickupCargo(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
   }
 }
 

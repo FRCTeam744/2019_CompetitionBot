@@ -21,11 +21,10 @@ class Arm
     //one button per preset : total of 8 buttons
     //2 buttons to switch between ball and panel
     //struct for different wrist and panel 
-    void AutoRotateArm(double targetPosition, double armCurrentPosition);   //Degrees
-    void AutoRotateWrist(double targetPosition, double wristCurrentPosition, double armCurrentPosition); //Degrees
+    void MoveArmToPosition(double targetPosition, double wristCurrentPosition, double armCurrentPosition);   //Degrees
+    void MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition); //Degrees
     void CheckHatchGripper(bool isClosed);
 
-    void MoveArmToPosition(const double encoderType, double armEncoderVal);
 
   private:
     static Arm *s_instance;

@@ -6,9 +6,9 @@
 #include <string>
 #include "networktables/NetworkTableInstance.h"
 #include "frc/smartdashboard/Smartdashboard.h"
-//#include "frc/shuffleboard"
 #include <ctre/Phoenix.h>
 #include "frc/DoubleSolenoid.h"
+//#include <frc/shuffleboard/Shuffleboard.h>
 
 
 class Drivetrain {
@@ -25,6 +25,7 @@ class Drivetrain {
 	double GetArmEncoderValue();
 	double GetWristEncoderValue();
 	void CheckSwitchGears(bool isHighGear);
+	// void PutOnShuffleboard();
 
   private:
 
@@ -33,6 +34,9 @@ class Drivetrain {
 	Drivetrain();
 
 	//Private Instance Objects
+
+	bool isInitialized = false;
+
 	//left back and right back encoder used for drivetrain
 	//left front and right front encoder used for arm and wrist respectively
 	TalonSRX *leftFront;

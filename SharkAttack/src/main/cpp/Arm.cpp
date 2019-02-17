@@ -71,15 +71,17 @@ void Arm::Intake(bool buttonIsPressed)
     intake->Set(INTAKE_SPEED);
 }
 
-void Arm::AutoRotateArm(double targetPosition, double armCurrentPosition)
+void Arm::MoveArmToPosition(double targetPosition, double wristCurrentPosition, double armCurrentPosition)
 {
     double delta = (targetPosition - armCurrentPosition) / ARM_ADJUSTER;
+    MoveWristToPosition(wristCurrentPosition, armCurrentPosition);
     arm1->Set(delta);
     arm2->Set(delta);
 }
 
-void Arm::AutoRotateWrist(double targetPosition, double wristCurrentPosition, double armCurrentPosition)
+void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
 {
+    double targetPosition;
     double delta;
     if ((armCurrentPosition > DANGER_ZONE_LIMIT) && (armCurrentPosition < -DANGER_ZONE_LIMIT))
     {
@@ -104,13 +106,4 @@ void Arm::CheckHatchGripper(bool isClosed)
     {
         hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
     }
-}
-
-void Arm::MoveArmToPosition(const double encoderPreset, double armEncoderVal){
-    Arm::AutoRotateArm(encoderPreset, armEncoderVal);
-    // if(OI::SetPresetToAButton()){
-    //    //OI::ArmPresetLow();
-    // }  //add other buttons
-    //     if(OI::SetPresetToOtherButton()){
-
 }

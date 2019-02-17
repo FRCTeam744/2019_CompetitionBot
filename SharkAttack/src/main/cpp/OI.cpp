@@ -6,7 +6,6 @@
 
 #include "OI.h"
 //#include "frc/smartdashboard/Smartdashboard.h"
-//#include <frc/shuffleboard/Shuffleboard.h>
 #include "Robot.h"
 
 OI *OI::s_instance = 0;
@@ -118,6 +117,7 @@ double OI::GetWristInput()
     return wristPowerOutput;
 }
 
+//positive degree values
 double OI::ArmPresetPickupCargo()
 {
     return ARM_PICKUP_CARGO_PRESET_DEG;
@@ -135,6 +135,24 @@ double OI::ArmPresetHigh()
     return ARM_PICKUP_HIGH_DEG;
 }
 
+//negative degree
+double OI::ArmPresetNegPickupCargo()
+{
+    return ARM_PICKUP_NEG_CARGO_PRESET_DEG;
+}
+double OI::ArmPresetNegLow()
+{
+    return ARM_PICKUP_NEG_LOW_DEG;
+}
+double OI::ArmPresetNegMid()
+{
+    return ARM_PICKUP_NEG_MID_DEG;
+}
+double OI::ArmPresetNegHigh()
+{
+    return ARM_PICKUP_NEG_HIGH_DEG;
+}
+
 void OI::PutOnShuffleboard()
 {
     if (isInitialized == false)
@@ -143,12 +161,13 @@ void OI::PutOnShuffleboard()
         // Drivertab.Add("Pi4", 3.14).GetEntry();
         // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
 
-        frc::ShuffleboardTab& PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
+        frc::ShuffleboardTab &PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
 
-        frc::ShuffleboardTab& ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+        frc::ShuffleboardTab &ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+        //PreCompTab.Add("Arm Encoder Val", drivetrain->GetArmEncoderValue());
 
-        frc::ShuffleboardTab& Visiontab = frc::Shuffleboard::GetTab("Vision Testing");
-    isInitialized = true;
+        frc::ShuffleboardTab &Visiontab = frc::Shuffleboard::GetTab("Vision Testing");
+        isInitialized = true;
     }
 
     //    //test variables
@@ -200,38 +219,45 @@ bool OI::GetFourbarRetract()
     return xbox->GetBackButtonPressed();
 }
 
-bool OI::SetPresetToAButton(){
-    return xbox->GetAButton();
+bool OI::SetPresetToAButton()
+{
+    return xbox->GetAButton(); //ARM_PICKUP_LOW_DEG
 }
 
-bool OI::SetPresetToBButton(){
-    return xbox->GetBackButton();
+bool OI::SetPresetToBButton()
+{
+    return xbox->GetBButton(); //ARM_PICKUP_MID_DEG
 }
 
-bool OI::SetPresetToXButton(){
-    return xbox->GetXButton();
+bool OI::SetPresetToXButton()
+{
+    return xbox->GetXButton(); //ARM_PICKUP_HIGH_DEG
 }
 
-bool OI::SetPresetToYButton(){
-    return xbox->GetYButton();
+bool OI::SetPresetToYButton()
+{
+    return xbox->GetYButton(); //ARM_PICKUP_CARGO_PRESET_DEG
 }
 
-bool OI::SetPresetToDPadUp(){
-    return xbox->GetPOV(0);
+bool OI::SetPresetToDPadUp()
+{
+    return xbox->GetPOV(0); //ARM_PICKUP_NEG_CARGO_PRESET_DEG
 }
 
-bool OI::SetPresetToDPadDown(){
-    return xbox->GetPOV(90);
+bool OI::SetPresetToDPadDown()
+{
+    return xbox->GetPOV(90); //ARM_PICKUP_NEG_MID_DEG
 }
 
-bool OI::SetPresetToDPadLeft(){
-    return xbox->GetPOV(180);
+bool OI::SetPresetToDPadLeft()
+{
+    return xbox->GetPOV(180); //ARM_PICKUP_NEG_HIGH_DEG
 }
 
-bool OI::SetPresetToDPadRight(){
-    return xbox->GetPOV(270);
+bool OI::SetPresetToDPadRight()
+{
+    return xbox->GetPOV(270); //ARM_PICKUP_NEG_LOW_DEG
 }
-
 
 // void OI::SwitchLED_Mode(Drivetrain drivetrain) {
 
