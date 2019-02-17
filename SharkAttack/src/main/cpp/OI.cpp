@@ -142,11 +142,11 @@ void OI::PrintToSmartDashboard(double encoderValue){
 }
 
 bool OI::GetFourbarExtend(){
-    return xbox->GetPOV(0);
+    return xbox->GetAButton();
 }
 
 bool OI::GetFourbarRetract(){
-    return xbox->GetPOV(180);
+    return xbox->GetBButton();
 }
 
 std::tuple<bool, std::string, double> OI::SetLimelight() {
@@ -164,4 +164,12 @@ std::tuple<bool, std::string, double> OI::SetLimelight() {
     }
     
     return std::make_tuple(false, "", 0.0);
+}
+
+bool OI::LEDButtonPressed() {
+    return leftStick->GetRawButton(2);
+}
+
+bool OI::AlsoLEDButtonPressed() {
+    return rightStick->GetRawButton(2);
 }

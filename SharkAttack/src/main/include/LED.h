@@ -6,7 +6,9 @@
 
 #pragma once
 
-
+#include <frc/SerialPort.h>
+#include <iostream>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 class LED {
 
@@ -14,11 +16,20 @@ class LED {
 
         static LED* GetInstance();
 
+        void LEDsOff();
+        void SwimmingShark();
+        void StartUp();
+        void StartUpBlue();
+        void StartUpRed();
+        void LiftOffBlue();
+        void LiftOffRed();
+
     private:
 
         static LED* s_instance;
         LED();
 
+        frc::SerialPort *arduino;
         
 
 };

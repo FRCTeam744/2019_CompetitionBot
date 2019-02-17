@@ -39,6 +39,9 @@ class OI {
 		void PutOnShuffleboard();
 		std::tuple<bool, std::string, double> SetLimelight();
 
+		bool LEDButtonPressed();
+		bool AlsoLEDButtonPressed();
+
 	private:
 
 		static OI* s_instance;

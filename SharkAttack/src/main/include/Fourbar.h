@@ -1,13 +1,18 @@
 #pragma once
 
 #include <rev/CANSparkMax.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/Ultrasonic.h>
+#include <frc/DigitalInput.h>
+#include <rev/CANEncoder.h>
 
 class Fourbar{
     public:
         static Fourbar* GetInstance();  
-        void ExtendBar(bool inputBar);
-        void RetractBar(bool inputBar);
-        void UpdateFourbarSpeed(double newSpeed);
+        void ExtendOrRetract(bool extendBut, bool retractBut);
+        void UpdateFourbarSpeed();
+
+        void PrintClimberRPM();
 
     private:
 
@@ -16,7 +21,16 @@ class Fourbar{
         Fourbar(); 
     
         rev::CANSparkMax *fourbarExtender;
+        rev::CANEncoder *fourbarEncoder;
 
         double fourbarSpeed; 
+        double newSpeed;
+
+        frc::DigitalInput *extended;
+        frc::DigitalInput *retracted;
+
+        bool retractedTripped;
+        bool extendedTripped;
                     
+        
 };
