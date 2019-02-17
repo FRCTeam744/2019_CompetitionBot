@@ -106,11 +106,11 @@ void Arm::CheckHatchGripper(bool isClosed)
     }
 }
 
-void Arm::MoveArmToPosition(){
-    if(SetPresetToAButton(){
-        Drivetrain::GetArmEncoderValue();
-    }
-    
-    
-    //add other buttons
+void Arm::MoveArmToPosition(const double encoderPreset, double armEncoderVal){
+    Arm::AutoRotateArm(encoderPreset, armEncoderVal);
+    // if(OI::SetPresetToAButton()){
+    //    //OI::ArmPresetLow();
+    // }  //add other buttons
+    //     if(OI::SetPresetToOtherButton()){
+
 }

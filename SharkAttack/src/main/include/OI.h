@@ -48,7 +48,16 @@ class OI
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();
-	bool SetPresetToAButton;
+
+	bool SetPresetToAButton();
+	bool SetPresetToBButton();
+	bool SetPresetToYButton();
+	bool SetPresetToXButton();
+	bool SetPresetToDPadUp();
+	bool SetPresetToDPadRight();
+	bool SetPresetToDPadDown();
+	bool SetPresetToDPadLeft();
+
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	void PutOnShuffleboard();
 
@@ -75,10 +84,10 @@ class OI
 	//Arm Constants
 	const double ARM_POWER_SCALE = 0.2;
 	const double WRIST_POWER_SCALE = 0.2;
-	const double ARM_PICKUP_CARGO_PRESET_DEG = 35;
-	const double ARM_PICKUP_LOW_DEG = 45;
-	const double ARM_PICKUP_MID_DEG = 90;
-	const double ARM_PICKUP_HIGH_DEG = 135;
+	const double ARM_PICKUP_CARGO_PRESET_DEG = 35; //Y
+	const double ARM_PICKUP_LOW_DEG = 45; //A
+	const double ARM_PICKUP_MID_DEG = 90; //B
+	const double ARM_PICKUP_HIGH_DEG = 135; //X
 
 	//Private Objects in OI.cpp
 	frc::Joystick *rightStick;

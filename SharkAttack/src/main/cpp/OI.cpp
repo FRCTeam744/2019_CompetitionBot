@@ -8,7 +8,6 @@
 //#include "frc/smartdashboard/Smartdashboard.h"
 //#include <frc/shuffleboard/Shuffleboard.h>
 #include "Robot.h"
-#define SMARTDASHBOARD
 
 OI *OI::s_instance = 0;
 
@@ -44,22 +43,22 @@ OI::OI()
 }
 
 //Public Methods
-void OI::SwitchDriveMode()
-{
-    if (xbox->GetStickButtonPressed(RIGHT_HAND))
-    {
-        if (!driveWithXbox)
-        {
-            driveWithXbox = true;
-            preferences->PutBoolean("driveWithXbox", true);
-        }
-        else
-        {
-            driveWithXbox = false;
-            preferences->PutBoolean("driveWithXbox", false);
-        }
-    }
-}
+// void OI::SwitchDriveMode()
+// {
+//     if (xbox->GetStickButtonPressed(RIGHT_HAND))
+//     {
+//         if (!driveWithXbox)
+//         {
+//             driveWithXbox = true;
+//             preferences->PutBoolean("driveWithXbox", true);
+//         }
+//         else
+//         {
+//             driveWithXbox = false;
+//             preferences->PutBoolean("driveWithXbox", false);
+//         }
+//     }
+// }
 
 bool OI::SwitchGears()
 {
@@ -162,29 +161,29 @@ void OI::PutOnShuffleboard()
 }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
-double OI::GetLeftDriveInput()
-{
-    if (driveWithXbox)
-    {
-        return -(xbox->GetY(LEFT_HAND));
-    }
-    else
-    {
-        return -(leftStick->GetY());
-    }
-}
+// double OI::GetLeftDriveInput()
+// {
+//     if (driveWithXbox)
+//     {
+//         return -(xbox->GetY(LEFT_HAND));
+//     }
+//     else
+//     {
+//         return -(leftStick->GetY());
+//     }
+// }
 
-double OI::GetRightDriveInput()
-{
-    if (driveWithXbox)
-    {
-        return -(xbox->GetY(RIGHT_HAND));
-    }
-    else
-    {
-        return -(rightStick->GetY());
-    }
-}
+// double OI::GetRightDriveInput()
+// {
+//     if (driveWithXbox)
+//     {
+//         return -(xbox->GetY(RIGHT_HAND));
+//     }
+//     else
+//     {
+//         return -(rightStick->GetY());
+//     }
+// }
 
 void OI::PrintToSmartDashboard(double encoderValue)
 {
@@ -193,17 +192,45 @@ void OI::PrintToSmartDashboard(double encoderValue)
 
 bool OI::GetFourbarExtend()
 {
-    return xbox->GetPOV(0); //up
+    return xbox->GetStartButtonPressed;
 }
 
 bool OI::GetFourbarRetract()
 {
-    return xbox->GetPOV(180); //down
+    return xbox->GetBackButtonPressed;
 }
 
-// bool OI::SetPresetToAButton(){
-//     return xbox->GetAButton();
-// }
+bool OI::SetPresetToAButton(){
+    return xbox->GetAButton();
+}
+
+bool OI::SetPresetToBButton(){
+    return xbox->GetBackButton();
+}
+
+bool OI::SetPresetToXButton(){
+    return xbox->GetXButton();
+}
+
+bool OI::SetPresetToYButton(){
+    return xbox->GetYButton();
+}
+
+bool OI::SetPresetToDPadUp(){
+    return xbox->GetPOV(0);
+}
+
+bool OI::SetPresetToDPadDown(){
+    return xbox->GetPOV(90);
+}
+
+bool OI::SetPresetToDPadLeft(){
+    return xbox->GetPOV(180);
+}
+
+bool OI::SetPresetToDPadRight(){
+    return xbox->GetPOV(270);
+}
 
 
 // void OI::SwitchLED_Mode(Drivetrain drivetrain) {
