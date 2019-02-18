@@ -59,7 +59,8 @@ class Arm
     const double WRIST_ADJUSTER = 400;
     const double DANGER_ZONE_LIMIT = 50;
     const double CALIBRATION_SPEED = 3000.0;
-    const double OFFSET = -5.0; 
+    const double LIMIT_SWITCH_OFFSET = -5.0;
+    const double FRONT_WRIST_POS_ENCODER_TICKS = 20.25;
 
     //Constants
     const rev::CANSparkMax::MotorType BRUSHLESS = rev::CANSparkMax::MotorType::kBrushless;

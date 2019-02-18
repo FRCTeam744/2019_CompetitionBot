@@ -96,12 +96,14 @@ void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosi
 {
     double targetPosition;
     double delta;
-    if ((armCurrentPosition > DANGER_ZONE_LIMIT) && (armCurrentPosition < -DANGER_ZONE_LIMIT))
-    {
+    if (armCurrentPosition > DANGER_ZONE_LIMIT) {
         //normal operations
+        targetPosition = FRONT_WRIST_POS_ENCODER_TICKS;
+    } else if(armCurrentPosition < -DANGER_ZONE_LIMIT){
+        //other normal operations
+        
     }
-    else
-    {
+    else {
         //Inside DANGER Z O N E
         targetPosition = 0;
     }
@@ -109,8 +111,8 @@ void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosi
     leftWrist->Set(delta);
 }
 
-void Arm::CheckHatchGripper(bool isClosed) {
-    
+void Arm::CheckHatchGripper(bool isClosed)
+{
     if (isClosed) {
         hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
     }
@@ -125,10 +127,11 @@ void Arm::PrintArmCurrent(){
 }
 
 void Arm::ManualCalibrateArm(){
-    if(!GetArmLimitSwitch()){
+    if(!GetArmLimitSwitch()) {
         wasArmLimitSwitchTripped = false;
     }
     else if (GetArmLimitSwitch() && !wasArmLimitSwitchTripped && armEncoder->GetVelocity() < 0 && armEncoder->GetVelocity() < CALIBRATION_SPEED){
+        
     }
     else {
         wasArmLimitSwitchTripped = true;
