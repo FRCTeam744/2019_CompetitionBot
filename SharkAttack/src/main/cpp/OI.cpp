@@ -5,10 +5,10 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "OI.h"
-//#include "frc/smartdashboard/Smartdashboard.h"
-#include "Robot.h"
 
-OI *OI::s_instance = 0;
+
+OI* OI::s_instance = 0;
+
 
 //Static Singleton Method
 OI *OI::GetInstance()
@@ -42,6 +42,7 @@ OI::OI()
 }
 
 //Public Methods
+
 // void OI::SwitchDriveMode()
 // {
 //     if (xbox->GetStickButtonPressed(RIGHT_HAND))
@@ -59,16 +60,13 @@ OI::OI()
 //     }
 // }
 
-bool OI::SwitchGears()
-{
-    if (leftStick->GetRawButtonPressed(1))
-    {
+bool OI::SwitchGears() {
+    if (leftStick->GetRawButtonPressed(1)) {
         isHighGear = false;
         frc::SmartDashboard::PutBoolean("isHighGear", false);
         return true;
     }
-    if (rightStick->GetRawButtonPressed(1))
-    {
+    if (rightStick->GetRawButtonPressed(1)) {
         isHighGear = true;
         frc::SmartDashboard::PutBoolean("isHighGear", true);
         return true;
@@ -81,16 +79,13 @@ bool OI::GetIsHighGear()
     return isHighGear;
 }
 
-bool OI::SwitchGripper()
-{
-    if (xbox->GetBumper(RIGHT_HAND))
-    {
+bool OI::SwitchGripper(){
+    if (xbox->GetBumperPressed(RIGHT_HAND)){
         isGripperClosed = false;
         frc::SmartDashboard::PutBoolean("isGripperClosed", false);
         return true;
     }
-    if (xbox->GetBumper(LEFT_HAND))
-    {
+    if (xbox->GetBumperPressed(LEFT_HAND)){
         isGripperClosed = true;
         frc::SmartDashboard::PutBoolean("isGripperClosed", true);
         return true;
@@ -209,6 +204,7 @@ void OI::PrintToSmartDashboard(double encoderValue)
     frc::SmartDashboard::PutNumber("Arm Encoder Value: ", encoderValue);
 }
 
+
 bool OI::GetFourbarExtend()
 {
     return xbox->GetStartButtonPressed();
@@ -259,13 +255,27 @@ bool OI::SetPresetToDPadRight()
     return xbox->GetPOV(270); //ARM_PICKUP_NEG_LOW_DEG
 }
 
-// void OI::SwitchLED_Mode(Drivetrain drivetrain) {
+std::tuple<bool, std::string, double> OI::SetLimelight() {
+    if (leftStick->GetRawButtonPressed(5)){
+        return std::make_tuple(true, "ledMode", 0.0);
+    }
+    else if (leftStick->GetRawButtonPressed(10)){
+        return std::make_tuple(true, "ledMode", 1.0);
+    }
+    else if (leftStick->GetRawButtonPressed(6)){
+        return std::make_tuple(true, "camMode", 0.0);
+    }
+    else if (leftStick->GetRawButtonPressed(9)){
+        return std::make_tuple(true, "camMode", 1.0);
+    }
+    
+    return std::make_tuple(false, "", 0.0);
+}
 
-//     if (drivetrain.LimelightGet("ledMode") == 0){
+bool OI::LEDButtonPressed() {
+    return leftStick->GetRawButton(2);
+}
 
-//         drivetrain.LimelightPut("ledMode", 1);
-//     }
-//     else {
-//         drivetrain.LimelightPut("ledMode", 0);
-//     }
-// }
+bool OI::AlsoLEDButtonPressed() {
+    return rightStick->GetRawButton(2);
+}

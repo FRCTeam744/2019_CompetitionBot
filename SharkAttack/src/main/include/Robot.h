@@ -19,15 +19,16 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <frc/DriverStation.h>
 
 #include "Drivetrain.h"
 #include "OI.h"
 #include "Arm.h"
 #include "Fourbar.h"
+#include "LED.h"
 
 
-class Robot : public frc::TimedRobot
-{
+class Robot : public frc::TimedRobot {
 public:
   void RobotInit() override;
   void RobotPeriodic() override;
@@ -50,5 +51,11 @@ private:
   OI *oi;
   Arm *arm;
   Fourbar *fourbar;
+  LED *led;
+
+  frc::DriverStation::Alliance alliance;
+
+  const frc::DriverStation::Alliance blue = frc::DriverStation::Alliance::kBlue;
+  const frc::DriverStation::Alliance red = frc::DriverStation::Alliance::kRed;
 
 };

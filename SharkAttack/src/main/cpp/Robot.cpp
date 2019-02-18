@@ -9,9 +9,9 @@
 
 
 static void VisionThread(){
-  cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
-  USBCam.SetResolution(640,480);
-  USBCam.SetFPS(12);
+  // cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+  // USBCam.SetResolution(640,480);
+  // USBCam.SetFPS(12);
 }
 
 void Robot::RobotInit()
@@ -24,12 +24,13 @@ void Robot::RobotInit()
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
+  led = LED::GetInstance();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
-  std::thread vision(VisionThread);
-  vision.detach();
+  // std::thread vision(VisionThread);
+  // vision.detach();
 
-  printf("%s\n","Hi, if you see this, the SD/SB method is working apparently!");
+  // printf("%s\n","Hi, if you see this, the SD/SB method is working apparently!");
 }
 
 /**
@@ -41,9 +42,12 @@ void Robot::RobotInit()
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
-    fourbar->UpdateFourbarSpeed(frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1));
-    oi->PutOnShuffleboard();
+  fourbar->UpdateFourbarSpeed();
+  oi->PutOnShuffleboard();
 
+  drivetrain->LimelightSet(oi->SetLimelight());
+
+  fourbar->PrintClimberRPM();
 }
 
 /**
@@ -87,10 +91,24 @@ void Robot::AutonomousPeriodic()
 }
 
 void Robot::TeleopInit() {
-
+  
+  if (alliance == blue){
+    led->StartUpBlue();
+  }
+  else if (alliance == red){
+    led->StartUpRed();
+  }
 }
 
 void Robot::TeleopPeriodic() {
+
+  if (oi->LEDButtonPressed()) {
+    led->LEDsOff();
+  }
+  if (oi->AlsoLEDButtonPressed()) {
+    led->SwimmingShark();
+  }
+  
   //drivetrain->leftBack->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightBack->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
   //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
@@ -98,13 +116,12 @@ void Robot::TeleopPeriodic() {
   //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
   //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
   
-  drivetrain->Periodic();
+  drivetrain->PutData();
 
   arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());
   
-  //fourbar->ExtendBar(oi->GetFourbarExtend());
-  //fourbar->RetractBar(oi->GetFourbarRetract());
+  fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
 
   oi->PrintToSmartDashboard(drivetrain->GetArmEncoderValue());
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
@@ -155,12 +172,13 @@ void Robot::TeleopPeriodic() {
 }
 
 void Robot::DisabledInit() {
-
+  
+  led->StartUp();
+  alliance = frc::DriverStation::GetInstance().GetAlliance();
 }
 
 void Robot::DisabledPeriodic() {
 
-  
 }
 
 void Robot::TestPeriodic() {

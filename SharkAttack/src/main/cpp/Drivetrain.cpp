@@ -25,12 +25,10 @@ Drivetrain::Drivetrain()
   rightMid = new TalonSRX(rightMidID);
   rightBack = new TalonSRX(rightBackID);
 
-  //Establish Double Solenoid
-  //frc::DoubleSolenoid *gearShifter;
+  //Initialize Double Solenoid
   gearShifter = new frc::DoubleSolenoid(0, 1);
-  //frc::DoubleSolenoid gearShifter {lowGear, highGear};
 
-  //Establish Limelight
+  //Initialize Limelight
   limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
 
   //Set Talons to be in same direction
@@ -65,9 +63,9 @@ Drivetrain::Drivetrain()
 }
 
 //Public Methods
-void Drivetrain::Periodic()
-{
-  // Set limelight and drivetrain variables to SD
+void Drivetrain::PutData() {
+//Send limelight and drivetrain variables to SD
+
   targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);
   targetOffsetAngle_Vertical = limelight->GetNumber("ty", 0.0);
   targetArea = limelight->GetNumber("ta", 0.0);
@@ -211,24 +209,13 @@ void Drivetrain::TankDrive(double leftValue, double rightValue)
 }
 
 // Use these methods in other classes to interact with the limelight
-void Drivetrain::LimelightPut(std::string key, int value)
-{
-
-  limelight->PutNumber(key, 0.0);
+void Drivetrain::LimelightSet(std::tuple <bool, std::string, double> data) {
+  if (std::get<0>(data)){
+    limelight->PutNumber(std::get<1>(data), std::get<2>(data));
+  }
 }
-/*
-double Drivetrain::LimelightGet(std::string key)
-{
 
-  leftMid->Set(ControlMode::Follower, 27.0);
-  rightMid->Set(ControlMode::Follower, 26.0);
-  leftFront->Set(ControlMode::Follower, 27.0);
-  rightFront->Set(ControlMode::Follower, 26.0);
-}
-*/
-double Drivetrain::LimelightGet(std::string key)
-{
-
+double Drivetrain::LimelightGet(std::string key) {
   return limelight->GetNumber(key, 0.0);
 }
 

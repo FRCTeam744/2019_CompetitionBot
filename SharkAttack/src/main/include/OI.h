@@ -15,15 +15,14 @@
 #include <cscore.h>
 #include <cameraserver/CameraServer.h>
 #include <frc/smartdashboard/Smartdashboard.h>
-#include "Drivetrain.h"
 #include <frc/shuffleboard/Shuffleboard.h>
 
-// #include "Drivetrain.h"
 
 class OI
 {
 	//TODO: Go through each button and assign variable in cpp file in functions
   public:
+  
 	static OI *GetInstance();
 
 	void SwitchDriveMode();
@@ -65,7 +64,13 @@ class OI
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	void PutOnShuffleboard();
 
+  std::tuple<bool, std::string, double> SetLimelight();
+
+	bool LEDButtonPressed();
+	bool AlsoLEDButtonPressed();
+
   private:
+
 	static OI *s_instance;
 
 	OI();
