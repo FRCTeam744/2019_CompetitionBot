@@ -64,7 +64,6 @@ void Fourbar::ExtendOrRetract(bool extendBut, bool retractBut){
         }
     }
     else if (isHoming){}
-    
     else {
         fourbarExtender->Set(0.0);
     }

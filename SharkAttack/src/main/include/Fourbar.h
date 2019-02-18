@@ -44,6 +44,4 @@ class Fourbar{
         const double GEAR_RATIO = 4.0;
         const double ROTATIONS_TO_HOME = DESIRED_MM_TO_HOME * GEAR_RATIO;
 
-                    
-        
 };
