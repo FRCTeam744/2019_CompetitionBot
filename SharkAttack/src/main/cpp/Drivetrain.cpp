@@ -103,8 +103,7 @@ void Drivetrain::PutData() {
   frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
 }
 
-void Drivetrain::AutoDrive()
-{
+void Drivetrain::AutoDrive() {
   /*
   if (xbox->GetStartButton())
   {
@@ -190,15 +189,7 @@ void Drivetrain::AutoDrive()
   */
 }
 
-void Drivetrain::TankDrive(double leftValue, double rightValue)
-{
-
-  // leftFront->SetInverted(false);
-  // leftBack->SetInverted(false);
-  // rightFront->SetInverted(true);
-  // rightBack->SetInverted(true);
-  // rightMid->SetInverted(false);
-  // leftMid->SetInverted(true);
+void Drivetrain::TankDrive(double leftValue, double rightValue) {
 
   leftBack->Set(ControlMode::PercentOutput, leftValue);
   rightBack->Set(ControlMode::PercentOutput, rightValue);

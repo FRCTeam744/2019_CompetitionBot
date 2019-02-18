@@ -54,12 +54,12 @@ class Drivetrain {
 	std::shared_ptr<NetworkTable> limelight;
 	
 	//CAN Talon IDs for each of the drivetrain motors
-	const int rightFrontID = 22;
-	const int rightMidID = 24;
-	const int rightBackID = 26;
-	const int leftFrontID = 27; //CHANGED: SHOULD BE 23
-	const int leftMidID = 25;
-	const int leftBackID = 27;
+	const int rightFrontID = 23;
+	const int rightMidID = 25;
+	const int rightBackID = 27;
+	const int leftFrontID = 22;
+	const int leftMidID = 24;
+	const int leftBackID = 26;
 
 	//DoubleSolenoid gearShirter forward and reverse channels
 	const int LOW_GEAR = 0;

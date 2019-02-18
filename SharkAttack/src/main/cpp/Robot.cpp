@@ -110,13 +110,6 @@ void Robot::TeleopPeriodic() {
     led->SwimmingShark();
   }
   
-  //drivetrain->leftBack->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
-  //drivetrain->rightBack->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
-  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
-  //drivetrain->rightMid->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
-  //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
-  //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
-  
   drivetrain->PutData();
 
   arm->ManualRotateArm(oi->GetArmInput());

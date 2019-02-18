@@ -109,14 +109,12 @@ void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosi
     leftWrist->Set(delta);
 }
 
-void Arm::CheckHatchGripper(bool isClosed)
-{
-    if (isClosed)
-    {
+void Arm::CheckHatchGripper(bool isClosed) {
+    
+    if (isClosed) {
         hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
     }
-    else if (!isClosed)
-    {
+    else if (!isClosed) {
         hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
     }
 }
