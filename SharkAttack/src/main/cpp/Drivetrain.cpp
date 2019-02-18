@@ -1,20 +1,22 @@
-
-
 #include "Drivetrain.h"
+//#include <frc/shuffleboard/Shuffleboard.h>
 
 
-Drivetrain* Drivetrain::s_instance = 0;
+Drivetrain *Drivetrain::s_instance = 0;
 
 //Static Singleton Method
-Drivetrain* Drivetrain::GetInstance() {
-  if (s_instance == 0){
+Drivetrain *Drivetrain::GetInstance()
+{
+  if (s_instance == 0)
+  {
     s_instance = new Drivetrain();
   }
   return s_instance;
 }
 
 //Constructor
-Drivetrain::Drivetrain() {
+Drivetrain::Drivetrain()
+{
   //Establish Talons according to ID's
   leftFront = new TalonSRX(leftFrontID);
   leftMid = new TalonSRX(leftMidID);
@@ -40,10 +42,12 @@ Drivetrain::Drivetrain() {
   //Set the sign of the encoder (true means switch sign)
   leftBack->SetSensorPhase(true);
   rightBack->SetSensorPhase(true);
-  
+
   //configure Talon encoder
   armEncoderTalon = leftFront;
-  armEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute,0,0);
+  armEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
+  wristEncoderTalon = rightFront;
+  wristEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
 
   //Config for the Talon internal PID loop for speedControl
   leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
@@ -56,12 +60,12 @@ Drivetrain::Drivetrain() {
   rightBack->Config_kI(0, kI_SPEED, talonTimeout);
   leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
   rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
-
 }
 
 //Public Methods
 void Drivetrain::PutData() {
 //Send limelight and drivetrain variables to SD
+
   targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);
   targetOffsetAngle_Vertical = limelight->GetNumber("ty", 0.0);
   targetArea = limelight->GetNumber("ta", 0.0);
@@ -72,6 +76,19 @@ void Drivetrain::PutData() {
 
   rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
   leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
+
+  //rightDashboardSpeed = NU_TO_FEET;
+  //leftDashboardSpeed = SECONDS_TO_100MS;
+
+  frc::SmartDashboard::PutNumber("NU_PER_REV", NU_PER_REV);
+  frc::SmartDashboard::PutNumber("CIRCUMFERENCE_INCHES", CIRCUMFERENCE_INCHES);
+
+  frc::SmartDashboard::PutNumber("RADIUS_INCHES", RADIUS_INCHES);
+  frc::SmartDashboard::PutNumber("INCHES_PER_REV", INCHES_PER_REV);
+  frc::SmartDashboard::PutNumber("NU_TO_FEET", NU_TO_FEET);
+  frc::SmartDashboard::PutNumber("FEET_TO_NU", FEET_TO_NU);
+  frc::SmartDashboard::PutNumber("SECONDS_TO_100MS", SECONDS_TO_100MS);
+  frc::SmartDashboard::PutNumber("CONVERT_100MS_TO_SECONDS", CONVERT_100MS_TO_SECONDS);
 
   frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
   frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
@@ -86,7 +103,8 @@ void Drivetrain::PutData() {
   frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
 }
 
-void Drivetrain::AutoDrive() {
+void Drivetrain::AutoDrive()
+{
   /*
   if (xbox->GetStartButton())
   {
@@ -172,7 +190,8 @@ void Drivetrain::AutoDrive() {
   */
 }
 
-void Drivetrain::TankDrive (double leftValue, double rightValue) {
+void Drivetrain::TankDrive(double leftValue, double rightValue)
+{
 
   // leftFront->SetInverted(false);
   // leftBack->SetInverted(false);
@@ -187,7 +206,6 @@ void Drivetrain::TankDrive (double leftValue, double rightValue) {
   rightMid->Set(ControlMode::Follower, 26.0);
   leftFront->Set(ControlMode::Follower, 27.0);
   rightFront->Set(ControlMode::Follower, 26.0);
-
 }
 
 // Use these methods in other classes to interact with the limelight
@@ -197,20 +215,41 @@ void Drivetrain::LimelightSet(std::tuple <bool, std::string, double> data) {
   }
 }
 
-double Drivetrain::LimelightGet(std::string key){
+double Drivetrain::LimelightGet(std::string key) {
   return limelight->GetNumber(key, 0.0);
 }
 
-double Drivetrain::GetArmEncoderValue(){
+double Drivetrain::GetArmEncoderValue()
+{
   return armEncoderTalon->GetSelectedSensorPosition();
 }
 
-void Drivetrain::CheckSwitchGears(bool isHighGear){
-  
-  if(isHighGear){
+double Drivetrain::GetWristEncoderValue()
+{
+  return wristEncoderTalon->GetSelectedSensorPosition();
+}
+
+void Drivetrain::CheckSwitchGears(bool isHighGear)
+{
+
+  if (isHighGear)
+  {
     gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
   }
-  else if (!isHighGear){
+  else if (!isHighGear)
+  {
     gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
   }
 }
+
+// void Drivetrain::PutOnShuffleboard()
+// {
+//   if (isInitialized == false)
+//   {
+//     frc::ShuffleboardTab &PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
+//     frc::ShuffleboardTab &ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+//     //PreCompTab.Add("Arm Encoder Val", drivetrain->GetArmEncoderValue());
+
+//     isInitialized = true;
+//   }
+// }

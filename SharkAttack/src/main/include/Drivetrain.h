@@ -8,6 +8,7 @@
 #include "frc/smartdashboard/Smartdashboard.h"
 #include <ctre/Phoenix.h>
 #include "frc/DoubleSolenoid.h"
+//#include <frc/shuffleboard/Shuffleboard.h>
 
 
 class Drivetrain {
@@ -22,7 +23,9 @@ class Drivetrain {
 	void LimelightSet(std::tuple<bool, std::string, double>);
 	double LimelightGet(std::string key);
 	double GetArmEncoderValue();
+	double GetWristEncoderValue();
 	void CheckSwitchGears(bool isHighGear);
+	// void PutOnShuffleboard();
 
   private:
 
@@ -31,8 +34,11 @@ class Drivetrain {
 	Drivetrain();
 
 	//Private Instance Objects
+
+	bool isInitialized = false;
+
 	//left back and right back encoder used for drivetrain
-	//left front encoder used for arm
+	//left front and right front encoder used for arm and wrist respectively
 	TalonSRX *leftFront;
 	TalonSRX *leftMid;
 	TalonSRX *leftBack;
@@ -41,6 +47,7 @@ class Drivetrain {
 	TalonSRX *rightBack;
 
 	TalonSRX *armEncoderTalon;
+	TalonSRX *wristEncoderTalon;
 
 	frc::DoubleSolenoid *gearShifter;
 
@@ -50,7 +57,7 @@ class Drivetrain {
 	const int rightFrontID = 22;
 	const int rightMidID = 24;
 	const int rightBackID = 26;
-	const int leftFrontID = 23;
+	const int leftFrontID = 27; //CHANGED: SHOULD BE 23
 	const int leftMidID = 25;
 	const int leftBackID = 27;
 
