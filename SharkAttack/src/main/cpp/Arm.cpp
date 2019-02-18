@@ -22,61 +22,74 @@ Arm *Arm::GetInstance()
 Arm::Arm()
 {
     //Initialize arm motors
-    arm1 = new rev::CANSparkMax(30, BRUSHLESS);
-    arm2 = new rev::CANSparkMax(31, BRUSHLESS);
-    wrist = new rev::CANSparkMax(32, BRUSHLESS);
-    intake = new rev::CANSparkMax(33, BRUSHLESS);
+    leftArm = new rev::CANSparkMax(42, BRUSHLESS);
+    rightArm = new rev::CANSparkMax(43, BRUSHLESS);
+    leftWrist = new rev::CANSparkMax(44, BRUSHLESS);
+    rightWrist = new rev::CANSparkMax(45, BRUSHLESS);
+    intake = new TalonSRX(46);
 
     hatchGripper = new frc::DoubleSolenoid(2, 3);
 
-    //Initialize encoders
-    // armEncoder = new Encoder(0, 1, false, Encoder::EncodingType::k2X);
+    armEncoder = new rev::CANEncoder(*leftArm);
+    wristEncoder = new rev::CANEncoder(*leftWrist);
 
-    //Set Encoder Parameters
-    // armEncoder->SetMaxPeriod(.1);
-    // armEncoder->SetMinRate(10);
-    // armEncoder->SetDistancePerPulse(5);
-    // armEncoder->SetReverseDirection(true);
-    // armEncoder->SetSamplesToAverage(7);
+    armLimitSwitch = new frc::DigitalInput(2);
+    wristLimitSwitch = new frc::DigitalInput(3);
 
     //Set arm Sparks invertions
-    arm1->SetInverted(false);
-    arm2->SetInverted(true);
-    wrist->SetInverted(false);
+    leftArm->SetInverted(false);
+    rightArm->SetInverted(true);
+    leftWrist->SetInverted(false);
+    rightWrist->SetInverted(true);
+
     intake->SetInverted(false);
 
     //Set to brake or coast
-    arm1->SetIdleMode(BRAKE);
-    arm2->SetIdleMode(BRAKE);
-    wrist->SetIdleMode(BRAKE);
-    intake->SetIdleMode(BRAKE);
+    leftArm->SetIdleMode(BRAKE);
+    rightArm->SetIdleMode(BRAKE);
+    leftWrist->SetIdleMode(BRAKE);
+    rightWrist->SetIdleMode(BRAKE);
+    intake->SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+
+    leftArm->SetSmartCurrentLimit(10);
+    rightArm->SetSmartCurrentLimit(10);
+    leftWrist->SetSmartCurrentLimit(10);
+    rightWrist->SetSmartCurrentLimit(10);
+    //SetFollowers
+    // rightArm->Follow(*leftArm, false);
+    // rightWrist->Follow(*leftWrist, false);
+
+    wasArmLimitSwitchTripped = true;
+    wasWristLimitSwitchTripped = true;
 }
 
 //Public Methods
 void Arm::ManualRotateArm(double input)
 {
-
-    arm1->Set(input);
-    arm2->Set(input);
+    frc::SmartDashboard::PutNumber("Arm Control Input", input);
+    leftArm->Set(input);
+    rightArm->Set(input);
 }
 
 void Arm::ManualRotateWrist(double input)
 {
-    wrist->Set(input);
+    leftWrist->Set(input);
+    rightWrist->Set(input);
 }
 
 void Arm::Intake(bool buttonIsPressed)
 {
-
-    intake->Set(INTAKE_SPEED);
+    if(buttonIsPressed) {
+        intake->Set(motorcontrol::ControlMode::PercentOutput, INTAKE_SPEED);
+    }
 }
 
 void Arm::MoveArmToPosition(double targetPosition, double wristCurrentPosition, double armCurrentPosition)
 {
     double delta = (targetPosition - armCurrentPosition) / ARM_ADJUSTER;
     MoveWristToPosition(wristCurrentPosition, armCurrentPosition);
-    arm1->Set(delta);
-    arm2->Set(delta);
+    leftArm->Set(delta);
+    rightArm->Set(delta);
 }
 
 void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
@@ -93,7 +106,7 @@ void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosi
         targetPosition = 0;
     }
     delta = (targetPosition - wristCurrentPosition) / WRIST_ADJUSTER;
-    wrist->Set(delta);
+    leftWrist->Set(delta);
 }
 
 void Arm::CheckHatchGripper(bool isClosed)
@@ -106,4 +119,29 @@ void Arm::CheckHatchGripper(bool isClosed)
     {
         hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
     }
+}
+
+void Arm::PrintArmCurrent(){
+    frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
+    frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
+}
+
+void Arm::ManualCalibrateArm(){
+    if(!GetArmLimitSwitch()){
+        wasArmLimitSwitchTripped = false;
+    }
+    else if (GetArmLimitSwitch() && !wasArmLimitSwitchTripped && armEncoder->GetVelocity() < 0 && armEncoder->GetVelocity() < CALIBRATION_SPEED){
+    }
+    else {
+        wasArmLimitSwitchTripped = true;
+    }
+}
+
+
+bool Arm::GetArmLimitSwitch(){
+    return !armLimitSwitch->Get();
+}
+
+bool Arm::GetWristLimitSwitch(){
+    return !wristLimitSwitch->Get();
 }

@@ -100,15 +100,18 @@ bool OI::GetIsGripperClosed()
 
 double OI::GetArmInput()
 {
-    armPowerOutput = 0.0;
-    armPowerOutput = xbox->GetY(LEFT_HAND) * ARM_POWER_SCALE;
+    armPowerOutput = xbox->GetY(LEFT_HAND);
+    frc::SmartDashboard::PutNumber("Xbox Y Left", armPowerOutput);
+    if (armPowerOutput < 0.07 && armPowerOutput > -0.07){
+        armPowerOutput = 0.0;
+    }
     return armPowerOutput;
 }
 
 double OI::GetWristInput()
 {
     wristPowerOutput = 0.0;
-    wristPowerOutput = xbox->GetY(RIGHT_HAND) * WRIST_POWER_SCALE;
+    wristPowerOutput = xbox->GetY(RIGHT_HAND);
     return wristPowerOutput;
 }
 
@@ -207,12 +210,16 @@ void OI::PrintToSmartDashboard(double encoderValue)
 
 bool OI::GetFourbarExtend()
 {
-    return xbox->GetStartButtonPressed();
+    return xbox->GetStartButton();
 }
 
 bool OI::GetFourbarRetract()
 {
-    return xbox->GetBackButtonPressed();
+    return xbox->GetBackButton();
+}
+
+bool OI::GetFourbarHome(){
+    return rightStick->GetRawButtonPressed(8);
 }
 
 bool OI::SetPresetToAButton()

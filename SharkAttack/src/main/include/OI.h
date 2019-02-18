@@ -51,6 +51,7 @@ class OI
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();
+	bool GetFourbarHome();
 
 	bool SetPresetToAButton();
 	bool SetPresetToBButton();

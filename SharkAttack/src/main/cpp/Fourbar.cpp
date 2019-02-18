@@ -23,8 +23,8 @@ Fourbar::Fourbar() {
 
     fourbarEncoder = new rev::CANEncoder(*fourbarExtender);
 
-    extended = new frc::DigitalInput(0);
-    retracted = new frc::DigitalInput(1);
+    extended = new frc::DigitalInput(1);
+    retracted = new frc::DigitalInput(0);
 
     isPastRetracted = true;
     isPastExtended = false;
@@ -91,8 +91,8 @@ void Fourbar::FourbarHome(bool homingBut){
 
 void Fourbar::UpdateFourbarSpeed() {
     
-    frc::SmartDashboard::PutBoolean("extended switch", !extended->Get());
-    frc::SmartDashboard::PutBoolean("retracted switch", !retracted->Get());
+    frc::SmartDashboard::PutBoolean("extended switch", IsExtendedTripped());
+    frc::SmartDashboard::PutBoolean("retracted switch", IsRetractedTripped());
 
     newSpeed = frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1);
     if (fourbarSpeed != newSpeed){
@@ -102,6 +102,7 @@ void Fourbar::UpdateFourbarSpeed() {
 
 void Fourbar::PrintClimberRPM(){
 
+    frc::SmartDashboard::PutNumber("Fourbar Rotations Counted", rotationsSinceRetractTripped);
     frc::SmartDashboard::PutNumber("Fourbar Encoder Position", fourbarEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Fourbar Rotations To Home", ROTATIONS_TO_HOME);
     frc::SmartDashboard::PutNumber("Fourbar Current", fourbarExtender->GetOutputCurrent());
