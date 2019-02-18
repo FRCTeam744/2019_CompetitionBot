@@ -134,10 +134,6 @@ void Robot::TeleopPeriodic() {
     arm->CheckHatchGripper(oi->GetIsGripperClosed());
   }
 
-    fourbar->RetractBar(oi->GetFourbarRetract());
-
-    fourbar->ExtendBar(oi->GetFourbarExtend());
-
   if(oi->SetPresetToAButton()){
     arm->MoveArmToPosition(oi->ArmPresetLow(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
   }
