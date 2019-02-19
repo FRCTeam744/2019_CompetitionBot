@@ -58,7 +58,7 @@ class Arm {
     const double WRIST_ADJUSTER = 400;
     const double DANGER_ZONE_LIMIT = 50;
     const double CALIBRATION_SPEED = 3000.0;
-    const double LIMIT_SWITCH_OFFSET = -5.0;
+    const double LIMIT_SWITCH_OFFSET = 5.0;
 
     const double ARM_GEAR_RATIO = 81.0;
     const double DEGREES_PER_REVOLUTION = 360.0;
