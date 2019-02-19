@@ -15,10 +15,10 @@ class ShuffleManager {
 
     public:
     	static ShuffleManager *GetInstance();
-		frc::ShuffleboardTab *Drivertab;
+		frc::ShuffleboardTab *DriverTab;
 		frc::ShuffleboardTab *PreCompTab;
-		frc::ShuffleboardTab *ArmWristtab;
-		frc::ShuffleboardTab *Visiontab;
+		frc::ShuffleboardTab *ArmWristTab;
+		frc::ShuffleboardTab *VisionTab;
 		frc::ShuffleboardTab *FourbarTab;
 
         void ShuffleInit();

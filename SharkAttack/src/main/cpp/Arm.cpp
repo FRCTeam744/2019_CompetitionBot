@@ -5,6 +5,7 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "Arm.h"
+#include "ShuffleManager.h"
 
 Arm *Arm::s_instance = 0;
 
@@ -71,6 +72,7 @@ Arm::Arm(){
 void Arm::ManualRotateArm(double input)
 {
     frc::SmartDashboard::PutNumber("Arm Control Input", input);
+    //ShuffleManager
     //shuffleboard?
     leftArm->Set(input);
     rightArm->Set(input);
@@ -131,9 +133,12 @@ void Arm::CheckHatchGripper(bool isClosed)
 }
 
 void Arm::PrintArmCurrent(){
-    frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
-    frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
-    //shuffleboard here
+    // frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
+    // frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Right Arm Current", rightArm->GetOutputCurrent());
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Left Arm Current", leftArm->GetOutputCurrent());
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Right Arm Current", rightArm->GetOutputCurrent());
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
 
 void Arm::ManualCalibrateArm(){

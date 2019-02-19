@@ -48,14 +48,14 @@ bool OI::SwitchGears() {
     if (leftStick->GetRawButtonPressed(1)) {
         isHighGear = false;
         //frc::SmartDashboard::PutBoolean("isHighGear", false);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isHighGear", isHighGear);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
         ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
         return true;
     }
     if (rightStick->GetRawButtonPressed(1)) {
         isHighGear = true;
         //frc::SmartDashboard::PutBoolean("isHighGear", true);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isHighGear", isHighGear);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
         ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
         return true;
     }
@@ -71,18 +71,17 @@ bool OI::SwitchGripper(){
     if (xbox->GetBumperPressed(RIGHT_HAND)){
         isGripperClosed = false;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", false);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isGripperClosed", isGripperClosed);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristtab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed", isGripperClosed);
         ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed", isGripperClosed);
         return true;
     }
     if (xbox->GetBumperPressed(LEFT_HAND)){
         isGripperClosed = true;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", true);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isGripperClosed", isGripperClosed);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristtab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed", isGripperClosed);
         ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed", isGripperClosed);
-
         return true;
     }
     return false;

@@ -21,33 +21,33 @@ ShuffleManager::ShuffleManager(){
 }
 
 void ShuffleManager::ShuffleInit(){
-    Drivertab = &frc::Shuffleboard::GetTab("DriverView");
+    DriverTab = &frc::Shuffleboard::GetTab("DriverView");
     PreCompTab = &frc::Shuffleboard::GetTab("Pre-Comp Check");
-    ArmWristtab = &frc::Shuffleboard::GetTab("Arm&Wrist Debug");
-    Visiontab = &frc::Shuffleboard::GetTab("Vision Testing");
+    ArmWristTab = &frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+    VisionTab = &frc::Shuffleboard::GetTab("Vision Testing");
     FourbarTab = &frc::Shuffleboard::GetTab("Fourbar Testing");
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, char* label, double val){
-   if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == Drivertab){
+   if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == DriverTab){ //negates everything on other tabs when FMS is connected
         tab->Add(label, val);
    }
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, char* label, float val){
-    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == Drivertab){
+    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == DriverTab){
         tab->Add(label, val);
    }
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, char* label, int val){
-    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == Drivertab){
+    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == DriverTab){
         tab->Add(label, val);
    }
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, char* label, char* val){
-    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == Drivertab){
+    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == DriverTab){
         tab->Add(label, val);
    }
 }
