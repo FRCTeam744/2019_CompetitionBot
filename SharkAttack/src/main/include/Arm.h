@@ -57,6 +57,8 @@ class Arm {
     bool wasArmLimitSwitchTripped;
     bool wasWristLimitSwitchTripped;
 
+    bool hasBall = false;
+
     //CAN Motor IDs
     const int LEFT_ARM_ID = 42;
     const int RIGHT_ARM_ID = 43;
@@ -67,8 +69,11 @@ class Arm {
     const int INTAKE_PDP_PORT = 10;
     const double INTAKE_MAX_CURRENT = 40.0;
 
+    const int ARM_CURRENT_LIMIT = 10;
+    const int WRIST_CURRENT_LIMIT = 10;
+
     //Tunables
-    const double INTAKE_SPEED = 0.5;
+    const double HOLD_BALL_SPEED = 0.05;
     const double ARM_ADJUSTER = 400;
     const double WRIST_ADJUSTER = 400;
     const double DANGER_ZONE_LIMIT = 50;
@@ -80,7 +85,14 @@ class Arm {
     const double DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_REVOLUTION / ARM_GEAR_RATIO;
 
     //ArmPositions
-    const double FRONT_WRIST_POS_ENCODER_TICKS = 20.25;
+    const double FRONT_HIGH = 20.25;
+    const double FRONT_MID = 0;
+    const double FRONT_LOW = 0;
+    const double FRONT_BALL_PICKUP = 0;
+    const double BACK_HIGH = 0;
+    const double BACK_MID = 0;
+    const double BACK_LOW = 0;
+    const double BACK_BALL_PICKUP = 0;
 
     //Constants
     const rev::CANSparkMax::MotorType BRUSHLESS = rev::CANSparkMax::MotorType::kBrushless;

@@ -56,10 +56,11 @@ Arm::Arm(){
     rightWrist->SetIdleMode(BRAKE);
     intake->SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
-    leftArm->SetSmartCurrentLimit(10);
-    rightArm->SetSmartCurrentLimit(10);
-    leftWrist->SetSmartCurrentLimit(10);
-    rightWrist->SetSmartCurrentLimit(10);
+    leftArm->SetSmartCurrentLimit(ARM_CURRENT_LIMIT);
+    rightArm->SetSmartCurrentLimit(ARM_CURRENT_LIMIT);
+    leftWrist->SetSmartCurrentLimit(WRIST_CURRENT_LIMIT);
+    rightWrist->SetSmartCurrentLimit(WRIST_CURRENT_LIMIT);
+
     //SetFollowers
     // rightArm->Follow(*leftArm, false);
     // rightWrist->Follow(*leftWrist, false);
@@ -84,27 +85,35 @@ void Arm::ManualRotateWrist(double input) {
 }
 
 void Arm::RunIntake(double in, double out) {
-    if(in != 0.0 && pdp->GetCurrent(INTAKE_PDP_PORT) < INTAKE_MAX_CURRENT) {
+    
+    if(in != 0.0 && !hasBall) {
         intake->Set(motorcontrol::ControlMode::PercentOutput, in);
+        
+        if(pdp->GetCurrent(INTAKE_PDP_PORT) < INTAKE_MAX_CURRENT){
+            hasBall = true;
+        }
+    }
+    else if (in != 0.0 && hasBall) {
+        intake->Set(motorcontrol::ControlMode::PercentOutput, HOLD_BALL_SPEED);
     }
     else if (out != 0.0) {
+        hasBall = false;
         intake->Set(motorcontrol::ControlMode::PercentOutput, -out);
     }
-    else{
+    else {
+        hasBall = false;
         intake->Set(motorcontrol::ControlMode::PercentOutput, 0.0);
     }
 }
 
-void Arm::MoveArmToPosition(double targetPosition, double wristCurrentPosition, double armCurrentPosition)
-{
+void Arm::MoveArmToPosition(double targetPosition, double wristCurrentPosition, double armCurrentPosition) {
     double delta = (targetPosition - armCurrentPosition) / ARM_ADJUSTER;
     MoveWristToPosition(wristCurrentPosition, armCurrentPosition);
     leftArm->Set(delta);
     rightArm->Set(delta);
 }
 
-void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
-{
+void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition) {
     double targetPosition;
     double delta;
     if (armCurrentPosition > DANGER_ZONE_LIMIT) {
@@ -122,8 +131,7 @@ void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosi
     leftWrist->Set(delta);
 }
 
-void Arm::CheckHatchGripper(bool isClosed)
-{
+void Arm::CheckHatchGripper(bool isClosed) {
     if (isClosed) {
         hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
     }
