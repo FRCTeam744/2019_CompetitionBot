@@ -26,7 +26,7 @@ Arm::Arm(){
     rightArm = new rev::CANSparkMax(43, BRUSHLESS);
     leftWrist = new rev::CANSparkMax(44, BRUSHLESS);
     rightWrist = new rev::CANSparkMax(45, BRUSHLESS);
-    intake = new TalonSRX(46);
+    intake = new TalonSRX(46); //might be a victorSPX
 
     hatchGripper = new frc::DoubleSolenoid(2, 3);
 
