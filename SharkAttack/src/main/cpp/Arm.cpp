@@ -118,7 +118,7 @@ void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosi
     double delta;
     if (armCurrentPosition > DANGER_ZONE_LIMIT) {
         //normal operations
-        targetPosition = FRONT_WRIST_POS_ENCODER_TICKS;
+        targetPosition = FRONT_BALL_PICKUP_POSITION;
     } else if(armCurrentPosition < -DANGER_ZONE_LIMIT){
         //other normal operations
         
