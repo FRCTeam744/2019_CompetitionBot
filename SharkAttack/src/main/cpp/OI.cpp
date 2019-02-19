@@ -5,6 +5,7 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "OI.h"
+#include "ShuffleManager.h"
 
 
 OI* OI::s_instance = 0;
@@ -47,12 +48,16 @@ OI::OI()
 bool OI::SwitchGears() {
     if (leftStick->GetRawButtonPressed(1)) {
         isHighGear = false;
-        frc::SmartDashboard::PutBoolean("isHighGear", false);
+        //frc::SmartDashboard::PutBoolean("isHighGear", false);
+        ShuffleManager::OnShfl(ShuffleManager::Drivertab, "isHighGear", isHighGear);
+        ShuffleManager::OnShfl(ShuffleManager::PreCompTab, "isHighGear", isHighGear);
         return true;
     }
     if (rightStick->GetRawButtonPressed(1)) {
         isHighGear = true;
-        frc::SmartDashboard::PutBoolean("isHighGear", true);
+        //frc::SmartDashboard::PutBoolean("isHighGear", true);
+        ShuffleManager::OnShfl(ShuffleManager::Drivertab, "isHighGear", isHighGear);
+        ShuffleManager::OnShfl(ShuffleManager::PreCompTab, "isHighGear", isHighGear);
         return true;
     }
     return false;
@@ -66,12 +71,16 @@ bool OI::GetIsHighGear()
 bool OI::SwitchGripper(){
     if (xbox->GetBumperPressed(RIGHT_HAND)){
         isGripperClosed = false;
-        frc::SmartDashboard::PutBoolean("isGripperClosed", false);
+        //frc::SmartDashboard::PutBoolean("isGripperClosed", false);
+        ShuffleManager::OnShfl(ShuffleManager::Drivertab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::OnShfl(ShuffleManager::ArmWristtab, "isGripperClosed", isGripperClosed);
         return true;
     }
     if (xbox->GetBumperPressed(LEFT_HAND)){
         isGripperClosed = true;
-        frc::SmartDashboard::PutBoolean("isGripperClosed", true);
+        //frc::SmartDashboard::PutBoolean("isGripperClosed", true);
+        ShuffleManager::OnShfl(ShuffleManager::Drivertab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::OnShfl(ShuffleManager::ArmWristtab, "isGripperClosed", isGripperClosed);
         return true;
     }
     return false;
@@ -135,24 +144,19 @@ double OI::ArmPresetNegHigh()
     return ARM_PICKUP_NEG_HIGH_DEG;
 }
 
-void OI::PutOnShuffleboardInOI(){
+// void OI::PutOnShuffleboardInOI(){
 
-    // if (isInitialized == false)
-    // {
-//         frc::ShuffleboardTab &Drivertab = frc::Shuffleboard::GetTab("DriverView");
-//         //Drivertab.Add("Pi4", 3.14).GetEntry();
-//         // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
-
-//         frc::ShuffleboardTab &PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
-
-//         frc::ShuffleboardTab &ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
-
-//Robot::PreCompTab->Add("Arm Encoder Val", drivetrain->GetArmEncoderValue());
-
-//         frc::ShuffleboardTab &Visiontab = frc::Shuffleboard::GetTab("Vision Testing");
-//         isInitialized = true;
-//     }
-}
+//     // if (isInitialized == false)
+//     // {
+// //         frc::ShuffleboardTab &Drivertab = frc::Shuffleboard::GetTab("DriverView");
+// //         //Drivertab.Add("Pi4", 3.14).GetEntry();
+// //         // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
+// //         frc::ShuffleboardTab &PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
+// //         frc::ShuffleboardTab &ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+// //         frc::ShuffleboardTab &Visiontab = frc::Shuffleboard::GetTab("Vision Testing");
+// //         isInitialized = true;
+// //     }
+// }
 
 
 

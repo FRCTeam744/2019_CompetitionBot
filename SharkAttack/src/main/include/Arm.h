@@ -59,6 +59,12 @@ class Arm {
     const double DANGER_ZONE_LIMIT = 50;
     const double CALIBRATION_SPEED = 3000.0;
     const double LIMIT_SWITCH_OFFSET = -5.0;
+
+    const double ARM_GEAR_RATIO = 81.0;
+    const double DEGREES_PER_REVOLUTION = 360.0;
+    const double DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_REVOLUTION / ARM_GEAR_RATIO;
+
+    //ArmPositions
     const double FRONT_WRIST_POS_ENCODER_TICKS = 20.25;
 
     //Constants

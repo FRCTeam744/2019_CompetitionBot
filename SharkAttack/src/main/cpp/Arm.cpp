@@ -35,6 +35,9 @@ Arm::Arm(){
     armLimitSwitch = new frc::DigitalInput(2);
     wristLimitSwitch = new frc::DigitalInput(3);
 
+    //Set the Conversion Factor for Encoder output to read Degrees
+    armEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
+
     //Set arm Sparks invertions
     leftArm->SetInverted(false);
     rightArm->SetInverted(true);

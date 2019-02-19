@@ -27,11 +27,11 @@ void Robot::RobotInit()
   led = LED::GetInstance();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
+
+  ShuffleManager::ShuffleInit();
    
   // std::thread vision(VisionThread);
   // vision.detach();
-
-  // printf("%s\n","Hi, if you see this, the SD/SB method is working apparently!");
 }
 
 /**
