@@ -65,6 +65,7 @@ Drivetrain::Drivetrain()
 //Public Methods
 void Drivetrain::PutData() {
 //Send limelight and drivetrain variables to SD
+//VISION TAB PLS
 
   targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);
   targetOffsetAngle_Vertical = limelight->GetNumber("ty", 0.0);

@@ -95,6 +95,7 @@ double OI::GetArmInput()
 {
     armPowerOutput = xbox->GetY(LEFT_HAND);
     frc::SmartDashboard::PutNumber("Xbox Y Left", armPowerOutput);
+    //shuffleboard here
     if (armPowerOutput < 0.07 && armPowerOutput > -0.07){
         armPowerOutput = 0.0;
     }

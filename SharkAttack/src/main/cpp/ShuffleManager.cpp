@@ -28,17 +28,25 @@ void ShuffleManager::ShuffleInit(){
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, char* label, double val){
-    tab->Add(label, val);
+   if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == Drivertab){
+        tab->Add(label, val);
+   }
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, char* label, float val){
-    tab->Add(label, val);
+    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == Drivertab){
+        tab->Add(label, val);
+   }
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, char* label, int val){
-    tab->Add(label, val);
+    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == Drivertab){
+        tab->Add(label, val);
+   }
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, char* label, char* val){
-    tab->Add(label, val);
+    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == Drivertab){
+        tab->Add(label, val);
+   }
 }

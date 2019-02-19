@@ -26,6 +26,7 @@
 #include "Arm.h"
 #include "Fourbar.h"
 #include "LED.h"
+#include "ShuffleManager.h"
 
 
 class Robot : public frc::TimedRobot {

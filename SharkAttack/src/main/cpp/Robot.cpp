@@ -26,9 +26,10 @@ void Robot::RobotInit()
   fourbar = Fourbar::GetInstance();
   led = LED::GetInstance();
 
-  frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
-
   ShuffleManager::ShuffleInit();
+  
+  frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
+  //ShuffleManager::OnShfl(ShuffleManager::PreCompTab, "Fourbar Speed", 0.1);
    
   // std::thread vision(VisionThread);
   // vision.detach();
