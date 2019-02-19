@@ -64,20 +64,14 @@ class OI
 
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	void PutOnShuffleboardInOI();
-	void OnShfl(frc::ShuffleboardTab *tab, char* label, double val);
-	void OnShfl(frc::ShuffleboardTab *tab, char* label, float val);
-	void OnShfl(frc::ShuffleboardTab *tab, char* label, int val);
-	void OnShfl(frc::ShuffleboardTab *tab, char* label, char* val);
+	
 
-  std::tuple<bool, std::string, double> SetLimelight();
+	std::tuple<bool, std::string, double> SetLimelight();
 
 	bool LEDButtonPressed();
 	bool AlsoLEDButtonPressed();
 
-	frc::ShuffleboardTab *Drivertab;
-	frc::ShuffleboardTab *PreCompTab;
-	frc::ShuffleboardTab *ArmWristtab;
-	frc::ShuffleboardTab *Visiontab;
+	
 
   private:
 

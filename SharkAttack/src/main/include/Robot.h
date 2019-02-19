@@ -54,11 +54,6 @@ private:
   Fourbar *fourbar;
   LED *led;
 
-  frc::ShuffleboardTab *Drivertab;
-  frc::ShuffleboardTab *PreCompTab;
-  frc::ShuffleboardTab *ArmWristtab;
-  frc::ShuffleboardTab *Visiontab;
-
   frc::DriverStation::Alliance alliance;
 
   const frc::DriverStation::Alliance blue = frc::DriverStation::Alliance::kBlue;

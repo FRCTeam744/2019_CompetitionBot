@@ -11,8 +11,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DigitalInput.h>
 
-class Arm
-{
+class Arm {
   public:
     static Arm *GetInstance();
 

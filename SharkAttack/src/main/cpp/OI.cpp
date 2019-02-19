@@ -34,10 +34,7 @@ OI::OI()
     isHighGear = true;
     isGripperClosed = true;
 
-    Drivertab = &frc::Shuffleboard::GetTab("DriverView");
-    PreCompTab = &frc::Shuffleboard::GetTab("Pre-Comp Check");
-    ArmWristtab = &frc::Shuffleboard::GetTab("Arm&Wrist Debug");
-    Visiontab = &frc::Shuffleboard::GetTab("Vision Testing");
+   
 
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
@@ -157,21 +154,7 @@ void OI::PutOnShuffleboardInOI(){
 //     }
 }
 
-void OI::OnShfl(frc::ShuffleboardTab *tab, char* label, double val){
 
-}
-
-void OI::OnShfl(frc::ShuffleboardTab *tab, char* label, float val){
-
-}
-
-void OI::OnShfl(frc::ShuffleboardTab *tab, char* label, int val){
-
-}
-
-void OI::OnShfl(frc::ShuffleboardTab *tab, char* label, char* val){
-
-}
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput()

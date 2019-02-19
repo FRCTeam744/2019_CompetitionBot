@@ -19,8 +19,7 @@ Arm *Arm::GetInstance()
 }
 
 //Constructor
-Arm::Arm()
-{
+Arm::Arm(){
     //Initialize arm motors
     leftArm = new rev::CANSparkMax(42, BRUSHLESS);
     rightArm = new rev::CANSparkMax(43, BRUSHLESS);
@@ -130,8 +129,8 @@ void Arm::ManualCalibrateArm(){
     if(!GetArmLimitSwitch()) {
         wasArmLimitSwitchTripped = false;
     }
-    else if (GetArmLimitSwitch() && !wasArmLimitSwitchTripped && armEncoder->GetVelocity() < 0 && armEncoder->GetVelocity() < CALIBRATION_SPEED){
-        
+    else if (GetArmLimitSwitch() && !wasArmLimitSwitchTripped && armEncoder->GetVelocity() < 0 && armEncoder->GetVelocity() > CALIBRATION_SPEED){
+        armEncoder->SetPosition(LIMIT_SWITCH_OFFSET);
     }
     else {
         wasArmLimitSwitchTripped = true;
