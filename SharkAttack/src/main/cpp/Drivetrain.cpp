@@ -81,24 +81,26 @@ void Drivetrain::PutData() {
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Heading", targetOffsetAngle_Horizontal);
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Skew", targetSkew);
 
-
   rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//rightDashboardSpeed = NU_TO_FEET;
   leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//leftDashboardSpeed = SECONDS_TO_100MS;
-
-  
 
   // frc::SmartDashboard::PutNumber("NU_PER_REV", NU_PER_REV);
   // frc::SmartDashboard::PutNumber("CIRCUMFERENCE_INCHES", CIRCUMFERENCE_INCHES);
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "NU_PER_REV", targetSkew);
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "CIRCUMFERENCE_INCHES", CIRCUMFERENCE_INCHES);
 
-
-  frc::SmartDashboard::PutNumber("RADIUS_INCHES", RADIUS_INCHES);
-  frc::SmartDashboard::PutNumber("INCHES_PER_REV", INCHES_PER_REV);
-  frc::SmartDashboard::PutNumber("NU_TO_FEET", NU_TO_FEET);
-  frc::SmartDashboard::PutNumber("FEET_TO_NU", FEET_TO_NU);
-  frc::SmartDashboard::PutNumber("SECONDS_TO_100MS", SECONDS_TO_100MS);
-  frc::SmartDashboard::PutNumber("CONVERT_100MS_TO_SECONDS", CONVERT_100MS_TO_SECONDS);
+  // frc::SmartDashboard::PutNumber("RADIUS_INCHES", RADIUS_INCHES);
+  // frc::SmartDashboard::PutNumber("INCHES_PER_REV", INCHES_PER_REV);
+  // frc::SmartDashboard::PutNumber("NU_TO_FEET", NU_TO_FEET);
+  // frc::SmartDashboard::PutNumber("FEET_TO_NU", FEET_TO_NU);
+  // frc::SmartDashboard::PutNumber("SECONDS_TO_100MS", SECONDS_TO_100MS);
+  // frc::SmartDashboard::PutNumber("CONVERT_100MS_TO_SECONDS", CONVERT_100MS_TO_SECONDS);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "RADIUS_INCHES", RADIUS_INCHES);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "INCHES_PER_REV", INCHES_PER_REV);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "NU_TO_FEET", NU_TO_FEET);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "FEET_T0_NU", FEET_TO_NU);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "SECONDS_TO_100MS", SECONDS_TO_100MS);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "CONVERT_100MS_TO_SECONDS", CONVERT_100MS_TO_SECONDS);
 
   frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
   frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
