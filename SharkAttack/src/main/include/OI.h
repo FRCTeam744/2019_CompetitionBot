@@ -63,12 +63,21 @@ class OI
 	bool SetPresetToDPadLeft();
 
 	// void SwitchLED_Mode(Drivetrain drivetrain);
-	void PutOnShuffleboard();
+	void PutOnShuffleboardInOI();
+	void OnShfl(frc::ShuffleboardTab *tab, char* label, double val);
+	void OnShfl(frc::ShuffleboardTab *tab, char* label, float val);
+	void OnShfl(frc::ShuffleboardTab *tab, char* label, int val);
+	void OnShfl(frc::ShuffleboardTab *tab, char* label, char* val);
 
   std::tuple<bool, std::string, double> SetLimelight();
 
 	bool LEDButtonPressed();
 	bool AlsoLEDButtonPressed();
+
+	frc::ShuffleboardTab *Drivertab;
+	frc::ShuffleboardTab *PreCompTab;
+	frc::ShuffleboardTab *ArmWristtab;
+	frc::ShuffleboardTab *Visiontab;
 
   private:
 
@@ -114,7 +123,6 @@ class OI
 	cs::UsbCamera camera; //Untested to see if usb camera class works for limelight
 
 	//Private Instance Variables
-	bool driveWithXbox = false;
 	bool isHighGear;
 	bool isGripperClosed;
 	double armPowerOutput = 0.0;

@@ -41,6 +41,7 @@ public:
   void TestPeriodic() override;
 
 
+
 private:
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoDrive1 = "Drive Off Level 1";
@@ -52,6 +53,11 @@ private:
   Arm *arm;
   Fourbar *fourbar;
   LED *led;
+
+  frc::ShuffleboardTab *Drivertab;
+  frc::ShuffleboardTab *PreCompTab;
+  frc::ShuffleboardTab *ArmWristtab;
+  frc::ShuffleboardTab *Visiontab;
 
   frc::DriverStation::Alliance alliance;
 

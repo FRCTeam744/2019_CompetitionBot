@@ -27,6 +27,13 @@ void Robot::RobotInit()
   led = LED::GetInstance();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
+  
+  Drivertab = &frc::Shuffleboard::GetTab("DriverView");
+  PreCompTab = &frc::Shuffleboard::GetTab("Pre-Comp Check");
+  ArmWristtab = &frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+  Visiontab = &frc::Shuffleboard::GetTab("Vision Testing");
+   
+
   // std::thread vision(VisionThread);
   // vision.detach();
 
@@ -43,7 +50,7 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic() {
   fourbar->UpdateFourbarSpeed();
-  oi->PutOnShuffleboard();
+  //oi->PutOnShuffleboard();
 
   drivetrain->LimelightSet(oi->SetLimelight());
 

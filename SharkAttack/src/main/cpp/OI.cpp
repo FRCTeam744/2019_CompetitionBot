@@ -25,7 +25,6 @@ OI::OI()
 {
 
     preferences = frc::Preferences::GetInstance();
-    driveWithXbox = preferences->GetBoolean("driveWithXbox", false);
 
     //Intantiates the controller objects for the drivers
     leftStick = new frc::Joystick(0);
@@ -35,6 +34,11 @@ OI::OI()
     isHighGear = true;
     isGripperClosed = true;
 
+    Drivertab = &frc::Shuffleboard::GetTab("DriverView");
+    PreCompTab = &frc::Shuffleboard::GetTab("Pre-Comp Check");
+    ArmWristtab = &frc::Shuffleboard::GetTab("Arm&Wrist Debug");
+    Visiontab = &frc::Shuffleboard::GetTab("Vision Testing");
+
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
     // camera.SetResolution(resolutionWidth, resolutionHeight);
@@ -42,23 +46,6 @@ OI::OI()
 }
 
 //Public Methods
-
-// void OI::SwitchDriveMode()
-// {
-//     if (xbox->GetStickButtonPressed(RIGHT_HAND))
-//     {
-//         if (!driveWithXbox)
-//         {
-//             driveWithXbox = true;
-//             preferences->PutBoolean("driveWithXbox", true);
-//         }
-//         else
-//         {
-//             driveWithXbox = false;
-//             preferences->PutBoolean("driveWithXbox", false);
-//         }
-//     }
-// }
 
 bool OI::SwitchGears() {
     if (leftStick->GetRawButtonPressed(1)) {
@@ -151,55 +138,50 @@ double OI::ArmPresetNegHigh()
     return ARM_PICKUP_NEG_HIGH_DEG;
 }
 
-void OI::PutOnShuffleboard()
-{
-    if (isInitialized == false)
-    {
-        frc::ShuffleboardTab &Drivertab = frc::Shuffleboard::GetTab("DriverView");
-        // Drivertab.Add("Pi4", 3.14).GetEntry();
-        // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
+void OI::PutOnShuffleboardInOI(){
 
-        frc::ShuffleboardTab &PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
+    // if (isInitialized == false)
+    // {
+//         frc::ShuffleboardTab &Drivertab = frc::Shuffleboard::GetTab("DriverView");
+//         //Drivertab.Add("Pi4", 3.14).GetEntry();
+//         // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
 
-        frc::ShuffleboardTab &ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
-        //PreCompTab.Add("Arm Encoder Val", drivetrain->GetArmEncoderValue());
+//         frc::ShuffleboardTab &PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
 
-        frc::ShuffleboardTab &Visiontab = frc::Shuffleboard::GetTab("Vision Testing");
-        isInitialized = true;
-    }
+//         frc::ShuffleboardTab &ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
 
-    //    //test variables
-    //     frc::SmartDashboard::PutBoolean("DriverView/bool", true);
-    //     frc::SmartDashboard::PutBoolean("DriverView/bool2", true);
-    //     frc::SmartDashboard::PutNumber("Smartdashboard/test5", 55);
-    //     frc::SmartDashboard::PutNumber("Smartdashboard/test6", 6);
-    //     frc::SmartDashboard::PutNumber("Smartdashboard/test7", 72);
-    //     frc::SmartDashboard::PutBoolean("Smartdashboard/using gyro2?", false);
+//Robot::PreCompTab->Add("Arm Encoder Val", drivetrain->GetArmEncoderValue());
+
+//         frc::ShuffleboardTab &Visiontab = frc::Shuffleboard::GetTab("Vision Testing");
+//         isInitialized = true;
+//     }
+}
+
+void OI::OnShfl(frc::ShuffleboardTab *tab, char* label, double val){
+
+}
+
+void OI::OnShfl(frc::ShuffleboardTab *tab, char* label, float val){
+
+}
+
+void OI::OnShfl(frc::ShuffleboardTab *tab, char* label, int val){
+
+}
+
+void OI::OnShfl(frc::ShuffleboardTab *tab, char* label, char* val){
+
 }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput()
 {
-    if (driveWithXbox)
-    {
-        return -(xbox->GetY(LEFT_HAND));
-    }
-    else
-    {
-        return -(leftStick->GetY());
-    }
+    return -(leftStick->GetY());
 }
 
 double OI::GetRightDriveInput()
 {
-    if (driveWithXbox)
-    {
-        return -(xbox->GetY(RIGHT_HAND));
-    }
-    else
-    {
-        return -(rightStick->GetY());
-    }
+    return -(rightStick->GetY());
 }
 
 void OI::PrintToSmartDashboard(double encoderValue)
