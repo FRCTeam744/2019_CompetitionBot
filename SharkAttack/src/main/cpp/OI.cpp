@@ -73,6 +73,7 @@ bool OI::SwitchGripper(){
         //frc::SmartDashboard::PutBoolean("isGripperClosed", false);
         ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isGripperClosed", isGripperClosed);
         ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristtab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed", isGripperClosed);
         return true;
     }
     if (xbox->GetBumperPressed(LEFT_HAND)){
@@ -80,6 +81,8 @@ bool OI::SwitchGripper(){
         //frc::SmartDashboard::PutBoolean("isGripperClosed", true);
         ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isGripperClosed", isGripperClosed);
         ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristtab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed", isGripperClosed);
+
         return true;
     }
     return false;

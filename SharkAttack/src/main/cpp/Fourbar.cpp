@@ -5,6 +5,7 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "Fourbar.h"
+#include "ShuffleManager.h"
 
 Fourbar* Fourbar::s_instance = 0;
 

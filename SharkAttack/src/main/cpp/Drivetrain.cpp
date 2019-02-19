@@ -5,6 +5,7 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "Drivetrain.h"
+#include "ShuffleManager.h"
 
 Drivetrain *Drivetrain::s_instance = 0;
 
@@ -76,8 +77,11 @@ void Drivetrain::PutData() {
   targetArea = limelight->GetNumber("ta", 0.0);
   targetSkew = limelight->GetNumber("ts", 0.0);
 
-  frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
-  frc::SmartDashboard::PutNumber("Skew", targetSkew);
+  // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
+  // frc::SmartDashboard::PutNumber("Skew", targetSkew);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Visiontab, "Heading", targetOffsetAngle_Horizontal);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Visiontab, "Skew", targetSkew);
+
 
   rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
   leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;
@@ -85,8 +89,11 @@ void Drivetrain::PutData() {
   //rightDashboardSpeed = NU_TO_FEET;
   //leftDashboardSpeed = SECONDS_TO_100MS;
 
-  frc::SmartDashboard::PutNumber("NU_PER_REV", NU_PER_REV);
-  frc::SmartDashboard::PutNumber("CIRCUMFERENCE_INCHES", CIRCUMFERENCE_INCHES);
+  // frc::SmartDashboard::PutNumber("NU_PER_REV", NU_PER_REV);
+  // frc::SmartDashboard::PutNumber("CIRCUMFERENCE_INCHES", CIRCUMFERENCE_INCHES);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Visiontab, "NU_PER_REV", targetSkew);
+  //FIX ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Visiontab, "Skew", targetSkew);
+
 
   frc::SmartDashboard::PutNumber("RADIUS_INCHES", RADIUS_INCHES);
   frc::SmartDashboard::PutNumber("INCHES_PER_REV", INCHES_PER_REV);
@@ -237,15 +244,3 @@ void Drivetrain::CheckSwitchGears(bool isHighGear)
     gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
   }
 }
-
-// void Drivetrain::PutOnShuffleboard()
-// {
-//   if (isInitialized == false)
-//   {
-//     frc::ShuffleboardTab &PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
-//     frc::ShuffleboardTab &ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
-//     //PreCompTab.Add("Arm Encoder Val", drivetrain->GetArmEncoderValue());
-
-//     isInitialized = true;
-//   }
-// }
