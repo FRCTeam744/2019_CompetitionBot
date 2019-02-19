@@ -17,6 +17,8 @@
 #include <frc/smartdashboard/Smartdashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
 
+#include "ShuffleManager.h"
+
 
 class OI
 {
@@ -39,6 +41,8 @@ class OI
 	double GetWristInput();
 	double GetArmEncoder();
 	double GetWristEncoder();
+	double GetIntakeOut();
+	double GetIntakeIn();
 
 	double ArmPresetPickupCargo();
 	double ArmPresetLow();

@@ -5,7 +5,6 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "Arm.h"
-#include "ShuffleManager.h"
 
 Arm *Arm::s_instance = 0;
 
@@ -22,11 +21,11 @@ Arm *Arm::GetInstance()
 //Constructor
 Arm::Arm(){
     //Initialize arm motors
-    leftArm = new rev::CANSparkMax(42, BRUSHLESS);
-    rightArm = new rev::CANSparkMax(43, BRUSHLESS);
-    leftWrist = new rev::CANSparkMax(44, BRUSHLESS);
-    rightWrist = new rev::CANSparkMax(45, BRUSHLESS);
-    intake = new TalonSRX(46); //might be a victorSPX
+    leftArm = new rev::CANSparkMax(LEFT_ARM_ID, BRUSHLESS);
+    rightArm = new rev::CANSparkMax(RIGHT_ARM_ID, BRUSHLESS);
+    leftWrist = new rev::CANSparkMax(LEFT_WRIST_ID, BRUSHLESS);
+    rightWrist = new rev::CANSparkMax(RIGHT_WRIST_ID, BRUSHLESS);
+    intake = new VictorSPX(INTAKE_ID);
 
     hatchGripper = new frc::DoubleSolenoid(2, 3);
 
@@ -35,6 +34,8 @@ Arm::Arm(){
 
     armLimitSwitch = new frc::DigitalInput(2);
     wristLimitSwitch = new frc::DigitalInput(3);
+
+    pdp = new frc::PowerDistributionPanel();
 
     //Set the Conversion Factor for Encoder output to read Degrees
     armEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
@@ -75,16 +76,20 @@ void Arm::ManualRotateArm(double input)
     rightArm->Set(input);
 }
 
-void Arm::ManualRotateWrist(double input)
-{
+void Arm::ManualRotateWrist(double input) {
     leftWrist->Set(input);
     rightWrist->Set(input);
 }
 
-void Arm::Intake(bool buttonIsPressed)
-{
-    if(buttonIsPressed) {
-        intake->Set(motorcontrol::ControlMode::PercentOutput, INTAKE_SPEED);
+void Arm::RunIntake(double in, double out) {
+    if(in != 0.0 && pdp->GetCurrent(INTAKE_PDP_PORT) < INTAKE_MAX_CURRENT) {
+        intake->Set(motorcontrol::ControlMode::PercentOutput, in);
+    }
+    else if (out != 0.0) {
+        intake->Set(motorcontrol::ControlMode::PercentOutput, -out);
+    }
+    else{
+        intake->Set(motorcontrol::ControlMode::PercentOutput, 0.0);
     }
 }
 

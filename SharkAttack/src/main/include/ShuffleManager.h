@@ -11,21 +11,21 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/Preferences.h>
 
-
 class ShuffleManager {
 
     public:
     	static ShuffleManager *GetInstance();
-		static frc::ShuffleboardTab *Drivertab;
-		static frc::ShuffleboardTab *PreCompTab;
-		static frc::ShuffleboardTab *ArmWristtab;
-		static frc::ShuffleboardTab *Visiontab;
+		frc::ShuffleboardTab *Drivertab;
+		frc::ShuffleboardTab *PreCompTab;
+		frc::ShuffleboardTab *ArmWristtab;
+		frc::ShuffleboardTab *Visiontab;
+		frc::ShuffleboardTab *FourbarTab;
 
-        static void ShuffleInit();
-		static void OnShfl(frc::ShuffleboardTab *tab, char* label, double val);
-		static void OnShfl(frc::ShuffleboardTab *tab, char* label, float val);
-		static void OnShfl(frc::ShuffleboardTab *tab, char* label, int val);
-		static void OnShfl(frc::ShuffleboardTab *tab, char* label, char* val);
+        void ShuffleInit();
+		void OnShfl(frc::ShuffleboardTab *tab, char* label, double val);
+		void OnShfl(frc::ShuffleboardTab *tab, char* label, float val);
+		void OnShfl(frc::ShuffleboardTab *tab, char* label, int val);
+		void OnShfl(frc::ShuffleboardTab *tab, char* label, char* val);
 
     private:
         static ShuffleManager *s_instance;

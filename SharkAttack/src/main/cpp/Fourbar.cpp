@@ -6,7 +6,6 @@
 
 #include "Fourbar.h"
 
-
 Fourbar* Fourbar::s_instance = 0;
 
 //Static Singleton Method

@@ -10,6 +10,7 @@
 #include "frc/DoubleSolenoid.h"
 //#include <frc/shuffleboard/Shuffleboard.h>
 
+#include "ShuffleManager.h"
 
 class Drivetrain {
 
@@ -54,12 +55,12 @@ class Drivetrain {
 	std::shared_ptr<NetworkTable> limelight;
 	
 	//CAN Talon IDs for each of the drivetrain motors
-	const int rightFrontID = 23;
-	const int rightMidID = 25;
-	const int rightBackID = 27;
-	const int leftFrontID = 22;
-	const int leftMidID = 24;
-	const int leftBackID = 26;
+	const int RIGHT_FRONT_ID = 23;
+	const int RIGHT_MID_ID = 25;
+	const int RIGHT_BACK_ID = 27;
+	const int LEFT_FRONT_ID = 22;
+	const int LEFT_MID_ID = 24;
+	const int LEFT_BACK_ID = 26;
 
 	//DoubleSolenoid gearShirter forward and reverse channels
 	const int LOW_GEAR = 0;

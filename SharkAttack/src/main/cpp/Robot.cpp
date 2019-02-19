@@ -25,8 +25,9 @@ void Robot::RobotInit()
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
   led = LED::GetInstance();
+  shufflemanager = ShuffleManager::GetInstance();
 
-  ShuffleManager::ShuffleInit();
+  shufflemanager->ShuffleInit();
   
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
   //ShuffleManager::OnShfl(ShuffleManager::PreCompTab, "Fourbar Speed", 0.1);
@@ -115,7 +116,7 @@ void Robot::TeleopPeriodic() {
   drivetrain->PutData();
 
   arm->ManualRotateArm(oi->GetArmInput());
-  // arm->ManualRotateWrist(oi->GetWristInput());
+  arm->RunIntake(oi->GetIntakeIn(), oi->GetIntakeOut());
   
   fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
   fourbar->FourbarHome(oi->GetFourbarHome());

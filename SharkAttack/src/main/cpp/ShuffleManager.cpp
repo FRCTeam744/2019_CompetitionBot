@@ -25,6 +25,7 @@ void ShuffleManager::ShuffleInit(){
     PreCompTab = &frc::Shuffleboard::GetTab("Pre-Comp Check");
     ArmWristtab = &frc::Shuffleboard::GetTab("Arm&Wrist Debug");
     Visiontab = &frc::Shuffleboard::GetTab("Vision Testing");
+    FourbarTab = &frc::Shuffleboard::GetTab("Fourbar Testing");
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, char* label, double val){

@@ -1,6 +1,10 @@
-#include "Drivetrain.h"
-//#include <frc/shuffleboard/Shuffleboard.h>
+/*----------------------------------------------------------------------------------*/
 
+//Methods for the Drivetrain class (any and all things drivetrain/locomotion)
+
+/*----------------------------------------------------------------------------------*/
+
+#include "Drivetrain.h"
 
 Drivetrain *Drivetrain::s_instance = 0;
 
@@ -18,12 +22,12 @@ Drivetrain *Drivetrain::GetInstance()
 Drivetrain::Drivetrain()
 {
   //Establish Talons according to ID's
-  leftFront = new TalonSRX(leftFrontID);
-  leftMid = new TalonSRX(leftMidID);
-  leftBack = new TalonSRX(leftBackID);
-  rightFront = new TalonSRX(rightFrontID);
-  rightMid = new TalonSRX(rightMidID);
-  rightBack = new TalonSRX(rightBackID);
+  leftFront = new TalonSRX(LEFT_FRONT_ID);
+  leftMid = new TalonSRX(LEFT_MID_ID);
+  leftBack = new TalonSRX(LEFT_BACK_ID);
+  rightFront = new TalonSRX(RIGHT_FRONT_ID);
+  rightMid = new TalonSRX(RIGHT_MID_ID);
+  rightBack = new TalonSRX(RIGHT_BACK_ID);
 
   //Initialize Double Solenoid
   gearShifter = new frc::DoubleSolenoid(0, 1);
@@ -33,11 +37,11 @@ Drivetrain::Drivetrain()
 
   //Set Talons to be in same direction
   leftFront->SetInverted(false);
+  leftMid->SetInverted(true);
   leftBack->SetInverted(false);
   rightFront->SetInverted(true);
-  rightBack->SetInverted(true);
   rightMid->SetInverted(false);
-  leftMid->SetInverted(true);
+  rightBack->SetInverted(true);
 
   //Set the sign of the encoder (true means switch sign)
   leftBack->SetSensorPhase(true);
@@ -194,10 +198,10 @@ void Drivetrain::TankDrive(double leftValue, double rightValue) {
 
   leftBack->Set(ControlMode::PercentOutput, leftValue);
   rightBack->Set(ControlMode::PercentOutput, rightValue);
-  leftMid->Set(ControlMode::Follower, 27.0);
-  rightMid->Set(ControlMode::Follower, 26.0);
-  leftFront->Set(ControlMode::Follower, 27.0);
-  rightFront->Set(ControlMode::Follower, 26.0);
+  leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+  rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+  leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+  rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
 }
 
 // Use these methods in other classes to interact with the limelight

@@ -54,6 +54,7 @@ private:
   Arm *arm;
   Fourbar *fourbar;
   LED *led;
+  ShuffleManager *shufflemanager;
 
   frc::DriverStation::Alliance alliance;
 

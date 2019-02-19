@@ -5,7 +5,6 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "OI.h"
-#include "ShuffleManager.h"
 
 
 OI* OI::s_instance = 0;
@@ -49,15 +48,15 @@ bool OI::SwitchGears() {
     if (leftStick->GetRawButtonPressed(1)) {
         isHighGear = false;
         //frc::SmartDashboard::PutBoolean("isHighGear", false);
-        ShuffleManager::OnShfl(ShuffleManager::Drivertab, "isHighGear", isHighGear);
-        ShuffleManager::OnShfl(ShuffleManager::PreCompTab, "isHighGear", isHighGear);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isHighGear", isHighGear);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
         return true;
     }
     if (rightStick->GetRawButtonPressed(1)) {
         isHighGear = true;
         //frc::SmartDashboard::PutBoolean("isHighGear", true);
-        ShuffleManager::OnShfl(ShuffleManager::Drivertab, "isHighGear", isHighGear);
-        ShuffleManager::OnShfl(ShuffleManager::PreCompTab, "isHighGear", isHighGear);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isHighGear", isHighGear);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
         return true;
     }
     return false;
@@ -72,15 +71,15 @@ bool OI::SwitchGripper(){
     if (xbox->GetBumperPressed(RIGHT_HAND)){
         isGripperClosed = false;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", false);
-        ShuffleManager::OnShfl(ShuffleManager::Drivertab, "isGripperClosed", isGripperClosed);
-        ShuffleManager::OnShfl(ShuffleManager::ArmWristtab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristtab, "isGripperClosed", isGripperClosed);
         return true;
     }
     if (xbox->GetBumperPressed(LEFT_HAND)){
         isGripperClosed = true;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", true);
-        ShuffleManager::OnShfl(ShuffleManager::Drivertab, "isGripperClosed", isGripperClosed);
-        ShuffleManager::OnShfl(ShuffleManager::ArmWristtab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->Drivertab, "isGripperClosed", isGripperClosed);
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristtab, "isGripperClosed", isGripperClosed);
         return true;
     }
     return false;
@@ -107,6 +106,22 @@ double OI::GetWristInput()
     wristPowerOutput = 0.0;
     wristPowerOutput = xbox->GetY(RIGHT_HAND);
     return wristPowerOutput;
+}
+
+double OI::GetIntakeIn() {
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Left Trigger Output", xbox->GetTriggerAxis(LEFT_HAND));
+    if (xbox->GetTriggerAxis(LEFT_HAND) > 0.05){
+        return xbox->GetTriggerAxis(LEFT_HAND);
+    }
+    return 0.0;
+}
+
+double OI::GetIntakeOut() {
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Right Trigger Output", xbox->GetTriggerAxis(RIGHT_HAND));
+    if (xbox->GetTriggerAxis(RIGHT_HAND) > 0.05){
+        return xbox->GetTriggerAxis(RIGHT_HAND);
+    }
+    return 0.0;
 }
 
 //positive degree values
@@ -144,21 +159,6 @@ double OI::ArmPresetNegHigh()
 {
     return ARM_PICKUP_NEG_HIGH_DEG;
 }
-
-// void OI::PutOnShuffleboardInOI(){
-
-//     // if (isInitialized == false)
-//     // {
-// //         frc::ShuffleboardTab &Drivertab = frc::Shuffleboard::GetTab("DriverView");
-// //         //Drivertab.Add("Pi4", 3.14).GetEntry();
-// //         // Drivertab.Add("Max Speed2", 1).WithWidget("Number Slider").GetEntry();
-// //         frc::ShuffleboardTab &PreCompTab = frc::Shuffleboard::GetTab("Pre-Comp Check");
-// //         frc::ShuffleboardTab &ArmWristtab = frc::Shuffleboard::GetTab("Arm&Wrist Debug");
-// //         frc::ShuffleboardTab &Visiontab = frc::Shuffleboard::GetTab("Vision Testing");
-// //         isInitialized = true;
-// //     }
-// }
-
 
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it

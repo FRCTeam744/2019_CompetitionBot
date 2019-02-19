@@ -10,6 +10,9 @@
 #include <frc/DoubleSolenoid.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DigitalInput.h>
+#include <frc/PowerDistributionPanel.h>
+
+#include "ShuffleManager.h"
 
 class Arm {
   public:
@@ -17,7 +20,7 @@ class Arm {
 
     void ManualRotateArm(double input);
     void ManualRotateWrist(double input);
-    void Intake(bool buttonIsPressed);
+    void RunIntake(double in, double out);
     //one button per preset : total of 8 buttons
     //2 buttons to switch between ball and panel
     //struct for different wrist and panel 
@@ -39,7 +42,7 @@ class Arm {
 
     //Private Objects
     rev::CANSparkMax *leftArm, *rightArm, *leftWrist, *rightWrist;
-    TalonSRX *intake;
+    VictorSPX *intake;
 
     rev::CANEncoder *armEncoder;
     rev::CANEncoder *wristEncoder;
@@ -49,8 +52,20 @@ class Arm {
 
     frc::DoubleSolenoid *hatchGripper;
 
+    frc::PowerDistributionPanel *pdp;
+
     bool wasArmLimitSwitchTripped;
     bool wasWristLimitSwitchTripped;
+
+    //CAN Motor IDs
+    const int LEFT_ARM_ID = 42;
+    const int RIGHT_ARM_ID = 43;
+    const int LEFT_WRIST_ID = 44;
+    const int RIGHT_WRIST_ID = 45;
+    const int INTAKE_ID = 46;
+
+    const int INTAKE_PDP_PORT = 10;
+    const double INTAKE_MAX_CURRENT = 40.0;
 
     //Tunables
     const double INTAKE_SPEED = 0.5;
