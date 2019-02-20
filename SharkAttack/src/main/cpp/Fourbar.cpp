@@ -93,8 +93,8 @@ void Fourbar::UpdateFourbarSpeed() {
     
     frc::SmartDashboard::PutBoolean("extended switch", IsExtendedTripped());
     frc::SmartDashboard::PutBoolean("retracted switch", IsRetractedTripped());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Extended Switch", IsExtendedTripped());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Retracted Switch", IsRetractedTripped());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Extended Switch", IsExtendedTripped());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Retracted Switch", IsRetractedTripped());
 
 
     newSpeed = frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1);
@@ -104,19 +104,19 @@ void Fourbar::UpdateFourbarSpeed() {
 }
 
 void Fourbar::PrintClimberRPM(){
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Rotations Counted", rotationsSinceRetractTripped);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Encoder Position", fourbarEncoder->GetPosition);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Rotations To Home", ROTATIONS_TO_HOME);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Current", fourbarExtender->GetOutputCurrent);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Fourbar Current", fourbarExtender->GetOutputCurrent);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar RPM", fourbarEncoder->GetVelocity());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Fourbar RPM", fourbarEncoder->GetVelocity());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Rotations Counted", rotationsSinceRetractTripped);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Encoder Position", fourbarEncoder->GetPosition);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Rotations To Home", ROTATIONS_TO_HOME);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Current", fourbarExtender->GetOutputCurrent);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Fourbar Current", fourbarExtender->GetOutputCurrent);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar RPM", fourbarEncoder->GetVelocity());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Fourbar RPM", fourbarEncoder->GetVelocity());
 
-    // frc::SmartDashboard::PutNumber("Fourbar Rotations Counted", rotationsSinceRetractTripped);
-    // frc::SmartDashboard::PutNumber("Fourbar Encoder Position", fourbarEncoder->GetPosition());
-    // frc::SmartDashboard::PutNumber("Fourbar Rotations To Home", ROTATIONS_TO_HOME);
-    // frc::SmartDashboard::PutNumber("Fourbar Current", fourbarExtender->GetOutputCurrent());
-    // frc::SmartDashboard::PutNumber("Fourbar RPM", fourbarEncoder->GetVelocity());
+    frc::SmartDashboard::PutNumber("Fourbar Rotations Counted", rotationsSinceRetractTripped);
+    frc::SmartDashboard::PutNumber("Fourbar Encoder Position", fourbarEncoder->GetPosition());
+    frc::SmartDashboard::PutNumber("Fourbar Rotations To Home", ROTATIONS_TO_HOME);
+    frc::SmartDashboard::PutNumber("Fourbar Current", fourbarExtender->GetOutputCurrent());
+    frc::SmartDashboard::PutNumber("Fourbar RPM", fourbarEncoder->GetVelocity());
 }
 
 //Private Methods
