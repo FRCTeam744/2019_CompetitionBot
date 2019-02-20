@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "frc/WPILib.h"
+
 #include <string>
 #include <math.h>
 #include <iostream>
@@ -14,13 +16,20 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/shuffleboard/Shuffleboard.h>
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <frc/DriverStation.h>
 
 #include "Drivetrain.h"
 #include "OI.h"
+#include "Arm.h"
+#include "Fourbar.h"
+#include "LED.h"
+#include "ShuffleManager.h"
 
 
-class Robot : public frc::TimedRobot
-{
+class Robot : public frc::TimedRobot {
 public:
   void RobotInit() override;
   void RobotPeriodic() override;
@@ -28,7 +37,11 @@ public:
   void AutonomousPeriodic() override;
   void TeleopInit() override;
   void TeleopPeriodic() override;
+  void DisabledInit() override;
+  void DisabledPeriodic() override;
   void TestPeriodic() override;
+
+
 
 private:
   frc::SendableChooser<std::string> m_chooser;
@@ -38,5 +51,14 @@ private:
   
   Drivetrain *drivetrain;
   OI *oi;
+  Arm *arm;
+  Fourbar *fourbar;
+  LED *led;
+  ShuffleManager *shufflemanager;
+
+  frc::DriverStation::Alliance alliance;
+
+  const frc::DriverStation::Alliance blue = frc::DriverStation::Alliance::kBlue;
+  const frc::DriverStation::Alliance red = frc::DriverStation::Alliance::kRed;
 
 };

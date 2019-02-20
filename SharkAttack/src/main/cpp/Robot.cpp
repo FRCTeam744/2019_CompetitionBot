@@ -8,6 +8,12 @@
 #include "Robot.h"
 
 
+static void VisionThread(){
+  // cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+  // USBCam.SetResolution(640,480);
+  // USBCam.SetFPS(12);
+}
+
 void Robot::RobotInit()
 {
   m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
@@ -16,9 +22,18 @@ void Robot::RobotInit()
 
   drivetrain = Drivetrain::GetInstance();
   oi = OI::GetInstance();
+  arm = Arm::GetInstance();
+  fourbar = Fourbar::GetInstance();
+  led = LED::GetInstance();
+  shufflemanager = ShuffleManager::GetInstance();
 
-  oi->lowGear = true;
-  oi->highGear = false;
+  shufflemanager->ShuffleInit();
+  
+  frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
+  //ShuffleManager::OnShfl(ShuffleManager::PreCompTab, "Fourbar Speed", 0.1);
+   
+  // std::thread vision(VisionThread);
+  // vision.detach();
 }
 
 /**
@@ -30,7 +45,13 @@ void Robot::RobotInit()
  * LiveWindow and SmartDashboard integrated updating.
  */
 void Robot::RobotPeriodic() {
+  fourbar->UpdateFourbarSpeed();
+  //oi->PutOnShuffleboard();
 
+  drivetrain->LimelightSet(oi->SetLimelight());
+
+  fourbar->PrintClimberRPM();
+  arm->PrintArmCurrent();
 }
 
 /**
@@ -74,27 +95,87 @@ void Robot::AutonomousPeriodic()
 }
 
 void Robot::TeleopInit() {
-
+  
+  if (alliance == blue){
+    led->StartUpBlue();
+  }
+  else if (alliance == red){
+    led->StartUpRed();
+  }
 }
 
 void Robot::TeleopPeriodic() {
-  //drivetrain->leftBack->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
-  //drivetrain->rightBack->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
-  //drivetrain->leftMid->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput()); //Should be inverted
-  //drivetrain->rightMid->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
-  //drivetrain->leftFront->Set(ControlMode::PercentOutput, oi->GetLeftDriveInput());
-  //drivetrain->rightFront->Set(ControlMode::PercentOutput, oi->GetRightDriveInput());
 
+  
+
+  if (oi->LEDButtonPressed()) {
+    led->LEDsOff();
+  }
+  if (oi->AlsoLEDButtonPressed()) {
+    led->SwimmingShark();
+  }
+  
+  drivetrain->PutData();
+  drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
+
+  arm->ManualRotateArm(oi->GetArmInput());
+  arm->RunIntake(oi->GetIntakeIn(), oi->GetIntakeOut());
+  
+  fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
+  fourbar->FourbarHome(oi->GetFourbarHome());
+
+  oi->PrintToSmartDashboard(drivetrain->GetArmEncoderValue());
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
-  if (oi->lowGear == true) {
-    drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
-  }
-  if (oi->highGear == true) {
-    drivetrain->gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
+  if (oi->SwitchGears()){
+    drivetrain->CheckSwitchGears(oi->GetIsHighGear());
   }
 
-  oi->SwitchGears();
+  if (oi->SwitchGripper()){
+    arm->CheckHatchGripper(oi->GetIsGripperClosed());
+  }
+
+  // if(oi->SetPresetToAButton()){
+  //   arm->MoveArmToPosition(oi->ArmPresetLow(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  // }
+
+  // if(oi->SetPresetToBButton()){
+  //   arm->MoveArmToPosition(oi->ArmPresetMid(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  // }
+
+  // if(oi->SetPresetToXButton()){
+  //   arm->MoveArmToPosition(oi->ArmPresetHigh(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  // }
+
+  // if(oi->SetPresetToYButton()){
+  //   arm->MoveArmToPosition(oi->ArmPresetPickupCargo(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  // }
+
+  // if(oi->SetPresetToDPadUp()){
+  //   arm->MoveArmToPosition(oi->ArmPresetNegLow(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  // }
+
+  // if(oi->SetPresetToDPadDown()){
+  //   arm->MoveArmToPosition(oi->ArmPresetNegMid(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  // }
+
+  // if(oi->SetPresetToDPadLeft()){
+  //   arm->MoveArmToPosition(oi->ArmPresetNegHigh(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  // }
+
+  // if(oi->SetPresetToDPadRight()){
+  //   arm->MoveArmToPosition(oi->ArmPresetNegPickupCargo(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  // }
+}
+
+void Robot::DisabledInit() {
+  
+  led->StartUp();
+  alliance = frc::DriverStation::GetInstance().GetAlliance();
+}
+
+void Robot::DisabledPeriodic() {
+
 }
 
 void Robot::TestPeriodic() {

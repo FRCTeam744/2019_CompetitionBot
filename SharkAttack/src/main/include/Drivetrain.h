@@ -8,7 +8,9 @@
 #include "frc/smartdashboard/Smartdashboard.h"
 #include <ctre/Phoenix.h>
 #include "frc/DoubleSolenoid.h"
+//#include <frc/shuffleboard/Shuffleboard.h>
 
+#include "ShuffleManager.h"
 
 class Drivetrain {
 
@@ -16,11 +18,16 @@ class Drivetrain {
 
 	static Drivetrain* GetInstance();
 
-	void Periodic();
+	void PutData();
 	void AutoDrive();
 	void TankDrive(double leftValue, double rightValue);
-	void LimelightPut(std::string key, int value);
+	void LimelightSet(std::tuple<bool, std::string, double>);
 	double LimelightGet(std::string key);
+	double GetArmEncoderValue();
+	double GetWristEncoderValue();
+	void CheckSwitchGears(bool isHighGear);
+	void AutoDriveForward(bool isBut, bool isVelocityControl);
+	// void PutOnShuffleboard();
 
   private:
 
@@ -29,6 +36,11 @@ class Drivetrain {
 	Drivetrain();
 
 	//Private Instance Objects
+
+	bool isInitialized = false;
+
+	//left back and right back encoder used for drivetrain
+	//left front and right front encoder used for arm and wrist respectively
 	TalonSRX *leftFront;
 	TalonSRX *leftMid;
 	TalonSRX *leftBack;
@@ -36,17 +48,20 @@ class Drivetrain {
 	TalonSRX *rightMid;
 	TalonSRX *rightBack;
 
+	TalonSRX *armEncoderTalon;
+	TalonSRX *wristEncoderTalon;
+
 	frc::DoubleSolenoid *gearShifter;
 
 	std::shared_ptr<NetworkTable> limelight;
 	
 	//CAN Talon IDs for each of the drivetrain motors
-	const int rightFrontID = 22;
-	const int rightMidID = 24;
-	const int rightBackID = 26;
-	const int leftFrontID = 23;
-	const int leftMidID = 25;
-	const int leftBackID = 27;
+	const int RIGHT_FRONT_ID = 23;
+	const int RIGHT_MID_ID = 25;
+	const int RIGHT_BACK_ID = 27;
+	const int LEFT_FRONT_ID = 22;
+	const int LEFT_MID_ID = 24;
+	const int LEFT_BACK_ID = 26;
 
 	//DoubleSolenoid gearShirter forward and reverse channels
 	const int LOW_GEAR = 0;
@@ -56,8 +71,8 @@ class Drivetrain {
 	double rightDashboardSpeed = 0.0;
 	double leftPower = 0.0;
 	double rightPower = 0.0;
-	double desiredRightFPS = 0.0;
-	double desiredLeftFPS = 0.0;
+	double desiredRightFPS = 3.0;
+	double desiredLeftFPS = 3.0;
 
 	double realRightSpeedNUPer100ms = 0.0;
 	double realLeftSpeedNUPer100ms = 0.0;
@@ -71,13 +86,15 @@ class Drivetrain {
 
 	double currentDistanceInches = 0.0;
 
+	bool isInAutoDrive;
+
 	//CONSTANTS FOR DRIVE
 	const double NU_PER_REV = 4096.0;
-	const double CIRCUMFERENCE_INCHES = RADIUS_INCHES * 2 * M_PI;
+	const double CIRCUMFERENCE_INCHES = 4.08;
 	const double INCHES_PER_REV = CIRCUMFERENCE_INCHES;
 	const double NU_TO_FEET = (1.0 / NU_PER_REV) * INCHES_PER_REV * (1.0 / 12.0);
 	const double FEET_TO_NU = 1.0 / NU_TO_FEET;
-	const double SECONDS_TO_100MS = .10;
+	const double SECONDS_TO_100MS = 10;
 	const double CONVERT_100MS_TO_SECONDS = 0.1;
 
 	const double MAX_TALON_OUTPUT = 1023.0; //instead of 0-100% power it is now 0-1023'%' where 1023 is the new 100%
@@ -88,9 +105,9 @@ class Drivetrain {
 
 	//TUNABLES FOR DRIVE
 	//Robot mechanical specifications & drivetrain variables
-	const double RADIUS_INCHES = 3.0;
-	const double TEST_PERCENT_OUTPUT = 0.25; //this is the percent output we used to test the feed forward gain
-	const double MEASURED_SPEED_NU = 800.0;  //this is the result of the test above in
+	//const double RADIUS_INCHES = 3.0;
+	const double TEST_PERCENT_OUTPUT = 0.5; //this is the percent output we used to test the feed forward gain
+	const double MEASURED_SPEED_NU = 2725.0;  //this is the result of the test above in NU/100ms
 
 	//PID control limelight
 	const double DESIRED_DISTANCE_INCHES = 65;									//desired distance from target
@@ -103,12 +120,12 @@ class Drivetrain {
 	const double MIN_COMMAND = 0.23;
 
 	//Constants for the PID of talon
-	const double kP_SPEED = 0.1; //FOR SPEED CONTROL
-	const double kD_SPEED_RIGHT = kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
-	const double kD_SPEED_LEFT = kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
+	const double kP_SPEED = 0.2; //FOR SPEED CONTROL
+	const double kD_SPEED_RIGHT = 0.0;//kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
+	const double kD_SPEED_LEFT = 0.0;//kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
 
 	const double kI_SPEED = kP_SPEED / 100.0;
-	const double kI_ZONE = (0.4 * 2.0) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS;
+	const double kI_ZONE = (0.1 * 2.0) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS;
 
 	double kFeedForwardGain = (TEST_PERCENT_OUTPUT * MAX_TALON_OUTPUT) / MEASURED_SPEED_NU;
 
