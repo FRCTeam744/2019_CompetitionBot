@@ -22,10 +22,10 @@ class ShuffleManager {
 		frc::ShuffleboardTab *FourbarTab;
 
         void ShuffleInit();
-		void OnShfl(frc::ShuffleboardTab *tab, char* label, double val);
-		void OnShfl(frc::ShuffleboardTab *tab, char* label, float val);
-		void OnShfl(frc::ShuffleboardTab *tab, char* label, int val);
-		void OnShfl(frc::ShuffleboardTab *tab, char* label, char* val);
+		void OnShfl(frc::ShuffleboardTab *tab, const char* label, double val);
+		void OnShfl(frc::ShuffleboardTab *tab, const char* label, float val);
+		void OnShfl(frc::ShuffleboardTab *tab, const char* label, int val);
+		void OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val);
 
     private:
         static ShuffleManager *s_instance;

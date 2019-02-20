@@ -12,7 +12,7 @@ Fourbar* Fourbar::s_instance = 0;
 //Static Singleton Method
 Fourbar* Fourbar::GetInstance() {
   if (s_instance == 0){
-    s_instance = new Fourbar();
+    s_instance = new Fourbar(); 
   }
   return s_instance;
 }
@@ -35,10 +35,17 @@ Fourbar::Fourbar() {
 
 void Fourbar::ExtendOrRetract(bool extendBut, bool retractBut){
 
+    if (IsExtendedTripped()){
+        isPastRetracted = false;
+    }
+    if (IsRetractedTripped()) {
+        isPastExtended = false;
+    }
+
     if (extendBut && !retractBut) {
         isHoming = false;
         if(!IsExtendedTripped() && !isPastExtended){
-            fourbarExtender->Set(fourbarSpeed);
+            fourbarExtender->Set(1.0);
             isPastRetracted = false;
         } 
         else if (IsExtendedTripped() && !isPastExtended){
@@ -52,7 +59,7 @@ void Fourbar::ExtendOrRetract(bool extendBut, bool retractBut){
     else if(retractBut && !extendBut){
         isHoming = false;
         if(!IsRetractedTripped() && !isPastRetracted){
-            fourbarExtender->Set(-fourbarSpeed); 
+            fourbarExtender->Set(-1.0); 
             isPastExtended = false;
         }
         else if (IsRetractedTripped() && !isPastRetracted){
@@ -73,16 +80,17 @@ void Fourbar::ExtendOrRetract(bool extendBut, bool retractBut){
 void Fourbar::FourbarHome(bool homingBut){
     if ((homingBut || isHoming) && !IsRetractedTripped() && !isPastRetracted){
         isHoming = true;
-        fourbarExtender->Set(-0.1);
+        fourbarExtender->Set(-0.2);
     }
     else if (IsRetractedTripped() && !isPastRetracted && isHoming) {
         isPastRetracted = true;
         rotationsAtRetractTripped = fourbarEncoder->GetPosition();
-        fourbarExtender->Set(-0.02);
+        fourbarExtender->Set(-0.05);
     }
     else if (-rotationsSinceRetractTripped < ROTATIONS_TO_HOME && isHoming){
         rotationsSinceRetractTripped = fourbarEncoder->GetPosition() - rotationsAtRetractTripped;
-        fourbarExtender->Set(-0.02);
+        fourbarExtender->Set(-0.05);
+        frc::SmartDashboard::PutNumber("MM Since Retract Tripped", rotationsSinceRetractTripped * MM_PER_REVOLUTIONS);
     }
     else {
         isHoming = false;

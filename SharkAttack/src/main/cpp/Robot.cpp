@@ -106,6 +106,8 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 
+  
+
   if (oi->LEDButtonPressed()) {
     led->LEDsOff();
   }
@@ -114,6 +116,7 @@ void Robot::TeleopPeriodic() {
   }
   
   drivetrain->PutData();
+  drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
   arm->ManualRotateArm(oi->GetArmInput());
   arm->RunIntake(oi->GetIntakeIn(), oi->GetIntakeOut());

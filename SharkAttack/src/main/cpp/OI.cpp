@@ -44,19 +44,23 @@ OI::OI()
 
 //Public Methods
 
+bool OI::GetAutoDriveForward() {
+    return leftStick->GetRawButton(8);
+}
+
 bool OI::SwitchGears() {
     if (leftStick->GetRawButtonPressed(1)) {
         isHighGear = false;
         //frc::SmartDashboard::PutBoolean("isHighGear", false);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
         return true;
     }
     if (rightStick->GetRawButtonPressed(1)) {
         isHighGear = true;
         //frc::SmartDashboard::PutBoolean("isHighGear", true);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
         return true;
     }
     return false;
@@ -67,21 +71,25 @@ bool OI::GetIsHighGear()
     return isHighGear;
 }
 
+bool OI::GetVelocityTest(){
+    return leftStick->GetRawButton(11);
+}
+
 bool OI::SwitchGripper(){
     if (xbox->GetBumperPressed(RIGHT_HAND)){
         isGripperClosed = false;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", false);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed", isGripperClosed);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed", isGripperClosed);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed", isGripperClosed);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed", isGripperClosed);
         return true;
     }
     if (xbox->GetBumperPressed(LEFT_HAND)){
         isGripperClosed = true;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", true);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed", isGripperClosed);
-        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed", isGripperClosed);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed", isGripperClosed);
+        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed", isGripperClosed);
         return true;
     }
     return false;
@@ -111,7 +119,7 @@ double OI::GetWristInput()
 }
 
 double OI::GetIntakeIn() {
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Left Trigger Output", xbox->GetTriggerAxis(LEFT_HAND));
+    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Left Trigger Output", xbox->GetTriggerAxis(LEFT_HAND));
     if (xbox->GetTriggerAxis(LEFT_HAND) > 0.05){
         return xbox->GetTriggerAxis(LEFT_HAND);
     }
@@ -119,7 +127,7 @@ double OI::GetIntakeIn() {
 }
 
 double OI::GetIntakeOut() {
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Right Trigger Output", xbox->GetTriggerAxis(RIGHT_HAND));
+   // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Right Trigger Output", xbox->GetTriggerAxis(RIGHT_HAND));
     if (xbox->GetTriggerAxis(RIGHT_HAND) > 0.05){
         return xbox->GetTriggerAxis(RIGHT_HAND);
     }

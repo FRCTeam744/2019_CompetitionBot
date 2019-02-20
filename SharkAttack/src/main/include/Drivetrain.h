@@ -26,6 +26,7 @@ class Drivetrain {
 	double GetArmEncoderValue();
 	double GetWristEncoderValue();
 	void CheckSwitchGears(bool isHighGear);
+	void AutoDriveForward(bool isBut, bool isVelocityControl);
 	// void PutOnShuffleboard();
 
   private:
@@ -70,8 +71,8 @@ class Drivetrain {
 	double rightDashboardSpeed = 0.0;
 	double leftPower = 0.0;
 	double rightPower = 0.0;
-	double desiredRightFPS = 0.0;
-	double desiredLeftFPS = 0.0;
+	double desiredRightFPS = 3.0;
+	double desiredLeftFPS = 3.0;
 
 	double realRightSpeedNUPer100ms = 0.0;
 	double realLeftSpeedNUPer100ms = 0.0;
@@ -85,11 +86,11 @@ class Drivetrain {
 
 	double currentDistanceInches = 0.0;
 
-	const double RADIUS_INCHES = 2.0;
+	bool isInAutoDrive;
 
 	//CONSTANTS FOR DRIVE
 	const double NU_PER_REV = 4096.0;
-	const double CIRCUMFERENCE_INCHES = RADIUS_INCHES * 2 * M_PI;
+	const double CIRCUMFERENCE_INCHES = 4.08;
 	const double INCHES_PER_REV = CIRCUMFERENCE_INCHES;
 	const double NU_TO_FEET = (1.0 / NU_PER_REV) * INCHES_PER_REV * (1.0 / 12.0);
 	const double FEET_TO_NU = 1.0 / NU_TO_FEET;
@@ -105,8 +106,8 @@ class Drivetrain {
 	//TUNABLES FOR DRIVE
 	//Robot mechanical specifications & drivetrain variables
 	//const double RADIUS_INCHES = 3.0;
-	const double TEST_PERCENT_OUTPUT = 0.25; //this is the percent output we used to test the feed forward gain
-	const double MEASURED_SPEED_NU = 800.0;  //this is the result of the test above in
+	const double TEST_PERCENT_OUTPUT = 0.5; //this is the percent output we used to test the feed forward gain
+	const double MEASURED_SPEED_NU = 2725.0;  //this is the result of the test above in NU/100ms
 
 	//PID control limelight
 	const double DESIRED_DISTANCE_INCHES = 65;									//desired distance from target
@@ -119,12 +120,12 @@ class Drivetrain {
 	const double MIN_COMMAND = 0.23;
 
 	//Constants for the PID of talon
-	const double kP_SPEED = 0.1; //FOR SPEED CONTROL
-	const double kD_SPEED_RIGHT = kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
-	const double kD_SPEED_LEFT = kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
+	const double kP_SPEED = 0.2; //FOR SPEED CONTROL
+	const double kD_SPEED_RIGHT = 0.0;//kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
+	const double kD_SPEED_LEFT = 0.0;//kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
 
 	const double kI_SPEED = kP_SPEED / 100.0;
-	const double kI_ZONE = (0.4 * 2.0) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS;
+	const double kI_ZONE = (0.1 * 2.0) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS;
 
 	double kFeedForwardGain = (TEST_PERCENT_OUTPUT * MAX_TALON_OUTPUT) / MEASURED_SPEED_NU;
 

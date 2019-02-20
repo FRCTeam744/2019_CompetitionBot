@@ -31,12 +31,15 @@ class OI
 	bool SwitchGears();
 	bool GetIsHighGear();
 
+	bool GetVelocityTest();
+
 	bool SwitchGripper();
 	bool GetIsGripperClosed();
 	void PrintToSmartDashboard(double encoderValue);
 
 	double GetLeftDriveInput();
 	double GetRightDriveInput();
+	bool GetAutoDriveForward();
 	double GetArmInput();
 	double GetWristInput();
 	double GetArmEncoder();

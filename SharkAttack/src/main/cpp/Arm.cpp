@@ -36,7 +36,7 @@ Arm::Arm(){
     armLimitSwitch = new frc::DigitalInput(2);
     wristLimitSwitch = new frc::DigitalInput(3);
 
-    pdp = new frc::PowerDistributionPanel();
+    // pdp = new frc::PowerDistributionPanel();
 
     //Set the Conversion Factor for Encoder output to read Degrees
     armEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
@@ -89,9 +89,9 @@ void Arm::RunIntake(double in, double out) {
     if(in != 0.0 && !hasBall) {
         intake->Set(motorcontrol::ControlMode::PercentOutput, in);
         
-        if(pdp->GetCurrent(INTAKE_PDP_PORT) < INTAKE_MAX_CURRENT){
-            hasBall = true;
-        }
+        // if(pdp->GetCurrent(INTAKE_PDP_PORT) < INTAKE_MAX_CURRENT){
+        //     hasBall = true;
+        // }
     }
     else if (in != 0.0 && hasBall) {
         intake->Set(motorcontrol::ControlMode::PercentOutput, HOLD_BALL_SPEED);
@@ -143,10 +143,8 @@ void Arm::CheckHatchGripper(bool isClosed) {
 void Arm::PrintArmCurrent(){
     // frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
     // frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Right Arm Current", rightArm->GetOutputCurrent());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Left Arm Current", leftArm->GetOutputCurrent());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Right Arm Current", rightArm->GetOutputCurrent());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
+   
+    // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
 
 void Arm::ManualCalibrateArm(){
