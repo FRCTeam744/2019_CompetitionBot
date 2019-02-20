@@ -194,44 +194,44 @@ bool OI::GetFourbarHome(){
     return rightStick->GetRawButtonPressed(8);
 }
 
-bool OI::SetPresetToAButton()
+bool OI::SetArmFrontHigh()
 {
-    return xbox->GetAButton(); //ARM_PICKUP_LOW_DEG
+    return xbox->GetYButtonPressed(); //ARM_PICKUP_LOW_DEG
 }
 
-bool OI::SetPresetToBButton()
+bool OI::SetArmFrontMid()
 {
-    return xbox->GetBButton(); //ARM_PICKUP_MID_DEG
+    return xbox->GetBButtonPressed(); //ARM_PICKUP_MID_DEG
 }
 
-bool OI::SetPresetToXButton()
+bool OI::SetArmFrontLow()
 {
-    return xbox->GetXButton(); //ARM_PICKUP_HIGH_DEG
+    return xbox->GetXButtonPressed(); //ARM_PICKUP_HIGH_DEG
 }
 
-bool OI::SetPresetToYButton()
+bool OI::SetArmFrontBallPickup()
 {
-    return xbox->GetYButton(); //ARM_PICKUP_CARGO_PRESET_DEG
+    return xbox->GetAButtonPressed(); //ARM_PICKUP_CARGO_PRESET_DEG
 }
 
-bool OI::SetPresetToDPadUp()
+bool OI::SetArmBackHigh()
 {
-    return xbox->GetPOV(0); //ARM_PICKUP_NEG_CARGO_PRESET_DEG
+    return (xbox->GetPOV(0) == 0); //ARM_PICKUP_NEG_CARGO_PRESET_DEG
 }
 
-bool OI::SetPresetToDPadDown()
+bool OI::SetArmBackMid()
 {
-    return xbox->GetPOV(90); //ARM_PICKUP_NEG_MID_DEG
+    return (xbox->GetPOV(0) == 270); //ARM_PICKUP_NEG_MID_DEG
 }
 
-bool OI::SetPresetToDPadLeft()
+bool OI::SetArmBackLow()
 {
-    return xbox->GetPOV(180); //ARM_PICKUP_NEG_HIGH_DEG
+    return (xbox->GetPOV(0) == 90); //ARM_PICKUP_NEG_HIGH_DEG
 }
 
-bool OI::SetPresetToDPadRight()
+bool OI::SetArmBackBallPickup()
 {
-    return xbox->GetPOV(270); //ARM_PICKUP_NEG_LOW_DEG
+    return (xbox->GetPOV(0) == 180); //ARM_PICKUP_NEG_LOW_DEG
 }
 
 std::tuple<bool, std::string, double> OI::SetLimelight() {

@@ -11,6 +11,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/DigitalInput.h>
 #include <frc/PowerDistributionPanel.h>
+#include "math.h"
 
 #include "ShuffleManager.h"
 
@@ -57,6 +58,8 @@ class Arm {
     bool wasArmLimitSwitchTripped;
     bool wasWristLimitSwitchTripped;
 
+    bool hasBall = false;
+
     //CAN Motor IDs
     const int LEFT_ARM_ID = 42;
     const int RIGHT_ARM_ID = 43;
@@ -67,20 +70,53 @@ class Arm {
     const int INTAKE_PDP_PORT = 10;
     const double INTAKE_MAX_CURRENT = 40.0;
 
+    const int ARM_CURRENT_LIMIT = 10;
+    const int WRIST_CURRENT_LIMIT = 10;
+
     //Tunables
-    const double INTAKE_SPEED = 0.5;
+    const double HOLD_BALL_SPEED = 0.05;
     const double ARM_ADJUSTER = 400;
     const double WRIST_ADJUSTER = 400;
     const double DANGER_ZONE_LIMIT = 50;
     const double CALIBRATION_SPEED = 3000.0;
     const double LIMIT_SWITCH_OFFSET = 5.0;
 
+    //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
     const double ARM_GEAR_RATIO = 81.0;
     const double DEGREES_PER_REVOLUTION = 360.0;
     const double DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_REVOLUTION / ARM_GEAR_RATIO;
 
-    //ArmPositions
-    const double FRONT_WRIST_POS_ENCODER_TICKS = 20.25;
+    //TARGET HEIGHTS IN INCHES (USE THESE FOR CALCULATION NOT FOR SETTING)
+    const double HIGH_HATCH_HEIGHT = 67.0;
+    const double MID_HATCH_HEIGHT = 43.0;
+    const double LOW_HATCH_HEIGHT = 19.0;
+    const double HIGH_BALL_HEIGHT = 71.5;
+    const double MID_BALL_HEIGHT = 47.5;
+    const double LOW_BALL_HEIGHT = 23.5;
+    const double CARGO_BALL_HEIGHT = 0;
+    const double BALL_PICKUP_HEIGHT = 0;
+
+    //ARM MEASUREMENTS
+    const double PIVOT_HEIGHT = 46.15;
+    const double ARM_LENGTH = 33.5;
+
+    //ARM POSITIONS IN DEGREES (USE FOR SETTING ENCODER);
+    const double FRONT_HIGH_BALL_POSITION = acos((PIVOT_HEIGHT-HIGH_BALL_HEIGHT)/(ARM_LENGTH));
+    const double FRONT_HIGH_HATCH_POSITION = acos((PIVOT_HEIGHT-HIGH_HATCH_HEIGHT)/(ARM_LENGTH));
+    const double FRONT_MID_BALL_POSITION = acos((PIVOT_HEIGHT-MID_BALL_HEIGHT)/(ARM_LENGTH));
+    const double FRONT_MID_HATCH_POSITION = acos((PIVOT_HEIGHT-MID_HATCH_HEIGHT)/(ARM_LENGTH));
+    const double FRONT_LOW_BALL_POSITION = acos((PIVOT_HEIGHT-LOW_BALL_HEIGHT)/(ARM_LENGTH));
+    const double FRONT_LOW_HATCH_POSITION = acos((PIVOT_HEIGHT-LOW_HATCH_HEIGHT)/(ARM_LENGTH));
+    const double FRONT_BALL_PICKUP_POSITION = acos((PIVOT_HEIGHT-BALL_PICKUP_HEIGHT)/(ARM_LENGTH));
+    const double BACK_HIGH_BALL_POSITION = acos((PIVOT_HEIGHT-HIGH_BALL_HEIGHT)/(ARM_LENGTH));
+    const double BACK_HIGH_HATCH_POSITION = acos((PIVOT_HEIGHT-HIGH_HATCH_HEIGHT)/(ARM_LENGTH));
+    const double BACK_MID_BALL_POSITION = acos((PIVOT_HEIGHT-MID_BALL_HEIGHT)/(ARM_LENGTH));
+    const double BACK_MID_HATCH_POSITION = acos((PIVOT_HEIGHT-MID_HATCH_HEIGHT)/(ARM_LENGTH));
+    const double BACK_LOW_BALL_POSITION = acos((PIVOT_HEIGHT-LOW_BALL_HEIGHT)/(ARM_LENGTH));
+    const double BACK_LOW_HATCH_POSITION = acos((PIVOT_HEIGHT-LOW_HATCH_HEIGHT)/(ARM_LENGTH));
+    const double BACK_BALL_PICKUP_POSITION = acos((PIVOT_HEIGHT-BALL_PICKUP_HEIGHT)/(ARM_LENGTH));
+    const double FRONT_CARGO_BALL_POSITION = acos((PIVOT_HEIGHT-CARGO_BALL_HEIGHT)/(ARM_LENGTH));
+    const double BACK_CARGO_BALL_POSITION = acos((PIVOT_HEIGHT-CARGO_BALL_HEIGHT)/(ARM_LENGTH));
 
     //Constants
     const rev::CANSparkMax::MotorType BRUSHLESS = rev::CANSparkMax::MotorType::kBrushless;

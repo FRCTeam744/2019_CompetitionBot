@@ -57,14 +57,14 @@ class OI
 	bool GetFourbarRetract();
 	bool GetFourbarHome();
 
-	bool SetPresetToAButton();
-	bool SetPresetToBButton();
-	bool SetPresetToYButton();
-	bool SetPresetToXButton();
-	bool SetPresetToDPadUp();
-	bool SetPresetToDPadRight();
-	bool SetPresetToDPadDown();
-	bool SetPresetToDPadLeft();
+	bool SetArmFrontHigh();
+	bool SetArmFrontMid();
+	bool SetArmFrontLow();
+	bool SetArmFrontBallPickup();
+	bool SetArmBackHigh();
+	bool SetArmBackMid();
+	bool SetArmBackLow();
+	bool SetArmBackBallPickup();
 
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	//void PutOnShuffleboardInOI();
