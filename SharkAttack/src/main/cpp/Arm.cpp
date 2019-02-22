@@ -36,7 +36,7 @@ Arm::Arm(){
     armLimitSwitch = new frc::DigitalInput(2);
     wristLimitSwitch = new frc::DigitalInput(3);
 
-    // pdp = new frc::PowerDistributionPanel();
+    // pdp = new frc::PowerDistributionPanel(0);
 
     //Set the Conversion Factor for Encoder output to read Degrees
     armEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);

@@ -118,7 +118,7 @@ class Arm {
     const double BACK_BALL_PICKUP_POSITION = -acos((PIVOT_HEIGHT-BALL_PICKUP_HEIGHT)/(ARM_LENGTH));
     const double BACK_CARGO_BALL_POSITION = -acos((PIVOT_HEIGHT-CARGO_BALL_HEIGHT)/(ARM_LENGTH));
 
-    const double NEATRAL_ARM_POSITION = 0.0;
+    const double NEUTRAL_ARM_POSITION = 0.0;
 
     //Constants
     const rev::CANSparkMax::MotorType BRUSHLESS = rev::CANSparkMax::MotorType::kBrushless;
