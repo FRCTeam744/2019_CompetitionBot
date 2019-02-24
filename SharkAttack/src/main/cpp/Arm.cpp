@@ -59,6 +59,7 @@ Arm::Arm()
     rightWrist->SetIdleMode(BRAKE);
     intake->SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
+    //Set Current Limits to not kill the Neos
     leftArm->SetSmartCurrentLimit(ARM_CURRENT_LIMIT);
     rightArm->SetSmartCurrentLimit(ARM_CURRENT_LIMIT);
     leftWrist->SetSmartCurrentLimit(WRIST_CURRENT_LIMIT);
