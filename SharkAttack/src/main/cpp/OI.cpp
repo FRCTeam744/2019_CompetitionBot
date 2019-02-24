@@ -240,7 +240,7 @@ double OI::GetTargetPosition()
 
         if (xbox->GetAButtonPressed())
         {
-            targetArmPosition = FRONT_LOW_HATCH_POSITION;
+            targetArmPosition = NEUTRAL_ARM_POSITION;
         }
 
         if (xbox->GetPOV(0) == DPAD_UP)
@@ -260,7 +260,7 @@ double OI::GetTargetPosition()
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
         {
-            targetArmPosition = BACK_LOW_HATCH_POSITION;
+            targetArmPosition = NEUTRAL_ARM_POSITION;
         }
     }
     frc::SmartDashboard::PutNumber("Target Arm Position Degrees", targetArmPosition);
