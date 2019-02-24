@@ -20,7 +20,8 @@ Arm *Arm::GetInstance()
 }
 
 //Constructor
-Arm::Arm(){
+Arm::Arm()
+{
     //Initialize arm motors
     leftArm = new rev::CANSparkMax(LEFT_ARM_ID, BRUSHLESS);
     rightArm = new rev::CANSparkMax(RIGHT_ARM_ID, BRUSHLESS);
@@ -31,7 +32,8 @@ Arm::Arm(){
     hatchGripper = new frc::DoubleSolenoid(2, 3);
 
     armEncoder = new rev::CANEncoder(*leftArm);
-    wristEncoder = new rev::CANEncoder(*leftWrist);
+    //wristEncoder = new rev::CANEncoder(*leftWrist);
+    wristEncoder = new rev::CANEncoder(*rightWrist); //Robert made this change for testing encoder values
 
     armLimitSwitch = new frc::DigitalInput(2);
     wristLimitSwitch = new frc::DigitalInput(3);
@@ -40,6 +42,7 @@ Arm::Arm(){
 
     //Set the Conversion Factor for Encoder output to read Degrees
     armEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
+    wristEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
 
     //Set arm Sparks invertions
     leftArm->SetInverted(false);
@@ -79,51 +82,76 @@ void Arm::ManualRotateArm(double input)
     rightArm->Set(input);
 }
 
-void Arm::ManualRotateWrist(double input) {
+void Arm::ManualRotateWrist(double input)
+{
     leftWrist->Set(input);
     rightWrist->Set(input);
 }
 
-void Arm::RunIntake(double in, double out) {
-    
-    if(in != 0.0 && !hasBall) {
+void Arm::RunIntake(double in, double out)
+{
+
+    if (in != 0.0 && !hasBall)
+    {
         intake->Set(motorcontrol::ControlMode::PercentOutput, in);
-        
+
         // if(pdp->GetCurrent(INTAKE_PDP_PORT) < INTAKE_MAX_CURRENT){
         //     hasBall = true;
         // }
     }
-    else if (in != 0.0 && hasBall) {
+    else if (in != 0.0 && hasBall)
+    {
         intake->Set(motorcontrol::ControlMode::PercentOutput, HOLD_BALL_SPEED);
     }
-    else if (out != 0.0) {
+    else if (out != 0.0)
+    {
         hasBall = false;
         intake->Set(motorcontrol::ControlMode::PercentOutput, -out);
     }
-    else {
+    else
+    {
         hasBall = false;
         intake->Set(motorcontrol::ControlMode::PercentOutput, 0.0);
     }
 }
 
-void Arm::MoveArmToPosition(double targetPosition, double wristCurrentPosition, double armCurrentPosition) {
+double Arm::GetArmEncoderValue()
+{
+    frc::SmartDashboard::PutNumber("armEncoder", (armEncoder->GetPosition()));
+    return (armEncoder->GetPosition());
+}
+
+double Arm::GetWristEncoderValue()
+{
+    frc::SmartDashboard::PutNumber("wristEncoder", (wristEncoder->GetPosition() * DEGREES_PER_MOTOR_ROTATION));
+    return (wristEncoder->GetPosition());
+}
+
+void Arm::MoveArmToPosition(double targetPosition, double wristCurrentPosition, double armCurrentPosition)
+{
+    std::cout << "target Pos:  " << (targetPosition) << std::endl;
+    frc::SmartDashboard::PutNumber("Arm position error:", targetPosition-armCurrentPosition);
     double delta = (targetPosition - armCurrentPosition) / ARM_ADJUSTER;
-    MoveWristToPosition(wristCurrentPosition, armCurrentPosition);
+    // MoveWristToPosition(wristCurrentPosition, armCurrentPosition);
     leftArm->Set(delta);
     rightArm->Set(delta);
 }
 
-void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition) {
+void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
+{
     double targetPosition;
     double delta;
-    if (armCurrentPosition > DANGER_ZONE_LIMIT) {
+    if (armCurrentPosition > DANGER_ZONE_LIMIT)
+    {
         //normal operations
         targetPosition = FRONT_BALL_PICKUP_POSITION;
-    } else if(armCurrentPosition < -DANGER_ZONE_LIMIT){
-        //other normal operations
-        
     }
-    else {
+    else if (armCurrentPosition < -DANGER_ZONE_LIMIT)
+    {
+        //other normal operations
+    }
+    else
+    {
         //Inside DANGER Z O N E
         targetPosition = 0;
     }
@@ -131,39 +159,48 @@ void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosi
     leftWrist->Set(delta);
 }
 
-void Arm::CheckHatchGripper(bool isClosed) {
-    if (isClosed) {
+void Arm::CheckHatchGripper(bool isClosed)
+{
+    if (isClosed)
+    {
         hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
     }
-    else if (!isClosed) {
+    else if (!isClosed)
+    {
         hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
     }
 }
 
-void Arm::PrintArmCurrent(){
+void Arm::PrintArmCurrent()
+{
     // frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
     // frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
-   
+
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
 
-void Arm::ManualCalibrateArm(){
-    if(!GetArmLimitSwitch()) {
+void Arm::ManualCalibrateArm()
+{
+    if (!GetArmLimitSwitch())
+    {
         wasArmLimitSwitchTripped = false;
     }
-    else if (GetArmLimitSwitch() && !wasArmLimitSwitchTripped && armEncoder->GetVelocity() < 0 && armEncoder->GetVelocity() > CALIBRATION_SPEED){
+    else if (GetArmLimitSwitch() && !wasArmLimitSwitchTripped && armEncoder->GetVelocity() < 0 && armEncoder->GetVelocity() > CALIBRATION_SPEED)
+    {
         armEncoder->SetPosition(LIMIT_SWITCH_OFFSET);
     }
-    else {
+    else
+    {
         wasArmLimitSwitchTripped = true;
     }
 }
 
-
-bool Arm::GetArmLimitSwitch(){
+bool Arm::GetArmLimitSwitch()
+{
     return !armLimitSwitch->Get();
 }
 
-bool Arm::GetWristLimitSwitch(){
+bool Arm::GetWristLimitSwitch()
+{
     return !wristLimitSwitch->Get();
 }

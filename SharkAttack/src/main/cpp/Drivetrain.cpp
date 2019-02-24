@@ -248,16 +248,6 @@ double Drivetrain::LimelightGet(std::string key) {
   return limelight->GetNumber(key, 0.0);
 }
 
-double Drivetrain::GetArmEncoderValue()
-{
-  return armEncoderTalon->GetSelectedSensorPosition();
-}
-
-double Drivetrain::GetWristEncoderValue()
-{
-  return wristEncoderTalon->GetSelectedSensorPosition();
-}
-
 void Drivetrain::CheckSwitchGears(bool isHighGear) {
 
   if (isHighGear)

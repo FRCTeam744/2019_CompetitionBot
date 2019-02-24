@@ -78,7 +78,8 @@
     "map": "cpp",
     "set": "cpp",
     "string": "cpp",
-    "string_view": "cpp"
+    "string_view": "cpp",
+    "numeric": "cpp"
   },
   "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }

@@ -7,8 +7,8 @@
 
 #include "Robot.h"
 
-
-static void VisionThread(){
+static void VisionThread()
+{
   // cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
   // USBCam.SetResolution(640,480);
   // USBCam.SetFPS(12);
@@ -28,10 +28,12 @@ void Robot::RobotInit()
   shufflemanager = ShuffleManager::GetInstance();
 
   shufflemanager->ShuffleInit();
-  
+
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
   //ShuffleManager::OnShfl(ShuffleManager::PreCompTab, "Fourbar Speed", 0.1);
-   
+
+  frc::SmartDashboard::PutNumber("wristEncoder", 0.1);
+
   // std::thread vision(VisionThread);
   // vision.detach();
 }
@@ -44,7 +46,8 @@ void Robot::RobotInit()
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {
+void Robot::RobotPeriodic()
+{
   fourbar->UpdateFourbarSpeed();
   //oi->PutOnShuffleboard();
 
@@ -94,94 +97,104 @@ void Robot::AutonomousPeriodic()
   }
 }
 
-void Robot::TeleopInit() {
-  
-  if (alliance == blue){
+void Robot::TeleopInit()
+{
+
+  if (alliance == blue)
+  {
     led->StartUpBlue();
   }
-  else if (alliance == red){
+  else if (alliance == red)
+  {
     led->StartUpRed();
   }
 }
 
-void Robot::TeleopPeriodic() {
+void Robot::TeleopPeriodic()
+{
 
-  
-
-  if (oi->LEDButtonPressed()) {
+  if (oi->LEDButtonPressed())
+  {
     led->LEDsOff();
   }
-  if (oi->AlsoLEDButtonPressed()) {
+  if (oi->AlsoLEDButtonPressed())
+  {
     led->SwimmingShark();
   }
-  
+
   drivetrain->PutData();
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
-  arm->ManualRotateArm(oi->GetArmInput());
+  //arm->ManualRotateArm(oi->GetArmInput()); //Needs fixing, conflicting with presets
+  arm->MoveArmToPosition(oi->GetTargetPosition(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
+  //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
+
+  //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;
   arm->RunIntake(oi->GetIntakeIn(), oi->GetIntakeOut());
-  
+
   fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
   fourbar->FourbarHome(oi->GetFourbarHome());
 
-  oi->PrintToSmartDashboard(drivetrain->GetArmEncoderValue());
+  oi->PrintToSmartDashboard(arm->GetArmEncoderValue());
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
-  if (oi->SwitchGears()){
+  if (oi->SwitchGears())
+  {
     drivetrain->CheckSwitchGears(oi->GetIsHighGear());
   }
 
-  if (oi->SwitchGripper()){
+  if (oi->SwitchGripper())
+  {
     arm->CheckHatchGripper(oi->GetIsGripperClosed());
   }
 
   // if(oi->SetPresetToAButton()){
-  //   arm->MoveArmToPosition(oi->ArmPresetLow(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  //   arm->MoveArmToPosition(oi->ArmPresetLow(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
   // }
 
   // if(oi->SetPresetToBButton()){
-  //   arm->MoveArmToPosition(oi->ArmPresetMid(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  //   arm->MoveArmToPosition(oi->ArmPresetMid(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
   // }
 
   // if(oi->SetPresetToXButton()){
-  //   arm->MoveArmToPosition(oi->ArmPresetHigh(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  //   arm->MoveArmToPosition(oi->ArmPresetHigh(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
   // }
 
   // if(oi->SetPresetToYButton()){
-  //   arm->MoveArmToPosition(oi->ArmPresetPickupCargo(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  //   arm->MoveArmToPosition(oi->ArmPresetPickupCargo(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
   // }
 
   // if(oi->SetPresetToDPadUp()){
-  //   arm->MoveArmToPosition(oi->ArmPresetNegLow(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  //   arm->MoveArmToPosition(oi->ArmPresetNegLow(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
   // }
 
   // if(oi->SetPresetToDPadDown()){
-  //   arm->MoveArmToPosition(oi->ArmPresetNegMid(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  //   arm->MoveArmToPosition(oi->ArmPresetNegMid(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
   // }
 
   // if(oi->SetPresetToDPadLeft()){
-  //   arm->MoveArmToPosition(oi->ArmPresetNegHigh(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  //   arm->MoveArmToPosition(oi->ArmPresetNegHigh(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
   // }
 
   // if(oi->SetPresetToDPadRight()){
-  //   arm->MoveArmToPosition(oi->ArmPresetNegPickupCargo(), drivetrain->GetWristEncoderValue(), drivetrain->GetArmEncoderValue());
+  //   arm->MoveArmToPosition(oi->ArmPresetNegPickupCargo(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
   // }
 }
 
-void Robot::DisabledInit() {
-  
+void Robot::DisabledInit()
+{
+
   led->StartUp();
   alliance = frc::DriverStation::GetInstance().GetAlliance();
 }
 
-void Robot::DisabledPeriodic() {
-
+void Robot::DisabledPeriodic()
+{
 }
 
-void Robot::TestPeriodic() {
-  
+void Robot::TestPeriodic()
+{
 }
-
 
 #ifndef RUNNING_FRC_TESTS
 int main()

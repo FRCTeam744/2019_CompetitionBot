@@ -23,8 +23,6 @@ class Drivetrain {
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightSet(std::tuple<bool, std::string, double>);
 	double LimelightGet(std::string key);
-	double GetArmEncoderValue();
-	double GetWristEncoderValue();
 	void CheckSwitchGears(bool isHighGear);
 	void AutoDriveForward(bool isBut, bool isVelocityControl);
 	// void PutOnShuffleboard();

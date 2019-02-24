@@ -19,12 +19,10 @@
 
 #include "ShuffleManager.h"
 
-
 class OI
 {
 	//TODO: Go through each button and assign variable in cpp file in functions
   public:
-  
 	static OI *GetInstance();
 
 	void SwitchDriveMode();
@@ -46,15 +44,15 @@ class OI
 	double GetWristEncoder();
 	double GetIntakeOut();
 	double GetIntakeIn();
-
-	double ArmPresetPickupCargo();
-	double ArmPresetLow();
-	double ArmPresetMid();
-	double ArmPresetHigh();
-	double ArmPresetNegPickupCargo();
-	double ArmPresetNegLow();
-	double ArmPresetNegMid();
-	double ArmPresetNegHigh();
+	double GetTargetPosition();
+	// double ArmPresetPickupCargo();
+	// double ArmPresetLow();
+	// double ArmPresetMid();
+	// double ArmPresetHigh();
+	// double ArmPresetNegPickupCargo();
+	// double ArmPresetNegLow();
+	// double ArmPresetNegMid();
+	// double ArmPresetNegHigh();
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();
@@ -71,17 +69,13 @@ class OI
 
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	//void PutOnShuffleboardInOI();
-	
 
 	std::tuple<bool, std::string, double> SetLimelight();
 
 	bool LEDButtonPressed();
 	bool AlsoLEDButtonPressed();
 
-	
-
   private:
-
 	static OI *s_instance;
 
 	OI();
@@ -104,14 +98,16 @@ class OI
 	//Arm Constants
 	const double ARM_POWER_SCALE = 0.2;
 	const double WRIST_POWER_SCALE = 0.2;
-	const double ARM_PICKUP_CARGO_PRESET_DEG = 35; //Y
-	const double ARM_PICKUP_LOW_DEG = 45; //A
-	const double ARM_PICKUP_MID_DEG = 90; //B
-	const double ARM_PICKUP_HIGH_DEG = 135; //X
-	const double ARM_PICKUP_NEG_CARGO_PRESET_DEG = -35; //UP
-	const double ARM_PICKUP_NEG_LOW_DEG = -45; //RIGHT
-	const double ARM_PICKUP_NEG_MID_DEG = -90; //DOWN
-	const double ARM_PICKUP_NEG_HIGH_DEG = -135; //LEFT
+	const double ARM_PICKUP_CARGO_PRESET_DEG = 35;		//A
+	const double ARM_PICKUP_LOW_DEG = 45;				//X
+	const double ARM_PICKUP_MID_DEG = 90;				//B
+	const double ARM_PICKUP_HIGH_DEG = 135;				//Y
+	const double ARM_PICKUP_NEG_CARGO_PRESET_DEG = -35; //DOWN
+	const double ARM_PICKUP_NEG_LOW_DEG = -45;			//RIGHT
+	const double ARM_PICKUP_NEG_MID_DEG = 4.4;			//LEFT // -90
+	const double ARM_PICKUP_NEG_HIGH_DEG = 0;		//UP // -135
+
+	double targetArmPosition;
 
 	//Private Objects in OI.cpp
 	frc::Joystick *rightStick;
