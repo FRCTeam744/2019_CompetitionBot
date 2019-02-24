@@ -86,9 +86,15 @@ class OI
 	const std::string kAutoDrive2 = "Drive Off Level 2";
 	std::string m_autoSelected;
 
-	//Use leftHand and rightHand constants to designate left and right sides of XboxController in OI.cpp
+	//Use LEFT_HAND and RIGHT_HAND constants to designate left and right sides of XboxController in OI.cpp
 	const frc::XboxController::JoystickHand LEFT_HAND = frc::XboxController::kLeftHand;
 	const frc::XboxController::JoystickHand RIGHT_HAND = frc::XboxController::kRightHand;
+
+    //Use D-Pad constants to designate the button direction
+    const int DPAD_UP = 0;
+    const int DPAD_RIGHT = 90;
+    const int DPAD_DOWN = 180;
+    const int DPAD_LEFT = 270;
 
 	//Camera Constants (change these to change camera quality in SmartDashboard)
 	const int resolutionWidth = 160;
@@ -96,8 +102,6 @@ class OI
 	const int framerate = 10;
 
 	//Arm Constants
-	const double ARM_POWER_SCALE = 0.2;
-	const double WRIST_POWER_SCALE = 0.2;
 	const double ARM_PICKUP_CARGO_PRESET_DEG = 35;		//A
 	const double ARM_PICKUP_LOW_DEG = 45;				//X
 	const double ARM_PICKUP_MID_DEG = 90;				//B
@@ -124,4 +128,42 @@ class OI
 	bool isGripperClosed;
 	double armPowerOutput = 0.0;
 	double wristPowerOutput = 0.0;
+
+    bool isInBallMode;
+
+
+
+    //TARGET HEIGHTS IN INCHES (USE THESE FOR CALCULATION NOT FOR SETTING)
+    const double HIGH_HATCH_HEIGHT = 67.0;
+    const double MID_HATCH_HEIGHT = 43.0;
+    const double LOW_HATCH_HEIGHT = 19.0;
+    const double HIGH_BALL_HEIGHT = 71.5;
+    const double MID_BALL_HEIGHT = 47.5;
+    const double LOW_BALL_HEIGHT = 23.5;
+    const double CARGOSHIP_BALL_HEIGHT = 47.5; //Don't know the height yet, needs to be measured
+    const double BALL_PICKUP_HEIGHT = 23.5; //Don't know the height yet, needs to be measured
+
+    //ARM MEASUREMENTS
+    const double PIVOT_HEIGHT = 46.15;
+    const double ARM_LENGTH = 33.5;
+
+    //ARM POSITIONS IN DEGREES (USE FOR SETTING ENCODER)
+    const double FRONT_HIGH_BALL_POSITION = acos((PIVOT_HEIGHT - HIGH_BALL_HEIGHT) / (ARM_LENGTH));
+    const double FRONT_HIGH_HATCH_POSITION = acos((PIVOT_HEIGHT - HIGH_HATCH_HEIGHT) / (ARM_LENGTH));
+    const double FRONT_MID_BALL_POSITION = acos((PIVOT_HEIGHT - MID_BALL_HEIGHT) / (ARM_LENGTH));
+    const double FRONT_MID_HATCH_POSITION = acos((PIVOT_HEIGHT - MID_HATCH_HEIGHT) / (ARM_LENGTH));
+    const double FRONT_LOW_BALL_POSITION = acos((PIVOT_HEIGHT - LOW_BALL_HEIGHT) / (ARM_LENGTH));
+    const double FRONT_LOW_HATCH_POSITION = acos((PIVOT_HEIGHT - LOW_HATCH_HEIGHT) / (ARM_LENGTH));
+    const double FRONT_BALL_PICKUP_POSITION = acos((PIVOT_HEIGHT - BALL_PICKUP_HEIGHT) / (ARM_LENGTH));
+    const double FRONT_CARGOSHIP_BALL_POSITION = acos((PIVOT_HEIGHT - CARGOSHIP_BALL_HEIGHT) / (ARM_LENGTH));
+    const double BACK_HIGH_BALL_POSITION = -acos((PIVOT_HEIGHT - HIGH_BALL_HEIGHT) / (ARM_LENGTH));
+    const double BACK_HIGH_HATCH_POSITION = -acos((PIVOT_HEIGHT - HIGH_HATCH_HEIGHT) / (ARM_LENGTH));
+    const double BACK_MID_BALL_POSITION = -acos((PIVOT_HEIGHT - MID_BALL_HEIGHT) / (ARM_LENGTH));
+    const double BACK_MID_HATCH_POSITION = -acos((PIVOT_HEIGHT - MID_HATCH_HEIGHT) / (ARM_LENGTH));
+    const double BACK_LOW_BALL_POSITION = -acos((PIVOT_HEIGHT - LOW_BALL_HEIGHT) / (ARM_LENGTH));
+    const double BACK_LOW_HATCH_POSITION = -acos((PIVOT_HEIGHT - LOW_HATCH_HEIGHT) / (ARM_LENGTH));
+    const double BACK_BALL_PICKUP_POSITION = -acos((PIVOT_HEIGHT - BALL_PICKUP_HEIGHT) / (ARM_LENGTH));
+    const double BACK_CARGOSHIP_BALL_POSITION = -acos((PIVOT_HEIGHT - CARGOSHIP_BALL_HEIGHT) / (ARM_LENGTH));
+
+    const double NEUTRAL_ARM_POSITION = 0.0;
 };
