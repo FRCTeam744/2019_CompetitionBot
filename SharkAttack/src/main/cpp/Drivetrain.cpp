@@ -98,7 +98,7 @@ void Drivetrain::PutData() {
   // frc::SmartDashboard::PutNumber("RIGHT REAL SPEED", rightDashboardSpeed);
   // frc::SmartDashboard::PutNumber("LEFT REAL SPEED", leftDashboardSpeed);
   
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "NU_PER_REV", targetSkew);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "NU_PER_REV", targetSkew);
 
   //change these?
   // frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
