@@ -31,6 +31,8 @@ OI::OI()
 
     isHighGear = true;
     isGripperClosed = true;
+    isInBallMode = false;
+    targetArmPosition = NEUTRAL_ARM_POSITION;
 
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
@@ -118,7 +120,6 @@ double OI::GetArmInput()
 
 double OI::GetWristInput()
 {
-    wristPowerOutput = 0.0;
     wristPowerOutput = xbox->GetY(RIGHT_HAND);
     return wristPowerOutput;
 }
@@ -142,42 +143,6 @@ double OI::GetIntakeOut()
     }
     return 0.0;
 }
-
-// //positive degree values
-// double OI::ArmPresetPickupCargo()
-// {
-//     return ARM_PICKUP_CARGO_PRESET_DEG;
-// }
-// double OI::ArmPresetLow()
-// {
-//     return ARM_PICKUP_LOW_DEG;
-// }
-// double OI::ArmPresetMid()
-// {
-//     return ARM_PICKUP_MID_DEG;
-// }
-// double OI::ArmPresetHigh()
-// {
-//     return ARM_PICKUP_HIGH_DEG;
-// }
-
-// //negative degree
-// double OI::ArmPresetNegPickupCargo()
-// {
-//     return ARM_PICKUP_NEG_CARGO_PRESET_DEG;
-// }
-// double OI::ArmPresetNegLow()
-// {
-//     return ARM_PICKUP_NEG_LOW_DEG;
-// }
-// double OI::ArmPresetNegMid()
-// {
-//     return ARM_PICKUP_NEG_MID_DEG;
-// }
-// double OI::ArmPresetNegHigh()
-// {
-//     return ARM_PICKUP_NEG_HIGH_DEG;
-// }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput()
@@ -210,89 +175,97 @@ bool OI::GetFourbarHome()
     return rightStick->GetRawButtonPressed(8);
 }
 
-double OI::GetTargetPosition()
+
+//Returns the Target Position to the Arm
+double OI::GetTargetPosition() 
 {
-    if (xbox->GetYButtonPressed())
-    {
-        targetArmPosition = ARM_PICKUP_HIGH_DEG;
-    }
+    //Ball Placement and Pickup Presets
+    if (isInBallMode){
+        if (xbox->GetYButtonPressed())
+        {
+            targetArmPosition = FRONT_HIGH_BALL_POSITION;
+        }
 
-    if (xbox->GetBButtonPressed())
-    {
-        targetArmPosition = ARM_PICKUP_MID_DEG;
-    }
+        if (xbox->GetBButtonPressed())
+        {
+            targetArmPosition = FRONT_MID_BALL_POSITION;
+        }
 
-    if (xbox->GetXButtonPressed())
-    {
-        targetArmPosition = ARM_PICKUP_LOW_DEG;
-    }
+        if (xbox->GetXButtonPressed())
+        {
+            targetArmPosition = FRONT_LOW_BALL_POSITION;
+        }
 
-    if (xbox->GetAButtonPressed())
-    {
-        targetArmPosition = ARM_PICKUP_CARGO_PRESET_DEG;
-    }
+        if (xbox->GetAButtonPressed())
+        {
+            targetArmPosition = FRONT_BALL_PICKUP_POSITION;
+        }
 
-    if (xbox->GetPOV(0) == 0)
-    {
-        targetArmPosition = ARM_PICKUP_NEG_HIGH_DEG;
-    }
+        if (xbox->GetPOV(0) == DPAD_UP)
+        {
+            targetArmPosition = BACK_HIGH_BALL_POSITION;
+        }
 
-    if (xbox->GetPOV(0) == 270)
-    {
-        targetArmPosition = ARM_PICKUP_NEG_MID_DEG;
-    }
+        if (xbox->GetPOV(0) == DPAD_LEFT)
+        {
+            targetArmPosition = BACK_MID_BALL_POSITION;
+        }
 
-    if (xbox->GetPOV(0) == 90)
-    {
-        targetArmPosition = ARM_PICKUP_NEG_LOW_DEG;
-    }
+        if (xbox->GetPOV(0) == DPAD_RIGHT)
+        {
+            targetArmPosition = BACK_LOW_BALL_POSITION;
+        }
 
-    if (xbox->GetPOV(0) == 180)
-    {
-        targetArmPosition = ARM_PICKUP_NEG_CARGO_PRESET_DEG;
+        if (xbox->GetPOV(0) == DPAD_DOWN)
+        {
+            targetArmPosition = BACK_BALL_PICKUP_POSITION;
+        }
     }
-    
+    else {
+        if (xbox->GetYButtonPressed())
+        {
+            targetArmPosition = FRONT_HIGH_HATCH_POSITION;
+        
+        }
+
+        if (xbox->GetBButtonPressed())
+        {
+            targetArmPosition = FRONT_MID_HATCH_POSITION;
+        }
+
+        if (xbox->GetXButtonPressed())
+        {
+            targetArmPosition = FRONT_LOW_HATCH_POSITION;
+        }
+
+        if (xbox->GetAButtonPressed())
+        {
+            targetArmPosition = NEUTRAL_ARM_POSITION;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_UP)
+        {
+            targetArmPosition = BACK_HIGH_HATCH_POSITION;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_LEFT)
+        {
+            targetArmPosition = BACK_MID_HATCH_POSITION;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_RIGHT)
+        {
+            targetArmPosition = BACK_LOW_HATCH_POSITION;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_DOWN)
+        {
+            targetArmPosition = NEUTRAL_ARM_POSITION;
+        }
+    }
+    frc::SmartDashboard::PutNumber("Target Arm Position Degrees", targetArmPosition);
     return targetArmPosition;
 }
-// bool OI::SetArmFrontHigh()
-// {
-//     return xbox->GetYButtonPressed(); //ARM_PICKUP_HIGH_DEG
-// }
-
-// bool OI::SetArmFrontMid()
-// {
-//     return xbox->GetBButtonPressed(); //ARM_PICKUP_MID_DEG
-// }
-
-// bool OI::SetArmFrontLow()
-// {
-//     return xbox->GetXButtonPressed(); //ARM_PICKUP_LOW_DEG
-// }
-
-// bool OI::SetArmFrontBallPickup()
-// {
-//     return xbox->GetAButtonPressed(); //ARM_PICKUP_CARGO_PRESET_DEG
-// }
-
-// bool OI::SetArmBackHigh()
-// {
-//     return (xbox->GetPOV(0) == 0); //ARM_PICKUP_NEG_HIGH_DEG
-// }
-
-// bool OI::SetArmBackMid()
-// {
-//     return (xbox->GetPOV(0) == 270); //ARM_PICKUP_NEG_MID_DEG
-// }
-
-// bool OI::SetArmBackLow()
-// {
-//     return (xbox->GetPOV(0) == 90); //ARM_PICKUP_NEG_LOW_DEG
-// }
-
-// bool OI::SetArmBackBallPickup()
-// {
-//     return (xbox->GetPOV(0) == 180); //ARM_PICKUP_NEG_CARGO_PRESET_DEG
-// }
 
 std::tuple<bool, std::string, double> OI::SetLimelight()
 {
