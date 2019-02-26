@@ -25,6 +25,8 @@ class Fourbar{
 
         bool IsExtendedTripped();
         bool IsRetractedTripped();
+
+        bool isInitialized = false;
     
         rev::CANSparkMax *fourbarExtender;
         rev::CANEncoder *fourbarEncoder;

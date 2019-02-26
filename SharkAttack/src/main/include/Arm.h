@@ -64,16 +64,16 @@ private:
   bool hasBall = false;
 
   //CAN Motor IDs
-  const int LEFT_ARM_ID = 45; //42 is actual, was changed for testing. Change back
+  const int LEFT_ARM_ID = 42; //42 is actual, was changed for testing. Change back
   const int RIGHT_ARM_ID = 43;
   const int LEFT_WRIST_ID = 44;
-  const int RIGHT_WRIST_ID = 42; //45 is actual, was changed for testing. Change back
+  const int RIGHT_WRIST_ID = 45; //45 is actual, was changed for testing. Change back
   const int INTAKE_ID = 46;
 
   const int INTAKE_PDP_PORT = 10;
   const double INTAKE_MAX_CURRENT = 40.0;
 
-  const int ARM_CURRENT_LIMIT = 10;
+  const int ARM_CURRENT_LIMIT = 40;
   const int WRIST_CURRENT_LIMIT = 10;
 
   //Tunables

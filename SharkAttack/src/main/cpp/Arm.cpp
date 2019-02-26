@@ -173,8 +173,8 @@ void Arm::CheckHatchGripper(bool isClosed)
 
 void Arm::PrintArmCurrent()
 {
-    // frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
-    // frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
+    frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
+    frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
 
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
