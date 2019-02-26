@@ -71,6 +71,11 @@ Arm::Arm()
 
     wasArmLimitSwitchTripped = true;
     wasWristLimitSwitchTripped = true;
+
+    isArmInManual = false;
+    previousTargetPosition = 0.0;
+
+    armEncoder->SetPosition(0.0);
 }
 
 //Public Methods
@@ -79,8 +84,15 @@ void Arm::ManualRotateArm(double input)
     frc::SmartDashboard::PutNumber("Arm Control Input", input);
     //ShuffleManager
     //shuffleboard?
-    leftArm->Set(input);
-    rightArm->Set(input);
+    if (input != 0.0) {
+        isArmInManual = true;
+        leftArm->Set(input);
+        rightArm->Set(input);
+    }
+    if (input == 0.0 && isArmInManual){
+        leftArm->Set(input);
+        rightArm->Set(input);
+    }
 }
 
 void Arm::ManualRotateWrist(double input)
@@ -118,24 +130,37 @@ void Arm::RunIntake(double in, double out)
 
 double Arm::GetArmEncoderValue()
 {
-    frc::SmartDashboard::PutNumber("armEncoder", (armEncoder->GetPosition()));
-    return (armEncoder->GetPosition());
+    return (-armEncoder->GetPosition());
 }
 
 double Arm::GetWristEncoderValue()
 {
-    frc::SmartDashboard::PutNumber("wristEncoder", (wristEncoder->GetPosition() * DEGREES_PER_MOTOR_ROTATION));
+    frc::SmartDashboard::PutNumber("wristEncoder", (wristEncoder->GetPosition()));
     return (wristEncoder->GetPosition());
 }
 
-void Arm::MoveArmToPosition(double targetPosition, double wristCurrentPosition, double armCurrentPosition)
+void Arm::MoveArmToPosition(double targetPosition)
 {
+    if (targetPosition != previousTargetPosition) {
+        previousTargetPosition = targetPosition;
+        isArmInManual = false;
+    }
+
     std::cout << "target Pos:  " << (targetPosition) << std::endl;
-    frc::SmartDashboard::PutNumber("Arm position error:", targetPosition-armCurrentPosition);
-    double delta = (targetPosition - armCurrentPosition) / ARM_ADJUSTER;
+    frc::SmartDashboard::PutNumber("Arm position error:", targetPosition-GetArmEncoderValue());
+    double armPower = -(targetPosition - GetArmEncoderValue()) * PGAIN_ARM;
+    frc::SmartDashboard::PutNumber("Arm Percent Output", armPower);
     // MoveWristToPosition(wristCurrentPosition, armCurrentPosition);
-    leftArm->Set(delta);
-    rightArm->Set(delta);
+    if (armPower > ARM_MAX_POWER){
+        armPower = ARM_MAX_POWER;
+    } else if(armPower < -ARM_MAX_POWER) {
+        armPower = -ARM_MAX_POWER;
+    }
+
+    if (!isArmInManual) {
+        leftArm->Set(armPower);
+        rightArm->Set(armPower);
+    }
 }
 
 void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
@@ -145,7 +170,7 @@ void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosi
     if (armCurrentPosition > DANGER_ZONE_LIMIT)
     {
         //normal operations
-        targetPosition = FRONT_BALL_PICKUP_POSITION;
+        targetPosition = 0.0;
     }
     else if (armCurrentPosition < -DANGER_ZONE_LIMIT)
     {
@@ -172,11 +197,13 @@ void Arm::CheckHatchGripper(bool isClosed)
     }
 }
 
-void Arm::PrintArmCurrent()
+void Arm::PrintArmInfo()
 {
     frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
 
+    frc::SmartDashboard::PutNumber("Arm Encoder", (-armEncoder->GetPosition()));
+    frc::SmartDashboard::PutNumber("Arm Speed Degrees/Sec", (-armEncoder->GetVelocity()));
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
 
@@ -205,3 +232,4 @@ bool Arm::GetWristLimitSwitch()
 {
     return !wristLimitSwitch->Get();
 }
+

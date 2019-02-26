@@ -54,7 +54,7 @@ void Robot::RobotPeriodic()
   drivetrain->LimelightSet(oi->SetLimelight());
 
   fourbar->PrintClimberRPM();
-  arm->PrintArmCurrent();
+  arm->PrintArmInfo();
 }
 
 /**
@@ -125,12 +125,12 @@ void Robot::TeleopPeriodic()
   drivetrain->PutData();
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
-  // arm->ManualRotateArm(oi->GetArmInput()); //Needs fixing, conflicting with presets
-  // arm->MoveArmToPosition(oi->GetTargetPosition(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
+  arm->ManualRotateArm(oi->GetArmInput()); //Needs fixing, conflicting with presets
+  arm->MoveArmToPosition(oi->GetTargetPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
   //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;
-  arm->RunIntake(oi->GetIntakeIn(), oi->GetIntakeOut());
+  // arm->RunIntake(oi->GetIntakeIn(), oi->GetIntakeOut());
 
   fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
   fourbar->FourbarHome(oi->GetFourbarHome());

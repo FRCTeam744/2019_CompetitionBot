@@ -28,6 +28,7 @@ OI::OI()
     leftStick = new frc::Joystick(0);
     rightStick = new frc::Joystick(1);
     xbox = new frc::XboxController(2);
+    armStick = new frc::Joystick(3);
 
     isHighGear = true;
     isGripperClosed = true;
@@ -115,7 +116,7 @@ double OI::GetArmInput()
     {
         armPowerOutput = 0.0;
     }
-    return armPowerOutput;
+    return armStick->GetY();
 }
 
 double OI::GetWristInput()
@@ -233,12 +234,12 @@ double OI::GetTargetPosition()
             targetArmPosition = FRONT_MID_HATCH_POSITION;
         }
 
-        if (xbox->GetXButtonPressed())
+        if (xbox->GetAButtonPressed())
         {
             targetArmPosition = FRONT_LOW_HATCH_POSITION;
         }
 
-        if (xbox->GetAButtonPressed())
+        if (xbox->GetXButtonPressed())
         {
             targetArmPosition = NEUTRAL_ARM_POSITION;
         }
@@ -248,17 +249,17 @@ double OI::GetTargetPosition()
             targetArmPosition = BACK_HIGH_HATCH_POSITION;
         }
 
-        if (xbox->GetPOV(0) == DPAD_LEFT)
+        if (xbox->GetPOV(0) == DPAD_RIGHT)
         {
             targetArmPosition = BACK_MID_HATCH_POSITION;
         }
 
-        if (xbox->GetPOV(0) == DPAD_RIGHT)
+        if (xbox->GetPOV(0) == DPAD_DOWN)
         {
             targetArmPosition = BACK_LOW_HATCH_POSITION;
         }
 
-        if (xbox->GetPOV(0) == DPAD_DOWN)
+        if (xbox->GetPOV(0) == DPAD_LEFT)
         {
             targetArmPosition = NEUTRAL_ARM_POSITION;
         }
