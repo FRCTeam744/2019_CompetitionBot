@@ -61,11 +61,13 @@ Arm::Arm()
 
     //Set arm Sparks invertions
     leftArm->SetInverted(false);
-    rightArm->SetInverted(true);
+    rightArm->SetInverted(false);
     leftWrist->SetInverted(false);
     rightWrist->SetInverted(true);
 
     intake->SetInverted(false);
+
+    rightArm->Follow(*leftArm, true);
 
     //Set to brake or coast
     leftArm->SetIdleMode(BRAKE);
@@ -153,7 +155,7 @@ double Arm::GetWristEncoderValue()
     frc::SmartDashboard::PutNumber("wristEncoder", (wristEncoder->GetPosition()));
     return (wristEncoder->GetPosition());
 }
-
+//Parameter: targetPosition -> Given final position in degrees for arm
 void Arm::MoveArmToPosition(double targetPosition)
 {
     if (targetPosition != previousTargetPosition) {

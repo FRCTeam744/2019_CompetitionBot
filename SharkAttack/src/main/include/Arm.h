@@ -69,10 +69,10 @@ private:
   double previousTargetPosition;
 
   //CAN Motor IDs
-  const int LEFT_ARM_ID = 45; //42 is actual, was changed for testing. Change back
-  const int RIGHT_ARM_ID = 43;
-  const int LEFT_WRIST_ID = 44;
-  const int RIGHT_WRIST_ID = 42; //45 is actual, was changed for testing. Change back
+  const int LEFT_ARM_ID = 42; //42 is actual, was changed for testing. Change back
+  const int RIGHT_ARM_ID = 43; //43 is actual
+  const int LEFT_WRIST_ID = 44; //44 is actual
+  const int RIGHT_WRIST_ID = 45; //45 is actual, was changed for testing. Change back
   const int INTAKE_ID = 46;
 
   const int INTAKE_PDP_PORT = 10;
@@ -90,20 +90,17 @@ private:
 
   //Arm PID Values
   const double FF_GAIN_ARM = 0.0625;
-  const double P_GAIN_ARM = 0.005;
+  const double P_GAIN_ARM = 0.01;
   const double I_GAIN_ARM = 0.0;
   const double I_ZONE_ARM = 0.0;
   const double D_GAIN_ARM = 0.0;
   const double MAX_POWER_ARM = 1.0;
   const double MIN_POWER_ARM = -1.0;
 
-  const double MAX_VEL_ARM = 500.0;
+  const double MAX_VEL_ARM = 30.0; //Everything here is Degrees/Sec
   const double MIN_VEL_ARM = 0.0;
-  const double MAX_ACCEL_ARM = 10.0;
-  const double ALLOWED_ERROR_ARM = 0.1;
-
-  const double MAX_RPM_ARM = 3000;
-
+  const double MAX_ACCEL_ARM = 20.0;
+  const double ALLOWED_ERROR_ARM = 0.0;
 
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
   const double ARM_GEAR_RATIO = 81.0;
