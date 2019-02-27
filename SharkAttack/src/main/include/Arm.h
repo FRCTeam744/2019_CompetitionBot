@@ -52,6 +52,7 @@ private:
 
   rev::CANEncoder *armEncoder;
   rev::CANEncoder *wristEncoder;
+  rev::CANPIDController *armPID;
 
   frc::DigitalInput *armLimitSwitch;
   frc::DigitalInput *wristLimitSwitch;
@@ -68,10 +69,10 @@ private:
   double previousTargetPosition;
 
   //CAN Motor IDs
-  const int LEFT_ARM_ID = 42; //42 is actual, was changed for testing. Change back
+  const int LEFT_ARM_ID = 45; //42 is actual, was changed for testing. Change back
   const int RIGHT_ARM_ID = 43;
   const int LEFT_WRIST_ID = 44;
-  const int RIGHT_WRIST_ID = 45; //45 is actual, was changed for testing. Change back
+  const int RIGHT_WRIST_ID = 42; //45 is actual, was changed for testing. Change back
   const int INTAKE_ID = 46;
 
   const int INTAKE_PDP_PORT = 10;
@@ -88,16 +89,33 @@ private:
   const double LIMIT_SWITCH_OFFSET = 5.0;
 
   //Arm PID Values
-  const double ARM_MAX_POWER = 0.5;
+  const double FF_GAIN_ARM = 0.0625;
+  const double P_GAIN_ARM = 0.005;
+  const double I_GAIN_ARM = 0.0;
+  const double I_ZONE_ARM = 0.0;
+  const double D_GAIN_ARM = 0.0;
+  const double MAX_POWER_ARM = 1.0;
+  const double MIN_POWER_ARM = -1.0;
 
-  const double FFGAIN_ARM = 0.0625; //
-  const double PGAIN_ARM = 0.01;
+  const double MAX_VEL_ARM = 500.0;
+  const double MIN_VEL_ARM = 0.0;
+  const double MAX_ACCEL_ARM = 10.0;
+  const double ALLOWED_ERROR_ARM = 0.1;
+
+  const double MAX_RPM_ARM = 3000;
 
 
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
   const double ARM_GEAR_RATIO = 81.0;
-  const double DEGREES_PER_REVOLUTION = 360.0;
-  const double DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_REVOLUTION / ARM_GEAR_RATIO;
+  const double DEGREES_PER_ARM_REVOLUTION = 360.0;
+  const double SECONDS_PER_MINUTE = 60.0;
+  
+  //This is the PositionConversionFactor
+  const double DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_ARM_REVOLUTION / ARM_GEAR_RATIO;
+  
+  //THis is the VelocityConversionFactor
+  const double RPM_TO_DEGREES_PER_SECOND = DEGREES_PER_MOTOR_ROTATION/SECONDS_PER_MINUTE;
+  
 
   //Constants
   const rev::CANSparkMax::MotorType BRUSHLESS = rev::CANSparkMax::MotorType::kBrushless;

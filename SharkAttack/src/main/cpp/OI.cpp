@@ -28,7 +28,6 @@ OI::OI()
     leftStick = new frc::Joystick(0);
     rightStick = new frc::Joystick(1);
     xbox = new frc::XboxController(2);
-    armStick = new frc::Joystick(3);
 
     isHighGear = true;
     isGripperClosed = true;
@@ -116,7 +115,7 @@ double OI::GetArmInput()
     {
         armPowerOutput = 0.0;
     }
-    return armStick->GetY();
+    return armPowerOutput;
 }
 
 double OI::GetWristInput()
@@ -158,7 +157,7 @@ double OI::GetRightDriveInput()
 
 void OI::PrintToSmartDashboard(double encoderValue)
 {
-    frc::SmartDashboard::PutNumber("Arm Encoder Value: ", encoderValue);
+
 }
 
 bool OI::GetFourbarExtend()
