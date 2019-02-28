@@ -24,12 +24,9 @@ public:
   void ManualRotateArm(double input);
   void ManualRotateWrist(double input);
   void RunIntake(double in, double out);
-  //one button per preset : total of 8 buttons
-  //2 buttons to switch between ball and panel
-  //struct for different wrist and panel
   double GetArmEncoderValue();
   double GetWristEncoderValue();
-  void MoveArmToPosition(double targetPosition); //Degrees
+  void MoveArmToPosition(double targetPosition, double FFVoltage); //Degrees
   void MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition);                      //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
@@ -61,6 +58,7 @@ private:
 
   frc::PowerDistributionPanel *pdp;
 
+  //Instance Variables
   bool wasArmLimitSwitchTripped;
   bool wasWristLimitSwitchTripped;
 

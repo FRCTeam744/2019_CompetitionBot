@@ -51,7 +51,7 @@ Arm::Arm()
     armLimitSwitch = new frc::DigitalInput(2);
     wristLimitSwitch = new frc::DigitalInput(3);
 
-    // pdp = new frc::PowerDistributionPanel(0);
+    pdp = new frc::PowerDistributionPanel(0);
 
     //Set the Conversion Factor for Encoder output to read Degrees
     armEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
@@ -108,7 +108,7 @@ void Arm::ManualRotateArm(double input)
     }
     if (input == 0.0 && isArmInManual){
         leftArm->Set(input);
-        rightArm->Set(input);
+        // rightArm->Set(input); RightArm is in follower mode so it does not need to be set
     }
 }
 
@@ -156,7 +156,7 @@ double Arm::GetWristEncoderValue()
     return (wristEncoder->GetPosition());
 }
 //Parameter: targetPosition -> Given final position in degrees for arm
-void Arm::MoveArmToPosition(double targetPosition)
+void Arm::MoveArmToPosition(double targetPosition, double FFVoltage)
 {
     if (targetPosition != previousTargetPosition) {
         previousTargetPosition = targetPosition;
@@ -174,9 +174,7 @@ void Arm::MoveArmToPosition(double targetPosition)
     }
 
     if (!isArmInManual) {
-        // leftArm->Set(armPower);
-        // rightArm->Set(armPower);
-        armPID->SetReference(targetPosition, rev::ControlType::kSmartMotion);
+        armPID->SetReference(targetPosition, rev::ControlType::kSmartMotion, 0, FFVoltage);
     }
 }
 
