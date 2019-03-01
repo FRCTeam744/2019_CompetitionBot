@@ -127,16 +127,15 @@ void Robot::TeleopPeriodic()
 
   arm->ManualRotateArm(oi->GetArmInput()); //Needs fixing, conflicting with presets
   arm->ManualRotateWrist(oi->GetWristInput());
-  arm->MoveArmToPosition(oi->GetTargetPosition(), oi->GetArmFFVoltage());
+  arm->MoveArmToPosition(oi->GetTargetPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
   //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;
-  // arm->RunIntake(oi->GetIntakeIn(), oi->GetIntakeOut());
+  arm->RunIntake(oi->GetIntakeInput());
 
   fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
   fourbar->FourbarHome(oi->GetFourbarHome());
 
-  oi->PrintToSmartDashboard(arm->GetArmEncoderValue());
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
   if (oi->SwitchGears())

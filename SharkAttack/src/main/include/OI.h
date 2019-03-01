@@ -42,8 +42,7 @@ class OI
 	double GetWristInput();
 	double GetArmEncoder();
 	double GetWristEncoder();
-	double GetIntakeOut();
-	double GetIntakeIn();
+	double GetIntakeInput();
 	double GetTargetPosition();
 
 	bool GetFourbarExtend();

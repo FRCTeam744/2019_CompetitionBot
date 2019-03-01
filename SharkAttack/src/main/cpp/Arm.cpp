@@ -51,7 +51,7 @@ Arm::Arm()
     armLimitSwitch = new frc::DigitalInput(2);
     wristLimitSwitch = new frc::DigitalInput(3);
 
-    pdp = new frc::PowerDistributionPanel(0);
+    // pdp = new frc::PowerDistributionPanel(0);
 
     //Set the Conversion Factor for Encoder output to read Degrees
     armEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
@@ -109,8 +109,8 @@ void Arm::ManualRotateArm(double input)
         leftArm->Set(input);
         // rightArm->Set(input); RightArm is in follower mode so it does not need to be set
     }
-double leftVoltage = (input * leftArm->GetBusVoltage());
-double rightVoltage = (input * rightArm->GetBusVoltage());
+    double leftVoltage = (input * leftArm->GetBusVoltage());
+    double rightVoltage = (input * rightArm->GetBusVoltage());
     frc::SmartDashboard::PutNumber("Arm Voltage Left", leftVoltage);
     frc::SmartDashboard::PutNumber("Arm Voltage Right", rightVoltage);
 }
@@ -121,31 +121,32 @@ void Arm::ManualRotateWrist(double input)
     rightWrist->Set(input);
 }
 
-void Arm::RunIntake(double in, double out)
+void Arm::RunIntake(double input)
 {
 
-    if (in != 0.0 && !hasBall)
-    {
-        intake->Set(motorcontrol::ControlMode::PercentOutput, in);
+    // if (in != 0.0 && !hasBall)
+    // {
+    //     intake->Set(motorcontrol::ControlMode::PercentOutput, in);
 
-        // if(pdp->GetCurrent(INTAKE_PDP_PORT) < INTAKE_MAX_CURRENT){
-        //     hasBall = true;
-        // }
-    }
-    else if (in != 0.0 && hasBall)
-    {
-        intake->Set(motorcontrol::ControlMode::PercentOutput, HOLD_BALL_SPEED);
-    }
-    else if (out != 0.0)
-    {
-        hasBall = false;
-        intake->Set(motorcontrol::ControlMode::PercentOutput, -out);
-    }
-    else
-    {
-        hasBall = false;
-        intake->Set(motorcontrol::ControlMode::PercentOutput, 0.0);
-    }
+    //     // if(pdp->GetCurrent(INTAKE_PDP_PORT) < INTAKE_MAX_CURRENT){
+    //     //     hasBall = true;
+    //     // }
+    // }
+    // else if (in != 0.0 && hasBall)
+    // {
+    //     intake->Set(motorcontrol::ControlMode::PercentOutput, HOLD_BALL_SPEED);
+    // }
+    // else if (out != 0.0)
+    // {
+    //     hasBall = false;
+    //     intake->Set(motorcontrol::ControlMode::PercentOutput, -out);
+    // }
+    // else
+    // {
+    //     hasBall = false;
+    //     intake->Set(motorcontrol::ControlMode::PercentOutput, 0.0);
+    // }
+    intake->Set(motorcontrol::ControlMode::PercentOutput, input);
 }
 
 double Arm::GetArmEncoderValue()
@@ -159,9 +160,10 @@ double Arm::GetWristEncoderValue()
     return (wristEncoder->GetPosition());
 }
 //Parameter: targetPosition -> Given final position in degrees for arm
-void Arm::MoveArmToPosition(double targetPosition, double FFVoltage)
+void Arm::MoveArmToPosition(double targetPosition)
 {
-    FFVoltage = 0.45 * (sin(GetArmEncoderValue()*M_PI/180));
+    FFVoltage = MAX_FF_GAIN * (sin(armEncoder->GetPosition()*M_PI/180));
+
     if (targetPosition != previousTargetPosition) {
         previousTargetPosition = targetPosition;
         isArmInManual = false;
@@ -221,7 +223,7 @@ void Arm::PrintArmInfo()
     frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
 
-    frc::SmartDashboard::PutNumber("Arm Encoder", GetArmEncoderValue());
+    frc::SmartDashboard::PutNumber("Arm Encoder Native Value", armEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Arm Speed Degrees/Sec", armEncoder->GetVelocity());
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }

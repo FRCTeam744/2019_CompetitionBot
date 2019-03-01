@@ -23,10 +23,10 @@ public:
 
   void ManualRotateArm(double input);
   void ManualRotateWrist(double input);
-  void RunIntake(double in, double out);
+  void RunIntake(double input);
   double GetArmEncoderValue();
   double GetWristEncoderValue();
-  void MoveArmToPosition(double targetPosition, double FFVoltage); //Degrees
+  void MoveArmToPosition(double targetPosition); //Degrees
   void MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition);                      //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
@@ -66,6 +66,8 @@ private:
   bool isArmInManual;
   double previousTargetPosition;
 
+  double FFVoltage = 0.0;
+
   //CAN Motor IDs
   const int LEFT_ARM_ID = 42; //42 is actual, was changed for testing. Change back
   const int RIGHT_ARM_ID = 43; //43 is actual
@@ -87,18 +89,19 @@ private:
   const double LIMIT_SWITCH_OFFSET = 5.0;
 
   //Arm PID Values
-  const double FF_GAIN_ARM = 0.0625;
-  const double P_GAIN_ARM = 0.01;
+  const double MAX_FF_GAIN = 0.51; //Volts required to hold arm at 90 degrees
+
+  const double P_GAIN_ARM = 0.02;
   const double I_GAIN_ARM = 0.0;
   const double I_ZONE_ARM = 0.0;
   const double D_GAIN_ARM = 0.0;
   const double MAX_POWER_ARM = 1.0;
   const double MIN_POWER_ARM = -1.0;
 
-  const double MAX_VEL_ARM = 30.0; //Everything here is Degrees/Sec
+  const double MAX_VEL_ARM = 60.0; //Everything here is Degrees/Sec
   const double MIN_VEL_ARM = 0.0;
   const double MAX_ACCEL_ARM = 20.0;
-  const double ALLOWED_ERROR_ARM = 0.0;
+  const double ALLOWED_ERROR_ARM = 1.0;
 
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
   const double ARM_GEAR_RATIO = 81.0;

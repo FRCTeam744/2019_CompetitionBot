@@ -130,24 +130,18 @@ double OI::GetWristInput()
     return wristPowerOutput;
 }
 
-double OI::GetIntakeIn()
-{
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Left Trigger Output", xbox->GetTriggerAxis(LEFT_HAND));
-    if (xbox->GetTriggerAxis(LEFT_HAND) > 0.05)
-    {
-        return xbox->GetTriggerAxis(LEFT_HAND);
+double OI::GetIntakeInput(){
+    double intakeIn = xbox->GetTriggerAxis(LEFT_HAND);
+    double intakeOut = xbox->GetTriggerAxis(RIGHT_HAND);
+    if (intakeIn > 0.05){
+        return intakeIn;
     }
-    return 0.0;
-}
-
-double OI::GetIntakeOut()
-{
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Right Trigger Output", xbox->GetTriggerAxis(RIGHT_HAND));
-    if (xbox->GetTriggerAxis(RIGHT_HAND) > 0.05)
-    {
-        return xbox->GetTriggerAxis(RIGHT_HAND);
+    else if (intakeOut > 0.05){
+        return -intakeOut;
     }
-    return 0.0;
+    else {
+        return 0.0;
+    }
 }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
