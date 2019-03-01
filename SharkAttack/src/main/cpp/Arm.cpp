@@ -5,7 +5,7 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "Arm.h"
-#include "ShuffleManager.h"
+#include "ShuffleManager.h" 
 
 Arm *Arm::s_instance = 0;
 
@@ -51,7 +51,7 @@ Arm::Arm()
     armLimitSwitch = new frc::DigitalInput(2);
     wristLimitSwitch = new frc::DigitalInput(3);
 
-    // pdp = new frc::PowerDistributionPanel(0);
+    pdp = new frc::PowerDistributionPanel(0);
 
     //Set the Conversion Factor for Encoder output to read Degrees
     armEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
@@ -100,7 +100,6 @@ void Arm::ManualRotateArm(double input)
 {
     frc::SmartDashboard::PutNumber("Arm Control Input", input);
     //ShuffleManager
-    //shuffleboard?
     if (input != 0.0) {
         isArmInManual = true;
         leftArm->Set(input);
@@ -108,8 +107,12 @@ void Arm::ManualRotateArm(double input)
     }
     if (input == 0.0 && isArmInManual){
         leftArm->Set(input);
-        rightArm->Set(input);
+        // rightArm->Set(input); RightArm is in follower mode so it does not need to be set
     }
+double leftVoltage = (input * leftArm->GetBusVoltage());
+double rightVoltage = (input * rightArm->GetBusVoltage());
+    frc::SmartDashboard::PutNumber("Arm Voltage Left", leftVoltage);
+    frc::SmartDashboard::PutNumber("Arm Voltage Right", rightVoltage);
 }
 
 void Arm::ManualRotateWrist(double input)
@@ -156,8 +159,9 @@ double Arm::GetWristEncoderValue()
     return (wristEncoder->GetPosition());
 }
 //Parameter: targetPosition -> Given final position in degrees for arm
-void Arm::MoveArmToPosition(double targetPosition)
+void Arm::MoveArmToPosition(double targetPosition, double FFVoltage)
 {
+    FFVoltage = 0.45 * (sin(GetArmEncoderValue()*M_PI/180));
     if (targetPosition != previousTargetPosition) {
         previousTargetPosition = targetPosition;
         isArmInManual = false;
@@ -174,9 +178,7 @@ void Arm::MoveArmToPosition(double targetPosition)
     }
 
     if (!isArmInManual) {
-        // leftArm->Set(armPower);
-        // rightArm->Set(armPower);
-        armPID->SetReference(targetPosition, rev::ControlType::kSmartMotion);
+        armPID->SetReference(targetPosition, rev::ControlType::kSmartMotion, 0, FFVoltage);
     }
 }
 

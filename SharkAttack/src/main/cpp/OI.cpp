@@ -38,6 +38,8 @@ OI::OI()
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
     // camera.SetResolution(resolutionWidth, resolutionHeight);
     // camera.SetFPS(framerate);
+
+    armFFVoltage = preferences->GetDouble("armFFVoltage", 0.0);
 }
 
 //Public Methods
@@ -301,4 +303,15 @@ bool OI::LEDButtonPressed()
 bool OI::AlsoLEDButtonPressed()
 {
     return rightStick->GetRawButton(2);
+}
+
+double OI::GetArmFFVoltage() {
+
+    double newArmFFVoltage = preferences->GetDouble("armFFVoltage", 0.0);
+
+    if (armFFVoltage != newArmFFVoltage) {
+        armFFVoltage = newArmFFVoltage;
+    }
+
+    return armFFVoltage;
 }

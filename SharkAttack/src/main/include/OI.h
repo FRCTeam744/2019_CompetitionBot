@@ -45,18 +45,12 @@ class OI
 	double GetIntakeOut();
 	double GetIntakeIn();
 	double GetTargetPosition();
-	// double ArmPresetPickupCargo();
-	// double ArmPresetLow();
-	// double ArmPresetMid();
-	// double ArmPresetHigh();
-	// double ArmPresetNegPickupCargo();
-	// double ArmPresetNegLow();
-	// double ArmPresetNegMid();
-	// double ArmPresetNegHigh();
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();
 	bool GetFourbarHome();
+
+  double GetArmFFVoltage();
 
 	bool SetArmFrontHigh();
 	bool SetArmFrontMid();
@@ -131,6 +125,7 @@ class OI
 
     bool isInBallMode;
 
+    double armFFVoltage;
 
 
     //TARGET HEIGHTS IN INCHES (USE THESE FOR CALCULATION NOT FOR SETTING)
