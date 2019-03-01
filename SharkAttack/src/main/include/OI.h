@@ -50,7 +50,7 @@ class OI
 	bool GetFourbarRetract();
 	bool GetFourbarHome();
 
-    double GetArmFFVoltage();
+  double GetArmFFVoltage();
 
 	bool SetArmFrontHigh();
 	bool SetArmFrontMid();

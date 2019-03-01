@@ -5,7 +5,7 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "Arm.h"
-#include "ShuffleManager.h"
+#include "ShuffleManager.h" 
 
 Arm *Arm::s_instance = 0;
 
@@ -100,7 +100,6 @@ void Arm::ManualRotateArm(double input)
 {
     frc::SmartDashboard::PutNumber("Arm Control Input", input);
     //ShuffleManager
-    //shuffleboard?
     if (input != 0.0) {
         isArmInManual = true;
         leftArm->Set(input);
@@ -110,6 +109,10 @@ void Arm::ManualRotateArm(double input)
         leftArm->Set(input);
         // rightArm->Set(input); RightArm is in follower mode so it does not need to be set
     }
+double leftVoltage = (input * leftArm->GetBusVoltage());
+double rightVoltage = (input * rightArm->GetBusVoltage());
+    frc::SmartDashboard::PutNumber("Arm Voltage Left", leftVoltage);
+    frc::SmartDashboard::PutNumber("Arm Voltage Right", rightVoltage);
 }
 
 void Arm::ManualRotateWrist(double input)
@@ -158,6 +161,7 @@ double Arm::GetWristEncoderValue()
 //Parameter: targetPosition -> Given final position in degrees for arm
 void Arm::MoveArmToPosition(double targetPosition, double FFVoltage)
 {
+    FFVoltage = 0.45 * (sin(GetArmEncoderValue()*M_PI/180));
     if (targetPosition != previousTargetPosition) {
         previousTargetPosition = targetPosition;
         isArmInManual = false;
