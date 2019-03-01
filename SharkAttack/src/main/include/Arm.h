@@ -91,10 +91,10 @@ private:
   //Arm PID Values
   const double MAX_FF_GAIN = 0.51; //Volts required to hold arm at 90 degrees
 
-  const double P_GAIN_ARM = 0.02;
+  const double P_GAIN_ARM = 0.01;
   const double I_GAIN_ARM = 0.0;
   const double I_ZONE_ARM = 0.0;
-  const double D_GAIN_ARM = 0.0;
+  const double D_GAIN_ARM = P_GAIN_ARM * 20; //Rule of thumb for DGain is to multiply P by 20
   const double MAX_POWER_ARM = 1.0;
   const double MIN_POWER_ARM = -1.0;
 

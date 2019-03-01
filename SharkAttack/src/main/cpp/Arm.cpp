@@ -31,12 +31,13 @@ Arm::Arm()
 
     hatchGripper = new frc::DoubleSolenoid(2, 3);
 
-    armEncoder = new rev::CANEncoder(*leftArm);
+    armEncoder = new rev::CANEncoder(*rightArm);
 
     //ARM SMARTMOTION SETUP
-    armPID = new rev::CANPIDController(*leftArm);
+    armPID = new rev::CANPIDController(*rightArm);
 
     armPID->SetP(P_GAIN_ARM);
+    armPID->SetD(D_GAIN_ARM);
 
     armPID->SetSmartMotionMaxVelocity(MAX_VEL_ARM);
     armPID->SetSmartMotionMaxAccel(MAX_ACCEL_ARM);
@@ -67,7 +68,7 @@ Arm::Arm()
 
     intake->SetInverted(false);
 
-    rightArm->Follow(*leftArm, true);
+    leftArm->Follow(*rightArm, true);
 
     //Set to brake or coast
     leftArm->SetIdleMode(BRAKE);
@@ -102,12 +103,10 @@ void Arm::ManualRotateArm(double input)
     //ShuffleManager
     if (input != 0.0) {
         isArmInManual = true;
-        leftArm->Set(input);
         rightArm->Set(input);
     }
     if (input == 0.0 && isArmInManual){
-        leftArm->Set(input);
-        // rightArm->Set(input); RightArm is in follower mode so it does not need to be set
+        rightArm->Set(input);
     }
     double leftVoltage = (input * leftArm->GetBusVoltage());
     double rightVoltage = (input * rightArm->GetBusVoltage());
