@@ -121,6 +121,10 @@ double OI::GetArmInput()
 double OI::GetWristInput()
 {
     wristPowerOutput = xbox->GetY(RIGHT_HAND);
+    if (wristPowerOutput < 0.1 && wristPowerOutput > -0.1){
+        wristPowerOutput = 0.0;
+    }
+    frc::SmartDashboard::PutNumber("Wrist Control Input", wristPowerOutput);
     return wristPowerOutput;
 }
 
