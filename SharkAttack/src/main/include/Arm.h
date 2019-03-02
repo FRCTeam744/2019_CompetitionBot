@@ -26,8 +26,8 @@ public:
   void RunIntake(double input);
   double GetArmEncoderValue();
   double GetWristEncoderValue();
-  void MoveArmToPosition(double targetPosition); //Degrees
-  void MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition);                      //Degrees
+  void MoveArmToPosition(double targetPosition);                                    //Degrees
+  void MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition); //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
   void SetArmToCoast();
@@ -35,6 +35,9 @@ public:
   void ManualCalibrateArm();
 
   void PrintArmInfo();
+
+  double GetMAX_FF_GAIN();
+  void SetMAX_FF_GAIN(double ArmFFVoltage);
 
 private:
   static Arm *s_instance;
@@ -69,9 +72,9 @@ private:
   double FFVoltage = 0.0;
 
   //CAN Motor IDs
-  const int LEFT_ARM_ID = 42; //42 is actual, was changed for testing. Change back
-  const int RIGHT_ARM_ID = 43; //43 is actual
-  const int LEFT_WRIST_ID = 44; //44 is actual
+  const int LEFT_ARM_ID = 42;    //42 is actual, was changed for testing. Change back
+  const int RIGHT_ARM_ID = 43;   //43 is actual
+  const int LEFT_WRIST_ID = 44;  //44 is actual
   const int RIGHT_WRIST_ID = 45; //45 is actual, was changed for testing. Change back
   const int INTAKE_ID = 46;
 
@@ -89,31 +92,30 @@ private:
   const double LIMIT_SWITCH_OFFSET = 5.0;
 
   //Arm PID Values
-  const double MAX_FF_GAIN = 0.51; //Volts required to hold arm at 90 degrees
-
-  const double P_GAIN_ARM = 0.01;
-  const double I_GAIN_ARM = 0.0;
-  const double I_ZONE_ARM = 0.0;
-  const double D_GAIN_ARM = P_GAIN_ARM * 20; //Rule of thumb for DGain is to multiply P by 20
+  const double MAX_FF_GAIN = 0.60; //Volts required to hold arm at 90 degrees
+  const double ARM_FF_GAIN = (1.15/360);
+  const double P_GAIN_ARM = 0.0017;
+  const double I_GAIN_ARM = 0.000034;
+  const double I_ZONE_ARM = 2;
+  const double D_GAIN_ARM = P_GAIN_ARM * 200; //Rule of thumb for DGain is to multiply P by 20
   const double MAX_POWER_ARM = 1.0;
   const double MIN_POWER_ARM = -1.0;
 
-  const double MAX_VEL_ARM = 60.0; //Everything here is Degrees/Sec
+  const double MAX_VEL_ARM = 90.0; //Was 60 //Everything here is Degrees/Sec
   const double MIN_VEL_ARM = 0.0;
-  const double MAX_ACCEL_ARM = 20.0;
-  const double ALLOWED_ERROR_ARM = 1.0;
+  const double MAX_ACCEL_ARM = 40.0; //Was 20
+  const double ALLOWED_ERROR_ARM = 2.0; //Was 1.0
 
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
   const double ARM_GEAR_RATIO = 81.0;
   const double DEGREES_PER_ARM_REVOLUTION = 360.0;
   const double SECONDS_PER_MINUTE = 60.0;
-  
+
   //This is the PositionConversionFactor
   const double DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_ARM_REVOLUTION / ARM_GEAR_RATIO;
-  
+
   //THis is the VelocityConversionFactor
-  const double RPM_TO_DEGREES_PER_SECOND = DEGREES_PER_MOTOR_ROTATION/SECONDS_PER_MINUTE;
-  
+  const double RPM_TO_DEGREES_PER_SECOND = DEGREES_PER_MOTOR_ROTATION / SECONDS_PER_MINUTE;
 
   //Constants
   const rev::CANSparkMax::MotorType BRUSHLESS = rev::CANSparkMax::MotorType::kBrushless;

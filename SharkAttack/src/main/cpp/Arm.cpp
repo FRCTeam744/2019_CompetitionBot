@@ -38,6 +38,9 @@ Arm::Arm()
 
     armPID->SetP(P_GAIN_ARM);
     armPID->SetD(D_GAIN_ARM);
+    armPID->SetI(I_GAIN_ARM);
+    armPID->SetIZone(I_ZONE_ARM);
+    armPID->SetFF(ARM_FF_GAIN);
 
     armPID->SetSmartMotionMaxVelocity(MAX_VEL_ARM);
     armPID->SetSmartMotionMaxAccel(MAX_ACCEL_ARM);
@@ -171,6 +174,7 @@ void Arm::MoveArmToPosition(double targetPosition)
     frc::SmartDashboard::PutNumber("Arm position Error", targetPosition+GetArmEncoderValue());
     double armPower = -(targetPosition - GetArmEncoderValue()) * P_GAIN_ARM;
     frc::SmartDashboard::PutNumber("Arm Percent Output", armPower);
+    frc::SmartDashboard::PutNumber("FFVoltage", FFVoltage);
     // MoveWristToPosition(wristCurrentPosition, armCurrentPosition);
     if (armPower > MAX_POWER_ARM){
         armPower = MAX_POWER_ARM;
@@ -180,6 +184,7 @@ void Arm::MoveArmToPosition(double targetPosition)
 
     if (!isArmInManual) {
         armPID->SetReference(targetPosition, rev::ControlType::kSmartMotion, 0, FFVoltage);
+        //armPID->SetReference(-15, rev::ControlType::kVelocity, 0, FFVoltage); //Testing
     }
 }
 
@@ -223,7 +228,8 @@ void Arm::PrintArmInfo()
     frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
 
     frc::SmartDashboard::PutNumber("Arm Encoder Native Value", armEncoder->GetPosition());
-    frc::SmartDashboard::PutNumber("Arm Speed Degrees/Sec", armEncoder->GetVelocity());
+    frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
+    frc::SmartDashboard::PutNumber("Arm Velocity Error", -15 - armEncoder->GetVelocity());
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
 
@@ -253,3 +259,12 @@ bool Arm::GetWristLimitSwitch()
     return !wristLimitSwitch->Get();
 }
 
+// double Arm::GetMAX_FF_GAIN()
+// {
+//     return MAX_FF_GAIN;
+// }
+
+// void Arm::SetMAX_FF_GAIN(double ArmFFVoltage)
+// {
+//     MAX_FF_GAIN = ArmFFVoltage;
+// }

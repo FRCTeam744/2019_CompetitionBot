@@ -55,6 +55,8 @@ void Robot::RobotPeriodic()
 
   fourbar->PrintClimberRPM();
   arm->PrintArmInfo();
+
+  // arm->SetMAX_FF_GAIN(oi->GetArmFFVoltage());
 }
 
 /**
