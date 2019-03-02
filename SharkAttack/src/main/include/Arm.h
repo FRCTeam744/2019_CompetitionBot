@@ -27,7 +27,7 @@ public:
   double GetArmEncoderValue();
   double GetWristEncoderValue();
   void MoveArmToPosition(double targetPosition);                                    //Degrees
-  void MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition); //Degrees
+  void MoveWristToPosition( double wristTargetPosition); //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
   void SetArmToCoast();
@@ -86,7 +86,7 @@ private:
 
   //Tunables
   const double HOLD_BALL_SPEED = 0.05;
-  const double WRIST_ADJUSTER = 400;
+  const double WRIST_ADJUSTER = 0.005; //Was (1/400)
   const double DANGER_ZONE_LIMIT = 50;
   const double CALIBRATION_SPEED = 3000.0;
   const double LIMIT_SWITCH_OFFSET = 5.0;

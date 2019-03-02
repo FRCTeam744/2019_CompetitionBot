@@ -129,7 +129,8 @@ void Robot::TeleopPeriodic()
 
   arm->ManualRotateArm(oi->GetArmInput()); //Needs fixing, conflicting with presets
   arm->ManualRotateWrist(oi->GetWristInput());
-  arm->MoveArmToPosition(oi->GetTargetPosition());
+  arm->MoveArmToPosition(oi->GetTargetArmPosition());
+  arm->MoveWristToPosition(oi->GetTargetWristPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
   //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;

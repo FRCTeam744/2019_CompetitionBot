@@ -123,23 +123,28 @@ double OI::GetArmInput()
 double OI::GetWristInput()
 {
     wristPowerOutput = xbox->GetY(RIGHT_HAND);
-    if (wristPowerOutput < 0.1 && wristPowerOutput > -0.1){
+    if (wristPowerOutput < 0.1 && wristPowerOutput > -0.1)
+    {
         wristPowerOutput = 0.0;
     }
     frc::SmartDashboard::PutNumber("Wrist Control Input", wristPowerOutput);
     return wristPowerOutput;
 }
 
-double OI::GetIntakeInput(){
+double OI::GetIntakeInput()
+{
     double intakeIn = xbox->GetTriggerAxis(LEFT_HAND);
     double intakeOut = xbox->GetTriggerAxis(RIGHT_HAND);
-    if (intakeIn > 0.05){
+    if (intakeIn > 0.05)
+    {
         return intakeIn;
     }
-    else if (intakeOut > 0.05){
+    else if (intakeOut > 0.05)
+    {
         return -intakeOut;
     }
-    else {
+    else
+    {
         return 0.0;
     }
 }
@@ -157,7 +162,6 @@ double OI::GetRightDriveInput()
 
 void OI::PrintToSmartDashboard(double encoderValue)
 {
-
 }
 
 bool OI::GetFourbarExtend()
@@ -175,12 +179,12 @@ bool OI::GetFourbarHome()
     return rightStick->GetRawButtonPressed(8);
 }
 
-
 //Returns the Target Position to the Arm
-double OI::GetTargetPosition() 
+double OI::GetTargetArmPosition()
 {
     //Ball Placement and Pickup Presets
-    if (isInBallMode){
+    if (isInBallMode)
+    {
         if (xbox->GetYButtonPressed())
         {
             targetArmPosition = FRONT_HIGH_BALL_POSITION;
@@ -221,11 +225,11 @@ double OI::GetTargetPosition()
             targetArmPosition = BACK_BALL_PICKUP_POSITION;
         }
     }
-    else {
+    else
+    {
         if (xbox->GetYButtonPressed())
         {
             targetArmPosition = FRONT_HIGH_HATCH_POSITION;
-        
         }
 
         if (xbox->GetBButtonPressed())
@@ -267,6 +271,97 @@ double OI::GetTargetPosition()
     return targetArmPosition;
 }
 
+double OI::GetTargetWristPosition()
+{
+    //Ball Placement and Pickup Presets
+    if (isInBallMode)
+    {
+        if (xbox->GetYButtonPressed())
+        {
+            targetWristPosition = WRIST_BALL_PICKUP_FRONT_HIGH_DEG;
+        }
+
+        if (xbox->GetBButtonPressed())
+        {
+            targetWristPosition = WRIST_BALL_PICKUP_FRONT_MID_DEG;
+        }
+
+        if (xbox->GetXButtonPressed())
+        {
+            targetWristPosition = WRIST_BALL_PICKUP_FRONT_LOW_DEG;
+        }
+
+        if (xbox->GetAButtonPressed())
+        {
+            targetWristPosition = WRIST_BALL_PICKUP_FRONT_CARGO_PRESET_DEG;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_UP)
+        {
+            targetWristPosition = WRIST_BALL_PICKUP_BACK_HIGH_DEG;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_LEFT)
+        {
+            targetWristPosition = WRIST_BALL_PICKUP_BACK_MID_DEG;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_RIGHT)
+        {
+            targetWristPosition = WRIST_BALL_PICKUP_BACK_LOW_DEG;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_DOWN)
+        {
+            targetWristPosition = WRIST_BALL_PICKUP_BACK_CARGO_PRESET_DEG;
+        }
+    }
+    else
+    {
+        if (xbox->GetYButtonPressed())
+        {
+            targetWristPosition = WRIST_HATCH_PICKUP_FRONT_HIGH_DEG;
+        }
+
+        if (xbox->GetBButtonPressed())
+        {
+            targetWristPosition = WRIST_HATCH_PICKUP_FRONT_MID_DEG;
+        }
+
+        if (xbox->GetAButtonPressed())
+        {
+            targetWristPosition = WRIST_HATCH_PICKUP_FRONT_CARGO_PRESET_DEG;
+        }
+
+        if (xbox->GetXButtonPressed())
+        {
+            targetWristPosition = WRIST_NEUTRAL_DEG;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_UP)
+        {
+            targetWristPosition = WRIST_HATCH_PICKUP_BACK_HIGH_DEG;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_RIGHT)
+        {
+            targetWristPosition = WRIST_HATCH_PICKUP_BACK_MID_DEG;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_DOWN)
+        {
+            targetWristPosition = WRIST_HATCH_PICKUP_BACK_CARGO_PRESET_DEG;
+        }
+
+        if (xbox->GetPOV(0) == DPAD_LEFT)
+        {
+            targetWristPosition = WRIST_NEUTRAL_DEG;
+        }
+    }
+    frc::SmartDashboard::PutNumber("Target Wrist Position Degrees", targetWristPosition);
+    return targetWristPosition;
+}
+
 std::tuple<bool, std::string, double> OI::SetLimelight()
 {
     if (leftStick->GetRawButtonPressed(5))
@@ -299,11 +394,13 @@ bool OI::AlsoLEDButtonPressed()
     return rightStick->GetRawButton(2);
 }
 
-double OI::GetArmFFVoltage() {
+double OI::GetArmFFVoltage()
+{
 
     double newArmFFVoltage = preferences->GetDouble("armFFVoltage", 0.0);
 
-    if (armFFVoltage != newArmFFVoltage) {
+    if (armFFVoltage != newArmFFVoltage)
+    {
         armFFVoltage = newArmFFVoltage;
     }
 

@@ -188,25 +188,20 @@ void Arm::MoveArmToPosition(double targetPosition)
     }
 }
 
-void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
+// void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
+void Arm::MoveWristToPosition(double wristTargetPosition)
 {
-    double targetPosition;
     double delta;
-    if (armCurrentPosition > DANGER_ZONE_LIMIT)
+    if ((GetArmEncoderValue() < DANGER_ZONE_LIMIT) && (GetArmEncoderValue() > -DANGER_ZONE_LIMIT))
     {
-        //normal operations
-        targetPosition = 0.0;
-    }
-    else if (armCurrentPosition < -DANGER_ZONE_LIMIT)
-    {
-        //other normal operations
+        //Inside D A N G E R  Z O N E
+        wristTargetPosition = 0.0;
     }
     else
     {
-        //Inside DANGER Z O N E
-        targetPosition = 0;
+        //Safe to move wrist
     }
-    delta = (targetPosition - wristCurrentPosition) / WRIST_ADJUSTER;
+    delta = (wristTargetPosition - GetWristEncoderValue()) * WRIST_ADJUSTER;
     leftWrist->Set(delta);
 }
 
