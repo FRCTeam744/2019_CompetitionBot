@@ -125,11 +125,11 @@ void Robot::TeleopPeriodic()
   }
 
   drivetrain->PutData();
-  drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
+  //drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
-  arm->ManualRotateArm(oi->GetArmInput()); //Needs fixing, conflicting with presets
+  //arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());
-  arm->MoveArmToPosition(oi->GetTargetArmPosition());
+  //arm->MoveArmToPosition(oi->GetTargetArmPosition());
   arm->MoveWristToPosition(oi->GetTargetWristPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 

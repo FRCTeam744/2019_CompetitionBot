@@ -127,6 +127,7 @@ class OI
 	const double WRIST_HATCH_PICKUP_BACK_HIGH_DEG = -90; //UP
 
 	double targetArmPosition;
+	double targetWristPosition;
 
 	//Private Objects in OI.cpp
 	frc::Joystick *rightStick;

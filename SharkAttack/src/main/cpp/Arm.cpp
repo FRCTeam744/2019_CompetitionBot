@@ -49,8 +49,8 @@ Arm::Arm()
 
     armPID->SetSmartMotionAccelStrategy(rev::CANPIDController::AccelStrategy::kTrapezoidal);
 
-    //wristEncoder = new rev::CANEncoder(*leftWrist);
-    wristEncoder = new rev::CANEncoder(*rightWrist); //Robert made this change for testing encoder values
+    wristEncoder = new rev::CANEncoder(*leftWrist);
+    //wristEncoder = new rev::CANEncoder(*rightWrist); //Robert made this change for testing encoder values
 
     armLimitSwitch = new frc::DigitalInput(2);
     wristLimitSwitch = new frc::DigitalInput(3);
@@ -195,7 +195,7 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
     if ((GetArmEncoderValue() < DANGER_ZONE_LIMIT) && (GetArmEncoderValue() > -DANGER_ZONE_LIMIT))
     {
         //Inside D A N G E R  Z O N E
-        wristTargetPosition = 0.0;
+        //wristTargetPosition = 0.0;
     }
     else
     {
@@ -203,6 +203,7 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
     }
     delta = (wristTargetPosition - GetWristEncoderValue()) * WRIST_ADJUSTER;
     leftWrist->Set(delta);
+    frc::SmartDashboard::PutNumber("Wrist position error: ", delta);
 }
 
 void Arm::CheckHatchGripper(bool isClosed)
