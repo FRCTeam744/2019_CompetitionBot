@@ -95,16 +95,6 @@ class OI
 	const int resolutionHeight = 120;
 	const int framerate = 10;
 
-	//Arm Constants //Not being used anymore
-	// const double ARM_PICKUP_CARGO_PRESET_DEG = 35;		//A
-	// const double ARM_PICKUP_LOW_DEG = 45;				//X
-	// const double ARM_PICKUP_MID_DEG = 90;				//B
-	// const double ARM_PICKUP_HIGH_DEG = 135;				//Y
-	// const double ARM_PICKUP_NEG_CARGO_PRESET_DEG = -35; //DOWN
-	// const double ARM_PICKUP_NEG_LOW_DEG = -45;			//RIGHT
-	// const double ARM_PICKUP_NEG_MID_DEG = 4.4;			//LEFT // -90
-	// const double ARM_PICKUP_NEG_HIGH_DEG = 0;			//UP // -135
-
 	//Wrist Constants //Work in Progress
 	const double WRIST_BALL_PICKUP_FRONT_CARGO_PRESET_DEG = 0; //A
 	const double WRIST_BALL_PICKUP_FRONT_LOW_DEG = 0;

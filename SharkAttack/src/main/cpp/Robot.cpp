@@ -193,6 +193,11 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
+  if (isBeforeMatch && !hasStartedUp) {
+    led->StartUp();
+  }
+  
+  
 }
 
 void Robot::TestPeriodic()

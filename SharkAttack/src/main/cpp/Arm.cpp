@@ -201,7 +201,7 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
     {
         //Safe to move wrist
     }
-    delta = (wristTargetPosition - GetWristEncoderValue()) * WRIST_ADJUSTER;
+    delta = (wristTargetPosition - GetWristEncoderValue()) * WRIST_P_GAIN;
     leftWrist->Set(delta);
     frc::SmartDashboard::PutNumber("Wrist position error: ", delta);
 }

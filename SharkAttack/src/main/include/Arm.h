@@ -86,10 +86,12 @@ private:
 
   //Tunables
   const double HOLD_BALL_SPEED = 0.05;
-  const double WRIST_ADJUSTER = 0.025; //Was .06 when experiencing issues
   const double DANGER_ZONE_LIMIT = 20;
   const double CALIBRATION_SPEED = 3000.0;
   const double LIMIT_SWITCH_OFFSET = 5.0;
+
+  //Wrist PID Values
+  const double WRIST_P_GAIN = 0.025; //Was .06 when experiencing issues
 
   //Arm PID Values
   const double MAX_FF_GAIN = 0.60; //Volts required to hold arm at 90 degrees
