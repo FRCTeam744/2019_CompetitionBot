@@ -94,7 +94,9 @@ Arm::Arm()
     wasWristLimitSwitchTripped = true;
 
     isArmInManual = false;
+    isArmInManual = false;
     previousTargetPosition = 0.0;
+    previousTargetWristPosition = 0.0;
 
     armEncoder->SetPosition(0.0);
 }
@@ -119,8 +121,15 @@ void Arm::ManualRotateArm(double input)
 
 void Arm::ManualRotateWrist(double input)
 {
-    leftWrist->Set(input);
-    rightWrist->Set(input);
+     if (input != 0.0) {
+        isWristInManual = true;
+        rightWrist->Set(input);
+        leftWrist->Set(input);
+    }
+    if (input == 0.0 && isWristInManual){
+        rightWrist->Set(input);
+        leftWrist->Set(input);
+    }
 }
 
 void Arm::RunIntake(double input)
@@ -191,6 +200,10 @@ void Arm::MoveArmToPosition(double targetPosition)
 // void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
 void Arm::MoveWristToPosition(double wristTargetPosition)
 {
+    if (wristTargetPosition != previousTargetWristPosition){
+        previousTargetWristPosition = wristTargetPosition;
+        isWristInManual = false;
+    }
     double delta;
     if ((GetArmEncoderValue() < DANGER_ZONE_LIMIT) && (GetArmEncoderValue() > -DANGER_ZONE_LIMIT))
     {
@@ -202,8 +215,11 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
         //Safe to move wrist
     }
     delta = (wristTargetPosition - GetWristEncoderValue()) * WRIST_P_GAIN;
-    leftWrist->Set(delta);
-    frc::SmartDashboard::PutNumber("Wrist position error: ", delta);
+    if (!isWristInManual){
+        leftWrist->Set(delta);
+        rightWrist->Set(delta);
+    }
+    frc::SmartDashboard::PutNumber("Wrist Auto Power", delta);
 }
 
 void Arm::CheckHatchGripper(bool isClosed)

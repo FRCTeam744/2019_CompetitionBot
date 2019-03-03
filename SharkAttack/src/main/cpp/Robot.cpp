@@ -36,6 +36,14 @@ void Robot::RobotInit()
 
   // std::thread vision(VisionThread);
   // vision.detach();
+
+  //Testing
+  // frc::Encoder *sampleEncoder = new frc::Encoder(0, 1, false, frc::Encoder::EncodingType::k4X);
+  // sampleEncoder->SetMaxPeriod(.1);
+  // sampleEncoder->SetMinRate(10);
+  // sampleEncoder->SetDistancePerPulse(5);
+  // sampleEncoder->SetReverseDirection(true);
+  // sampleEncoder->SetSamplesToAverage(7);
 }
 
 /**
@@ -115,6 +123,9 @@ void Robot::TeleopInit()
 void Robot::TeleopPeriodic()
 {
 
+  // frc::SmartDashboard::PutNumber("sampleEncoder Value: ", sampleEncoder->GetRaw()); //Testing
+  // std::cout << "sampleEncoder Value: " << sampleEncoder->GetRaw() << std::endl;
+
   if (oi->LEDButtonPressed())
   {
     led->LEDsOff();
@@ -127,9 +138,9 @@ void Robot::TeleopPeriodic()
   drivetrain->PutData();
   //drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
-  //arm->ManualRotateArm(oi->GetArmInput());
+  arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());
-  //arm->MoveArmToPosition(oi->GetTargetArmPosition());
+  arm->MoveArmToPosition(oi->GetTargetArmPosition());
   arm->MoveWristToPosition(oi->GetTargetWristPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
@@ -193,11 +204,10 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
-  if (isBeforeMatch && !hasStartedUp) {
+  if (isBeforeMatch && !hasStartedUp)
+  {
     led->StartUp();
   }
-  
-  
 }
 
 void Robot::TestPeriodic()

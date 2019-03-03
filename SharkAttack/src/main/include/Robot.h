@@ -27,9 +27,10 @@
 #include "Fourbar.h"
 #include "LED.h"
 #include "ShuffleManager.h"
+#include <Encoder.h>
 
-
-class Robot : public frc::TimedRobot {
+class Robot : public frc::TimedRobot
+{
 public:
   void RobotInit() override;
   void RobotPeriodic() override;
@@ -41,14 +42,12 @@ public:
   void DisabledPeriodic() override;
   void TestPeriodic() override;
 
-
-
 private:
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoDrive1 = "Drive Off Level 1";
   const std::string kAutoDrive2 = "Drive Off Level 2";
   std::string m_autoSelected;
-  
+
   Drivetrain *drivetrain;
   OI *oi;
   Arm *arm;
@@ -64,4 +63,5 @@ private:
   const frc::DriverStation::Alliance blue = frc::DriverStation::Alliance::kBlue;
   const frc::DriverStation::Alliance red = frc::DriverStation::Alliance::kRed;
 
+  frc::Encoder *sampleEncoder; //Testing
 };

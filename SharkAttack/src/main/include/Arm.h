@@ -67,7 +67,9 @@ private:
 
   bool hasBall = false;
   bool isArmInManual;
+  bool isWristInManual;
   double previousTargetPosition;
+  double previousTargetWristPosition;
 
   double FFVoltage = 0.0;
 
@@ -109,7 +111,7 @@ private:
   const double ALLOWED_ERROR_ARM = 2.0; //Was 1.0
 
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
-  const double ARM_GEAR_RATIO = 81.0;
+  const double ARM_GEAR_RATIO = 74.97;
   const double DEGREES_PER_ARM_REVOLUTION = 360.0;
   const double SECONDS_PER_MINUTE = 60.0;
 
