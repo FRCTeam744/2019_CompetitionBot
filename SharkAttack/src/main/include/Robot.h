@@ -59,7 +59,6 @@ private:
   //LED CODE
   frc::DriverStation::Alliance alliance;
   bool isBeforeMatch = true;
-  bool hasStartedUp = false;
 
   const frc::DriverStation::Alliance blue = frc::DriverStation::Alliance::kBlue;
   const frc::DriverStation::Alliance red = frc::DriverStation::Alliance::kRed;
