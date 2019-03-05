@@ -47,7 +47,7 @@ Arm::Arm()
     armPID->SetSmartMotionMinOutputVelocity(MIN_VEL_ARM);
     armPID->SetSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_ARM);
 
-    armPID->SetSmartMotionAccelStrategy(rev::CANPIDController::AccelStrategy::kTrapezoidal);
+    armPID->SetSmartMotionAccelStrategy(rev::CANPIDController::AccelStrategy::kSCurve);
 
     wristEncoder = new rev::CANEncoder(*leftWrist);
     //wristEncoder = new rev::CANEncoder(*rightWrist); //Robert made this change for testing encoder values
