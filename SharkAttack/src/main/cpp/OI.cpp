@@ -113,15 +113,15 @@ double OI::GetArmInput()
     armPowerOutput = xbox->GetY(LEFT_HAND);
     frc::SmartDashboard::PutNumber("Xbox Y Left", armPowerOutput);
     //shuffleboard here
-    if (armPowerOutput < 0.07 && armPowerOutput > -0.07)
+    if (armPowerOutput < ARM_DEADZONE && armPowerOutput > -ARM_DEADZONE)
     {
         armPowerOutput = 0.0;
     }
-    else if (armPowerOutput >= 0.07){
-        armPowerOutput = (armPowerOutput - 0.07) / 0.93; //Scales power to 0.0-1.0
+    else if (armPowerOutput >= ARM_DEADZONE){
+        armPowerOutput = (armPowerOutput - ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
     }
-    else if (armPowerOutput <= -0.07) {
-        armPowerOutput = (armPowerOutput + 0.07) / 0.93; //Scales power to 0.0-1.0
+    else if (armPowerOutput <= -ARM_DEADZONE) {
+        armPowerOutput = (armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
     }
     return armPowerOutput;
 }
@@ -129,15 +129,15 @@ double OI::GetArmInput()
 double OI::GetWristInput()
 {
     wristPowerOutput = xbox->GetY(RIGHT_HAND);
-    if (wristPowerOutput < 0.08 && wristPowerOutput > -0.08)
+    if (wristPowerOutput < WRIST_DEADZONE && wristPowerOutput > -WRIST_DEADZONE)
     {
         wristPowerOutput = 0.0;
     }
-    else if (wristPowerOutput >= 0.08){
-        wristPowerOutput = (wristPowerOutput - 0.08) / 0.92; //Scales power to 0.0-1.0
+    else if (wristPowerOutput >= WRIST_DEADZONE){
+        wristPowerOutput = (wristPowerOutput - WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
     }
-    else if (armPowerOutput <= -0.08) {
-        wristPowerOutput = (wristPowerOutput + 0.08) / 0.92; //Scales power to 0.0-1.0
+    else if (armPowerOutput <= -WRIST_DEADZONE) {
+        wristPowerOutput = (wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
     }
 
     frc::SmartDashboard::PutNumber("Wrist Control Input", wristPowerOutput);

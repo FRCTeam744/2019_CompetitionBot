@@ -80,6 +80,10 @@ class OI
 	const std::string kAutoDrive2 = "Drive Off Level 2";
 	std::string m_autoSelected;
 
+	//CONTROLLER DEADZONES
+	const double ARM_DEADZONE = 0.07;
+	const double WRIST_DEADZONE = 0.08;
+
 	//Use LEFT_HAND and RIGHT_HAND constants to designate left and right sides of XboxController in OI.cpp
 	const frc::XboxController::JoystickHand LEFT_HAND = frc::XboxController::kLeftHand;
 	const frc::XboxController::JoystickHand RIGHT_HAND = frc::XboxController::kRightHand;
