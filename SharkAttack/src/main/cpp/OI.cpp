@@ -117,19 +117,29 @@ double OI::GetArmInput()
     {
         armPowerOutput = 0.0;
     }
-
-    armPowerOutput = (armPowerOutput/0.93) * 100.0;
-
+    else if (armPowerOutput >= 0.07){
+        armPowerOutput = (armPowerOutput - 0.07) / 0.93; //Scales power to 0.0-1.0
+    }
+    else if (armPowerOutput <= -0.07) {
+        armPowerOutput = (armPowerOutput + 0.07) / 0.93; //Scales power to 0.0-1.0
+    }
     return armPowerOutput;
 }
 
 double OI::GetWristInput()
 {
     wristPowerOutput = xbox->GetY(RIGHT_HAND);
-    if (wristPowerOutput < 0.1 && wristPowerOutput > -0.1)
+    if (wristPowerOutput < 0.08 && wristPowerOutput > -0.08)
     {
         wristPowerOutput = 0.0;
     }
+    else if (wristPowerOutput >= 0.08){
+        wristPowerOutput = (wristPowerOutput - 0.08) / 0.92; //Scales power to 0.0-1.0
+    }
+    else if (armPowerOutput <= -0.08) {
+        wristPowerOutput = (wristPowerOutput + 0.08) / 0.92; //Scales power to 0.0-1.0
+    }
+
     frc::SmartDashboard::PutNumber("Wrist Control Input", wristPowerOutput);
     return wristPowerOutput;
 }

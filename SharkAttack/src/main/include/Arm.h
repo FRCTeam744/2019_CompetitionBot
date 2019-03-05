@@ -26,7 +26,7 @@ public:
   void RunIntake(double input);
   double GetArmEncoderValue();
   double GetWristEncoderValue();
-  void MoveArmToPosition(double targetPosition);                                    //Degrees
+  void MoveArmToPosition(double targetPosition); //Degrees
   void MoveWristToPosition( double wristTargetPosition); //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
