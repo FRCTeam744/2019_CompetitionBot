@@ -245,6 +245,25 @@ void Arm::PrintArmInfo()
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
 
+void Arm::PrintArmInfotoConsole(){
+   if(frc::DriverStation::GetInstance().IsFMSAttached() == true){
+    compPrintCount ++;
+      if(compPrintCount > 1000){
+        std::cout << "Arm Amps Left: " << leftArm->GetOutputCurrent();
+        std::cout << "Arm Amps Right: " << rightArm->GetOutputCurrent();
+        compPrintCount = 0;
+      }
+    else{
+        printCount ++;
+            if(printCount > 30){
+                std::cout << "Arm Amps Testing Left: " << leftArm->GetOutputCurrent();
+                std::cout << "Arm Amps Testing Right: " << rightArm->GetOutputCurrent();
+                printCount = 0;
+            }
+    }
+  } 
+}
+
 void Arm::ManualCalibrateArm()
 {
     if (!GetArmLimitSwitch())

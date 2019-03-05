@@ -13,6 +13,8 @@
 #include <frc/PowerDistributionPanel.h>
 #include "math.h"
 #include <iostream>
+#include <string>
+
 
 #include "ShuffleManager.h"
 
@@ -35,6 +37,8 @@ public:
   void ManualCalibrateArm();
 
   void PrintArmInfo();
+  void Arm::PrintArmInfotoConsole();
+
 
   double GetMAX_FF_GAIN();
   void SetMAX_FF_GAIN(double ArmFFVoltage);
@@ -72,6 +76,9 @@ private:
   double previousTargetWristPosition;
 
   double FFVoltage = 0.0;
+
+  int compPrintCount = 0;
+  int printCount = 0;
 
   //CAN Motor IDs
   const int LEFT_ARM_ID = 42;    //42 is actual, was changed for testing. Change back
