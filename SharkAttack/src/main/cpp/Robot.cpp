@@ -80,6 +80,7 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
+  isBeforeMatch = false;
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   //     kAutoNameDefault);
@@ -197,17 +198,19 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit()
 {
-
-  led->StartUp();
   alliance = frc::DriverStation::GetInstance().GetAlliance();
 }
 
 void Robot::DisabledPeriodic()
 {
-  if (isBeforeMatch && !hasStartedUp)
-  {
+  if (isBeforeMatch) {
     led->StartUp();
   }
+  
+  if (!isBeforeMatch) {
+    led->ShutDown();
+  }
+  
 }
 
 void Robot::TestPeriodic()

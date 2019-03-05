@@ -23,6 +23,7 @@ class LED {
         void StartUpRed();
         void LiftOffBlue();
         void LiftOffRed();
+        void ShutDown();
 
     private:
 

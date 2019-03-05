@@ -88,3 +88,7 @@ void LED::LiftOffRed()
         arduino->Write("N", 1);
     }
 }
+
+void LED::ShutDown() {
+    arduino->Write("S", 1);
+}
