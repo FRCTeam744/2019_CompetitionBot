@@ -123,7 +123,7 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-
+  printf("%s\n", so)
   // frc::SmartDashboard::PutNumber("sampleEncoder Value: ", sampleEncoder->GetRaw()); //Testing
   // std::cout << "sampleEncoder Value: " << sampleEncoder->GetRaw() << std::endl;
 
