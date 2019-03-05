@@ -117,6 +117,9 @@ double OI::GetArmInput()
     {
         armPowerOutput = 0.0;
     }
+
+    armPowerOutput = (armPowerOutput/0.93) * 100.0;
+
     return armPowerOutput;
 }
 
