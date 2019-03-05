@@ -74,8 +74,8 @@ Arm::Arm()
     leftArm->Follow(*rightArm, true);
 
     //Set to brake or coast
-    leftArm->SetIdleMode(BRAKE);
-    rightArm->SetIdleMode(BRAKE);
+    leftArm->SetIdleMode(COAST);
+    rightArm->SetIdleMode(COAST);
     leftWrist->SetIdleMode(BRAKE);
     rightWrist->SetIdleMode(BRAKE);
     intake->SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
