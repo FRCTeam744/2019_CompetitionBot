@@ -33,6 +33,7 @@ public:
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
   void SetArmToCoast();
+  void SwitchPlacingMode(bool hatchButton, bool ballButton);
 
   void ManualCalibrateArm();
 
@@ -80,6 +81,9 @@ private:
   int compPrintCount = 0;
   int printCount = 0;
 
+  bool isInBallMode;
+  bool isOnBack;
+
   //CAN Motor IDs
   const int LEFT_ARM_ID = 42;    //42 is actual, was changed for testing. Change back
   const int RIGHT_ARM_ID = 43;   //43 is actual
@@ -92,6 +96,15 @@ private:
 
   const int ARM_CURRENT_LIMIT = 40;
   const int WRIST_CURRENT_LIMIT = 10;
+
+  //Wrist Positions
+  const int WRIST_BALL_FORWARD = -90;
+  const int WRIST_HATCH_FORWARD = 90;
+  const int WRIST_BALL_BACKWARD = 90;
+  const int WRIST_HATCH_BACKWARD = -90;
+  const int WRIST_NEUTRAL = 0;
+  const int WRIST_BALL_PICKUP_FRONT = -180;
+  const int WRIST_BALL_PICKUP_BACK = 180;
 
   //Tunables
   const double HOLD_BALL_SPEED = 0.05;
