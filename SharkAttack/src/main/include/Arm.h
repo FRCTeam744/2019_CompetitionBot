@@ -118,19 +118,14 @@ private:
   const double TIME_TO_MAX_MOTOR_OUTPUT = 0.5; //secs
   const double RAMP_RATE = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT;
 
-  const double MAX_FF_GAIN = 0.66; //Volts required to hold arm at 90 degrees
-  const double ARM_FF_GAIN = (.9/360);
-  const double P_GAIN_ARM = 0.0017 * 3;
-  const double I_GAIN_ARM = 0; //0.000034;
-  const double I_ZONE_ARM = 2;
-  const double D_GAIN_ARM = 0;// P_GAIN_ARM * 200; //Rule of thumb for DGain is to multiply P by 20
+  const double MAX_FF_GAIN = 0.67; //Volts required to hold arm at 90 degrees
+  const double ARM_FF_GAIN = 0;
+  const double P_GAIN_ARM = 0.01;
+  const double I_GAIN_ARM = 0;
+  const double I_ZONE_ARM = 0;
+  const double D_GAIN_ARM = P_GAIN_ARM * 20.0 * 8.0; //8.0 = 2^3 //Rule of thumb for DGain is to multiply P by 20, then keep doubling it (we doubled it three times in this case)
   const double MAX_POWER_ARM = MAX_MOTOR_OUTPUT;
   const double MIN_POWER_ARM = -MAX_MOTOR_OUTPUT;
-
-  const double MAX_VEL_ARM = 60.0; //Was 60 //Everything here is Degrees/Sec
-  const double MIN_VEL_ARM = 0.0;
-  const double MAX_ACCEL_ARM = 60.0; //Was 20
-  const double ALLOWED_ERROR_ARM = 2.0; //Was 1.0
 
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
   const double ARM_GEAR_RATIO = 74.97;

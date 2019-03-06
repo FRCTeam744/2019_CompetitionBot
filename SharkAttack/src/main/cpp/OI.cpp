@@ -123,7 +123,7 @@ double OI::GetArmInput()
     else if (armPowerOutput <= -ARM_DEADZONE) {
         armPowerOutput = (armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
     }
-    return armPowerOutput;
+    return -armPowerOutput; //setting negative makes positive values move the arm forward
 }
 
 double OI::GetWristInput()
@@ -141,7 +141,7 @@ double OI::GetWristInput()
     }
 
     frc::SmartDashboard::PutNumber("Wrist Control Input", wristPowerOutput);
-    return wristPowerOutput;
+    return -wristPowerOutput; //setting negative makes positive values move the wrist forward
 }
 
 double OI::GetIntakeInput()

@@ -46,13 +46,6 @@ Arm::Arm()
 
     armPID->SetOutputRange(MIN_POWER_ARM, MAX_POWER_ARM);
 
-    armPID->SetSmartMotionMaxVelocity(MAX_VEL_ARM);
-    armPID->SetSmartMotionMaxAccel(MAX_ACCEL_ARM);
-    armPID->SetSmartMotionMinOutputVelocity(MIN_VEL_ARM);
-    armPID->SetSmartMotionAllowedClosedLoopError(ALLOWED_ERROR_ARM);
-
-    armPID->SetSmartMotionAccelStrategy(rev::CANPIDController::AccelStrategy::kSCurve);
-
     wristEncoder = new rev::CANEncoder(*leftWrist);
     //wristEncoder = new rev::CANEncoder(*rightWrist); //Robert made this change for testing encoder values
 
@@ -68,14 +61,14 @@ Arm::Arm()
     wristEncoder->SetVelocityConversionFactor(RPM_TO_DEGREES_PER_SECOND);
 
     //Set arm Sparks invertions
-    leftArm->SetInverted(false);
+    leftArm->SetInverted(false);//this one doesnt matter bc it is a follower
     rightArm->SetInverted(false);
     leftWrist->SetInverted(false);
     rightWrist->SetInverted(true);
 
     intake->SetInverted(false);
 
-    leftArm->Follow(*rightArm, true);
+    leftArm->Follow(*rightArm, true);//make sure this is always inverted, otherwise arm motors will fight
 
     //Set to brake or coast
     leftArm->SetIdleMode(BRAKE);
