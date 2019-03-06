@@ -162,6 +162,14 @@ double OI::GetIntakeInput()
     }
 }
 
+bool OI::GetBallButton(){
+    return xbox->GetStickButtonPressed(RIGHT_HAND);
+}
+
+bool OI::GetHatchButton(){
+    return xbox->GetStickButtonPressed(LEFT_HAND);
+}
+
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput()
 {

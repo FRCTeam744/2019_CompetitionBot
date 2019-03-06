@@ -5,7 +5,7 @@
 /*----------------------------------------------------------------------------------*/
 
 #include "Arm.h"
-#include "ShuffleManager.h" 
+#include "ShuffleManager.h"
 
 Arm *Arm::s_instance = 0;
 
@@ -94,11 +94,14 @@ Arm::Arm()
     wasWristLimitSwitchTripped = true;
 
     isArmInManual = true;
-    isArmInManual = true;
+    isWristInManual = true;
     previousTargetPosition = 0.0;
     previousTargetWristPosition = 0.0;
 
     armEncoder->SetPosition(0.0);
+
+    isInBallMode = false;
+    isOnBack = false;
 }
 
 //Public Methods
@@ -106,11 +109,13 @@ void Arm::ManualRotateArm(double input)
 {
     frc::SmartDashboard::PutNumber("Arm Control Input", input);
     //ShuffleManager
-    if (input != 0.0) {
+    if (input != 0.0)
+    {
         isArmInManual = true;
         rightArm->Set(input);
     }
-    if (input == 0.0 && isArmInManual){
+    if (input == 0.0 && isArmInManual)
+    {
         rightArm->Set(input);
     }
     double leftVoltage = (input * leftArm->GetBusVoltage());
@@ -121,12 +126,14 @@ void Arm::ManualRotateArm(double input)
 
 void Arm::ManualRotateWrist(double input)
 {
-     if (input != 0.0) {
+    if (input != 0.0)
+    {
         isWristInManual = true;
         rightWrist->Set(input);
         leftWrist->Set(input);
     }
-    if (input == 0.0 && isWristInManual){
+    if (input == 0.0 && isWristInManual)
+    {
         rightWrist->Set(input);
         leftWrist->Set(input);
     }
@@ -170,37 +177,54 @@ double Arm::GetWristEncoderValue()
     frc::SmartDashboard::PutNumber("wristEncoder", (wristEncoder->GetPosition()));
     return (wristEncoder->GetPosition());
 }
+
+void Arm::SwitchPlacingMode(bool hatchButton, bool ballButton)
+{
+    if (hatchButton)
+    {
+        isInBallMode = false;
+    }
+    else if (ballButton)
+    {
+        isInBallMode = true;
+    }
+}
+
 //Parameter: targetPosition -> Given final position in degrees for arm
 void Arm::MoveArmToPosition(double targetPosition)
 {
-    FFVoltage = MAX_FF_GAIN * (sin(armEncoder->GetPosition()*M_PI/180));
+    if (targetPosition < 0)
+    {
+        isOnBack = true;
+    }
+    else
+    {
+        isOnBack = false;
+    }
 
-    if (targetPosition != previousTargetPosition) {
+    FFVoltage = MAX_FF_GAIN * (sin(armEncoder->GetPosition() * M_PI / 180));
+
+    if (targetPosition != previousTargetPosition)
+    {
         previousTargetPosition = targetPosition;
         isArmInManual = false;
     }
 
-    frc::SmartDashboard::PutNumber("Arm position Error", targetPosition+GetArmEncoderValue());
-    double armPower = -(targetPosition - GetArmEncoderValue()) * P_GAIN_ARM;
-    frc::SmartDashboard::PutNumber("Arm Percent Output", armPower);
+    frc::SmartDashboard::PutNumber("Arm position Error", targetPosition + GetArmEncoderValue());
     frc::SmartDashboard::PutNumber("FFVoltage", FFVoltage);
     // MoveWristToPosition(wristCurrentPosition, armCurrentPosition);
-    if (armPower > MAX_POWER_ARM){
-        armPower = MAX_POWER_ARM;
-    } else if(armPower < -MAX_POWER_ARM) {
-        armPower = -MAX_POWER_ARM;
-    }
 
-    if (!isArmInManual) {
-        armPID->SetReference(targetPosition, rev::ControlType::kSmartMotion, 0, FFVoltage);
-        // armPID->SetReference(15, rev::ControlType::kVelocity, 0, FFVoltage); //Testing
+    if (!isArmInManual)
+    {
+        armPID->SetReference(targetPosition, rev::ControlType::kPosition, 0, FFVoltage);
     }
 }
 
 // void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
 void Arm::MoveWristToPosition(double wristTargetPosition)
 {
-    if (wristTargetPosition != previousTargetWristPosition){
+    if (wristTargetPosition != previousTargetWristPosition)
+    {
         previousTargetWristPosition = wristTargetPosition;
         isWristInManual = false;
     }
@@ -215,7 +239,8 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
         //Safe to move wrist
     }
     delta = (wristTargetPosition - GetWristEncoderValue()) * WRIST_P_GAIN;
-    if (!isWristInManual){
+    if (!isWristInManual)
+    {
         leftWrist->Set(delta);
         rightWrist->Set(delta);
     }
@@ -245,23 +270,28 @@ void Arm::PrintArmInfo()
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
 
-void Arm::PrintArmInfotoConsole(){
-   if(frc::DriverStation::GetInstance().IsFMSAttached() == true){
-    compPrintCount ++;
-      if(compPrintCount > 1000){
-        std::cout << "Arm Amps Left: " << leftArm->GetOutputCurrent();
-        std::cout << "Arm Amps Right: " << rightArm->GetOutputCurrent();
-        compPrintCount = 0;
-      }
-    else{
-        printCount ++;
-            if(printCount > 30){
+void Arm::PrintArmInfotoConsole()
+{
+    if (frc::DriverStation::GetInstance().IsFMSAttached() == true)
+    {
+        compPrintCount++;
+        if (compPrintCount > 1000)
+        {
+            std::cout << "Arm Amps Left: " << leftArm->GetOutputCurrent();
+            std::cout << "Arm Amps Right: " << rightArm->GetOutputCurrent();
+            compPrintCount = 0;
+        }
+        else
+        {
+            printCount++;
+            if (printCount > 30)
+            {
                 std::cout << "Arm Amps Testing Left: " << leftArm->GetOutputCurrent();
                 std::cout << "Arm Amps Testing Right: " << rightArm->GetOutputCurrent();
                 printCount = 0;
             }
+        }
     }
-  } 
 }
 
 void Arm::ManualCalibrateArm()
