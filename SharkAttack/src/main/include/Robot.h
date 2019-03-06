@@ -27,7 +27,7 @@
 #include "Fourbar.h"
 #include "LED.h"
 #include "ShuffleManager.h"
-#include <Encoder.h>
+#include <frc/Encoder.h>
 
 class Robot : public frc::TimedRobot
 {

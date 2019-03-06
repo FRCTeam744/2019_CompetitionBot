@@ -26,10 +26,7 @@ public:
   void ManualRotateArm(double input);
   void ManualRotateWrist(double input);
   void RunIntake(double input);
-  double GetArmEncoderValue();
-  double GetWristEncoderValue();
   void MoveArmToPosition(double targetPosition, bool isInBallMode); //Degrees
-  void MoveWristToPosition( double wristTargetPosition); //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
   void SetArmToCoast();
@@ -47,16 +44,18 @@ private:
   static Arm *s_instance;
   Arm();
 
+  void MoveWristToPosition( double wristTargetPosition); //Degrees
   bool GetArmLimitSwitch();
   bool GetWristLimitSwitch();
 
   //Private Objects
-  rev::CANSparkMax *leftArm, *rightArm, *leftWrist, *rightWrist;
+  rev::CANSparkMax *leftArm, *rightArm, *leftWrist;
   VictorSPX *intake;
 
   rev::CANEncoder *armEncoder;
   rev::CANEncoder *wristEncoder;
   rev::CANPIDController *armPID;
+  rev::CANPIDController *wristPID;
 
   frc::DigitalInput *armLimitSwitch;
   frc::DigitalInput *wristLimitSwitch;
@@ -81,6 +80,9 @@ private:
   int printCount = 0;
 
   bool isArmInBack;
+  bool isArmSwitchingSides;
+  bool isArmGoingToMove;
+  bool isWristMoving;
 
   //CAN Motor IDs
   const int LEFT_ARM_ID = 42;    //42 is actual, was changed for testing. Change back
@@ -96,19 +98,21 @@ private:
   const int WRIST_CURRENT_LIMIT = 10;
 
   //Wrist Positions
-  const int WRIST_BALL_FORWARD = -90;
-  const int WRIST_HATCH_FORWARD = 90;
-  const int WRIST_BALL_BACKWARD = 90;
-  const int WRIST_HATCH_BACKWARD = -90;
+  const int WRIST_BALL_FRONT = -90;
+  const int WRIST_HATCH_FRONT = 90;
+  const int WRIST_BALL_BACK = 90;
+  const int WRIST_HATCH_BACK = -90;
   const int WRIST_NEUTRAL = 0;
   const int WRIST_BALL_PICKUP_FRONT = -180;
   const int WRIST_BALL_PICKUP_BACK = 180;
 
   //Tunables
   const double HOLD_BALL_SPEED = 0.05;
-  const double DANGER_ZONE_LIMIT = 20;
   const double CALIBRATION_SPEED = 3000.0;
   const double LIMIT_SWITCH_OFFSET = 5.0;
+
+  //ARM "NO ROTATE ZONE" ANGLE
+  const double ARM_DEADZONE = 45.0;
 
   //Wrist PID Values
   const double WRIST_P_GAIN = 0.025; //Was .06 when experiencing issues
@@ -127,16 +131,23 @@ private:
   const double MAX_POWER_ARM = MAX_MOTOR_OUTPUT;
   const double MIN_POWER_ARM = -MAX_MOTOR_OUTPUT;
 
+  //Wrist PID Values
+  const double P_GAIN_WRIST = 0.025;
+  const double D_GAIN_WRIST = P_GAIN_WRIST * 20; //2 = 2^1 //Rule of thumb for DGain is to multiply P by 20, then keep doubling it (we doubled it once in this case)
+
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
   const double ARM_GEAR_RATIO = 74.97;
+  const double WRIST_GEAR_RATIO = 81.0;
   const double DEGREES_PER_ARM_REVOLUTION = 360.0;
   const double SECONDS_PER_MINUTE = 60.0;
 
   //This is the PositionConversionFactor
-  const double DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_ARM_REVOLUTION / ARM_GEAR_RATIO;
+  const double ARM_DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_ARM_REVOLUTION / ARM_GEAR_RATIO;
+  const double WRIST_DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_ARM_REVOLUTION / WRIST_GEAR_RATIO;
 
   //THis is the VelocityConversionFactor
-  const double RPM_TO_DEGREES_PER_SECOND = DEGREES_PER_MOTOR_ROTATION / SECONDS_PER_MINUTE;
+  const double ARM_RPM_TO_DEGREES_PER_SECOND = ARM_DEGREES_PER_MOTOR_ROTATION / SECONDS_PER_MINUTE;
+  const double WRIST_RPM_TO_DEGREES_PER_SECOND = WRIST_DEGREES_PER_MOTOR_ROTATION / SECONDS_PER_MINUTE;
 
   //Constants
   const rev::CANSparkMax::MotorType BRUSHLESS = rev::CANSparkMax::MotorType::kBrushless;

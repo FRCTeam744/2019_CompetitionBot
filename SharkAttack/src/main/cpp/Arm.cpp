@@ -22,17 +22,22 @@ Arm *Arm::GetInstance()
 //Constructor
 Arm::Arm()
 {
-    //Initialize arm motors
+    //Initialize Arm Objects
     leftArm = new rev::CANSparkMax(LEFT_ARM_ID, BRUSHLESS);
     rightArm = new rev::CANSparkMax(RIGHT_ARM_ID, BRUSHLESS);
     leftWrist = new rev::CANSparkMax(LEFT_WRIST_ID, BRUSHLESS);
-    rightWrist = new rev::CANSparkMax(RIGHT_WRIST_ID, BRUSHLESS);
     intake = new VictorSPX(INTAKE_ID);
 
     hatchGripper = new frc::DoubleSolenoid(2, 3);
 
+    armLimitSwitch = new frc::DigitalInput(2);
+    wristLimitSwitch = new frc::DigitalInput(3);
+
     armEncoder = new rev::CANEncoder(*rightArm);
     armPID = new rev::CANPIDController(*rightArm);
+
+    wristEncoder = new rev::CANEncoder(*leftWrist);
+    wristPID = new rev::CANPIDController(*leftWrist);
 
     //ARM PositionPID SETUP
     rightArm->SetClosedLoopRampRate(RAMP_RATE);
@@ -46,25 +51,23 @@ Arm::Arm()
 
     armPID->SetOutputRange(MIN_POWER_ARM, MAX_POWER_ARM);
 
-    wristEncoder = new rev::CANEncoder(*leftWrist);
-    //wristEncoder = new rev::CANEncoder(*rightWrist); //Robert made this change for testing encoder values
+    //WRIST PositionPID SETUP
+    wristPID->SetP(P_GAIN_WRIST);
+    wristPID->SetD(D_GAIN_WRIST);
 
-    armLimitSwitch = new frc::DigitalInput(2);
-    wristLimitSwitch = new frc::DigitalInput(3);
 
     // pdp = new frc::PowerDistributionPanel(0);
 
     //Set the Conversion Factor for Encoder output to read Degrees
-    armEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
-    wristEncoder->SetPositionConversionFactor(DEGREES_PER_MOTOR_ROTATION);
-    armEncoder->SetVelocityConversionFactor(RPM_TO_DEGREES_PER_SECOND);
-    wristEncoder->SetVelocityConversionFactor(RPM_TO_DEGREES_PER_SECOND);
+    armEncoder->SetPositionConversionFactor(ARM_DEGREES_PER_MOTOR_ROTATION);
+    wristEncoder->SetPositionConversionFactor(WRIST_DEGREES_PER_MOTOR_ROTATION);
+    armEncoder->SetVelocityConversionFactor(ARM_RPM_TO_DEGREES_PER_SECOND);
+    wristEncoder->SetVelocityConversionFactor(WRIST_RPM_TO_DEGREES_PER_SECOND);
 
     //Set arm Sparks invertions
     leftArm->SetInverted(false);//this one doesnt matter bc it is a follower
     rightArm->SetInverted(false);
-    leftWrist->SetInverted(false);
-    rightWrist->SetInverted(true);
+    leftWrist->SetInverted(true);
 
     intake->SetInverted(false);
 
@@ -74,14 +77,12 @@ Arm::Arm()
     leftArm->SetIdleMode(BRAKE);
     rightArm->SetIdleMode(COAST);
     leftWrist->SetIdleMode(BRAKE);
-    rightWrist->SetIdleMode(BRAKE);
     intake->SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
     //Set Current Limits to not kill the Neos
     leftArm->SetSmartCurrentLimit(ARM_CURRENT_LIMIT);
     rightArm->SetSmartCurrentLimit(ARM_CURRENT_LIMIT);
     leftWrist->SetSmartCurrentLimit(WRIST_CURRENT_LIMIT);
-    rightWrist->SetSmartCurrentLimit(WRIST_CURRENT_LIMIT);
 
     //SetFollowers
     // rightArm->Follow(*leftArm, false);
@@ -98,6 +99,9 @@ Arm::Arm()
     armEncoder->SetPosition(0.0);
 
     isArmInBack = false;
+    isArmSwitchingSides = false;
+    isArmGoingToMove = false;
+    isWristMoving = false;
 }
 
 //Public Methods
@@ -125,12 +129,10 @@ void Arm::ManualRotateWrist(double input)
     if (input != 0.0)
     {
         isWristInManual = true;
-        rightWrist->Set(input);
         leftWrist->Set(input);
     }
     if (input == 0.0 && isWristInManual)
     {
-        rightWrist->Set(input);
         leftWrist->Set(input);
     }
 }
@@ -163,17 +165,6 @@ void Arm::RunIntake(double input)
     intake->Set(motorcontrol::ControlMode::PercentOutput, input);
 }
 
-double Arm::GetArmEncoderValue()
-{
-    return (-armEncoder->GetPosition());
-}
-
-double Arm::GetWristEncoderValue()
-{
-    frc::SmartDashboard::PutNumber("wristEncoder", (wristEncoder->GetPosition()));
-    return (wristEncoder->GetPosition());
-}
-
 //Parameter: targetPosition -> Given final position in degrees for arm
 void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
 {
@@ -186,49 +177,87 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
         isArmInBack = false;
     }
 
-    FFVoltage = MAX_FF_GAIN * (sin(armEncoder->GetPosition() * M_PI / 180));
-
     if (targetPosition != previousTargetPosition)
     {
+        isArmGoingToMove = true;
+        //checks to see if switching sides
+        if (previousTargetPosition <= 0.0 && targetPosition > 0.0 || previousTargetPosition >= 0.0 && targetPosition < 0.0)
+        {
+            isArmSwitchingSides = true;
+        }
+        
         previousTargetPosition = targetPosition;
         isArmInManual = false;
     }
 
-    frc::SmartDashboard::PutNumber("Arm position Error", targetPosition + GetArmEncoderValue());
-    frc::SmartDashboard::PutNumber("FFVoltage", FFVoltage);
-    // MoveWristToPosition(wristCurrentPosition, armCurrentPosition);
+    //Wrist Control
+    if (isArmSwitchingSides || targetPosition == 0.0) {
+        MoveWristToPosition(WRIST_NEUTRAL);
+    }
+    else if(!isInBallMode && !isArmInBack){
+        MoveWristToPosition(WRIST_HATCH_FRONT);
+    }
+    else if(!isInBallMode && isArmInBack){
+        MoveWristToPosition(WRIST_HATCH_BACK);
+    }
+    else if(isInBallMode && !isArmInBack){
+        MoveWristToPosition(WRIST_BALL_FRONT);
+    }
+    else if(isInBallMode && isArmInBack){
+        MoveWristToPosition(WRIST_BALL_BACK);
+    }
 
-    if (!isArmInManual)
+    FFVoltage = MAX_FF_GAIN * (sin(armEncoder->GetPosition() * M_PI / 180));
+    frc::SmartDashboard::PutNumber("FFVoltage", FFVoltage);
+
+    if (!isArmInManual && !isWristMoving)
     {
         armPID->SetReference(targetPosition, rev::ControlType::kPosition, 0, FFVoltage);
     }
+    
+    double positionError = armEncoder->GetPosition() - targetPosition;
+    frc::SmartDashboard::PutNumber("Arm Position Error", positionError);
+    if (positionError < 3.0 && positionError > -3.0) {
+        isArmGoingToMove = false;
+        isArmSwitchingSides = false;
+    }
+
 }
 
 // void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
 void Arm::MoveWristToPosition(double wristTargetPosition)
 {
+    frc::SmartDashboard::PutNumber("Wrist Target Position", wristTargetPosition);
     if (wristTargetPosition != previousTargetWristPosition)
     {
+        isWristMoving = true;
         previousTargetWristPosition = wristTargetPosition;
         isWristInManual = false;
     }
+
+    // if ((get() < DANGER_ZONE_LIMIT) && (GetArmEncoderValue() > -DANGER_ZONE_LIMIT))
+    // {
+    //     //Inside D A N G E R  Z O N E
+    //     //wristTargetPosition = 0.0;
+    // }
+    // else
+    // {
+    //     //Safe to move wrist
+    // }
+    
     double delta;
-    if ((GetArmEncoderValue() < DANGER_ZONE_LIMIT) && (GetArmEncoderValue() > -DANGER_ZONE_LIMIT))
-    {
-        //Inside D A N G E R  Z O N E
-        //wristTargetPosition = 0.0;
-    }
-    else
-    {
-        //Safe to move wrist
-    }
-    delta = (wristTargetPosition - GetWristEncoderValue()) * WRIST_P_GAIN;
+    delta = (wristTargetPosition - wristEncoder->GetPosition()) * WRIST_P_GAIN;
     if (!isWristInManual)
     {
-        leftWrist->Set(delta);
-        rightWrist->Set(delta);
+        wristPID->SetReference(wristTargetPosition, rev::ControlType::kPosition);
     }
     frc::SmartDashboard::PutNumber("Wrist Auto Power", delta);
+
+    double wristPositionError = wristEncoder->GetPosition() - wristTargetPosition;
+    frc::SmartDashboard::PutNumber("Wrist Position Error", wristPositionError);
+    if (wristPositionError < 1.0 && wristPositionError > -1.0){
+        isWristMoving = false;
+    }
 }
 
 void Arm::CheckHatchGripper(bool isClosed)
@@ -248,7 +277,8 @@ void Arm::PrintArmInfo()
     frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
 
-    frc::SmartDashboard::PutNumber("Arm Encoder Native Value", armEncoder->GetPosition());
+    frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
+    frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
     frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
