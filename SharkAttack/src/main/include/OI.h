@@ -100,14 +100,14 @@ class OI
 	const int framerate = 10;
 
 	//Wrist Constants //Work in Progress
-	const double WRIST_BALL_PICKUP_FRONT_CARGO_PRESET_DEG = 0; //A
+	const double WRIST_BALL_PICKUP_FRONT_CARGO_PRESET_DEG = -90; //A
 	const double WRIST_BALL_PICKUP_FRONT_LOW_DEG = 0;
-	const double WRIST_BALL_PICKUP_FRONT_MID_DEG = 0;		  //B
-	const double WRIST_BALL_PICKUP_FRONT_HIGH_DEG = 0;		  //Y
-	const double WRIST_BALL_PICKUP_BACK_CARGO_PRESET_DEG = 0; //DOWN
+	const double WRIST_BALL_PICKUP_FRONT_MID_DEG = -90;		   //B
+	const double WRIST_BALL_PICKUP_FRONT_HIGH_DEG = -90;	   //Y
+	const double WRIST_BALL_PICKUP_BACK_CARGO_PRESET_DEG = 90; //DOWN
 	const double WRIST_BALL_PICKUP_BACK_LOW_DEG = 0;
-	const double WRIST_BALL_PICKUP_BACK_MID_DEG = 0;  //RIGHT
-	const double WRIST_BALL_PICKUP_BACK_HIGH_DEG = 0; //UP
+	const double WRIST_BALL_PICKUP_BACK_MID_DEG = 90;  //RIGHT
+	const double WRIST_BALL_PICKUP_BACK_HIGH_DEG = 90; //UP
 
 	const double WRIST_NEUTRAL_DEG = 0; //X and LEFT
 
