@@ -52,14 +52,14 @@ class OI
 
 	double GetArmFFVoltage();
 
-	bool SetArmFrontHigh();
-	bool SetArmFrontMid();
-	bool SetArmFrontLow();
-	bool SetArmFrontBallPickup();
-	bool SetArmBackHigh();
-	bool SetArmBackMid();
-	bool SetArmBackLow();
-	bool SetArmBackBallPickup();
+	// bool SetArmFrontHigh();
+	// bool SetArmFrontMid();
+	// bool SetArmFrontLow();
+	// bool SetArmFrontBallPickup();
+	// bool SetArmBackHigh();
+	// bool SetArmBackMid();
+	// bool SetArmBackLow();
+	// bool SetArmBackBallPickup();
 
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	//void PutOnShuffleboardInOI();
@@ -114,7 +114,7 @@ class OI
 	const double WRIST_HATCH_PICKUP_FRONT_CARGO_PRESET_DEG = 90; //A
 	const double WRIST_HATCH_PICKUP_FRONT_LOW_DEG = 0;
 	const double WRIST_HATCH_PICKUP_FRONT_MID_DEG = 90;			 //B
-	const double WRIST_HATCH_PICKUP_FRONT_HIGH_DEG = 90;			 //Y
+	const double WRIST_HATCH_PICKUP_FRONT_HIGH_DEG = 90;		 //Y
 	const double WRIST_HATCH_PICKUP_BACK_CARGO_PRESET_DEG = -90; //DOWN
 	const double WRIST_HATCH_PICKUP_BACK_LOW_DEG = 0;
 	const double WRIST_HATCH_PICKUP_BACK_MID_DEG = -90;  //RIGHT

@@ -210,12 +210,12 @@ double OI::GetTargetArmPosition()
 
         if (xbox->GetXButtonPressed())
         {
-            targetArmPosition = FRONT_LOW_BALL_POSITION;
+            targetArmPosition = NEUTRAL_ARM_POSITION;
         }
 
         if (xbox->GetAButtonPressed())
         {
-            targetArmPosition = FRONT_BALL_PICKUP_POSITION;
+            targetArmPosition = FRONT_LOW_BALL_POSITION;
         }
 
         if (xbox->GetPOV(0) == DPAD_UP)
@@ -225,17 +225,17 @@ double OI::GetTargetArmPosition()
 
         if (xbox->GetPOV(0) == DPAD_LEFT)
         {
-            targetArmPosition = BACK_MID_BALL_POSITION;
+            targetArmPosition = NEUTRAL_ARM_POSITION;
         }
 
         if (xbox->GetPOV(0) == DPAD_RIGHT)
         {
-            targetArmPosition = BACK_LOW_BALL_POSITION;
+            targetArmPosition = BACK_MID_BALL_POSITION;
         }
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
         {
-            targetArmPosition = BACK_BALL_PICKUP_POSITION;
+            targetArmPosition = BACK_LOW_BALL_POSITION;
         }
     }
     else
@@ -301,7 +301,7 @@ double OI::GetTargetWristPosition()
 
         if (xbox->GetXButtonPressed())
         {
-            targetWristPosition = WRIST_BALL_PICKUP_FRONT_LOW_DEG;
+            targetWristPosition = WRIST_NEUTRAL_DEG;
         }
 
         if (xbox->GetAButtonPressed())
@@ -316,12 +316,12 @@ double OI::GetTargetWristPosition()
 
         if (xbox->GetPOV(0) == DPAD_LEFT)
         {
-            targetWristPosition = WRIST_BALL_PICKUP_BACK_MID_DEG;
+            targetWristPosition = WRIST_NEUTRAL_DEG;
         }
 
         if (xbox->GetPOV(0) == DPAD_RIGHT)
         {
-            targetWristPosition = WRIST_BALL_PICKUP_BACK_LOW_DEG;
+            targetWristPosition = WRIST_BALL_PICKUP_BACK_MID_DEG;
         }
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
