@@ -74,7 +74,7 @@ Arm::Arm()
     leftArm->Follow(*rightArm, true);
 
     //Set to brake or coast
-    leftArm->SetIdleMode(COAST);
+    leftArm->SetIdleMode(BRAKE);
     rightArm->SetIdleMode(COAST);
     leftWrist->SetIdleMode(BRAKE);
     rightWrist->SetIdleMode(BRAKE);
@@ -93,8 +93,8 @@ Arm::Arm()
     wasArmLimitSwitchTripped = true;
     wasWristLimitSwitchTripped = true;
 
-    isArmInManual = false;
-    isArmInManual = false;
+    isArmInManual = true;
+    isArmInManual = true;
     previousTargetPosition = 0.0;
     previousTargetWristPosition = 0.0;
 
@@ -193,7 +193,7 @@ void Arm::MoveArmToPosition(double targetPosition)
 
     if (!isArmInManual) {
         armPID->SetReference(targetPosition, rev::ControlType::kSmartMotion, 0, FFVoltage);
-        //armPID->SetReference(-15, rev::ControlType::kVelocity, 0, FFVoltage); //Testing
+        // armPID->SetReference(15, rev::ControlType::kVelocity, 0, FFVoltage); //Testing
     }
 }
 
@@ -241,7 +241,7 @@ void Arm::PrintArmInfo()
 
     frc::SmartDashboard::PutNumber("Arm Encoder Native Value", armEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
-    frc::SmartDashboard::PutNumber("Arm Velocity Error", -15 - armEncoder->GetVelocity());
+    frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
 

@@ -37,7 +37,7 @@ public:
   void ManualCalibrateArm();
 
   void PrintArmInfo();
-  void Arm::PrintArmInfotoConsole();
+  void PrintArmInfotoConsole();
 
 
   double GetMAX_FF_GAIN();
@@ -103,18 +103,18 @@ private:
   const double WRIST_P_GAIN = 0.025; //Was .06 when experiencing issues
 
   //Arm PID Values
-  const double MAX_FF_GAIN = 0.60; //Volts required to hold arm at 90 degrees
-  const double ARM_FF_GAIN = (1.15/360);
-  const double P_GAIN_ARM = 0.0017;
-  const double I_GAIN_ARM = 0.000034;
+  const double MAX_FF_GAIN = 0.66; //Volts required to hold arm at 90 degrees
+  const double ARM_FF_GAIN = (.9/360);
+  const double P_GAIN_ARM = 0.0017 * 3;
+  const double I_GAIN_ARM = 0; //0.000034;
   const double I_ZONE_ARM = 2;
-  const double D_GAIN_ARM = P_GAIN_ARM * 200; //Rule of thumb for DGain is to multiply P by 20
+  const double D_GAIN_ARM = 0;// P_GAIN_ARM * 200; //Rule of thumb for DGain is to multiply P by 20
   const double MAX_POWER_ARM = 1.0;
   const double MIN_POWER_ARM = -1.0;
 
-  const double MAX_VEL_ARM = 90.0; //Was 60 //Everything here is Degrees/Sec
+  const double MAX_VEL_ARM = 60.0; //Was 60 //Everything here is Degrees/Sec
   const double MIN_VEL_ARM = 0.0;
-  const double MAX_ACCEL_ARM = 40.0; //Was 20
+  const double MAX_ACCEL_ARM = 60.0; //Was 20
   const double ALLOWED_ERROR_ARM = 2.0; //Was 1.0
 
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
