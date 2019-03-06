@@ -29,25 +29,25 @@ void ShuffleManager::ShuffleInit(){
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, double val){
-   if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == DriverTab){ //negates everything on other tabs when FMS is connected
-        tab->Add(label, val);
-   }
+    if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == DriverTab){ //negates everything on other tabs when FMS is connected
+        tab->Add(label, val).GetEntry();
+    }    
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, float val){
     if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == DriverTab){
-        tab->Add(label, val);
+        tab->Add(label, val).GetEntry();
    }
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, int val){
     if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == DriverTab){
-        tab->Add(label, val);
+        tab->Add(label, val).GetEntry();
    }
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val){
     if(!(frc::DriverStation::GetInstance().IsFMSAttached() == true) || tab == DriverTab){
-        tab->Add(label, val);
+        tab->Add(label, val).GetEntry();
    }
 }

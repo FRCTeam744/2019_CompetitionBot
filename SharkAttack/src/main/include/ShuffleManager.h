@@ -27,6 +27,9 @@ class ShuffleManager {
 		void OnShfl(frc::ShuffleboardTab *tab, const char* label, int val);
 		void OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val);
 
+    bool isInitalized = false;
+
+
     private:
         static ShuffleManager *s_instance;
         ShuffleManager();

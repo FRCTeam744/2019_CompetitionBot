@@ -25,12 +25,12 @@ void Robot::RobotInit()
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
   led = LED::GetInstance();
+  
   // shufflemanager = ShuffleManager::GetInstance();
 
   // shufflemanager->ShuffleInit();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
-  //ShuffleManager::OnShfl(ShuffleManager::PreCompTab, "Fourbar Speed", 0.1);
 
   frc::SmartDashboard::PutNumber("wristEncoder", 0.1);
 
@@ -139,9 +139,9 @@ void Robot::TeleopPeriodic()
   drivetrain->PutData();
   //drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
-  arm->ManualRotateArm(oi->GetArmInput());
-  arm->ManualRotateWrist(oi->GetWristInput());
-  arm->MoveArmToPosition(oi->GetTargetArmPosition());
+  // arm->ManualRotateArm(oi->GetArmInput());
+  // arm->ManualRotateWrist(oi->GetWristInput());
+  // arm->MoveArmToPosition(oi->GetTargetArmPosition());
   //arm->MoveWristToPosition(oi->GetTargetWristPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
@@ -163,37 +163,6 @@ void Robot::TeleopPeriodic()
     arm->CheckHatchGripper(oi->GetIsGripperClosed());
   }
 
-  // if(oi->SetPresetToAButton()){
-  //   arm->MoveArmToPosition(oi->ArmPresetLow(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
-  // }
-
-  // if(oi->SetPresetToBButton()){
-  //   arm->MoveArmToPosition(oi->ArmPresetMid(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
-  // }
-
-  // if(oi->SetPresetToXButton()){
-  //   arm->MoveArmToPosition(oi->ArmPresetHigh(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
-  // }
-
-  // if(oi->SetPresetToYButton()){
-  //   arm->MoveArmToPosition(oi->ArmPresetPickupCargo(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
-  // }
-
-  // if(oi->SetPresetToDPadUp()){
-  //   arm->MoveArmToPosition(oi->ArmPresetNegLow(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
-  // }
-
-  // if(oi->SetPresetToDPadDown()){
-  //   arm->MoveArmToPosition(oi->ArmPresetNegMid(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
-  // }
-
-  // if(oi->SetPresetToDPadLeft()){
-  //   arm->MoveArmToPosition(oi->ArmPresetNegHigh(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
-  // }
-
-  // if(oi->SetPresetToDPadRight()){
-  //   arm->MoveArmToPosition(oi->ArmPresetNegPickupCargo(), arm->GetWristEncoderValue(), arm->GetArmEncoderValue());
-  // }
 }
 
 void Robot::DisabledInit()
