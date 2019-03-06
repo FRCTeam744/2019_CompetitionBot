@@ -28,12 +28,11 @@ public:
   void RunIntake(double input);
   double GetArmEncoderValue();
   double GetWristEncoderValue();
-  void MoveArmToPosition(double targetPosition); //Degrees
+  void MoveArmToPosition(double targetPosition, bool isInBallMode); //Degrees
   void MoveWristToPosition( double wristTargetPosition); //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
   void SetArmToCoast();
-  void SwitchPlacingMode(bool hatchButton, bool ballButton);
 
   void ManualCalibrateArm();
 
@@ -81,8 +80,7 @@ private:
   int compPrintCount = 0;
   int printCount = 0;
 
-  bool isInBallMode;
-  bool isOnBack;
+  bool isArmInBack;
 
   //CAN Motor IDs
   const int LEFT_ARM_ID = 42;    //42 is actual, was changed for testing. Change back
@@ -116,14 +114,18 @@ private:
   const double WRIST_P_GAIN = 0.025; //Was .06 when experiencing issues
 
   //Arm PID Values
+  const double MAX_MOTOR_OUTPUT = 0.25; //percent output
+  const double TIME_TO_MAX_MOTOR_OUTPUT = 0.5; //secs
+  const double RAMP_RATE = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT;
+
   const double MAX_FF_GAIN = 0.66; //Volts required to hold arm at 90 degrees
   const double ARM_FF_GAIN = (.9/360);
   const double P_GAIN_ARM = 0.0017 * 3;
   const double I_GAIN_ARM = 0; //0.000034;
   const double I_ZONE_ARM = 2;
   const double D_GAIN_ARM = 0;// P_GAIN_ARM * 200; //Rule of thumb for DGain is to multiply P by 20
-  const double MAX_POWER_ARM = 1.0;
-  const double MIN_POWER_ARM = -1.0;
+  const double MAX_POWER_ARM = MAX_MOTOR_OUTPUT;
+  const double MIN_POWER_ARM = -MAX_MOTOR_OUTPUT;
 
   const double MAX_VEL_ARM = 60.0; //Was 60 //Everything here is Degrees/Sec
   const double MIN_VEL_ARM = 0.0;

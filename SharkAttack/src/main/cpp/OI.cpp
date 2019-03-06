@@ -82,7 +82,7 @@ bool OI::GetVelocityTest()
 
 bool OI::SwitchGripper()
 {
-    if (xbox->GetBumperPressed(RIGHT_HAND))
+    if (xbox->GetBumperPressed(LEFT_HAND))
     {
         isGripperClosed = false;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", false);
@@ -91,7 +91,7 @@ bool OI::SwitchGripper()
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed_PRE", isGripperClosed);
         return true;
     }
-    if (xbox->GetBumperPressed(LEFT_HAND))
+    if (xbox->GetBumperPressed(RIGHT_HAND))
     {
         isGripperClosed = true;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", true);
@@ -162,12 +162,14 @@ double OI::GetIntakeInput()
     }
 }
 
-bool OI::GetBallButton(){
-    return xbox->GetStickButtonPressed(RIGHT_HAND);
-}
-
-bool OI::GetHatchButton(){
-    return xbox->GetStickButtonPressed(LEFT_HAND);
+bool OI::GetPlacingMode(){
+    if(xbox->GetStickButtonPressed(LEFT_HAND)){
+        isInBallMode = false;
+    }
+    else if(xbox->GetStickButtonPressed(RIGHT_HAND)){
+        isInBallMode = true;
+    }
+    return isInBallMode;
 }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it

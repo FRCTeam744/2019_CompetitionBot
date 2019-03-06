@@ -89,8 +89,8 @@ void Drivetrain::PutData() {
   // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
   // frc::SmartDashboard::PutNumber("Skew", targetSkew);
   
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Heading", targetOffsetAngle_Horizontal);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Skew", targetSkew);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Heading", targetOffsetAngle_Horizontal);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Skew", targetSkew);
 
   rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//rightDashboardSpeed = NU_TO_FEET;
   leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//leftDashboardSpeed = SECONDS_TO_100MS;
@@ -106,10 +106,10 @@ void Drivetrain::PutData() {
   // frc::SmartDashboard::PutNumber("Ft-Sec-Right", rightDashboardSpeed);
   // frc::SmartDashboard::PutNumber("Ft-Sec-Left", leftDashboardSpeed);
   
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Ft-Sec-Right_PRE", rightDashboardSpeed);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Ft-Sec-Left_PRE", leftDashboardSpeed);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Right", rightDashboardSpeed);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Left", leftDashboardSpeed);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Ft-Sec-Right_PRE", rightDashboardSpeed);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Ft-Sec-Left_PRE", leftDashboardSpeed);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Right", rightDashboardSpeed);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Left", leftDashboardSpeed);
 
   // frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
   // frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));

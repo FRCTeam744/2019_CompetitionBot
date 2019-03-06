@@ -46,8 +46,7 @@ class OI
 	double GetTargetArmPosition();
 	double GetTargetWristPosition();
 
-    bool GetBallButton();
-    bool GetHatchButton();
+    bool GetPlacingMode();
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();

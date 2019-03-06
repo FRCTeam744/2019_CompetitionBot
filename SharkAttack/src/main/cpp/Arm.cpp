@@ -32,15 +32,19 @@ Arm::Arm()
     hatchGripper = new frc::DoubleSolenoid(2, 3);
 
     armEncoder = new rev::CANEncoder(*rightArm);
-
-    //ARM SMARTMOTION SETUP
     armPID = new rev::CANPIDController(*rightArm);
+
+    //ARM PositionPID SETUP
+    rightArm->SetClosedLoopRampRate(RAMP_RATE);
+    leftArm->SetClosedLoopRampRate(RAMP_RATE);
 
     armPID->SetP(P_GAIN_ARM);
     armPID->SetD(D_GAIN_ARM);
     armPID->SetI(I_GAIN_ARM);
     armPID->SetIZone(I_ZONE_ARM);
     armPID->SetFF(ARM_FF_GAIN);
+
+    armPID->SetOutputRange(MIN_POWER_ARM, MAX_POWER_ARM);
 
     armPID->SetSmartMotionMaxVelocity(MAX_VEL_ARM);
     armPID->SetSmartMotionMaxAccel(MAX_ACCEL_ARM);
@@ -100,8 +104,7 @@ Arm::Arm()
 
     armEncoder->SetPosition(0.0);
 
-    isInBallMode = false;
-    isOnBack = false;
+    isArmInBack = false;
 }
 
 //Public Methods
@@ -178,28 +181,16 @@ double Arm::GetWristEncoderValue()
     return (wristEncoder->GetPosition());
 }
 
-void Arm::SwitchPlacingMode(bool hatchButton, bool ballButton)
-{
-    if (hatchButton)
-    {
-        isInBallMode = false;
-    }
-    else if (ballButton)
-    {
-        isInBallMode = true;
-    }
-}
-
 //Parameter: targetPosition -> Given final position in degrees for arm
-void Arm::MoveArmToPosition(double targetPosition)
+void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
 {
     if (targetPosition < 0)
     {
-        isOnBack = true;
+        isArmInBack = true;
     }
     else
     {
-        isOnBack = false;
+        isArmInBack = false;
     }
 
     FFVoltage = MAX_FF_GAIN * (sin(armEncoder->GetPosition() * M_PI / 180));

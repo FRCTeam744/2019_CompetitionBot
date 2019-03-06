@@ -123,7 +123,6 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-  arm->SwitchPlacingMode(oi->GetHatchButton(), oi->GetBallButton());
 
   arm->PrintArmInfotoConsole();
   // frc::SmartDashboard::PutNumber("sampleEncoder Value: ", sampleEncoder->GetRaw()); //Testing
@@ -143,7 +142,7 @@ void Robot::TeleopPeriodic()
 
   // arm->ManualRotateArm(oi->GetArmInput());
   // arm->ManualRotateWrist(oi->GetWristInput());
-  // arm->MoveArmToPosition(oi->GetTargetArmPosition());
+  // arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode());
   //arm->MoveWristToPosition(oi->GetTargetWristPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
