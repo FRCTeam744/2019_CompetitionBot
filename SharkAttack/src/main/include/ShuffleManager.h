@@ -11,6 +11,9 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/Preferences.h>
 
+#include <vector>  //for std::vector
+#include <string>  //for std::string
+
 class ShuffleManager {
 
     public:
@@ -27,7 +30,12 @@ class ShuffleManager {
 		void OnShfl(frc::ShuffleboardTab *tab, const char* label, int val);
 		void OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val);
 
-    bool isInitalized = false;
+		NetworkTableEntry test;
+
+		void VariableInit();
+		void GetShuffleVariable();
+
+    //bool isInitalized = false;
 
 
     private:
