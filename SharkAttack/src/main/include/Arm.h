@@ -31,6 +31,8 @@ public:
   void SetArmToBrake();
   void SetArmToCoast();
 
+  void UpdateArmAndWristInManual(bool arm, bool wrist);
+
   void ManualCalibrateArm();
 
   void PrintArmInfo();
@@ -44,7 +46,8 @@ private:
   static Arm *s_instance;
   Arm();
 
-  void MoveWristToPosition( double wristTargetPosition); //Degrees
+  void MoveWristToPosition(double wristTargetPosition); //Degrees
+  double FindWristFinalPosition(bool isGoingToBack, bool isInBallMode);
   bool GetArmLimitSwitch();
   bool GetWristLimitSwitch();
 
@@ -81,8 +84,17 @@ private:
 
   bool isArmInBack;
   bool isArmSwitchingSides;
-  bool isArmGoingToMove;
+  bool isArmMoving;
   bool isWristMoving;
+  bool isInBallPickup;
+
+  bool areWheelsVeryDown;
+  bool willArmEnterDZ;
+  bool areWheelsUp;
+  bool isArmInDZ;
+  bool isArmGoingToBack;
+  double currentArmPos;
+  double currentWristPos;
 
   //CAN Motor IDs
   const int LEFT_ARM_ID = 42;    //42 is actual, was changed for testing. Change back
@@ -112,10 +124,11 @@ private:
   const double LIMIT_SWITCH_OFFSET = 5.0;
 
   //ARM "NO ROTATE ZONE" ANGLE
-  const double ARM_DEADZONE = 45.0;
+  const double ARM_DANGERZONE = 30.0;
+  const double ARM_CHECKPOINT = 36.0;
 
   //Wrist PID Values
-  const double WRIST_P_GAIN = 0.025; //Was .06 when experiencing issues
+  const double WRIST_P_GAIN = 0.02; //Was .06 when experiencing issues
 
   //Arm PID Values
   const double MAX_MOTOR_OUTPUT = 0.25; //percent output
@@ -136,7 +149,7 @@ private:
   const double D_GAIN_WRIST = P_GAIN_WRIST * 20; //2 = 2^1 //Rule of thumb for DGain is to multiply P by 20, then keep doubling it (we doubled it once in this case)
 
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
-  const double ARM_GEAR_RATIO = 74.97;
+  const double ARM_GEAR_RATIO = 85.0;
   const double WRIST_GEAR_RATIO = 81.0;
   const double DEGREES_PER_ARM_REVOLUTION = 360.0;
   const double SECONDS_PER_MINUTE = 60.0;

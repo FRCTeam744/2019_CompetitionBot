@@ -34,6 +34,9 @@ OI::OI()
     isInBallMode = false;
     targetArmPosition = NEUTRAL_ARM_POSITION;
 
+    isArmInManual = true;
+    isWristInManual = true;
+
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
     // camera.SetResolution(resolutionWidth, resolutionHeight);
@@ -123,6 +126,11 @@ double OI::GetArmInput()
     else if (armPowerOutput <= -ARM_DEADZONE) {
         armPowerOutput = (armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
     }
+
+    if(armPowerOutput != 0.0){
+        isArmInManual = true;
+    }
+
     return -armPowerOutput; //setting negative makes positive values move the arm forward
 }
 
@@ -138,6 +146,10 @@ double OI::GetWristInput()
     }
     else if (armPowerOutput <= -WRIST_DEADZONE) {
         wristPowerOutput = (wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
+    }
+
+    if (wristPowerOutput != 0.0){
+        isWristInManual = true;
     }
 
     frc::SmartDashboard::PutNumber("Wrist Control Input", wristPowerOutput);
@@ -170,6 +182,13 @@ bool OI::GetPlacingMode(){
         isInBallMode = true;
     }
     return isInBallMode;
+}
+
+bool OI::GetIsArmInManual(){
+    return isArmInManual;
+}
+bool OI::GetIsWristInManual(){
+    return isWristInManual;
 }
 
 //Joysticks natively give out negative values when going forward, so adding the negative corrects it
@@ -211,41 +230,57 @@ double OI::GetTargetArmPosition()
         if (xbox->GetYButtonPressed())
         {
             targetArmPosition = FRONT_HIGH_BALL_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetBButtonPressed())
         {
             targetArmPosition = FRONT_MID_BALL_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetXButtonPressed())
         {
             targetArmPosition = NEUTRAL_ARM_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetAButtonPressed())
         {
             targetArmPosition = FRONT_LOW_BALL_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_UP)
         {
             targetArmPosition = BACK_HIGH_BALL_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_LEFT)
         {
             targetArmPosition = NEUTRAL_ARM_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_RIGHT)
         {
             targetArmPosition = BACK_MID_BALL_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
         {
             targetArmPosition = BACK_LOW_BALL_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
     }
     else
@@ -253,41 +288,57 @@ double OI::GetTargetArmPosition()
         if (xbox->GetYButtonPressed())
         {
             targetArmPosition = FRONT_HIGH_HATCH_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetBButtonPressed())
         {
             targetArmPosition = FRONT_MID_HATCH_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetAButtonPressed())
         {
             targetArmPosition = FRONT_LOW_HATCH_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetXButtonPressed())
         {
             targetArmPosition = NEUTRAL_ARM_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_UP)
         {
             targetArmPosition = BACK_HIGH_HATCH_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_RIGHT)
         {
             targetArmPosition = BACK_MID_HATCH_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
         {
             targetArmPosition = BACK_LOW_HATCH_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_LEFT)
         {
             targetArmPosition = NEUTRAL_ARM_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
         }
     }
     frc::SmartDashboard::PutNumber("Target Arm Position Degrees", targetArmPosition);

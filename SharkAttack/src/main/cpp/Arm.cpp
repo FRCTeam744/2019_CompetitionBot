@@ -100,7 +100,7 @@ Arm::Arm()
 
     isArmInBack = false;
     isArmSwitchingSides = false;
-    isArmGoingToMove = false;
+    isArmMoving = false;
     isWristMoving = false;
 }
 
@@ -137,6 +137,11 @@ void Arm::ManualRotateWrist(double input)
     }
 }
 
+void Arm::UpdateArmAndWristInManual(bool arm, bool wrist){
+    isArmInManual = arm;
+    isWristInManual = wrist;
+}
+
 void Arm::RunIntake(double input)
 {
 
@@ -166,6 +171,48 @@ void Arm::RunIntake(double input)
 }
 
 //Parameter: targetPosition -> Given final position in degrees for arm
+void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode){
+
+    currentArmPos = armEncoder->GetPosition();
+    currentWristPos = wristEncoder->GetPosition();
+
+    areWheelsVeryDown = (currentWristPos > 60 || currentWristPos < -60);
+    willArmEnterDZ = ((currentArmPos < -ARM_DANGERZONE && targetPosition > -ARM_DANGERZONE) || (currentArmPos > ARM_DANGERZONE && targetPosition < ARM_DANGERZONE));
+    areWheelsUp = (currentWristPos < 1.0 && currentWristPos > -1.0);
+    isArmInDZ = (currentArmPos > -ARM_DANGERZONE && currentArmPos < ARM_DANGERZONE);
+    isArmGoingToBack = (targetPosition < 0);
+
+    if (isArmInDZ && areWheelsVeryDown){
+        isArmInManual = true;
+        isWristInManual = true;
+    }
+    else if (!isArmInDZ && !willArmEnterDZ) {
+        MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode);
+    }
+    else if (willArmEnterDZ) {
+        MoveWristToPosition(WRIST_NEUTRAL);
+    }
+}
+
+double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode){
+    
+    if(!isInBallMode && !isArmGoingToBack){
+        return WRIST_HATCH_FRONT;
+    }
+    else if(!isInBallMode && isArmGoingToBack){
+        return WRIST_HATCH_BACK;
+    }
+    else if(isInBallMode && !isArmGoingToBack){
+        return WRIST_BALL_FRONT;
+    }
+    else if(isInBallMode && isArmGoingToBack){
+        return WRIST_BALL_BACK;
+    }
+    else {
+        return WRIST_NEUTRAL; //this should never be reached bc the ifs above cover all possibilities
+    }
+}
+
 void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
 {
     if (targetPosition < 0)
@@ -179,7 +226,6 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
 
     if (targetPosition != previousTargetPosition)
     {
-        isArmGoingToMove = true;
         //checks to see if switching sides
         if (previousTargetPosition <= 0.0 && targetPosition > 0.0 || previousTargetPosition >= 0.0 && targetPosition < 0.0)
         {
@@ -188,6 +234,20 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
         
         previousTargetPosition = targetPosition;
         isArmInManual = false;
+    }
+
+    if ((armEncoder->GetPosition() * targetPosition) <= 0) {
+        isArmSwitchingSides = true;
+    }
+    else {
+        isArmSwitchingSides = false;
+    }
+
+    if (armEncoder->GetVelocity() < 2.0 && armEncoder->GetVelocity() > -2.0){
+        isArmMoving = true;
+    }
+    else {
+        isArmMoving = false;
     }
 
     //Wrist Control
@@ -218,7 +278,6 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
     double positionError = armEncoder->GetPosition() - targetPosition;
     frc::SmartDashboard::PutNumber("Arm Position Error", positionError);
     if (positionError < 3.0 && positionError > -3.0) {
-        isArmGoingToMove = false;
         isArmSwitchingSides = false;
     }
 
@@ -228,36 +287,14 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
 void Arm::MoveWristToPosition(double wristTargetPosition)
 {
     frc::SmartDashboard::PutNumber("Wrist Target Position", wristTargetPosition);
-    if (wristTargetPosition != previousTargetWristPosition)
-    {
-        isWristMoving = true;
-        previousTargetWristPosition = wristTargetPosition;
-        isWristInManual = false;
-    }
-
-    // if ((get() < DANGER_ZONE_LIMIT) && (GetArmEncoderValue() > -DANGER_ZONE_LIMIT))
-    // {
-    //     //Inside D A N G E R  Z O N E
-    //     //wristTargetPosition = 0.0;
-    // }
-    // else
-    // {
-    //     //Safe to move wrist
-    // }
     
-    double delta;
-    delta = (wristTargetPosition - wristEncoder->GetPosition()) * WRIST_P_GAIN;
     if (!isWristInManual)
     {
         wristPID->SetReference(wristTargetPosition, rev::ControlType::kPosition);
     }
-    frc::SmartDashboard::PutNumber("Wrist Auto Power", delta);
 
-    double wristPositionError = wristEncoder->GetPosition() - wristTargetPosition;
-    frc::SmartDashboard::PutNumber("Wrist Position Error", wristPositionError);
-    if (wristPositionError < 1.0 && wristPositionError > -1.0){
-        isWristMoving = false;
-    }
+    frc::SmartDashboard::PutNumber("Wrist Position Error", wristEncoder->GetPosition() - wristTargetPosition);
+    
 }
 
 void Arm::CheckHatchGripper(bool isClosed)
@@ -310,18 +347,18 @@ void Arm::PrintArmInfotoConsole()
 
 void Arm::ManualCalibrateArm()
 {
-    if (!GetArmLimitSwitch())
-    {
-        wasArmLimitSwitchTripped = false;
-    }
-    else if (GetArmLimitSwitch() && !wasArmLimitSwitchTripped && armEncoder->GetVelocity() < 0 && armEncoder->GetVelocity() > CALIBRATION_SPEED)
-    {
-        armEncoder->SetPosition(LIMIT_SWITCH_OFFSET);
-    }
-    else
-    {
-        wasArmLimitSwitchTripped = true;
-    }
+//     if (!GetArmLimitSwitch())
+//     {
+//         wasArmLimitSwitchTripped = false;
+//     }
+//     else if (GetArmLimitSwitch() && !wasArmLimitSwitchTripped && armEncoder->GetVelocity() < 0 && armEncoder->GetVelocity() > CALIBRATION_SPEED)
+//     {
+//         armEncoder->SetPosition(LIMIT_SWITCH_OFFSET);
+//     }
+//     else
+//     {
+//         wasArmLimitSwitchTripped = true;
+//     }
 }
 
 bool Arm::GetArmLimitSwitch()
