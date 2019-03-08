@@ -277,7 +277,8 @@ void Arm::PrintArmInfo()
     frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
     frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
 
-    frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
+   // frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
+   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->armEncoder , armEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
     frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());

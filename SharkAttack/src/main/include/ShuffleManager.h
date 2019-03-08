@@ -29,6 +29,7 @@ class ShuffleManager {
 		frc::ShuffleboardTab *FourbarTab;
 
 		nt::NetworkTableEntry testVal;
+		nt::NetworkTableEntry armEncoder;
 
         void ShuffleInit();
 		//void OnShfl(frc::ShuffleboardTab *tab, const char* label, double val);

@@ -35,7 +35,8 @@ void ShuffleManager::ShuffleInit(){
 //call with  (name).set[thing]
 
 void ShuffleManager::VariableInit(){
-    testVal = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0).GetEntry();
+    testVal = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
+    armEncoder = ShuffleManager::DriverTab->Add("New Arm Encoder", 0.0).GetEntry();
     // public NetworkTableEntry test2 = PreCompTab.Add("Ft-Sec-Right", 0).getEntry();
     // public NetworkTableEntry test = ArmWristTab.Add("Ft-Sec-Left", 0).getEntry();
     // public NetworkTableEntry test2 = VisionTab.Add("Ft-Sec-Right", 0).getEntry();
