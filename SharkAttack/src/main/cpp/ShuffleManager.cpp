@@ -18,7 +18,7 @@ ShuffleManager *ShuffleManager::GetInstance(){
 }
 
 ShuffleManager::ShuffleManager(){
-    
+
 }
 
 void ShuffleManager::ShuffleInit(){
@@ -35,7 +35,7 @@ void ShuffleManager::ShuffleInit(){
 //call with  (name).set[thing]
 
 void ShuffleManager::VariableInit(){
-    testVal = DriverTab.Add("Ft-Sec-Left", 0).getEntry();
+    testVal = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0).GetEntry();
     // public NetworkTableEntry test2 = PreCompTab.Add("Ft-Sec-Right", 0).getEntry();
     // public NetworkTableEntry test = ArmWristTab.Add("Ft-Sec-Left", 0).getEntry();
     // public NetworkTableEntry test2 = VisionTab.Add("Ft-Sec-Right", 0).getEntry();
@@ -45,15 +45,15 @@ void ShuffleManager::VariableInit(){
 // //what goes in here?
 // }
 
-void ShuffleManager::OnShfl(NetworkTableEntry var, double val){
+void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val){
     if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){ //negates everything on other tabs when FMS is connected
         // tab->Add(label, val).GetEntry();
-        var.setDouble(val);
+        var.SetDouble(val);
     }    
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, float val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == false) || tab == DriverTab){
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
         tab->Add(label, val);
    }
 }
@@ -67,6 +67,6 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, int va
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val){
     
     if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
-        tab->Add(label, val).;
+        tab->Add(label, val);
    }
 }

@@ -11,8 +11,12 @@
 #include <frc/shuffleboard/Shuffleboard.h>
 #include <frc/Preferences.h>
 
-#include <vector>  //for std::vector
-#include <string>  //for std::string
+#include "networktables/NetworkTable.h"
+#include "networktables/NetworkTableEntry.h"
+#include "networktables/NetworkTableInstance.h"
+
+// #include <vector>  //for std::vector
+// #include <string>  //for std::string
 
 class ShuffleManager {
 
@@ -24,13 +28,16 @@ class ShuffleManager {
 		frc::ShuffleboardTab *VisionTab;
 		frc::ShuffleboardTab *FourbarTab;
 
+		nt::NetworkTableEntry testVal;
+
         void ShuffleInit();
-		void OnShfl(frc::ShuffleboardTab *tab, const char* label, double val);
+		//void OnShfl(frc::ShuffleboardTab *tab, const char* label, double val);
+		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val);
 		void OnShfl(frc::ShuffleboardTab *tab, const char* label, float val);
 		void OnShfl(frc::ShuffleboardTab *tab, const char* label, int val);
 		void OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val);
 
-		NetworkTableEntry test;
+		nt::NetworkTableEntry test;
 
 		void VariableInit();
 		void GetShuffleVariable();
