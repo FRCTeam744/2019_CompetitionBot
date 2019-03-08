@@ -76,7 +76,6 @@ private:
   bool isWristInManual;
   double previousTargetPosition;
   double previousTargetWristPosition;
-  double wristRelativeToArm = currentArmPos + currentWristPos;
 
   double FFVoltage = 0.0;
 
@@ -130,6 +129,8 @@ private:
   const double ARM_DANGERZONE = 30.0;
   const double ARM_CHECKPOINT = 36.0;
 
+  const double WRIST_HATCH_LIMIT = 90;
+
   //Wrist PID Values
   const double WRIST_P_GAIN = 0.02; //Was .06 when experiencing issues
 
@@ -170,5 +171,4 @@ private:
   const rev::CANSparkMax::MotorType BRUSHED = rev::CANSparkMax::MotorType::kBrushed;
   const rev::CANSparkMax::IdleMode COAST = rev::CANSparkMax::IdleMode::kCoast;
   const rev::CANSparkMax::IdleMode BRAKE = rev::CANSparkMax::IdleMode::kBrake;
-  const double WRIST_HATCH_LIMIT = 90;
 };
