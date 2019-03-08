@@ -24,7 +24,7 @@ void Robot::RobotInit()
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
-  led = LED::GetInstance();
+  // led = LED::GetInstance();
   
   shufflemanager = ShuffleManager::GetInstance();
   shufflemanager->ShuffleInit();
@@ -113,16 +113,17 @@ void Robot::TeleopInit()
 
   if (alliance == blue)
   {
-    led->StartUpBlue();
+    // led->StartUpBlue();
   }
   else if (alliance == red)
   {
-    led->StartUpRed();
+    // led->StartUpRed();
   }
 }
 
 void Robot::TeleopPeriodic()
 {
+  arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
   arm->PrintArmInfotoConsole();
   // frc::SmartDashboard::PutNumber("sampleEncoder Value: ", sampleEncoder->GetRaw()); //Testing
@@ -130,11 +131,11 @@ void Robot::TeleopPeriodic()
 
   if (oi->LEDButtonPressed())
   {
-    led->LEDsOff();
+    // led->LEDsOff();
   }
   if (oi->AlsoLEDButtonPressed())
   {
-    led->SwimmingShark();
+    // led->SwimmingShark();
   }
 
   drivetrain->PutData();
@@ -173,13 +174,13 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
-  if (isBeforeMatch) {
-    led->StartUp();
-  }
+  // if (isBeforeMatch) {
+  //   led->StartUp();
+  // }
   
-  if (!isBeforeMatch) {
-    led->ShutDown();
-  }
+  // if (!isBeforeMatch) {
+  //   led->ShutDown();
+  // }
   
 }
 
