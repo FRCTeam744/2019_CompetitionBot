@@ -26,9 +26,9 @@ void Robot::RobotInit()
   fourbar = Fourbar::GetInstance();
   led = LED::GetInstance();
   
-  // shufflemanager = ShuffleManager::GetInstance();
-  // shufflemanager->ShuffleInit();
-  // shufflemanager->VariableInit();
+  shufflemanager = ShuffleManager::GetInstance();
+  shufflemanager->ShuffleInit();
+  shufflemanager->VariableInit();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
