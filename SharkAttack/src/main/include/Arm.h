@@ -76,6 +76,7 @@ private:
   bool isWristInManual;
   double previousTargetPosition;
   double previousTargetWristPosition;
+  double wristRelativeToArm = currentArmPos + currentWristPos;
 
   double FFVoltage = 0.0;
 
@@ -87,6 +88,8 @@ private:
   bool isArmMoving;
   bool isWristMoving;
   bool isInBallPickup;
+  bool isInHatchMode = true;
+  bool isHatchGripperClosed = true;
 
   bool areWheelsVeryDown;
   bool willArmEnterDZ;
@@ -158,7 +161,7 @@ private:
   const double ARM_DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_ARM_REVOLUTION / ARM_GEAR_RATIO;
   const double WRIST_DEGREES_PER_MOTOR_ROTATION = DEGREES_PER_ARM_REVOLUTION / WRIST_GEAR_RATIO;
 
-  //THis is the VelocityConversionFactor
+  //This is the VelocityConversionFactor
   const double ARM_RPM_TO_DEGREES_PER_SECOND = ARM_DEGREES_PER_MOTOR_ROTATION / SECONDS_PER_MINUTE;
   const double WRIST_RPM_TO_DEGREES_PER_SECOND = WRIST_DEGREES_PER_MOTOR_ROTATION / SECONDS_PER_MINUTE;
 
@@ -167,4 +170,5 @@ private:
   const rev::CANSparkMax::MotorType BRUSHED = rev::CANSparkMax::MotorType::kBrushed;
   const rev::CANSparkMax::IdleMode COAST = rev::CANSparkMax::IdleMode::kCoast;
   const rev::CANSparkMax::IdleMode BRAKE = rev::CANSparkMax::IdleMode::kBrake;
+  const double WRIST_HATCH_LIMIT = 90;
 };
