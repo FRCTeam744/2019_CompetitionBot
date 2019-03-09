@@ -172,7 +172,7 @@ void Arm::RunIntake(double input)
 
 //Parameter: targetPosition -> Given final position in degrees for arm
 //Work in Progress
-void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
+void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup)
 {
 
     currentArmPos = armEncoder->GetPosition();
@@ -182,6 +182,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
     willArmEnterDZ = ((currentArmPos < -ARM_DANGERZONE && targetPosition > -ARM_DANGERZONE) || (currentArmPos > ARM_DANGERZONE && targetPosition < ARM_DANGERZONE));
     areWheelsUp = (currentWristPos < 1.0 && currentWristPos > -1.0);
     isArmInDZ = (currentArmPos > -ARM_DANGERZONE && currentArmPos < ARM_DANGERZONE);
+    
     isArmGoingToBack = (targetPosition < 0);
 
     FFVoltage = MAX_FF_GAIN * (sin(currentArmPos * M_PI / 180));
@@ -211,7 +212,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
     }
     else if (!isArmInDZ && !willArmEnterDZ)
     {
-        MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode));
+        MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup));
     }
     
     if (!isArmInManual) {
@@ -228,10 +229,15 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode)
     }
 }
 
-double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode)
+double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup)
 {
-
-    if (!isInBallMode && !isArmGoingToBack)
+    if (isInBallPickup && !isArmGoingToBack){
+        return WRIST_BALL_PICKUP_FRONT;
+    }
+    else if (isInBallPickup && isArmGoingToBack){
+        return WRIST_BALL_PICKUP_BACK;
+    }
+    else if (!isInBallMode && !isArmGoingToBack)
     {
         return WRIST_HATCH_FRONT;
     }

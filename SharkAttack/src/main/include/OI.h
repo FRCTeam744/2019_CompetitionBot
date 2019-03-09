@@ -47,6 +47,7 @@ class OI
 	double GetTargetWristPosition();
 
     bool GetPlacingMode();
+    bool GetIsInBallPickup();
 	bool GetIsArmInManual();
 	bool GetIsWristInManual();
 
@@ -144,6 +145,7 @@ class OI
 	double wristPowerOutput = 0.0;
 
 	bool isInBallMode;
+    bool isInBallPickup;
 	bool isArmInManual;
 	bool isWristInManual;
 
@@ -157,7 +159,7 @@ class OI
 	const double MID_BALL_HEIGHT = 47.5;
 	const double LOW_BALL_HEIGHT = 23.5;
 	const double CARGOSHIP_BALL_HEIGHT = 47.5; //Don't know the height yet, needs to be measured
-	const double BALL_PICKUP_HEIGHT = 22.0;	//Don't know the height yet, needs to be measured
+	const double BALL_PICKUP_HEIGHT = 19.0;	//Don't know the height yet, needs to be measured
 
 	//ARM MEASUREMENTS
 	const double PIVOT_HEIGHT = 46.15;
@@ -165,7 +167,7 @@ class OI
 
 	const double RADIANS_TO_DEGREES = (180.0 / M_PI);
 
-	//add to back and subtract from front to compensate for the deadzone in the bands
+	//add to back and front to compensate for the deadzone in the bands
 	const double DEADZONE_ADJUSTOR = -3.0;
 
 	//ARM POSITIONS IN DEGREES (USE FOR SETTING ENCODER)
