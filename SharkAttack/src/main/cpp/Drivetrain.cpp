@@ -88,8 +88,8 @@ void Drivetrain::PutData() {
 
   // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
   // frc::SmartDashboard::PutNumber("Skew", targetSkew);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, headingVision, targetOffsetAngle_Horizontal);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, skewVision, targetSkew);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->headingVision, targetOffsetAngle_Horizontal);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->skewVision, targetSkew);
 
   rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//rightDashboardSpeed = NU_TO_FEET;
   leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//leftDashboardSpeed = SECONDS_TO_100MS;
@@ -102,8 +102,8 @@ void Drivetrain::PutData() {
 
   // frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
   // frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::speedErrorRightPreComp, desiredRightFPS - rightDashboardSpeed);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::speedErrorLeftPreComp, desiredLeftFPS - leftDashboardSpeed);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorRightPreComp, desiredRightFPS - rightDashboardSpeed);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorLeftPreComp, desiredLeftFPS - leftDashboardSpeed);
   
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDrivePreComp , rightDashboardSpeed);
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDrivePreComp , rightDashboardSpeed);
