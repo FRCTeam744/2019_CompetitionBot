@@ -28,23 +28,38 @@ class ShuffleManager {
 		frc::ShuffleboardTab *VisionTab;
 		frc::ShuffleboardTab *FourbarTab;
 
-		nt::NetworkTableEntry testVal;
-		nt::NetworkTableEntry armEncoder;
+		//using native hierarchy that RoboRio uses on startup
+		//organized by class
+		//Drivetrain.cpp
+		nt::NetworkTableEntry leftDriveDriver;
+		nt::NetworkTableEntry rightDriveDriver;
+		nt::NetworkTableEntry leftDrivePreComp;
+		nt::NetworkTableEntry rightDrivePreComp;
+		nt::NetworkTableEntry headingVision;
+		nt::NetworkTableEntry skewVision;
+		nt::NetworkTableEntry currentDistanceInchesDriver;
+		nt::NetworkTableEntry speedErrorRightPreComp;
+		nt::NetworkTableEntry speedErrorLeftPreComp;
+
+
+		//OI.cpp?
+
+		//Fourbar.cpp
+
+		//Arm.cpp
+		nt::NetworkTableEntry armEncoderDriver;
+		nt::NetworkTableEntry armEncoderPreComp;
+		nt::NetworkTableEntry leftArmCurrentArmWrist;
+		nt::NetworkTableEntry rightArmCurrentArmWrist;
 
         void ShuffleInit();
-		//void OnShfl(frc::ShuffleboardTab *tab, const char* label, double val);
 		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val);
 		void OnShfl(frc::ShuffleboardTab *tab, const char* label, float val);
-		void OnShfl(frc::ShuffleboardTab *tab, const char* label, int val);
+		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, int val);
 		void OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val);
 
-		nt::NetworkTableEntry test;
-
 		void VariableInit();
-		void GetShuffleVariable();
-
-    //bool isInitalized = false;
-
+		//void GetShuffleVariable();
 
     private:
         static ShuffleManager *s_instance;

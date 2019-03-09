@@ -57,7 +57,6 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   fourbar->UpdateFourbarSpeed();
-  //oi->PutOnShuffleboard();
 
   drivetrain->LimelightSet(oi->SetLimelight());
 
