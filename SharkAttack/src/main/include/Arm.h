@@ -131,7 +131,7 @@ private:
   const double WRIST_HATCH_LIMIT = 90;
 
   //Arm PID Values
-  const double MAX_MOTOR_OUTPUT = 0.5; //percent output
+  const double MAX_MOTOR_OUTPUT = 0.35; //percent output
   const double TIME_TO_MAX_MOTOR_OUTPUT = 0.5; //secs
   const double RAMP_RATE = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT;
 

@@ -298,7 +298,7 @@ double OI::GetTargetArmPosition()
     else
     {
         isInBallPickup = false;
-        
+
         if (xbox->GetYButtonPressed())
         {
             targetArmPosition = FRONT_HIGH_HATCH_POSITION;
