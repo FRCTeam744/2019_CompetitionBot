@@ -49,6 +49,8 @@ class ShuffleManager {
 		//Arm.cpp
 		nt::NetworkTableEntry armEncoderDriver;
 		nt::NetworkTableEntry armEncoderPreComp;
+		nt::NetworkTableEntry wristEncoderDriver;
+		nt::NetworkTableEntry wristEncoderPreComp;
 		nt::NetworkTableEntry leftArmCurrentArmWrist;
 		nt::NetworkTableEntry rightArmCurrentArmWrist;
 
