@@ -33,8 +33,9 @@ Drivetrain::Drivetrain()
   //Initialize Double Solenoid
   gearShifter = new frc::DoubleSolenoid(0, 1);
 
-  //Initialize Limelight
-  limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+  //Initialize limelight
+  limelightFront = nt::NetworkTableInstance::GetDefault().GetTable("limelight-front");
+  limelightBack = nt::NetworkTableInstance::GetDefault().GetTable("limelight-back");
 
   //Set Talons to be in same direction
   leftFront->SetInverted(false);
@@ -79,12 +80,12 @@ Drivetrain::Drivetrain()
 
 //Public Methods
 void Drivetrain::PutData() {
-//Send limelight and drivetrain variables to SD
+//Send limelightFront and drivetrain variables to SD
 
-  targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);
-  targetOffsetAngle_Vertical = limelight->GetNumber("ty", 0.0);
-  targetArea = limelight->GetNumber("ta", 0.0);
-  targetSkew = limelight->GetNumber("ts", 0.0);
+  targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
+  targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
+  targetArea = limelightFront->GetNumber("ta", 0.0);
+  targetSkew = limelightFront->GetNumber("ts", 0.0);
 
   // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
   // frc::SmartDashboard::PutNumber("Skew", targetSkew);
@@ -219,15 +220,15 @@ void Drivetrain::TankDrive(double leftValue, double rightValue) {
   }
 }
 
-// Use these methods in other classes to interact with the limelight
+// Use these methods in other classes to interact with the limelightFront
 void Drivetrain::LimelightSet(std::tuple <bool, std::string, double> data) {
   if (std::get<0>(data)){
-    limelight->PutNumber(std::get<1>(data), std::get<2>(data));
+    limelightFront->PutNumber(std::get<1>(data), std::get<2>(data));
   }
 }
 
 double Drivetrain::LimelightGet(std::string key) {
-  return limelight->GetNumber(key, 0.0);
+  return limelightFront->GetNumber(key, 0.0);
 }
 
 void Drivetrain::CheckSwitchGears(bool isHighGear) {

@@ -297,6 +297,7 @@ double OI::GetTargetArmPosition()
     }
     else
     {
+
         isInBallPickup = false;
 
         if (xbox->GetYButtonPressed())

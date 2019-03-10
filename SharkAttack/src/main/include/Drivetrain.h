@@ -51,7 +51,8 @@ class Drivetrain {
 
 	frc::DoubleSolenoid *gearShifter;
 
-	std::shared_ptr<NetworkTable> limelight;
+	std::shared_ptr<NetworkTable> limelightFront;
+	std::shared_ptr<NetworkTable> limelightBack;
 	
 	//CAN Talon IDs for each of the drivetrain motors
 	const int RIGHT_FRONT_ID = 23;
