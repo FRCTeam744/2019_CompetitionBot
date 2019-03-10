@@ -127,7 +127,7 @@ void Drivetrain::AutoDrive() {
   if (xbox->GetStartButton())
   {
     double p_dist_loop = 0;
-    // double currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - limelightFront_HEIGHT_INCHES) / tan((limelightFront_ANGLE + targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+    // double currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
 
     //Target is to the left of the Robot
     if (targetOffsetAngle_Horizontal < -1.0)

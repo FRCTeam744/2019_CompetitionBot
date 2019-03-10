@@ -168,7 +168,7 @@ class OI
 	const double RADIANS_TO_DEGREES = (180.0 / M_PI);
 
 	//add to back and front to compensate for the deadzone in the bands
-	const double DEADZONE_ADJUSTOR = -6.0;
+	const double DEADZONE_ADJUSTOR = -4.0;
 
 	//ARM POSITIONS IN DEGREES (USE FOR SETTING ENCODER)
 	const double FRONT_HIGH_BALL_POSITION = DEADZONE_ADJUSTOR + (RADIANS_TO_DEGREES * acos((PIVOT_HEIGHT - HIGH_BALL_HEIGHT) / (ARM_LENGTH)));
