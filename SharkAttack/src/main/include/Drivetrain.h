@@ -25,6 +25,7 @@ class Drivetrain {
 	double LimelightGet(std::string key);
 	void CheckSwitchGears(bool isHighGear);
 	void AutoDriveForward(bool isBut, bool isVelocityControl);
+    void AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool isFront);
 	// void PutOnShuffleboard();
 
   private:
@@ -80,6 +81,7 @@ class Drivetrain {
 	double targetOffsetAngle_Vertical;
 	double targetArea;
 	double targetSkew;
+    std::vector<double> limelightPose;
 
 	double adjust = 0.0;
 
@@ -109,6 +111,11 @@ class Drivetrain {
 	const double MEASURED_SPEED_NU = 2725.0;  //this is the result of the test above in NU/100ms
 
 	//PID control limelight
+    const double kP_THETA_DESIRED = 0;
+    const double LL_THETA_OFFSET = 0;
+    const double kP_FORWARD = 0;
+    const double kP_THETA = 0;
+
 	const double DESIRED_DISTANCE_INCHES = 65;									//desired distance from target
 	const double kP_DIST_FPS = -.05;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
 	const double kP_NU_PER_100MS = kP_DIST_FPS * FEET_TO_NU * SECONDS_TO_100MS; //Converted from FPS estimate above to NU/100ms that the talon can use

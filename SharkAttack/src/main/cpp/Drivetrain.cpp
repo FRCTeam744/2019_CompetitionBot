@@ -12,118 +12,119 @@ Drivetrain *Drivetrain::s_instance = 0;
 //Static Singleton Method
 Drivetrain *Drivetrain::GetInstance()
 {
-  if (s_instance == 0)
-  {
-    s_instance = new Drivetrain();
-  }
-  return s_instance;
+    if (s_instance == 0)
+    {
+        s_instance = new Drivetrain();
+    }
+    return s_instance;
 }
 
 //Constructor
 Drivetrain::Drivetrain()
 {
-  //Establish Talons according to ID's
-  leftFront = new TalonSRX(LEFT_FRONT_ID);
-  leftMid = new TalonSRX(LEFT_MID_ID);
-  leftBack = new TalonSRX(LEFT_BACK_ID);
-  rightFront = new TalonSRX(RIGHT_FRONT_ID);
-  rightMid = new TalonSRX(RIGHT_MID_ID);
-  rightBack = new TalonSRX(RIGHT_BACK_ID);
+    //Establish Talons according to ID's
+    leftFront = new TalonSRX(LEFT_FRONT_ID);
+    leftMid = new TalonSRX(LEFT_MID_ID);
+    leftBack = new TalonSRX(LEFT_BACK_ID);
+    rightFront = new TalonSRX(RIGHT_FRONT_ID);
+    rightMid = new TalonSRX(RIGHT_MID_ID);
+    rightBack = new TalonSRX(RIGHT_BACK_ID);
 
-  //Initialize Double Solenoid
-  gearShifter = new frc::DoubleSolenoid(0, 1);
+    //Initialize Double Solenoid
+    gearShifter = new frc::DoubleSolenoid(0, 1);
 
-  //Initialize limelight
-  limelightFront = nt::NetworkTableInstance::GetDefault().GetTable("limelight-front");
-  limelightBack = nt::NetworkTableInstance::GetDefault().GetTable("limelight-back");
+    //Initialize limelight
+    limelightFront = nt::NetworkTableInstance::GetDefault().GetTable("limelight-front");
+    limelightBack = nt::NetworkTableInstance::GetDefault().GetTable("limelight-back");
 
-  //Set Talons to be in same direction
-  leftFront->SetInverted(false);
-  leftMid->SetInverted(true);
-  leftBack->SetInverted(false);
-  rightFront->SetInverted(true);
-  rightMid->SetInverted(false);
-  rightBack->SetInverted(true);
+    //Set Talons to be in same direction
+    leftFront->SetInverted(false);
+    leftMid->SetInverted(true);
+    leftBack->SetInverted(false);
+    rightFront->SetInverted(true);
+    rightMid->SetInverted(false);
+    rightBack->SetInverted(true);
 
-  //Set Coast Or Brake
-  leftFront->SetNeutralMode(motorcontrol::NeutralMode::Coast);
-  leftMid->SetNeutralMode(motorcontrol::NeutralMode::Coast);
-  leftBack->SetNeutralMode(motorcontrol::NeutralMode::Brake);
-  rightFront->SetNeutralMode(motorcontrol::NeutralMode::Coast);
-  rightMid->SetNeutralMode(motorcontrol::NeutralMode::Coast);
-  rightBack->SetNeutralMode(motorcontrol::NeutralMode::Brake);
+    //Set Coast Or Brake
+    leftFront->SetNeutralMode(motorcontrol::NeutralMode::Coast);
+    leftMid->SetNeutralMode(motorcontrol::NeutralMode::Coast);
+    leftBack->SetNeutralMode(motorcontrol::NeutralMode::Brake);
+    rightFront->SetNeutralMode(motorcontrol::NeutralMode::Coast);
+    rightMid->SetNeutralMode(motorcontrol::NeutralMode::Coast);
+    rightBack->SetNeutralMode(motorcontrol::NeutralMode::Brake);
 
-  //Set the sign of the encoder (true means switch sign)
-  leftBack->SetSensorPhase(true);
-  rightBack->SetSensorPhase(true);
+    //Set the sign of the encoder (true means switch sign)
+    leftBack->SetSensorPhase(true);
+    rightBack->SetSensorPhase(true);
 
-  //configure Talon encoder
-  armEncoderTalon = leftFront;
-  armEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
-  wristEncoderTalon = rightFront;
-  wristEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
+    //configure Talon encoder
+    armEncoderTalon = leftFront;
+    armEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
+    wristEncoderTalon = rightFront;
+    wristEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
 
-  //Config for the Talon internal PID loop for speedControl
-  leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
-  rightBack->Config_kF(0, kFeedForwardGain, talonTimeout);
-  leftBack->Config_kP(0, kP_SPEED, talonTimeout);
-  rightBack->Config_kP(0, kP_SPEED, talonTimeout);
-  leftBack->Config_kD(0, kD_SPEED_LEFT, talonTimeout);
-  rightBack->Config_kD(0, kD_SPEED_RIGHT, talonTimeout);
-  leftBack->Config_kI(0, kI_SPEED, talonTimeout);
-  rightBack->Config_kI(0, kI_SPEED, talonTimeout);
-  leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
-  rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
+    //Config for the Talon internal PID loop for speedControl
+    leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
+    rightBack->Config_kF(0, kFeedForwardGain, talonTimeout);
+    leftBack->Config_kP(0, kP_SPEED, talonTimeout);
+    rightBack->Config_kP(0, kP_SPEED, talonTimeout);
+    leftBack->Config_kD(0, kD_SPEED_LEFT, talonTimeout);
+    rightBack->Config_kD(0, kD_SPEED_RIGHT, talonTimeout);
+    leftBack->Config_kI(0, kI_SPEED, talonTimeout);
+    rightBack->Config_kI(0, kI_SPEED, talonTimeout);
+    leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
+    rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
 
-  isInAutoDrive = false;
+    isInAutoDrive = false;
 }
 
 //Public Methods
-void Drivetrain::PutData() {
-//Send limelightFront and drivetrain variables to SD
+void Drivetrain::PutData()
+{
+    //Send limelightFront and drivetrain variables to SD
 
-  targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
-  targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
-  targetArea = limelightFront->GetNumber("ta", 0.0);
-  targetSkew = limelightFront->GetNumber("ts", 0.0);
+    targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
+    targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
+    targetArea = limelightFront->GetNumber("ta", 0.0);
+    targetSkew = limelightFront->GetNumber("ts", 0.0);
 
-  // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
-  // frc::SmartDashboard::PutNumber("Skew", targetSkew);
-  
-  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Heading", targetOffsetAngle_Horizontal);
-  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Skew", targetSkew);
+    // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
+    // frc::SmartDashboard::PutNumber("Skew", targetSkew);
 
-  rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//rightDashboardSpeed = NU_TO_FEET;
-  leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//leftDashboardSpeed = SECONDS_TO_100MS;
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Heading", targetOffsetAngle_Horizontal);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Skew", targetSkew);
 
-  // frc::SmartDashboard::PutNumber("RIGHT REAL SPEED", rightDashboardSpeed);
-  // frc::SmartDashboard::PutNumber("LEFT REAL SPEED", leftDashboardSpeed);
-  
-  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "NU_PER_REV", targetSkew);
+    rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS; //rightDashboardSpeed = NU_TO_FEET;
+    leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;   //leftDashboardSpeed = SECONDS_TO_100MS;
 
-  //change these?
-  // frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
-  // frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
-  // frc::SmartDashboard::PutNumber("Ft-Sec-Right", rightDashboardSpeed);
-  // frc::SmartDashboard::PutNumber("Ft-Sec-Left", leftDashboardSpeed);
-  
-  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Ft-Sec-Right_PRE", rightDashboardSpeed);
-  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Ft-Sec-Left_PRE", leftDashboardSpeed);
-  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Right", rightDashboardSpeed);
-  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Left", leftDashboardSpeed);
+    // frc::SmartDashboard::PutNumber("RIGHT REAL SPEED", rightDashboardSpeed);
+    // frc::SmartDashboard::PutNumber("LEFT REAL SPEED", leftDashboardSpeed);
 
-  // frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
-  // frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
-  // frc::SmartDashboard::PutNumber("Target Area", targetArea);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "NU_PER_REV", targetSkew);
 
-  currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
-  //frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
-  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Current Distance", currentDistanceInches);
+    //change these?
+    frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
+    frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
+    frc::SmartDashboard::PutNumber("Ft-Sec-Right", rightDashboardSpeed);
+    frc::SmartDashboard::PutNumber("Ft-Sec-Left", leftDashboardSpeed);
 
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Ft-Sec-Right_PRE", rightDashboardSpeed);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "Ft-Sec-Left_PRE", leftDashboardSpeed);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Right", rightDashboardSpeed);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Left", leftDashboardSpeed);
+
+    // frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
+    // frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
+    // frc::SmartDashboard::PutNumber("Target Area", targetArea);
+
+    currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
+                                                                                                                                                       //frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
+                                                                                                                                                       // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Current Distance", currentDistanceInches);
 }
 
-void Drivetrain::AutoDrive() {
-  /*
+void Drivetrain::AutoDrive()
+{
+    /*
   if (xbox->GetStartButton())
   {
     double p_dist_loop = 0;
@@ -208,63 +209,152 @@ void Drivetrain::AutoDrive() {
   */
 }
 
-void Drivetrain::TankDrive(double leftValue, double rightValue) {
+void Drivetrain::TankDrive(double leftValue, double rightValue)
+{
 
-  if(!isInAutoDrive){
-    leftBack->Set(ControlMode::PercentOutput, leftValue);
-    rightBack->Set(ControlMode::PercentOutput, rightValue);
-    leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
-    rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
-    leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
-    rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
-  }
+    if (!isInAutoDrive)
+    {
+        leftBack->Set(ControlMode::PercentOutput, leftValue);
+        rightBack->Set(ControlMode::PercentOutput, rightValue);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
 }
 
 // Use these methods in other classes to interact with the limelightFront
-void Drivetrain::LimelightSet(std::tuple <bool, std::string, double> data) {
-  if (std::get<0>(data)){
-    limelightFront->PutNumber(std::get<1>(data), std::get<2>(data));
-  }
+void Drivetrain::LimelightSet(std::tuple<bool, std::string, double> data)
+{
+    if (std::get<0>(data))
+    {
+        limelightFront->PutNumber(std::get<1>(data), std::get<2>(data));
+    }
 }
 
-double Drivetrain::LimelightGet(std::string key) {
-  return limelightFront->GetNumber(key, 0.0);
+double Drivetrain::LimelightGet(std::string key)
+{
+    return limelightFront->GetNumber(key, 0.0);
 }
 
-void Drivetrain::CheckSwitchGears(bool isHighGear) {
+void Drivetrain::CheckSwitchGears(bool isHighGear)
+{
 
-  if (isHighGear)
-  {
-    gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
-  }
-  else if (!isHighGear)
-  {
-    gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
-  }
+    if (isHighGear)
+    {
+        gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
+    }
+    else if (!isHighGear)
+    {
+        gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
+    }
 }
 
-void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl){
-  if (isBut && !isVelocityControl) {
-    isInAutoDrive = true;
+void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
+{
+    if (isBut && !isVelocityControl)
+    {
+        isInAutoDrive = true;
 
-    leftBack->Set(ControlMode::PercentOutput, 0.5);
-    rightBack->Set(ControlMode::PercentOutput, 0.5);
-    leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
-    rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
-    leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
-    rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftBack->Set(ControlMode::PercentOutput, 0.5);
+        rightBack->Set(ControlMode::PercentOutput, 0.5);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
+    else if (isVelocityControl)
+    {
+        isInAutoDrive = true;
 
-  }else if(isVelocityControl){
-    isInAutoDrive = true;
+        desiredLeftFPS = desiredRightFPS = 2.0;
 
-    leftBack->Set(ControlMode::Velocity, 3 * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
-    rightBack->Set(ControlMode::Velocity, 3 * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
-    leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
-    rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
-    leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
-    rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
-  }
-  else {
-    isInAutoDrive = false;
-  }
+        leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
+        rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
+    else
+    {
+        isInAutoDrive = false;
+    }
+}
+
+void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool isFront)
+{
+    if (!wantLimelight)
+    {
+        isInAutoDrive = false;
+        limelightFront->PutNumber("pipeline", 1.0);
+        limelightBack->PutNumber("pipeline", 1.0);
+        return;
+    }
+
+    if (!isInAutoDrive)
+    {
+        //set limelight pipeline and turn on leds, once
+        if (isFront)
+        {
+            limelightFront->PutNumber("pipeline", 0.0);
+        }
+        else
+        {
+            limelightBack->PutNumber("pipeline", 0.0);
+        }
+        isInAutoDrive = true;
+    }
+
+    if (isFront)
+    {
+        limelightPose = limelightFront->GetNumberArray("camtran", 0.0);
+    }
+    else
+    {
+        limelightPose = limelightBack->GetNumberArray("camtran", 0.0);
+    }
+
+    double X = limelightPose.at(0);   frc::SmartDashboard::PutNumber("X", X);
+    double Y = limelightPose.at(1);   frc::SmartDashboard::PutNumber("Y", Y);
+    double Z = limelightPose.at(2);   frc::SmartDashboard::PutNumber("Z", Z);
+    double roll = limelightPose.at(3);   frc::SmartDashboard::PutNumber("roll", roll);
+    double pitch = limelightPose.at(4);   frc::SmartDashboard::PutNumber("pitch", pitch);
+    double yaw = limelightPose.at(5);  frc::SmartDashboard::PutNumber("yaw", yaw);
+
+    double yDesiredInches = -12.5;
+    double zDesiredInches = -30;
+
+    double yErrorInches = (yDesiredInches - Y);
+    double thetaDesired_Robot = yErrorInches * kP_THETA_DESIRED;
+    if(thetaDesired_Robot > 30){
+        thetaDesired_Robot = 30;
+    } else if (thetaDesired_Robot < -30) {
+        thetaDesired_Robot = -30;
+    }
+    double thetaError_Robot = (thetaDesired_Robot - (roll - LL_THETA_OFFSET));
+
+    double zErrorInches = zDesiredInches - Z;
+
+    double forwardSpeed = zErrorInches*kP_FORWARD;
+    double adjustment = thetaDesired_Robot*kP_THETA;
+
+
+
+    if(abs(zErrorInches) < 1 && abs(yErrorInches) < 2 && abs(thetaDesired_Robot) < 5) {
+        leftBack->Set(ControlMode::PercentOutput, 0);
+        rightBack->Set(ControlMode::PercentOutput, 0);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
+    else{
+        // leftBack->Set(ControlMode::Velocity, forwardSpeed + adjustment);
+        // rightBack->Set(ControlMode::Velocity, forwardSpeed - adjustment);
+        // leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        // rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        // leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        // rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
 }

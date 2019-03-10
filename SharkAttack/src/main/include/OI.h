@@ -37,7 +37,10 @@ class OI
 
 	double GetLeftDriveInput();
 	double GetRightDriveInput();
+
 	bool GetAutoDriveForward();
+    bool GetDriveByLimelight();
+
 	double GetArmInput();
 	double GetWristInput();
 	double GetArmEncoder();
@@ -57,6 +60,9 @@ class OI
 
 	double GetArmFFVoltage();
 
+    bool LEDButtonPressed();
+	bool AlsoLEDButtonPressed();
+
 	// bool SetArmFrontHigh();
 	// bool SetArmFrontMid();
 	// bool SetArmFrontLow();
@@ -70,9 +76,6 @@ class OI
 	//void PutOnShuffleboardInOI();
 
 	std::tuple<bool, std::string, double> SetLimelight();
-
-	bool LEDButtonPressed();
-	bool AlsoLEDButtonPressed();
 
   private:
 	static OI *s_instance;

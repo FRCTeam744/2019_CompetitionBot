@@ -52,6 +52,11 @@ bool OI::GetAutoDriveForward()
     return leftStick->GetRawButton(8);
 }
 
+bool OI::GetDriveByLimelight()
+{
+    return rightStick->GetRawButton(2);
+}
+
 bool OI::SwitchGears()
 {
     if (leftStick->GetRawButtonPressed(1))
@@ -120,14 +125,17 @@ double OI::GetArmInput()
     {
         armPowerOutput = 0.0;
     }
-    else if (armPowerOutput >= ARM_DEADZONE){
+    else if (armPowerOutput >= ARM_DEADZONE)
+    {
         armPowerOutput = (armPowerOutput - ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
     }
-    else if (armPowerOutput <= -ARM_DEADZONE) {
+    else if (armPowerOutput <= -ARM_DEADZONE)
+    {
         armPowerOutput = (armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
     }
 
-    if(armPowerOutput != 0.0){
+    if (armPowerOutput != 0.0)
+    {
         isArmInManual = true;
     }
 
@@ -141,14 +149,17 @@ double OI::GetWristInput()
     {
         wristPowerOutput = 0.0;
     }
-    else if (wristPowerOutput >= WRIST_DEADZONE){
+    else if (wristPowerOutput >= WRIST_DEADZONE)
+    {
         wristPowerOutput = (wristPowerOutput - WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
     }
-    else if (armPowerOutput <= -WRIST_DEADZONE) {
+    else if (armPowerOutput <= -WRIST_DEADZONE)
+    {
         wristPowerOutput = (wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
     }
 
-    if (wristPowerOutput != 0.0){
+    if (wristPowerOutput != 0.0)
+    {
         isWristInManual = true;
     }
 
@@ -174,24 +185,30 @@ double OI::GetIntakeInput()
     }
 }
 
-bool OI::GetPlacingMode(){
-    if(xbox->GetStickButtonPressed(LEFT_HAND)){
+bool OI::GetPlacingMode()
+{
+    if (xbox->GetStickButtonPressed(LEFT_HAND))
+    {
         isInBallMode = false;
     }
-    else if(xbox->GetStickButtonPressed(RIGHT_HAND)){
+    else if (xbox->GetStickButtonPressed(RIGHT_HAND))
+    {
         isInBallMode = true;
     }
     return isInBallMode;
 }
 
-bool OI::GetIsInBallPickup(){
+bool OI::GetIsInBallPickup()
+{
     return isInBallPickup;
 }
 
-bool OI::GetIsArmInManual(){
+bool OI::GetIsArmInManual()
+{
     return isArmInManual;
 }
-bool OI::GetIsWristInManual(){
+bool OI::GetIsWristInManual()
+{
     return isWristInManual;
 }
 
@@ -475,12 +492,12 @@ std::tuple<bool, std::string, double> OI::SetLimelight()
 
 bool OI::LEDButtonPressed()
 {
-    return leftStick->GetRawButton(2);
+    return leftStick->GetRawButton(3);
 }
 
 bool OI::AlsoLEDButtonPressed()
 {
-    return rightStick->GetRawButton(2);
+    return rightStick->GetRawButton(3);
 }
 
 double OI::GetArmFFVoltage()
