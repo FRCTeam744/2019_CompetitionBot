@@ -462,11 +462,11 @@ std::tuple<bool, std::string, double> OI::SetLimelight()
     }
     else if (leftStick->GetRawButtonPressed(6))
     {
-        return std::make_tuple(true, "camMode", 0.0);
+        return std::make_tuple(true, "pipeline", 0.0);
     }
     else if (leftStick->GetRawButtonPressed(9))
     {
-        return std::make_tuple(true, "camMode", 1.0);
+        return std::make_tuple(true, "pipeline", 1.0);
     }
 
     return std::make_tuple(false, "", 0.0);
