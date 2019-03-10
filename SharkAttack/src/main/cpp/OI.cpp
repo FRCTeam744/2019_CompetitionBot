@@ -184,10 +184,6 @@ bool OI::GetPlacingMode(){
     return isInBallMode;
 }
 
-bool OI::GetIsInBallPickup(){
-    return isInBallPickup;
-}
-
 bool OI::GetIsArmInManual(){
     return isArmInManual;
 }
@@ -236,7 +232,6 @@ double OI::GetTargetArmPosition()
             targetArmPosition = FRONT_HIGH_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
-            isInBallPickup = false;
         }
 
         if (xbox->GetBButtonPressed())
@@ -244,15 +239,13 @@ double OI::GetTargetArmPosition()
             targetArmPosition = FRONT_MID_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
-            isInBallPickup = false;
         }
 
         if (xbox->GetXButtonPressed())
         {
-            targetArmPosition = FRONT_BALL_PICKUP_POSITION;
+            targetArmPosition = NEUTRAL_ARM_POSITION;
             isArmInManual = false;
             isWristInManual = false;
-            isInBallPickup = true;
         }
 
         if (xbox->GetAButtonPressed())
@@ -260,7 +253,6 @@ double OI::GetTargetArmPosition()
             targetArmPosition = FRONT_LOW_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
-            isInBallPickup = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_UP)
@@ -268,15 +260,13 @@ double OI::GetTargetArmPosition()
             targetArmPosition = BACK_HIGH_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
-            isInBallPickup = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_LEFT)
         {
-            targetArmPosition = BACK_BALL_PICKUP_POSITION;
+            targetArmPosition = NEUTRAL_ARM_POSITION;
             isArmInManual = false;
             isWristInManual = false;
-            isInBallPickup = true;
         }
 
         if (xbox->GetPOV(0) == DPAD_RIGHT)
@@ -284,7 +274,6 @@ double OI::GetTargetArmPosition()
             targetArmPosition = BACK_MID_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
-            isInBallPickup = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
@@ -292,13 +281,10 @@ double OI::GetTargetArmPosition()
             targetArmPosition = BACK_LOW_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
-            isInBallPickup = false;
         }
     }
     else
     {
-        isInBallPickup = false;
-
         if (xbox->GetYButtonPressed())
         {
             targetArmPosition = FRONT_HIGH_HATCH_POSITION;
