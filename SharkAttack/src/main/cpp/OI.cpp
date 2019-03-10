@@ -184,6 +184,10 @@ bool OI::GetPlacingMode(){
     return isInBallMode;
 }
 
+bool OI::GetIsInBallPickup(){
+    return isInBallPickup;
+}
+
 bool OI::GetIsArmInManual(){
     return isArmInManual;
 }
