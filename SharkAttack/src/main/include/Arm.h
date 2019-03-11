@@ -50,6 +50,8 @@ private:
   double FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup);
   bool GetArmLimitSwitch();
   bool GetWristLimitSwitch();
+  void OpenHatchGripper();
+  void CloseHatchGripper();
 
   //Private Objects
   rev::CANSparkMax *leftArm, *rightArm, *leftWrist;
@@ -88,6 +90,7 @@ private:
   bool isWristMoving;
   bool isInHatchMode = true;
   bool isHatchGripperClosed = true;
+  bool wantHatchGripperClosed = true;
 
   bool areWheelsVeryDown;
   bool willArmEnterDZ;

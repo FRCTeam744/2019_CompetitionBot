@@ -96,6 +96,7 @@ Arm::Arm()
     previousTargetWristPosition = 0.0;
 
     armEncoder->SetPosition(0.0);
+    wristEncoder->SetPosition(0.0);
 
     isArmInBack = false;
     isArmSwitchingSides = false;
@@ -190,6 +191,10 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
 
     if (isArmInDZ)
     {
+        if(!isHatchGripperClosed) {
+            CloseHatchGripper();
+        }
+
         if(areWheelsVeryDown){
             isArmInManual = true;
             isWristInManual = true;
@@ -204,6 +209,9 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
     }
     else if (willArmEnterDZ)
     {
+        if(!isHatchGripperClosed) {
+            CloseHatchGripper();
+        }
         MoveWristToPosition(WRIST_NEUTRAL);
 
         if(!areWheelsUp){
@@ -212,6 +220,15 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
     }
     else if (!isArmInDZ && !willArmEnterDZ)
     {
+        if(isHatchGripperClosed == true && wantHatchGripperClosed == false) {
+            OpenHatchGripper();
+        }
+        else if(isHatchGripperClosed == false && wantHatchGripperClosed == true) {
+            CloseHatchGripper();
+        }
+        else {
+            //in desired state already
+        }
         MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup));
     }
     
@@ -221,11 +238,10 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
 
     if (isInBallMode == true)
     {
-        isInHatchMode = false;
-    }
-    else if (isInBallMode = false)
-    {
-        isInHatchMode = true;
+        if (isHatchGripperClosed){
+            // OpenHatchGripper();
+            wantHatchGripperClosed = false;
+        }
     }
 }
 
@@ -268,7 +284,7 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
 
     frc::SmartDashboard::PutNumber("Wrist Position Error", wristEncoder->GetPosition() - wristTargetPosition);
 
-    if ((isHatchGripperClosed == true) && (isInHatchMode == true))
+    if (wantHatchGripperClosed)
     {
         if (wristTargetRelativeToArm > WRIST_HATCH_LIMIT)
         {
@@ -286,17 +302,25 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
     }
 }
 
+void Arm::OpenHatchGripper() {
+    hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
+    isHatchGripperClosed = false;
+}
+
+void Arm::CloseHatchGripper() {
+    hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
+    isHatchGripperClosed = true;
+}
+
 void Arm::CheckHatchGripper(bool isClosed)
 {
     if (isClosed)
     {
-        hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
-        isHatchGripperClosed = true;
+        wantHatchGripperClosed = true;
     }
     else if (!isClosed)
     {
-        hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
-        isHatchGripperClosed = false;
+        wantHatchGripperClosed = false;
     }
 }
 

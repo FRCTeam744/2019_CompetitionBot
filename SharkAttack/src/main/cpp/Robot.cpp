@@ -16,10 +16,6 @@ static void VisionThread()
 
 void Robot::RobotInit()
 {
-  m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
-  m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-
   drivetrain = Drivetrain::GetInstance();
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
@@ -60,6 +56,8 @@ void Robot::RobotPeriodic()
   //oi->PutOnShuffleboard();
 
   drivetrain->LimelightSet(oi->SetLimelight());
+  drivetrain->PutData();
+  
 
   fourbar->PrintClimberRPM();
   arm->PrintArmInfo();
@@ -81,31 +79,12 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   isBeforeMatch = false;
-  m_autoSelected = m_chooser.GetSelected();
-  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
-  //     kAutoNameDefault);
-  std::cout << "Auto selected: " << m_autoSelected << std::endl;
-
-  if (m_autoSelected == kAutoDrive2)
-  {
-    // Custom Auto goes here
-  }
-  else
-  {
-    // Default Auto goes here
-  }
+  
 }
 
 void Robot::AutonomousPeriodic()
 {
-  if (m_autoSelected == kAutoDrive2)
-  {
-    // Custom Auto goes here
-  }
-  else
-  {
-    // Default Auto goes here
-  }
+  TeleopPeriodic();
 }
 
 void Robot::TeleopInit()
@@ -138,7 +117,6 @@ void Robot::TeleopPeriodic()
     // led->SwimmingShark();
   }
 
-  drivetrain->PutData();
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
   drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), true, false, true);

@@ -57,12 +57,6 @@ Drivetrain::Drivetrain()
     leftBack->SetSensorPhase(true);
     rightBack->SetSensorPhase(true);
 
-    //configure Talon encoder
-    armEncoderTalon = leftFront;
-    armEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
-    wristEncoderTalon = rightFront;
-    wristEncoderTalon->ConfigSelectedFeedbackSensor(CTRE_MagEncoder_Absolute, 0, 0);
-
     //Config for the Talon internal PID loop for speedControl
     leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
     rightBack->Config_kF(0, kFeedForwardGain, talonTimeout);
@@ -76,6 +70,7 @@ Drivetrain::Drivetrain()
     rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
 
     isInAutoDrive = false;
+    isInLLDrive = false;
 }
 
 //Public Methods
@@ -113,13 +108,14 @@ void Drivetrain::PutData()
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Right", rightDashboardSpeed);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "Ft-Sec-Left", leftDashboardSpeed);
 
-    // frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
-    // frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
+    frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
+    frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
     // frc::SmartDashboard::PutNumber("Target Area", targetArea);
 
-    currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
-                                                                                                                                                       //frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
-                                                                                                                                                       // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Current Distance", currentDistanceInches);
+    //current distance from target
+    // currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); 
+    //frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Current Distance", currentDistanceInches);
 }
 
 void Drivetrain::AutoDrive()
@@ -211,15 +207,14 @@ void Drivetrain::AutoDrive()
 
 void Drivetrain::TankDrive(double leftValue, double rightValue)
 {
-
-    if (!isInAutoDrive)
+    if (!isInAutoDrive && !isInLLDrive)
     {
         leftBack->Set(ControlMode::PercentOutput, leftValue);
         rightBack->Set(ControlMode::PercentOutput, rightValue);
-        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
-        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
-        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
-        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftMid->Set(ControlMode::PercentOutput, leftValue);
+        rightMid->Set(ControlMode::PercentOutput, rightValue);
+        leftFront->Set(ControlMode::PercentOutput, leftValue);
+        rightFront->Set(ControlMode::PercentOutput, rightValue);
     }
 }
 
@@ -256,8 +251,8 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
     {
         isInAutoDrive = true;
 
-        leftBack->Set(ControlMode::PercentOutput, 0.5);
-        rightBack->Set(ControlMode::PercentOutput, 0.5);
+        leftBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);
+        rightBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
         leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
@@ -286,7 +281,7 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
 {
     if (!wantLimelight)
     {
-        isInAutoDrive = false;
+        isInLLDrive = false;
         limelightFront->PutNumber("pipeline", 1.0);
         limelightBack->PutNumber("pipeline", 1.0);
         return;
@@ -322,26 +317,35 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
     double pitch = limelightPose.at(4);   frc::SmartDashboard::PutNumber("pitch", pitch);
     double yaw = limelightPose.at(5);  frc::SmartDashboard::PutNumber("yaw", yaw);
 
-    double yDesiredInches = -12.5;
+    if(X==0 && Y==0 && Z==0 && roll==0 && pitch==0 && yaw==0) {
+      //no signal from solvepnp, what do?
+
+       
+    }
+
+    // //get x/y and z desired
+    double xDesiredInches = -12.5;
     double zDesiredInches = -30;
 
-    double yErrorInches = (yDesiredInches - Y);
-    double thetaDesired_Robot = yErrorInches * kP_THETA_DESIRED;
+    double xErrorInches = (xDesiredInches - X);
+    double zErrorInches = zDesiredInches - Z;
+
+    // // if()
+    
+    double thetaDesired_Robot = xErrorInches * kP_THETA_DESIRED;
     if(thetaDesired_Robot > 30){
         thetaDesired_Robot = 30;
     } else if (thetaDesired_Robot < -30) {
         thetaDesired_Robot = -30;
     }
-    double thetaError_Robot = (thetaDesired_Robot - (roll - LL_THETA_OFFSET));
-
-    double zErrorInches = zDesiredInches - Z;
+    double thetaError_Robot = (thetaDesired_Robot - (pitch - LL_THETA_OFFSET));    
 
     double forwardSpeed = zErrorInches*kP_FORWARD;
     double adjustment = thetaDesired_Robot*kP_THETA;
 
 
 
-    if(abs(zErrorInches) < 1 && abs(yErrorInches) < 2 && abs(thetaDesired_Robot) < 5) {
+    if(abs(zErrorInches) < 1 && abs(xErrorInches) < 2 && abs(thetaDesired_Robot) < 5) {
         leftBack->Set(ControlMode::PercentOutput, 0);
         rightBack->Set(ControlMode::PercentOutput, 0);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);

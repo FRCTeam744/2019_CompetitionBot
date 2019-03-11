@@ -47,9 +47,6 @@ class Drivetrain {
 	TalonSRX *rightMid;
 	TalonSRX *rightBack;
 
-	TalonSRX *armEncoderTalon;
-	TalonSRX *wristEncoderTalon;
-
 	frc::DoubleSolenoid *gearShifter;
 
 	std::shared_ptr<NetworkTable> limelightFront;
@@ -88,10 +85,11 @@ class Drivetrain {
 	double currentDistanceInches = 0.0;
 
 	bool isInAutoDrive;
+	bool isInLLDrive;
 
 	//CONSTANTS FOR DRIVE
 	const double NU_PER_REV = 4096.0;
-	const double CIRCUMFERENCE_INCHES = 4.08;
+	const double CIRCUMFERENCE_INCHES = 4.08 * M_PI;
 	const double INCHES_PER_REV = CIRCUMFERENCE_INCHES;
 	const double NU_TO_FEET = (1.0 / NU_PER_REV) * INCHES_PER_REV * (1.0 / 12.0);
 	const double FEET_TO_NU = 1.0 / NU_TO_FEET;
