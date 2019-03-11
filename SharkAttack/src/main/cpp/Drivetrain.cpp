@@ -287,7 +287,14 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         return;
     }
 
-    if (!isInAutoDrive)
+    double X;
+    double Y;
+    double Z;
+    double roll;
+    double pitch;
+    double yaw;
+
+    if (!isInLLDrive) //init
     {
         //set limelight pipeline and turn on leds, once
         if (isFront)
@@ -298,7 +305,14 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         {
             limelightBack->PutNumber("pipeline", 0.0);
         }
-        isInAutoDrive = true;
+        isInLLDrive = true;
+
+        X = 0;
+        Y = 0;
+        Z = 0;
+        roll = 0;
+        pitch = 0;
+        yaw = 0;
     }
 
     if (isFront)
@@ -310,12 +324,16 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         limelightPose = limelightBack->GetNumberArray("camtran", 0.0);
     }
 
-    double X = limelightPose.at(0);   frc::SmartDashboard::PutNumber("X", X);
-    double Y = limelightPose.at(1);   frc::SmartDashboard::PutNumber("Y", Y);
-    double Z = limelightPose.at(2);   frc::SmartDashboard::PutNumber("Z", Z);
-    double roll = limelightPose.at(3);   frc::SmartDashboard::PutNumber("roll", roll);
-    double pitch = limelightPose.at(4);   frc::SmartDashboard::PutNumber("pitch", pitch);
-    double yaw = limelightPose.at(5);  frc::SmartDashboard::PutNumber("yaw", yaw);
+    try {
+        X = limelightPose.at(0);   frc::SmartDashboard::PutNumber("X", X);
+        Y = limelightPose.at(1);   frc::SmartDashboard::PutNumber("Y", Y);
+        Z = limelightPose.at(2);   frc::SmartDashboard::PutNumber("Z", Z);
+        roll = limelightPose.at(3);   frc::SmartDashboard::PutNumber("roll", roll);
+        pitch = limelightPose.at(4);   frc::SmartDashboard::PutNumber("pitch", pitch);
+        yaw = limelightPose.at(5);  frc::SmartDashboard::PutNumber("yaw", yaw);
+    } catch(...) {
+        return;
+    }
 
     if(X==0 && Y==0 && Z==0 && roll==0 && pitch==0 && yaw==0) {
       //no signal from solvepnp, what do?

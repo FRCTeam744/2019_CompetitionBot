@@ -124,7 +124,7 @@ class Drivetrain {
 	const double MIN_COMMAND = 0.23;
 
 	//Constants for the PID of talon
-	const double kP_SPEED = 0.2; //FOR SPEED CONTROL
+	const double kP_SPEED = 0; //0.2; //FOR SPEED CONTROL
 	const double kD_SPEED_RIGHT = 0.0;//kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
 	const double kD_SPEED_LEFT = 0.0;//kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
 
