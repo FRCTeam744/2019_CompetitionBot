@@ -71,6 +71,20 @@ Drivetrain::Drivetrain()
 
     isInAutoDrive = false;
     isInLLDrive = false;
+
+    //Config for Talon Loop Ramp Rates in seconds
+    leftFront->ConfigClosedloopRamp(talonRampRate);
+    leftMid->ConfigClosedloopRamp(talonRampRate);
+    leftBack->ConfigClosedloopRamp(talonRampRate);
+    rightFront->ConfigClosedloopRamp(talonRampRate);
+    rightMid->ConfigClosedloopRamp(talonRampRate);
+    rightBack->ConfigClosedloopRamp(talonRampRate);
+    leftFront->ConfigOpenloopRamp(talonRampRate);
+    leftMid->ConfigOpenloopRamp(talonRampRate);
+    leftBack->ConfigOpenloopRamp(talonRampRate);
+    rightFront->ConfigOpenloopRamp(talonRampRate);
+    rightMid->ConfigOpenloopRamp(talonRampRate);
+    rightBack->ConfigOpenloopRamp(talonRampRate);
 }
 
 //Public Methods
@@ -113,7 +127,7 @@ void Drivetrain::PutData()
     // frc::SmartDashboard::PutNumber("Target Area", targetArea);
 
     //current distance from target
-    // currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); 
+    // currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180));
     //frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Current Distance", currentDistanceInches);
 }
@@ -281,7 +295,8 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
 {
     if (!wantLimelight)
     {
-        if(isInLLDrive) {
+        if (isInLLDrive)
+        {
             limelightFront->PutNumber("pipeline", 1.0);
             limelightBack->PutNumber("pipeline", 1.0);
         }
@@ -321,58 +336,90 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         prevRoll = 0;
         prevPitch = 0;
         prevYaw = 0;
-        
     }
 
     if (isFront)
-    {  
-        if(limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) == 0.0) {
+    {
+        if (limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) == 0.0)
+        {
             limelightPose = limelightFront->GetNumberArray("camtran", 0.0);
         }
-        else {
+        else
+        {
             return;
         }
     }
     else
     {
-        if(limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) == 0.0) {
+        if (limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) == 0.0)
+        {
             limelightPose = limelightBack->GetNumberArray("camtran", 0.0);
         }
-        else {
+        else
+        {
             return;
-        }    
+        }
     }
 
-    try {
-        X = limelightPose.at(0);   frc::SmartDashboard::PutNumber("X", X);
-        Y = limelightPose.at(1);   frc::SmartDashboard::PutNumber("Y", Y);
-        Z = limelightPose.at(2);   frc::SmartDashboard::PutNumber("Z", Z);
-        roll = limelightPose.at(3);   frc::SmartDashboard::PutNumber("roll", roll);
-        pitch = limelightPose.at(4);   frc::SmartDashboard::PutNumber("pitch", pitch);
-        yaw = limelightPose.at(5);  frc::SmartDashboard::PutNumber("yaw", yaw);
-        
-        if(X==0 && Y==0 && Z==0 && roll==0 && pitch==0 && yaw==0) {
+    try
+    {
+        X = limelightPose.at(0);
+        frc::SmartDashboard::PutNumber("X", X);
+        Y = limelightPose.at(1);
+        frc::SmartDashboard::PutNumber("Y", Y);
+        Z = limelightPose.at(2);
+        frc::SmartDashboard::PutNumber("Z", Z);
+        roll = limelightPose.at(3);
+        frc::SmartDashboard::PutNumber("roll", roll);
+        pitch = limelightPose.at(4);
+        frc::SmartDashboard::PutNumber("pitch", pitch);
+        yaw = limelightPose.at(5);
+        frc::SmartDashboard::PutNumber("yaw", yaw);
+
+        if (X == 0 && Y == 0 && Z == 0 && roll == 0 && pitch == 0 && yaw == 0)
+        {
             //no signal from solvepnp, what do?
             isInLLDrive = false;
             TankDrive(leftTank, rightTank);
             isInLLDrive = true;
-            return;  
+            return;
         }
-        if(prevX==0 && prevY==0 && prevZ==0 && prevRoll==0 && prevPitch==0 && prevYaw==0) {
+        if (prevX == 0 && prevY == 0 && prevZ == 0 && prevRoll == 0 && prevPitch == 0 && prevYaw == 0)
+        {
             //first run through - no filter
-        } else{
-            X = alpha*X + (1-alpha)*prevX;
-            Y = alpha*Y + (1-alpha)*prevY;
+        }
+        else
+        {
+            X = alpha * X + (1 - alpha) * prevX;
+            Y = alpha * Y + (1 - alpha) * prevY;
             // Z = alpha*Z + (1-alpha)*prevZ;
-            roll = alpha*roll + (1-alpha)*prevRoll;
-            pitch = alpha*pitch + (1-alpha)*prevPitch;
-            yaw = alpha*yaw + (1-alpha)*prevYaw;
-            if(abs(X-prevX) > 5) { X = prevX; }
-            if(abs(Y-prevY) > 5) { Y = prevY; }
-            if(abs(Z-prevZ) > 5) { Z = prevZ; }
-            if(abs(roll-prevRoll) > 5) { roll = prevRoll; }
-            if(abs(yaw-prevYaw) > 5) { yaw = prevYaw; }
-            if(abs(pitch-prevPitch) > 5) { pitch = prevPitch; }
+            roll = alpha * roll + (1 - alpha) * prevRoll;
+            pitch = alpha * pitch + (1 - alpha) * prevPitch;
+            yaw = alpha * yaw + (1 - alpha) * prevYaw;
+            if (abs(X - prevX) > 5)
+            {
+                X = prevX;
+            }
+            if (abs(Y - prevY) > 5)
+            {
+                Y = prevY;
+            }
+            if (abs(Z - prevZ) > 5)
+            {
+                Z = prevZ;
+            }
+            if (abs(roll - prevRoll) > 5)
+            {
+                roll = prevRoll;
+            }
+            if (abs(yaw - prevYaw) > 5)
+            {
+                yaw = prevYaw;
+            }
+            if (abs(pitch - prevPitch) > 5)
+            {
+                pitch = prevPitch;
+            }
         }
 
         frc::SmartDashboard::PutNumber("Filter X", X);
@@ -388,48 +435,56 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         prevRoll = roll;
         prevPitch = pitch;
         prevYaw = yaw;
-    } catch(...) {
+    }
+    catch (...)
+    {
         return;
     }
 
-    if(X==0 && Y==0 && Z==0 && roll==0 && pitch==0 && yaw==0) {
-      //no signal from solvepnp, what do?
-        return;  
+    if (X == 0 && Y == 0 && Z == 0 && roll == 0 && pitch == 0 && yaw == 0)
+    {
+        //no signal from solvepnp, what do?
+        return;
     }
 
     // //get x/y and z desired
-    double xDesiredInches = 0+LL_FRONT_X_OFFSET;
+    double xDesiredInches = 0 + LL_FRONT_X_OFFSET;
     double zDesiredInches = -40;
 
     double xErrorInches_robot = (xDesiredInches - X);
     double zErrorInches = zDesiredInches - Z;
 
     // // if()
-    
+
     double thetaDesired_Robot = xErrorInches_robot * kP_THETA_DESIRED;
-    if(thetaDesired_Robot > 30){
+    if (thetaDesired_Robot > 30)
+    {
         thetaDesired_Robot = 30;
-    } else if (thetaDesired_Robot < -30) {
+    }
+    else if (thetaDesired_Robot < -30)
+    {
         thetaDesired_Robot = -30;
     }
-    double thetaError_Robot = (thetaDesired_Robot - (pitch - LL_FRONT_THETA_OFFSET));    
+    double thetaError_Robot = (thetaDesired_Robot - (pitch - LL_FRONT_THETA_OFFSET));
 
-    double forwardSpeed = zErrorInches*kP_FORWARD;
-    if(forwardSpeed > .3) {
+    double forwardSpeed = zErrorInches * kP_FORWARD;
+    if (forwardSpeed > .3)
+    {
         forwardSpeed = .3;
     }
-    else if (forwardSpeed < -.3) {
+    else if (forwardSpeed < -.3)
+    {
         forwardSpeed = -.3;
     }
-    double adjustment = thetaError_Robot*kP_THETA;
+    double adjustment = thetaError_Robot * kP_THETA;
 
     frc::SmartDashboard::PutNumber("Desired Theta (Robot)", thetaDesired_Robot);
     frc::SmartDashboard::PutNumber("Theta Error (Robot)", thetaError_Robot);
     frc::SmartDashboard::PutNumber("X Error (Robot)", xErrorInches_robot);
     frc::SmartDashboard::PutNumber("Z Error", zErrorInches);
-    
 
-    if(abs(zErrorInches) < 1 && abs(xErrorInches_robot) < 2 && abs(thetaDesired_Robot) < 5) {
+    if (abs(zErrorInches) < 1 && abs(xErrorInches_robot) < 2 && abs(thetaDesired_Robot) < 5)
+    {
         leftBack->Set(ControlMode::PercentOutput, 0);
         rightBack->Set(ControlMode::PercentOutput, 0);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
@@ -437,7 +492,8 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
     }
-    else{
+    else
+    {
         leftBack->Set(ControlMode::PercentOutput, forwardSpeed - adjustment);
         rightBack->Set(ControlMode::PercentOutput, forwardSpeed + adjustment);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
