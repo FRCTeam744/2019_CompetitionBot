@@ -71,21 +71,6 @@ Drivetrain::Drivetrain()
 
     isInAutoDrive = false;
     isInLLDrive = false;
-
-    //Config for Talon Loop Ramp Rates in seconds
-    leftFront->ConfigClosedloopRamp(talonRampRate);
-    leftMid->ConfigClosedloopRamp(talonRampRate);
-    leftBack->ConfigClosedloopRamp(talonRampRate);
-    rightFront->ConfigClosedloopRamp(talonRampRate);
-    rightMid->ConfigClosedloopRamp(talonRampRate);
-    rightBack->ConfigClosedloopRamp(talonRampRate);
-    leftFront->ConfigOpenloopRamp(talonRampRate);
-    leftMid->ConfigOpenloopRamp(talonRampRate);
-    leftBack->ConfigOpenloopRamp(talonRampRate);
-    rightFront->ConfigOpenloopRamp(talonRampRate);
-    rightMid->ConfigOpenloopRamp(talonRampRate);
-    rightBack->ConfigOpenloopRamp(talonRampRate);
-
 }
 
 //Public Methods
