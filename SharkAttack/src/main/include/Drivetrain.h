@@ -143,4 +143,6 @@ class Drivetrain {
 
 	const double talonTimeout = 10; //number of ms before the talon stops trying to configure a specific value
 
+	//Talon Loop Ramp Rates in seconds
+	const double talonRampRate = 0.25;
 };
