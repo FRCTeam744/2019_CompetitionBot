@@ -293,13 +293,19 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
     }
 }
 
-void Drivetrain::IsTargetNotAcquired(double leftTank, double rightTank) {
-	isInLLDrive = false;
-	TankDrive(leftTank, rightTank);
-	isInLLDrive = true;
-	isTargetAcquired = false;
+void Drivetrain::IsTargetNotAcquired(double leftTank, double rightTank)
+{
+    isInLLDrive = false;
+    TankDrive(leftTank, rightTank);
+    isInLLDrive = true;
+    isTargetAcquired = false;
 }
 
+void Drivetrain::SetDesiredLLDistances(double xDesiredInches, double zDesiredInches)
+{
+    this->xDesiredInches = xDesiredInches;
+    this->zDesiredInches = zDesiredInches;
+}
 
 void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool isFront, double leftTank, double rightTank)
 {
@@ -320,7 +326,7 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
     double roll;
     double pitch;
     double yaw;
-	int counter;
+    int counter;
 
     if (!isInLLDrive) //init
     {
@@ -351,112 +357,111 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
 
     if (isFront)
     {
-        if(limelightFront->GetNumber("tv", 0.0) == 0 || limelightFront->GetNumber("getpipe", 0.0) != 0.0)
+        if (limelightFront->GetNumber("tv", 0.0) == 0 || limelightFront->GetNumber("getpipe", 0.0) != 0.0)
         {
             IsTargetNotAcquired(leftTank, rightTank);
-			return;
+            return;
         }
-		
-		//first time seeing, or re-seeing the target
-		if(limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) == 0.0 && !isTargetAcquired) {
-			isTargetAcquired = true;
-			counter = 0;
-		}
-		
-		limelightPose = limelightFront->GetNumberArray("camtran", 0.0);
+
+        //first time seeing, or re-seeing the target
+        if (limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) == 0.0 && !isTargetAcquired)
+        {
+            isTargetAcquired = true;
+            counter = 0;
+        }
+
+        limelightPose = limelightFront->GetNumberArray("camtran", 0.0);
     }
     else
     {
-        if(limelightBack->GetNumber("tv", 0.0) == 0 || limelightBack->GetNumber("getpipe", 0.0) != 0.0)
+        if (limelightBack->GetNumber("tv", 0.0) == 0 || limelightBack->GetNumber("getpipe", 0.0) != 0.0)
         {
             IsTargetNotAcquired(leftTank, rightTank);
-			return;
+            return;
         }
-		//first time seeing, or re-seeing the target
-		if(limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) == 0.0 && !isTargetAcquired) {
-			isTargetAcquired = true;
-			counter = 0;
-		}
-		limelightPose = limelightBack->GetNumberArray("camtran", 0.0);
+        //first time seeing, or re-seeing the target
+        if (limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) == 0.0 && !isTargetAcquired)
+        {
+            isTargetAcquired = true;
+            counter = 0;
+        }
+        limelightPose = limelightBack->GetNumberArray("camtran", 0.0);
     }
 
-    
-	X = limelightPose.at(0);
-	frc::SmartDashboard::PutNumber("X", X);
-	Y = limelightPose.at(1);
-	frc::SmartDashboard::PutNumber("Y", Y);
-	Z = limelightPose.at(2);
-	frc::SmartDashboard::PutNumber("Z", Z);
-	roll = limelightPose.at(3);
-	frc::SmartDashboard::PutNumber("roll", roll);
-	pitch = limelightPose.at(4);
-	frc::SmartDashboard::PutNumber("pitch", pitch);
-	yaw = limelightPose.at(5);
-	frc::SmartDashboard::PutNumber("yaw", yaw);
+    X = limelightPose.at(0);
+    frc::SmartDashboard::PutNumber("X", X);
+    Y = limelightPose.at(1);
+    frc::SmartDashboard::PutNumber("Y", Y);
+    Z = limelightPose.at(2);
+    frc::SmartDashboard::PutNumber("Z", Z);
+    roll = limelightPose.at(3);
+    frc::SmartDashboard::PutNumber("roll", roll);
+    pitch = limelightPose.at(4);
+    frc::SmartDashboard::PutNumber("pitch", pitch);
+    yaw = limelightPose.at(5);
+    frc::SmartDashboard::PutNumber("yaw", yaw);
 
-	if (X == 0 && Y == 0 && Z == 0 && roll == 0 && pitch == 0 && yaw == 0)
-	{
-		//no signal from solvepnp, what do?
-		IsTargetNotAcquired(leftTank, rightTank);
-		return;
-	}
-	
-	
-	//filter data (low-pass)
-	X = alpha * X + (1 - alpha) * prevX;
-	Y = alpha * Y + (1 - alpha) * prevY;
-	// Z = alpha*Z + (1-alpha)*prevZ;
-	roll = alpha * roll + (1 - alpha) * prevRoll;
-	pitch = alpha * pitch + (1 - alpha) * prevPitch;
-	yaw = alpha * yaw + (1 - alpha) * prevYaw;
-	counter++;
-	
-	if (counter > START_FILTERING_JUMPS)
-	{	
-		if (abs(X - prevX) > 5)
-		{
-			X = prevX;
-		}
-		if (abs(Y - prevY) > 5)
-		{
-			Y = prevY;
-		}
-		if (abs(Z - prevZ) > 5)
-		{
-			Z = prevZ;
-		}
-		if (abs(roll - prevRoll) > 5)
-		{
-			roll = prevRoll;
-		}
-		if (abs(yaw - prevYaw) > 5)
-		{
-			yaw = prevYaw;
-		}
-		if (abs(pitch - prevPitch) > 5)
-		{
-			pitch = prevPitch;
-		}
-	}
+    if (X == 0 && Y == 0 && Z == 0 && roll == 0 && pitch == 0 && yaw == 0)
+    {
+        //no signal from solvepnp, what do?
+        IsTargetNotAcquired(leftTank, rightTank);
+        return;
+    }
 
-	frc::SmartDashboard::PutNumber("Filter X", X);
-	frc::SmartDashboard::PutNumber("Filter Y", Y);
-	frc::SmartDashboard::PutNumber("Filter Z", Z);
-	frc::SmartDashboard::PutNumber("Filter roll", roll);
-	frc::SmartDashboard::PutNumber("Filter pitch", pitch);
-	frc::SmartDashboard::PutNumber("Filter yaw", yaw);
+    //filter data (low-pass)
+    X = alpha * X + (1 - alpha) * prevX;
+    Y = alpha * Y + (1 - alpha) * prevY;
+    // Z = alpha*Z + (1-alpha)*prevZ;
+    roll = alpha * roll + (1 - alpha) * prevRoll;
+    pitch = alpha * pitch + (1 - alpha) * prevPitch;
+    yaw = alpha * yaw + (1 - alpha) * prevYaw;
+    counter++;
 
-	prevX = X;
-	prevY = Y;
-	prevZ = Z;
-	prevRoll = roll;
-	prevPitch = pitch;
-	prevYaw = yaw;
+    if (counter > START_FILTERING_JUMPS)
+    {
+        if (abs(X - prevX) > 5)
+        {
+            X = prevX;
+        }
+        if (abs(Y - prevY) > 5)
+        {
+            Y = prevY;
+        }
+        if (abs(Z - prevZ) > 5)
+        {
+            Z = prevZ;
+        }
+        if (abs(roll - prevRoll) > 5)
+        {
+            roll = prevRoll;
+        }
+        if (abs(yaw - prevYaw) > 5)
+        {
+            yaw = prevYaw;
+        }
+        if (abs(pitch - prevPitch) > 5)
+        {
+            pitch = prevPitch;
+        }
+    }
 
+    frc::SmartDashboard::PutNumber("Filter X", X);
+    frc::SmartDashboard::PutNumber("Filter Y", Y);
+    frc::SmartDashboard::PutNumber("Filter Z", Z);
+    frc::SmartDashboard::PutNumber("Filter roll", roll);
+    frc::SmartDashboard::PutNumber("Filter pitch", pitch);
+    frc::SmartDashboard::PutNumber("Filter yaw", yaw);
 
-    // //get x/y and z desired
-    double xDesiredInches = 0 + LL_FRONT_X_OFFSET;
-    double zDesiredInches = -36;
+    prevX = X;
+    prevY = Y;
+    prevZ = Z;
+    prevRoll = roll;
+    prevPitch = pitch;
+    prevYaw = yaw;
+
+    // // //get x/y and z desired
+    // double xDesiredInches = 0 + LL_FRONT_X_OFFSET;
+    // double zDesiredInches = -36;
 
     double xErrorInches_robot = (xDesiredInches - X);
     double zErrorInches = zDesiredInches - Z;

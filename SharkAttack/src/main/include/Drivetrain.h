@@ -25,6 +25,7 @@ class Drivetrain
 	double LimelightGet(std::string key);
 	void CheckSwitchGears(bool isHighGear);
 	void AutoDriveForward(bool isBut, bool isVelocityControl);
+	void SetDesiredLLDistances(double xDesiredInches, double zDesiredInches);
 	void AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool isFront, double leftTank, double rightTank);
 	// void PutOnShuffleboard();
 
@@ -91,6 +92,8 @@ class Drivetrain
 
 	double currentDistanceInches = 0.0;
 
+	double xDesiredInches;
+	double zDesiredInches;
 	bool isInAutoDrive;
 	bool isInLLDrive;
 

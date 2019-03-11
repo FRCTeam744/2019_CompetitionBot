@@ -118,9 +118,8 @@ void Robot::TeleopPeriodic()
   }
 
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
-
+  GetDesiredLLDistances(oi->GetTargetArmPosition());
   drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), true, false, true, oi->GetLeftDriveInput(), oi->GetRightDriveInput());
-
 //   arm->ManualRotateArm(oi->GetArmInput());
 //   arm->ManualRotateWrist(oi->GetWristInput());
   arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode(), oi->GetIsInBallPickup());
@@ -174,3 +173,32 @@ int main()
   return frc::StartRobot<Robot>();
 }
 #endif
+
+void Robot::GetDesiredLLDistances(double armTargetPosition)
+{
+    if ((armTargetPosition == oi->FRONT_HIGH_BALL_POSITION) || (armTargetPosition == oi->BACK_HIGH_BALL_POSITION))
+    {
+        
+    }
+    if ((armTargetPosition == oi->FRONT_MID_BALL_POSITION) || (armTargetPosition == oi->BACK_MID_BALL_POSITION))
+    {
+        
+    }
+    if ((armTargetPosition == oi->FRONT_LOW_BALL_POSITION) || (armTargetPosition == oi->BACK_LOW_BALL_POSITION))
+    {
+        
+    }
+    if ((armTargetPosition == oi->FRONT_HIGH_HATCH_POSITION) || (armTargetPosition == oi->BACK_HIGH_HATCH_POSITION))
+    {
+        
+    }
+    if ((armTargetPosition == oi->FRONT_MID_HATCH_POSITION) || (armTargetPosition == oi->BACK_MID_HATCH_POSITION))
+    {
+        xDesiredInches = 0;
+        zDesiredInches = -36;
+    }
+    if ((armTargetPosition == oi->FRONT_LOW_HATCH_POSITION) || (armTargetPosition == oi->BACK_LOW_HATCH_POSITION))
+    {
+        
+    }
+}
