@@ -281,9 +281,11 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
 {
     if (!wantLimelight)
     {
+        if(isInLLDrive) {
+            limelightFront->PutNumber("pipeline", 1.0);
+            limelightBack->PutNumber("pipeline", 1.0);
+        }
         isInLLDrive = false;
-        limelightFront->PutNumber("pipeline", 1.0);
-        limelightBack->PutNumber("pipeline", 1.0);
         return;
     }
 
