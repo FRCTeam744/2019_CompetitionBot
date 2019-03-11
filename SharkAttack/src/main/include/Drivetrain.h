@@ -32,6 +32,7 @@ class Drivetrain
 	static Drivetrain *s_instance;
 
 	Drivetrain();
+	void IsTargetNotAcquired(double leftTank, double rightTank);
 
 	//Private Instance Objects
 
@@ -120,6 +121,9 @@ class Drivetrain
 	const double LL_FRONT_X_OFFSET = 12.5;
 	const double kP_FORWARD = .2 / 10;
 	const double kP_THETA = .2 / 30;
+	const double START_FILTERING_JUMPS = 15;
+	bool isTargetAcquired;
+
 
 	const double DESIRED_DISTANCE_INCHES = 65;									//desired distance from target
 	const double kP_DIST_FPS = -.05;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
