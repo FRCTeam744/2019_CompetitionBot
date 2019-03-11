@@ -119,7 +119,7 @@ void Robot::TeleopPeriodic()
 
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
-  drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), true, false, true);
+  drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), true, false, true, oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
 //   arm->ManualRotateArm(oi->GetArmInput());
 //   arm->ManualRotateWrist(oi->GetWristInput());

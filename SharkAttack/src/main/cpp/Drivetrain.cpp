@@ -277,7 +277,7 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
     }
 }
 
-void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool isFront)
+void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool isFront, double leftTank, double rightTank)
 {
     if (!wantLimelight)
     {
@@ -313,15 +313,32 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         roll = 0;
         pitch = 0;
         yaw = 0;
+        prevX = 0;
+        prevY = 0;
+        prevZ = 0;
+        prevRoll = 0;
+        prevPitch = 0;
+        prevYaw = 0;
+        
     }
 
     if (isFront)
-    {
-        limelightPose = limelightFront->GetNumberArray("camtran", 0.0);
+    {  
+        if(limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) == 0.0) {
+            limelightPose = limelightFront->GetNumberArray("camtran", 0.0);
+        }
+        else {
+            return;
+        }
     }
     else
     {
-        limelightPose = limelightBack->GetNumberArray("camtran", 0.0);
+        if(limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) == 0.0) {
+            limelightPose = limelightBack->GetNumberArray("camtran", 0.0);
+        }
+        else {
+            return;
+        }    
     }
 
     try {
@@ -331,39 +348,86 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         roll = limelightPose.at(3);   frc::SmartDashboard::PutNumber("roll", roll);
         pitch = limelightPose.at(4);   frc::SmartDashboard::PutNumber("pitch", pitch);
         yaw = limelightPose.at(5);  frc::SmartDashboard::PutNumber("yaw", yaw);
+        
+        if(X==0 && Y==0 && Z==0 && roll==0 && pitch==0 && yaw==0) {
+            //no signal from solvepnp, what do?
+            isInLLDrive = false;
+            TankDrive(leftTank, rightTank);
+            isInLLDrive = true;
+            return;  
+        }
+        if(prevX==0 && prevY==0 && prevZ==0 && prevRoll==0 && prevPitch==0 && prevYaw==0) {
+            //first run through - no filter
+        } else{
+            X = alpha*X + (1-alpha)*prevX;
+            Y = alpha*Y + (1-alpha)*prevY;
+            // Z = alpha*Z + (1-alpha)*prevZ;
+            roll = alpha*roll + (1-alpha)*prevRoll;
+            pitch = alpha*pitch + (1-alpha)*prevPitch;
+            yaw = alpha*yaw + (1-alpha)*prevYaw;
+            if(abs(X-prevX) > 5) { X = prevX; }
+            if(abs(Y-prevY) > 5) { Y = prevY; }
+            if(abs(Z-prevZ) > 5) { Z = prevZ; }
+            if(abs(roll-prevRoll) > 5) { roll = prevRoll; }
+            if(abs(yaw-prevYaw) > 5) { yaw = prevYaw; }
+            if(abs(pitch-prevPitch) > 5) { pitch = prevPitch; }
+        }
+
+        frc::SmartDashboard::PutNumber("Filter X", X);
+        frc::SmartDashboard::PutNumber("Filter Y", Y);
+        frc::SmartDashboard::PutNumber("Filter Z", Z);
+        frc::SmartDashboard::PutNumber("Filter roll", roll);
+        frc::SmartDashboard::PutNumber("Filter pitch", pitch);
+        frc::SmartDashboard::PutNumber("Filter yaw", yaw);
+
+        prevX = X;
+        prevY = Y;
+        prevZ = Z;
+        prevRoll = roll;
+        prevPitch = pitch;
+        prevYaw = yaw;
     } catch(...) {
         return;
     }
 
     if(X==0 && Y==0 && Z==0 && roll==0 && pitch==0 && yaw==0) {
       //no signal from solvepnp, what do?
-
-       
+        return;  
     }
 
     // //get x/y and z desired
-    double xDesiredInches = -12.5;
-    double zDesiredInches = -30;
+    double xDesiredInches = 0+LL_FRONT_X_OFFSET;
+    double zDesiredInches = -40;
 
-    double xErrorInches = (xDesiredInches - X);
+    double xErrorInches_robot = (xDesiredInches - X);
     double zErrorInches = zDesiredInches - Z;
 
     // // if()
     
-    double thetaDesired_Robot = xErrorInches * kP_THETA_DESIRED;
+    double thetaDesired_Robot = xErrorInches_robot * kP_THETA_DESIRED;
     if(thetaDesired_Robot > 30){
         thetaDesired_Robot = 30;
     } else if (thetaDesired_Robot < -30) {
         thetaDesired_Robot = -30;
     }
-    double thetaError_Robot = (thetaDesired_Robot - (pitch - LL_THETA_OFFSET));    
+    double thetaError_Robot = (thetaDesired_Robot - (pitch - LL_FRONT_THETA_OFFSET));    
 
     double forwardSpeed = zErrorInches*kP_FORWARD;
-    double adjustment = thetaDesired_Robot*kP_THETA;
+    if(forwardSpeed > .3) {
+        forwardSpeed = .3;
+    }
+    else if (forwardSpeed < -.3) {
+        forwardSpeed = -.3;
+    }
+    double adjustment = thetaError_Robot*kP_THETA;
 
+    frc::SmartDashboard::PutNumber("Desired Theta (Robot)", thetaDesired_Robot);
+    frc::SmartDashboard::PutNumber("Theta Error (Robot)", thetaError_Robot);
+    frc::SmartDashboard::PutNumber("X Error (Robot)", xErrorInches_robot);
+    frc::SmartDashboard::PutNumber("Z Error", zErrorInches);
+    
 
-
-    if(abs(zErrorInches) < 1 && abs(xErrorInches) < 2 && abs(thetaDesired_Robot) < 5) {
+    if(abs(zErrorInches) < 1 && abs(xErrorInches_robot) < 2 && abs(thetaDesired_Robot) < 5) {
         leftBack->Set(ControlMode::PercentOutput, 0);
         rightBack->Set(ControlMode::PercentOutput, 0);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
@@ -372,11 +436,11 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
     }
     else{
-        // leftBack->Set(ControlMode::Velocity, forwardSpeed + adjustment);
-        // rightBack->Set(ControlMode::Velocity, forwardSpeed - adjustment);
-        // leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
-        // rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
-        // leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
-        // rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftBack->Set(ControlMode::PercentOutput, forwardSpeed - adjustment);
+        rightBack->Set(ControlMode::PercentOutput, forwardSpeed + adjustment);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
     }
 }
