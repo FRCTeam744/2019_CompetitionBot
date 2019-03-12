@@ -96,3 +96,4 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
     if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
        var.SetBoolean(val);
    }
+}
