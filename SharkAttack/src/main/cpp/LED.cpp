@@ -29,6 +29,7 @@ LED::LED()
     catch (const std::exception &e)
     {
         frc::SmartDashboard::PutString("LED Data", "Error: Could not connect to arduino");
+        std::cout << "ERROR: Could not connect to arduino!";
     }
 }
 

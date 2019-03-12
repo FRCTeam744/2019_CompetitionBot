@@ -366,15 +366,15 @@ void Arm::PrintArmInfo()
     // frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
 
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->leftArmCurrentArmWrist, leftArm->GetOutputCurrent());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->rightArmCurrentArmWrist, rightArm->GetOutputCurrent()); 
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->armEncoderDriver , armEncoder->GetPosition());
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->rightArmCurrentArmWrist, rightArm->GetOutputCurrent());
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->armEncoderDriver, armEncoder->GetPosition());
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->armEncoderPreComp, armEncoder->GetPosition());
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->wristEncoderDriver, wristEncoder->GetPosition());
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->wristEncoderPreComp, wristEncoder->GetPosition());
 
-    //frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
     frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
+    ShuffleManager::GetInstance()->OnShfl()
 }
 
 void Arm::PrintArmInfotoConsole()
@@ -388,15 +388,15 @@ void Arm::PrintArmInfotoConsole()
             std::cout << "Arm Amps Right: " << rightArm->GetOutputCurrent();
             compPrintCount = 0;
         }
-        else
+    }
+    else
+    {
+        printCount++;
+        if (printCount > 30)
         {
-            printCount++;
-            if (printCount > 30)
-            {
-                std::cout << "Arm Amps Testing Left: " << leftArm->GetOutputCurrent();
-                std::cout << "Arm Amps Testing Right: " << rightArm->GetOutputCurrent();
-                printCount = 0;
-            }
+        std::cout << "Arm Amps Testing Left: " << leftArm->GetOutputCurrent();
+        std::cout << "Arm Amps Testing Right: " << rightArm->GetOutputCurrent();
+        printCount = 0;
         }
     }
 }

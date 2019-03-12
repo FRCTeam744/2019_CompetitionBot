@@ -37,14 +37,24 @@ class ShuffleManager {
 		nt::NetworkTableEntry rightDrivePreComp;
 		nt::NetworkTableEntry headingVision;
 		nt::NetworkTableEntry skewVision;
-		nt::NetworkTableEntry currentDistanceInchesDriver;
+		nt::NetworkTableEntry currentDistanceInchesVision;
 		nt::NetworkTableEntry speedErrorRightPreComp;
 		nt::NetworkTableEntry speedErrorLeftPreComp;
-
+		nt::NetworkTableEntry checkDriveTrainGearDriver;
 
 		//OI.cpp?
 
 		//Fourbar.cpp
+		nt::NetworkTableEntry checkRetractedTrippedDriver;
+		nt::NetworkTableEntry checkExtendedTrippedDriver;
+		nt::NetworkTableEntry fourbarEncoderDriver;
+		nt::NetworkTableEntry checkRetractedTrippedFourbar;
+		nt::NetworkTableEntry checkExtendedTrippedFourbar;
+		nt::NetworkTableEntry fourbarEncoderFourbar;
+		nt::NetworkTableEntry fourbarRotationsToHomeFourbar;
+		nt::NetworkTableEntry fourbarCurrentFourbar;
+		nt::NetworkTableEntry fourbarRPMFourbar;
+		nt::NetworkTableEntry fourbarRotationsSinceRetractFourbar;
 
 		//Arm.cpp
 		nt::NetworkTableEntry armEncoderDriver;
@@ -53,12 +63,18 @@ class ShuffleManager {
 		nt::NetworkTableEntry wristEncoderPreComp;
 		nt::NetworkTableEntry leftArmCurrentArmWrist;
 		nt::NetworkTableEntry rightArmCurrentArmWrist;
+		nt::NetworkTableEntry armVelocityErrorArmWrist;
+		nt::NetworkTableEntry armVelocityArmWrist;
+		nt::NetworkTableEntry checkWristModeDriver;
+		nt::NetworkTableEntry checkHatchGripperDriver;
+
 
         void ShuffleInit();
 		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val);
-		void OnShfl(frc::ShuffleboardTab *tab, const char* label, float val);
+		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, float val);
 		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, int val);
-		void OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val);
+		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, const char* val);
+		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val);
 
 		void VariableInit();
 		//void GetShuffleVariable();

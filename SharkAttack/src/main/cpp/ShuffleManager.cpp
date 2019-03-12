@@ -29,12 +29,12 @@ void ShuffleManager::ShuffleInit(){ //variables were instantiated in .h, giving 
     FourbarTab = &frc::Shuffleboard::GetTab("Fourbar Testing");
 }
 
-void ShuffleManager::VariableInit(){ //variables were instantiated in .h, giving them values/initializing them here
+void ShuffleManager::VariableInit(){ //variables were declared in .h, giving them values/initializing them here
     leftDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     rightDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     leftDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     rightDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Right", 0.0).GetEntry();
-    currentDistanceInchesDriver = ShuffleManager::DriverTab->Add("Current Distance Inches", 0.0).GetEntry();    
+    currentDistanceInchesVision = ShuffleManager::VisionTab->Add("Current Distance Inches", 0.0).GetEntry();    
     speedErrorLeftPreComp = ShuffleManager::PreCompTab->Add("Speed Error Left", 0.0).GetEntry();
     speedErrorRightPreComp = ShuffleManager::PreCompTab->Add("Speed Error Right", 0.0).GetEntry();
     armEncoderDriver = ShuffleManager::DriverTab->Add("Arm Encoder", 0.0).GetEntry();
@@ -43,6 +43,11 @@ void ShuffleManager::VariableInit(){ //variables were instantiated in .h, giving
     rightArmCurrentArmWrist = ShuffleManager::ArmWristTab->Add("Right Arm Current", 0.0).GetEntry();
     wristEncoderDriver = ShuffleManager::DriverTab->Add("Wrist Encoder", 0.0).GetEntry();
     wristEncoderPreComp = ShuffleManager::PreCompTab->Add("Wrist Encoder", 0.0).GetEntry();
+    headingVision = ShuffleManager::VisionTab->Add("Heading", 0.0).GetEntry();
+    skewVision = ShuffleManager::VisionTab->Add("Skew", 0.0).GetEntry();
+    checkDriveTrainGearDriver
+    checkHatchGripperDriver
+    checkWristModeDriver
 
 }
 
@@ -56,20 +61,24 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
     }    
 }
 
-void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, float val){
+void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, float val){
     if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
-        tab->Add(label, val);
+        var.SetDouble((double)val);
    }
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, int val){
     if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
-        var.SetDouble((int)val); //check this, no getInt exists
+        var.SetDouble((int)val);
    }
 }
 
-void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val){
+void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, const char* val){
     if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
-        tab->Add(label, val);
+        var.SetString(val);
    }
 }
+void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val){
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
+       var.SetBoolean(val);
+   }
