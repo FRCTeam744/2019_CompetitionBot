@@ -46,6 +46,7 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     checkWristModeDriver = ShuffleManager::DriverTab->Add("In Ball Mode?", false).GetEntry();
     wristEncoderDriver = ShuffleManager::DriverTab->Add("Wrist Encoder", 0.0).GetEntry();
     wristEncoderPreComp = ShuffleManager::PreCompTab->Add("Wrist Encoder", 0.0).GetEntry();
+    targetWristPositionDegreesDriver = ShuffleManager::DriverTab->Add("Wrist Target Position", 0.0).GetEntry();
     
     headingVision = ShuffleManager::VisionTab->Add("Heading", 0.0).GetEntry();
     skewVision = ShuffleManager::VisionTab->Add("Skew", 0.0).GetEntry();

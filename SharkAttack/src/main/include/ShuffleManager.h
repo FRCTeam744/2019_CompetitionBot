@@ -81,7 +81,7 @@ class ShuffleManager {
 		nt::NetworkTableEntry armVelocityErrorArmWrist;
 		nt::NetworkTableEntry armVelocityArmWrist;
 		nt::NetworkTableEntry checkWristModeDriver;
-		nt::NetworkTableEntry targetWristPositionDegrees;
+		nt::NetworkTableEntry targetWristPositionDegreesDriver;
 
 		//OI.cpp
 		nt::NetworkTableEntry checkHatchGripperDriver;
