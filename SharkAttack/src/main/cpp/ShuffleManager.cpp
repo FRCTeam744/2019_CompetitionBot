@@ -34,13 +34,16 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     rightDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     leftDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     rightDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Right", 0.0).GetEntry();
-    checkDriveTrainGearDriver = ShuffleManager::DriverTab->Add("In High Gear?", false).GetEntry(); //temp false?
+    checkDriveTrainGearDriver = ShuffleManager::DriverTab->Add("In High Gear?", false).GetEntry(); //temp false 
     speedErrorLeftPreComp = ShuffleManager::PreCompTab->Add("Speed Error Left", 0.0).GetEntry();
     speedErrorRightPreComp = ShuffleManager::PreCompTab->Add("Speed Error Right", 0.0).GetEntry();    
     checkArmManualArmWrist = ShuffleManager::ArmWristTab->Add("Arm in Manual?", true).GetEntry();
     checkWristManualArmWrist = ShuffleManager::ArmWristTab->Add("Wrist in Manual?", true).GetEntry();
     checkWristManualDriver = ShuffleManager::DriverTab->Add("Wrist in Manual?", true).GetEntry();
     checkArmManualDriver = ShuffleManager::DriverTab->Add("Arm in Manual?", true).GetEntry();
+    checkArmManualPreComp = ShuffleManager::PreCompTab->Add("Arm in Manual?", true).GetEntry();
+    checkWristManualPreComp = ShuffleManager::PreCompTab->Add("Wrist in Manual?", true).GetEntry();
+    
 
     armEncoderDriver = ShuffleManager::DriverTab->Add("Arm Encoder", 0.0).GetEntry();
     armEncoderPreComp = ShuffleManager::PreCompTab->Add("Arm Encoder", 0.0).GetEntry();
@@ -48,6 +51,8 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     rightArmCurrentArmWrist = ShuffleManager::ArmWristTab->Add("Right Arm Current", 0.0).GetEntry();
     checkHatchGripperDriver = ShuffleManager::DriverTab->Add("Hatch Gripper Open?", false).GetEntry(); //temp false
     checkWristModeDriver = ShuffleManager::DriverTab->Add("In Ball Mode?", false).GetEntry();
+    checkWristModeArmWrist = ShuffleManager::ArmWristTab->Add("In Ball Mode?", false).GetEntry();
+    checkWristModePreComp = ShuffleManager::PreCompTab->Add("In Ball Mode?", false).GetEntry();
     wristEncoderDriver = ShuffleManager::DriverTab->Add("Wrist Encoder", 0.0).GetEntry();
     wristEncoderPreComp = ShuffleManager::PreCompTab->Add("Wrist Encoder", 0.0).GetEntry();
     targetWristPositionDegreesDriver = ShuffleManager::DriverTab->Add("Wrist Target Position", 0.0).GetEntry();

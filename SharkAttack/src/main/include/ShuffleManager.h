@@ -87,6 +87,11 @@ class ShuffleManager {
 		nt::NetworkTableEntry checkArmManualArmWrist;
 		nt::NetworkTableEntry checkWristManualArmWrist;
 
+		nt::NetworkTableEntry checkArmManualPreComp;
+		nt::NetworkTableEntry checkWristManualPreComp;
+		nt::NetworkTableEntry checkArmManualArtPreComp;
+		nt::NetworkTableEntry checkWristManualPreComp;
+
 		//OI.cpp
 		nt::NetworkTableEntry checkHatchGripperDriver;
 		nt::NetworkTableEntry checkDriveTrainGearDriver;
