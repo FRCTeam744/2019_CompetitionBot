@@ -16,10 +16,6 @@ static void VisionThread()
 
 void Robot::RobotInit()
 {
-  m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
-  m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-
   drivetrain = Drivetrain::GetInstance();
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
@@ -59,6 +55,8 @@ void Robot::RobotPeriodic()
   fourbar->UpdateFourbarSpeed();
 
   drivetrain->LimelightSet(oi->SetLimelight());
+  drivetrain->PutData();
+  
 
   fourbar->PrintClimberRPM();
   arm->PrintArmInfo();
@@ -80,31 +78,12 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   isBeforeMatch = false;
-  m_autoSelected = m_chooser.GetSelected();
-  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
-  //     kAutoNameDefault);
-  std::cout << "Auto selected: " << m_autoSelected << std::endl;
-
-  if (m_autoSelected == kAutoDrive2)
-  {
-    // Custom Auto goes here
-  }
-  else
-  {
-    // Default Auto goes here
-  }
+  
 }
 
 void Robot::AutonomousPeriodic()
 {
-  if (m_autoSelected == kAutoDrive2)
-  {
-    // Custom Auto goes here
-  }
-  else
-  {
-    // Default Auto goes here
-  }
+  TeleopPeriodic();
 }
 
 void Robot::TeleopInit()
@@ -137,12 +116,12 @@ void Robot::TeleopPeriodic()
     // led->SwimmingShark();
   }
 
-  drivetrain->PutData();
-  //drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
-
-  arm->ManualRotateArm(oi->GetArmInput());
-  arm->ManualRotateWrist(oi->GetWristInput());
-  arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode());
+  drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
+  GetDesiredLLDistances(oi->GetTargetArmPosition());
+  drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), true, false, true, oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+//   arm->ManualRotateArm(oi->GetArmInput());
+//   arm->ManualRotateWrist(oi->GetWristInput());
+  arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode(), oi->GetIsInBallPickup());
   //arm->MoveWristToPosition(oi->GetTargetWristPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
@@ -193,3 +172,32 @@ int main()
   return frc::StartRobot<Robot>();
 }
 #endif
+
+void Robot::GetDesiredLLDistances(double armTargetPosition)
+{
+    if ((armTargetPosition == oi->FRONT_HIGH_BALL_POSITION) || (armTargetPosition == oi->BACK_HIGH_BALL_POSITION))
+    {
+        
+    }
+    if ((armTargetPosition == oi->FRONT_MID_BALL_POSITION) || (armTargetPosition == oi->BACK_MID_BALL_POSITION))
+    {
+        
+    }
+    if ((armTargetPosition == oi->FRONT_LOW_BALL_POSITION) || (armTargetPosition == oi->BACK_LOW_BALL_POSITION))
+    {
+        
+    }
+    if ((armTargetPosition == oi->FRONT_HIGH_HATCH_POSITION) || (armTargetPosition == oi->BACK_HIGH_HATCH_POSITION))
+    {
+        
+    }
+    if ((armTargetPosition == oi->FRONT_MID_HATCH_POSITION) || (armTargetPosition == oi->BACK_MID_HATCH_POSITION))
+    {
+        xDesiredInches = 0;
+        zDesiredInches = -36;
+    }
+    if ((armTargetPosition == oi->FRONT_LOW_HATCH_POSITION) || (armTargetPosition == oi->BACK_LOW_HATCH_POSITION))
+    {
+        
+    }
+}

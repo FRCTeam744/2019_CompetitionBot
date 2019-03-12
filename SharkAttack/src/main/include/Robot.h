@@ -41,6 +41,10 @@ public:
   void DisabledInit() override;
   void DisabledPeriodic() override;
   void TestPeriodic() override;
+  void GetDesiredLLDistances(double armTargetPosition);
+
+  double xDesiredInches;
+  double zDesiredInches;
 
 private:
   frc::SendableChooser<std::string> m_chooser;

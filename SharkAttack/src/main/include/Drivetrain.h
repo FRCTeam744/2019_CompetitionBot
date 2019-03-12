@@ -12,11 +12,11 @@
 
 #include "ShuffleManager.h"
 
-class Drivetrain {
+class Drivetrain
+{
 
   public:
-
-	static Drivetrain* GetInstance();
+	static Drivetrain *GetInstance();
 
 	void PutData();
 	void AutoDrive();
@@ -25,13 +25,15 @@ class Drivetrain {
 	double LimelightGet(std::string key);
 	void CheckSwitchGears(bool isHighGear);
 	void AutoDriveForward(bool isBut, bool isVelocityControl);
+	void SetDesiredLLDistances(double xDesiredInches, double zDesiredInches);
+	void AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool isFront, double leftTank, double rightTank);
 	// void PutOnShuffleboard();
 
   private:
-
-	static Drivetrain* s_instance;
+	static Drivetrain *s_instance;
 
 	Drivetrain();
+	void IsTargetNotAcquired(double leftTank, double rightTank);
 
 	//Private Instance Objects
 
@@ -46,13 +48,11 @@ class Drivetrain {
 	TalonSRX *rightMid;
 	TalonSRX *rightBack;
 
-	TalonSRX *armEncoderTalon;
-	TalonSRX *wristEncoderTalon;
-
 	frc::DoubleSolenoid *gearShifter;
 
-	std::shared_ptr<NetworkTable> limelight;
-	
+	std::shared_ptr<NetworkTable> limelightFront;
+	std::shared_ptr<NetworkTable> limelightBack;
+
 	//CAN Talon IDs for each of the drivetrain motors
 	const int RIGHT_FRONT_ID = 23;
 	const int RIGHT_MID_ID = 25;
@@ -63,7 +63,7 @@ class Drivetrain {
 
 	//DoubleSolenoid gearShirter forward and reverse channels
 	const int LOW_GEAR = 0;
-	const int HIGH_GEAR = 1; 
+	const int HIGH_GEAR = 1;
 
 	double leftDashboardSpeed = 0.0;
 	double rightDashboardSpeed = 0.0;
@@ -79,16 +79,27 @@ class Drivetrain {
 	double targetOffsetAngle_Vertical;
 	double targetArea;
 	double targetSkew;
+	std::vector<double> limelightPose;
+	double prevX;
+	double prevY;
+	double prevZ;
+	double prevRoll;
+	double prevPitch;
+	double prevYaw;
+	const double alpha = 0.02 / (0.06 + 0.02);
 
 	double adjust = 0.0;
 
 	double currentDistanceInches = 0.0;
 
+	double xDesiredInches;
+	double zDesiredInches;
 	bool isInAutoDrive;
+	bool isInLLDrive;
 
 	//CONSTANTS FOR DRIVE
 	const double NU_PER_REV = 4096.0;
-	const double CIRCUMFERENCE_INCHES = 4.08;
+	const double CIRCUMFERENCE_INCHES = 4.08 * M_PI;
 	const double INCHES_PER_REV = CIRCUMFERENCE_INCHES;
 	const double NU_TO_FEET = (1.0 / NU_PER_REV) * INCHES_PER_REV * (1.0 / 12.0);
 	const double FEET_TO_NU = 1.0 / NU_TO_FEET;
@@ -104,10 +115,19 @@ class Drivetrain {
 	//TUNABLES FOR DRIVE
 	//Robot mechanical specifications & drivetrain variables
 	//const double RADIUS_INCHES = 3.0;
-	const double TEST_PERCENT_OUTPUT = 0.5; //this is the percent output we used to test the feed forward gain
-	const double MEASURED_SPEED_NU = 2725.0;  //this is the result of the test above in NU/100ms
+	const double TEST_PERCENT_OUTPUT = 0.5;  //this is the percent output we used to test the feed forward gain
+	const double MEASURED_SPEED_NU = 2725.0; //this is the result of the test above in NU/100ms
 
 	//PID control limelight
+	const double kP_THETA_DESIRED = -2;
+	const double LL_FRONT_THETA_OFFSET = 15;
+	const double LL_FRONT_X_OFFSET = 12.5;
+	const double kP_FORWARD = .2 / 10;
+	const double kP_THETA = .2 / 30;
+	const double START_FILTERING_JUMPS = 15;
+	bool isTargetAcquired;
+
+
 	const double DESIRED_DISTANCE_INCHES = 65;									//desired distance from target
 	const double kP_DIST_FPS = -.05;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
 	const double kP_NU_PER_100MS = kP_DIST_FPS * FEET_TO_NU * SECONDS_TO_100MS; //Converted from FPS estimate above to NU/100ms that the talon can use
@@ -118,9 +138,9 @@ class Drivetrain {
 	const double MIN_COMMAND = 0.23;
 
 	//Constants for the PID of talon
-	const double kP_SPEED = 0.2; //FOR SPEED CONTROL
-	const double kD_SPEED_RIGHT = 0.0;//kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
-	const double kD_SPEED_LEFT = 0.0;//kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
+	const double kP_SPEED = 0;		   //0.2; //FOR SPEED CONTROL
+	const double kD_SPEED_RIGHT = 0.0; //kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
+	const double kD_SPEED_LEFT = 0.0;  //kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
 
 	const double kI_SPEED = kP_SPEED / 100.0;
 	const double kI_ZONE = (0.1 * 2.0) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS;
@@ -129,4 +149,6 @@ class Drivetrain {
 
 	const double talonTimeout = 10; //number of ms before the talon stops trying to configure a specific value
 
+	//Talon Loop Ramp Rates in seconds
+	const double talonRampRate = 0.25;
 };

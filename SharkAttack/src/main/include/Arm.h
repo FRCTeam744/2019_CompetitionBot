@@ -26,7 +26,7 @@ public:
   void ManualRotateArm(double input);
   void ManualRotateWrist(double input);
   void RunIntake(double input);
-  void MoveArmToPosition(double targetPosition, bool isInBallMode); //Degrees
+  void MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup); //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
   void SetArmToCoast();
@@ -47,9 +47,11 @@ private:
   Arm();
 
   void MoveWristToPosition(double wristTargetPosition); //Degrees
-  double FindWristFinalPosition(bool isGoingToBack, bool isInBallMode);
+  double FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup);
   bool GetArmLimitSwitch();
   bool GetWristLimitSwitch();
+  void OpenHatchGripper();
+  void CloseHatchGripper();
 
   //Private Objects
   rev::CANSparkMax *leftArm, *rightArm, *leftWrist;
@@ -76,7 +78,6 @@ private:
   bool isWristInManual;
   double previousTargetPosition;
   double previousTargetWristPosition;
-  double wristRelativeToArm = currentArmPos + currentWristPos;
 
   double FFVoltage = 0.0;
 
@@ -87,9 +88,9 @@ private:
   bool isArmSwitchingSides;
   bool isArmMoving;
   bool isWristMoving;
-  bool isInBallPickup;
   bool isInHatchMode = true;
   bool isHatchGripperClosed = true;
+  bool wantHatchGripperClosed = true;
 
   bool areWheelsVeryDown;
   bool willArmEnterDZ;
@@ -113,13 +114,13 @@ private:
   const int WRIST_CURRENT_LIMIT = 10;
 
   //Wrist Positions
-  const int WRIST_BALL_FRONT = -90;
-  const int WRIST_HATCH_FRONT = 90;
-  const int WRIST_BALL_BACK = 90;
-  const int WRIST_HATCH_BACK = -90;
+  const int WRIST_BALL_FRONT = -65;
+  const int WRIST_HATCH_FRONT = 85;
+  const int WRIST_BALL_BACK = 65;
+  const int WRIST_HATCH_BACK = -85;
   const int WRIST_NEUTRAL = 0;
-  const int WRIST_BALL_PICKUP_FRONT = -180;
-  const int WRIST_BALL_PICKUP_BACK = 180;
+  const int WRIST_BALL_PICKUP_FRONT = -190;
+  const int WRIST_BALL_PICKUP_BACK = 190;
 
   //Tunables
   const double HOLD_BALL_SPEED = 0.05;
@@ -130,11 +131,10 @@ private:
   const double ARM_DANGERZONE = 30.0;
   const double ARM_CHECKPOINT = 36.0;
 
-  //Wrist PID Values
-  const double WRIST_P_GAIN = 0.02; //Was .06 when experiencing issues
+  const double WRIST_HATCH_LIMIT = 90;
 
   //Arm PID Values
-  const double MAX_MOTOR_OUTPUT = 0.25; //percent output
+  const double MAX_MOTOR_OUTPUT = 0.35; //percent output
   const double TIME_TO_MAX_MOTOR_OUTPUT = 0.5; //secs
   const double RAMP_RATE = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT;
 
@@ -152,7 +152,7 @@ private:
   const double D_GAIN_WRIST = P_GAIN_WRIST * 20; //2 = 2^1 //Rule of thumb for DGain is to multiply P by 20, then keep doubling it (we doubled it once in this case)
 
   //USE THIS TO SET CONVERSTION FACTOR FOR ENCODER TO READ IN DEGREES OF ARM ROTATION
-  const double ARM_GEAR_RATIO = 85.0;
+  const double ARM_GEAR_RATIO = 90.0;
   const double WRIST_GEAR_RATIO = 81.0;
   const double DEGREES_PER_ARM_REVOLUTION = 360.0;
   const double SECONDS_PER_MINUTE = 60.0;
@@ -170,5 +170,4 @@ private:
   const rev::CANSparkMax::MotorType BRUSHED = rev::CANSparkMax::MotorType::kBrushed;
   const rev::CANSparkMax::IdleMode COAST = rev::CANSparkMax::IdleMode::kCoast;
   const rev::CANSparkMax::IdleMode BRAKE = rev::CANSparkMax::IdleMode::kBrake;
-  const double WRIST_HATCH_LIMIT = 90;
 };
