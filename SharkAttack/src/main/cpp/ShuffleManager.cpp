@@ -34,21 +34,34 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     rightDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     leftDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     rightDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Right", 0.0).GetEntry();
-    currentDistanceInchesVision = ShuffleManager::VisionTab->Add("Current Distance Inches", 0.0).GetEntry();    
+    checkDriveTrainGearDriver = ShuffleManager::DriverTab->Add("In High Gear?", false).GetEntry(); //temp false?
     speedErrorLeftPreComp = ShuffleManager::PreCompTab->Add("Speed Error Left", 0.0).GetEntry();
-    speedErrorRightPreComp = ShuffleManager::PreCompTab->Add("Speed Error Right", 0.0).GetEntry();
+    speedErrorRightPreComp = ShuffleManager::PreCompTab->Add("Speed Error Right", 0.0).GetEntry();    
+
     armEncoderDriver = ShuffleManager::DriverTab->Add("Arm Encoder", 0.0).GetEntry();
     armEncoderPreComp = ShuffleManager::PreCompTab->Add("Arm Encoder", 0.0).GetEntry();
     leftArmCurrentArmWrist = ShuffleManager::ArmWristTab->Add("Left Arm Curent", 0.0).GetEntry();
     rightArmCurrentArmWrist = ShuffleManager::ArmWristTab->Add("Right Arm Current", 0.0).GetEntry();
+    checkHatchGripperDriver = ShuffleManager::DriverTab->Add("Hatch Gripper Open?", false).GetEntry(); //temp false
+    checkWristModeDriver = ShuffleManager::DriverTab->Add("In Ball Mode?", false).GetEntry();
     wristEncoderDriver = ShuffleManager::DriverTab->Add("Wrist Encoder", 0.0).GetEntry();
     wristEncoderPreComp = ShuffleManager::PreCompTab->Add("Wrist Encoder", 0.0).GetEntry();
+    
     headingVision = ShuffleManager::VisionTab->Add("Heading", 0.0).GetEntry();
     skewVision = ShuffleManager::VisionTab->Add("Skew", 0.0).GetEntry();
-    checkDriveTrainGearDriver
-    checkHatchGripperDriver
-    checkWristModeDriver
+    currentDistanceInchesVision = ShuffleManager::VisionTab->Add("Current Distance Inches", 0.0).GetEntry();
 
+    fourbarEncoderDriver = ShuffleManager::DriverTab->Add("FB Encoder", 0.0).GetEntry();
+    checkRetractedTrippedDriver = ShuffleManager::DriverTab->Add("Retracted?", true).GetEntry();
+    checkExtendedTrippedDriver = ShuffleManager::DriverTab->Add("Extended?", true).GetEntry();
+    fourbarEncoderFourbar = ShuffleManager::FourbarTab->Add("FB Encoder", 0.0).GetEntry();
+    checkExtendedTrippedFourbar = ShuffleManager::FourbarTab->Add("Retracted?", true).GetEntry();
+    checkRetractedTrippedFourbar = ShuffleManager::FourbarTab->Add("Extended?", true).GetEntry();
+    fourbarCurrentFourbar = ShuffleManager::FourbarTab->Add("FB Current", 0.0).GetEntry();
+    fourbarRotationsSinceRetractFourbar = ShuffleManager::FourbarTab->Add("FB Rotations Since Retract", 0.0).GetEntry();
+    fourbarRPMFourbar = ShuffleManager::FourbarTab->Add("FB RPM", 0.0).GetEntry();
+    fourbarRotationsToHomeFourbar = ShuffleManager::FourbarTab->Add("FB Rotations to Home", 0.0).GetEntry();
+    fourbarSpeedFourbar = ShuffleManager::FourbarTab->Add("FB Speed", 0.0).GetEntry();
 }
 
 // void ShuffleManager::GetShuffleVariable(){

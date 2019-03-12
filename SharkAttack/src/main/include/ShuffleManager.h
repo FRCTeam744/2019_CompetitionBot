@@ -40,9 +40,23 @@ class ShuffleManager {
 		nt::NetworkTableEntry currentDistanceInchesVision;
 		nt::NetworkTableEntry speedErrorRightPreComp;
 		nt::NetworkTableEntry speedErrorLeftPreComp;
-		nt::NetworkTableEntry checkDriveTrainGearDriver;
 
-		//OI.cpp?
+		nt::NetworkTableEntry limeLightXVision;
+		nt::NetworkTableEntry limelightYVision;
+		nt::NetworkTableEntry limeLightZVision;
+		nt::NetworkTableEntry limeLightFilteredXVision;
+		nt::NetworkTableEntry limelightFilteredYVision;
+		nt::NetworkTableEntry limeLightFilteredZVision;
+		nt::NetworkTableEntry limeLightRollVision;
+		nt::NetworkTableEntry limelightPitchVision;
+		nt::NetworkTableEntry limeLightYawVision;
+		nt::NetworkTableEntry limeLightFilteredRollVision;
+		nt::NetworkTableEntry limelightFilteredPitchVision;
+		nt::NetworkTableEntry limeLightFilteredYawVision;
+		nt::NetworkTableEntry limeLightThetaDesiredVision;
+		nt::NetworkTableEntry limelightThetaErrorVision;
+		nt::NetworkTableEntry limeLightXErrorVision;
+		nt::NetworkTableEntry limelightZErrorVision;
 
 		//Fourbar.cpp
 		nt::NetworkTableEntry checkRetractedTrippedDriver;
@@ -54,6 +68,7 @@ class ShuffleManager {
 		nt::NetworkTableEntry fourbarRotationsToHomeFourbar;
 		nt::NetworkTableEntry fourbarCurrentFourbar;
 		nt::NetworkTableEntry fourbarRPMFourbar;
+		nt::NetworkTableEntry fourbarSpeedFourbar;
 		nt::NetworkTableEntry fourbarRotationsSinceRetractFourbar;
 
 		//Arm.cpp
@@ -66,7 +81,12 @@ class ShuffleManager {
 		nt::NetworkTableEntry armVelocityErrorArmWrist;
 		nt::NetworkTableEntry armVelocityArmWrist;
 		nt::NetworkTableEntry checkWristModeDriver;
+		nt::NetworkTableEntry targetWristPositionDegrees;
+
+		//OI.cpp
 		nt::NetworkTableEntry checkHatchGripperDriver;
+		nt::NetworkTableEntry checkDriveTrainGearDriver;
+
 
 
         void ShuffleInit();

@@ -57,17 +57,13 @@ bool OI::SwitchGears()
     if (leftStick->GetRawButtonPressed(1))
     {
         isHighGear = false;
-        //frc::SmartDashboard::PutBoolean("isHighGear", false);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
+            ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkDriveTrainGearDriver, isHighGear); 
         return true;
     }
     if (rightStick->GetRawButtonPressed(1))
     {
         isHighGear = true;
-        //frc::SmartDashboard::PutBoolean("isHighGear", true);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
+            ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkDriveTrainGearDriver, isHighGear);
         return true;
     }
     return false;
@@ -115,7 +111,6 @@ double OI::GetArmInput()
 {
     armPowerOutput = xbox->GetY(LEFT_HAND);
     frc::SmartDashboard::PutNumber("Xbox Y Left", armPowerOutput);
-    //shuffleboard here
     if (armPowerOutput < ARM_DEADZONE && armPowerOutput > -ARM_DEADZONE)
     {
         armPowerOutput = 0.0;
