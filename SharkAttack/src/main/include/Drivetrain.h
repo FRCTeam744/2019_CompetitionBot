@@ -37,7 +37,7 @@ class Drivetrain
 	//measured crosshair angles
 	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT = 6.5; 
 	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT   = -3.6; 
-	const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 0; 
+	const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 13.55; 
 	const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT = 0;
 
 	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK = 17; 
@@ -54,6 +54,16 @@ class Drivetrain
 	const double INTERCEPT_LOW_HIGH_HATCH_BACK = 4.7;
 	const double SLOPE_MIDDLE_HATCH_BACK = -0.344; 
 	const double INTERCEPT_MIDDLE_HATCH_BACK = 14.86;
+
+	const double SLOPE_LOW_HIGH_BALL_FRONT = 2.6758579; 
+	const double INTERCEPT_LOW_HIGH_BALL_FRONT = -26.96;
+	const double SLOPE_MID_BALL_FRONT = 0.15; 
+	const double INTERCEPT_MID_BALL_FRONT = -3.31;
+
+	const double SLOPE_LOW_HIGH_BALL_BACK = -0.55; 
+	const double INTERCEPT_LOW_HIGH_BALL_BACK = 4.7;
+	const double SLOPE_MID_BALL_BACK = -0.344; 
+	const double INTERCEPT_MID_BALL_BACK = 14.86;
 
   private:
 	static Drivetrain *s_instance;

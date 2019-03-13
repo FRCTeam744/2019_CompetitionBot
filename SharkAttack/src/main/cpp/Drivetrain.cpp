@@ -210,11 +210,14 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
 
     double p_dist_loop = 0;
     double targetHeight = TARGET_LOW_HEIGHT_INCHES;
+    double kP_DIST = kP_DIST_FPS;
     if(isBallMode) {
         targetHeight = TARGET_HIGH_HEIGHT_INCHES;
-    } 
+        kP_DIST = kP_DIST_FPS * 10;
+    }
     double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - targetHeight) / tan((LIMELIGHT_ANGLE + crosshairAngle - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
     frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
+    frc::SmartDashboard::PutNumber("zDesiredInches", zDesiredInches);
     frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
     double desiredAngle = currentDistanceInches*slopeForAngleCalc + interceptForAngleCalc;
     double angleError = targetOffsetAngle_Horizontal-desiredAngle;
@@ -229,8 +232,8 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     
     
     frc::SmartDashboard::PutNumber("Adjust", adjust);
-
-    p_dist_loop = kP_DIST_FPS * (zDesiredInches - currentDistanceInches);
+    
+    p_dist_loop = kP_DIST * (zDesiredInches - currentDistanceInches);
 
     if (isFront == false)
     {

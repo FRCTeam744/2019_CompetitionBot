@@ -179,20 +179,50 @@ int main()
 
 void Robot::GetDesiredLLDistances(double armTargetPosition)
 {
-    if ((armTargetPosition == oi->FRONT_HIGH_BALL_POSITION) || (armTargetPosition == oi->BACK_HIGH_BALL_POSITION))
+    if (armTargetPosition == oi->FRONT_HIGH_BALL_POSITION) {
+        xDesiredInches = 0;
+        zDesiredInches = 10.52; // TODO CHANGE
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_FRONT, drivetrain->INTERCEPT_LOW_HIGH_BALL_FRONT);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT);
+        drivetrain->SetPipelineNumber(3);
+    } 
+    if(armTargetPosition == oi->BACK_HIGH_BALL_POSITION)
     {
         xDesiredInches = 0;
-        zDesiredInches = 40;
+        zDesiredInches = 22; // TODO CHANGE 
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_BACK, drivetrain->INTERCEPT_LOW_HIGH_BALL_BACK);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK);
+        drivetrain->SetPipelineNumber(3);
     }
-    if ((armTargetPosition == oi->FRONT_MID_BALL_POSITION) || (armTargetPosition == oi->BACK_MID_BALL_POSITION))
+    if (armTargetPosition == oi->FRONT_MID_BALL_POSITION) {
+        xDesiredInches = 0;
+        zDesiredInches = 22; // TODO CHANGE
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_MID_BALL_FRONT, drivetrain->INTERCEPT_MID_BALL_FRONT);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT);
+        drivetrain->SetPipelineNumber(4);        
+    } 
+    if (armTargetPosition == oi->BACK_MID_BALL_POSITION)
     {
         xDesiredInches = 0;
-        zDesiredInches = 40;
+        zDesiredInches = 22; // TODO CHANGE
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_MID_BALL_BACK, drivetrain->INTERCEPT_MID_BALL_BACK);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_MIDDLE_BACK);
+        drivetrain->SetPipelineNumber(4);
     }
-    if ((armTargetPosition == oi->FRONT_LOW_BALL_POSITION) || (armTargetPosition == oi->BACK_LOW_BALL_POSITION))
+    if (armTargetPosition == oi->FRONT_LOW_BALL_POSITION) {
+        xDesiredInches = 0;
+        zDesiredInches = 10.52; // TODO CHANGE
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_FRONT, drivetrain->INTERCEPT_LOW_HIGH_BALL_FRONT);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT);
+        drivetrain->SetPipelineNumber(3);
+    } 
+    if(armTargetPosition == oi->BACK_LOW_BALL_POSITION)
     {
         xDesiredInches = 0;
-        zDesiredInches = 40;
+        zDesiredInches = 13.39; // TODO CHANGE
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_BACK, drivetrain->INTERCEPT_LOW_HIGH_BALL_BACK);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK);
+        drivetrain->SetPipelineNumber(3);
     }
     if (armTargetPosition == oi->FRONT_HIGH_HATCH_POSITION)
     {
