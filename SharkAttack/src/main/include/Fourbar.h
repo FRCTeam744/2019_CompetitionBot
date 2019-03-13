@@ -15,8 +15,8 @@ class Fourbar{
         void ExtendOrRetract(bool extendBut, bool retractBut);
         void UpdateFourbarSpeed();
         void FourbarHome(bool homingBut);
-        void PrintClimberRPM();
-
+        void Fourbar::PrintFourbarShuffleInfo();
+        
     private:
 
         static Fourbar* s_instance;
