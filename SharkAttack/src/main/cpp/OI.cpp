@@ -311,6 +311,13 @@ double OI::GetTargetArmPosition()
             isWristInManual = false;
             isInBallPickup = false;
         }
+
+        if (xbox->GetStartButtonPressed()){
+            targetArmPosition = NEUTRAL_ARM_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
+            isInBallPickup = false;
+        }
     }
     else
     {
@@ -368,6 +375,12 @@ double OI::GetTargetArmPosition()
 
         if (xbox->GetPOV(0) == DPAD_LEFT)
         {
+            targetArmPosition = NEUTRAL_ARM_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
+        }
+
+        if (xbox->GetStartButtonPressed()){
             targetArmPosition = NEUTRAL_ARM_POSITION;
             isArmInManual = false;
             isWristInManual = false;
