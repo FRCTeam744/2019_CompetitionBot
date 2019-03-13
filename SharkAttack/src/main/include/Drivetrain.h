@@ -19,8 +19,8 @@ class Drivetrain
   public:
 	static Drivetrain *GetInstance();
 
-	void PutData();
 	void AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode);
+	void PrintDriveShuffleInfo();
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightSet(std::tuple<bool, std::string, double>);
 	double LimelightGet(std::string key);
