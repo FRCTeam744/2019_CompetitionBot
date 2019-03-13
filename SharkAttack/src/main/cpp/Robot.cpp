@@ -9,9 +9,9 @@
 
 static void VisionThread()
 {
-  cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
-  USBCam.SetResolution(640,480);
-  USBCam.SetFPS(12);
+  // cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+  // USBCam.SetResolution(640,480);
+  // USBCam.SetFPS(12);
 }
 
 void Robot::RobotInit()
@@ -30,8 +30,8 @@ void Robot::RobotInit()
 
   frc::SmartDashboard::PutNumber("wristEncoder", 0.1);
 
-  std::thread vision(VisionThread);
-  vision.detach();
+  // std::thread vision(VisionThread);
+  // vision.detach();
 
   //Testing
   // frc::Encoder *sampleEncoder = new frc::Encoder(0, 1, false, frc::Encoder::EncodingType::k4X);
