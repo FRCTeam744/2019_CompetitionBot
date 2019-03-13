@@ -379,12 +379,11 @@ double OI::GetTargetArmPosition()
             isArmInManual = false;
             isWristInManual = false;
         }
-        
+
         if (xbox->GetStartButtonPressed()){
             targetArmPosition = NEUTRAL_ARM_POSITION;
             isArmInManual = false;
             isWristInManual = false;
-            isInBallPickup = false;
         }
     }
     frc::SmartDashboard::PutNumber("Target Arm Position Degrees", targetArmPosition);
