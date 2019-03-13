@@ -118,7 +118,8 @@ void Robot::TeleopPeriodic()
 
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
   GetDesiredLLDistances(oi->GetTargetArmPosition());
-  drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), true, false, true, oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+  // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+  drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 //   arm->ManualRotateArm(oi->GetArmInput());
 //   arm->ManualRotateWrist(oi->GetWristInput());
   arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode(), oi->GetIsInBallPickup());
@@ -177,27 +178,39 @@ void Robot::GetDesiredLLDistances(double armTargetPosition)
 {
     if ((armTargetPosition == oi->FRONT_HIGH_BALL_POSITION) || (armTargetPosition == oi->BACK_HIGH_BALL_POSITION))
     {
-        
+        xDesiredInches = 0;
+        zDesiredInches = 40;
     }
     if ((armTargetPosition == oi->FRONT_MID_BALL_POSITION) || (armTargetPosition == oi->BACK_MID_BALL_POSITION))
     {
-        
+        xDesiredInches = 0;
+        zDesiredInches = 40;
     }
     if ((armTargetPosition == oi->FRONT_LOW_BALL_POSITION) || (armTargetPosition == oi->BACK_LOW_BALL_POSITION))
     {
-        
+        xDesiredInches = 0;
+        zDesiredInches = 40;
     }
     if ((armTargetPosition == oi->FRONT_HIGH_HATCH_POSITION) || (armTargetPosition == oi->BACK_HIGH_HATCH_POSITION))
     {
-        
+        xDesiredInches = 0;
+        zDesiredInches = 40;
     }
     if ((armTargetPosition == oi->FRONT_MID_HATCH_POSITION) || (armTargetPosition == oi->BACK_MID_HATCH_POSITION))
     {
         xDesiredInches = 0;
-        zDesiredInches = -36;
+        zDesiredInches = 36;
     }
     if ((armTargetPosition == oi->FRONT_LOW_HATCH_POSITION) || (armTargetPosition == oi->BACK_LOW_HATCH_POSITION))
     {
-        
+        xDesiredInches = 0;
+        zDesiredInches = 22;
+    }
+
+    if(armTargetPosition > 0){
+      drivetrain->SetIsFrontLL(true);
+    }
+    else {
+      drivetrain->SetIsFrontLL(false);
     }
 }

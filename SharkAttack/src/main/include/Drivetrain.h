@@ -8,6 +8,7 @@
 #include "frc/smartdashboard/Smartdashboard.h"
 #include <ctre/Phoenix.h>
 #include "frc/DoubleSolenoid.h"
+#include <iostream>
 //#include <frc/shuffleboard/Shuffleboard.h>
 
 #include "ShuffleManager.h"
@@ -19,14 +20,15 @@ class Drivetrain
 	static Drivetrain *GetInstance();
 
 	void PutData();
-	void AutoDrive();
+	void AutoDrive(bool wantLimelight, double leftTank, double rightTank);
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightSet(std::tuple<bool, std::string, double>);
 	double LimelightGet(std::string key);
 	void CheckSwitchGears(bool isHighGear);
 	void AutoDriveForward(bool isBut, bool isVelocityControl);
 	void SetDesiredLLDistances(double xDesiredInches, double zDesiredInches);
-	void AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool isFront, double leftTank, double rightTank);
+	void SetIsFrontLL(bool isFront);
+	void AutoDriveLL(bool wantLimelight, double leftTank, double rightTank);
 	// void PutOnShuffleboard();
 
   private:
@@ -80,6 +82,12 @@ class Drivetrain
 	double targetArea;
 	double targetSkew;
 	std::vector<double> limelightPose;
+	std::vector<double> rawXBuffer;
+	std::vector<double> rawYBuffer;
+	std::vector<double> rawZBuffer;
+	std::vector<double> rawRollBuffer;
+	std::vector<double> rawPitchBuffer;
+	std::vector<double> rawYawBuffer;
 	double prevX;
 	double prevY;
 	double prevZ;
@@ -96,6 +104,7 @@ class Drivetrain
 	double zDesiredInches;
 	bool isInAutoDrive;
 	bool isInLLDrive;
+	bool isFront;
 
 	//CONSTANTS FOR DRIVE
 	const double NU_PER_REV = 4096.0;
@@ -116,34 +125,37 @@ class Drivetrain
 	//Robot mechanical specifications & drivetrain variables
 	//const double RADIUS_INCHES = 3.0;
 	const double TEST_PERCENT_OUTPUT = 0.5;  //this is the percent output we used to test the feed forward gain
-	const double MEASURED_SPEED_NU = 2725.0; //this is the result of the test above in NU/100ms
+	const double MEASURED_SPEED_NU = 2300.0; //this is the result of the test above in NU/100ms
 
 	//PID control limelight
 	const double kP_THETA_DESIRED = -2;
 	const double LL_FRONT_THETA_OFFSET = 15;
 	const double LL_FRONT_X_OFFSET = 12.5;
-	const double kP_FORWARD = .2 / 10;
-	const double kP_THETA = .2 / 30;
+	const double kP_FORWARD = 0; //.2 / 10;
+	const double kP_THETA = 0; //.2 / 30;
 	const double START_FILTERING_JUMPS = 15;
 	bool isTargetAcquired;
+	
+    int counter = 0;
 
 
-	const double DESIRED_DISTANCE_INCHES = 65;									//desired distance from target
-	const double kP_DIST_FPS = -.05;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
+	const double DESIRED_DISTANCE_INCHES = 22;									//desired distance from target
+	const double kP_DIST_FPS = -.2;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
 	const double kP_NU_PER_100MS = kP_DIST_FPS * FEET_TO_NU * SECONDS_TO_100MS; //Converted from FPS estimate above to NU/100ms that the talon can use
-	const double LIMELIGHT_HEIGHT_INCHES = 20.625;
-	const double LIMELIGHT_ANGLE = 0.0;
-	const double kP_ANGLE = 0.02 * 13.0 * FEET_TO_NU * SECONDS_TO_100MS; //FOR ANGLE CORRECTION TODO
+	const double LIMELIGHT_HEIGHT_INCHES = 45;
+	const double LIMELIGHT_ANGLE = 27.0;
+	const double CROSSHAIR_ANGLE = 17.3;
+	const double kP_ANGLE = 0.05; //FOR ANGLE CORRECTION TODO
 
 	const double MIN_COMMAND = 0.23;
 
 	//Constants for the PID of talon
-	const double kP_SPEED = 0;		   //0.2; //FOR SPEED CONTROL
-	const double kD_SPEED_RIGHT = 0.0; //kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
-	const double kD_SPEED_LEFT = 0.0;  //kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
+	const double kP_SPEED = 0.2; //FOR SPEED CONTROL
+	const double kD_SPEED_RIGHT = kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
+	const double kD_SPEED_LEFT = kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
 
 	const double kI_SPEED = kP_SPEED / 100.0;
-	const double kI_ZONE = (0.1 * 2.0) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS;
+	const double kI_ZONE = (.5 * 2.0) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS;
 
 	double kFeedForwardGain = (TEST_PERCENT_OUTPUT * MAX_TALON_OUTPUT) / MEASURED_SPEED_NU;
 

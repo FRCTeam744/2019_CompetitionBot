@@ -115,9 +115,9 @@ private:
 
   //Wrist Positions
   const int WRIST_BALL_FRONT = -65;
-  const int WRIST_HATCH_FRONT = 85;
+  const int WRIST_HATCH_FRONT = 90;
   const int WRIST_BALL_BACK = 65;
-  const int WRIST_HATCH_BACK = -85;
+  const int WRIST_HATCH_BACK = -90;
   const int WRIST_NEUTRAL = 0;
   const int WRIST_BALL_PICKUP_FRONT = -190;
   const int WRIST_BALL_PICKUP_BACK = 190;
