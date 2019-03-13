@@ -55,11 +55,9 @@ void Robot::RobotPeriodic()
   fourbar->UpdateFourbarSpeed();
 
   drivetrain->LimelightSet(oi->SetLimelight());
-  drivetrain->PutData();
-  
-
-  fourbar->PrintClimberRPM();
-  arm->PrintArmInfo();
+  drivetrain->PrintDriveShuffleInfo();
+  fourbar->PrintFourbarShuffleInfo();
+  arm->PrintArmShuffleInfo();
 
   // arm->SetMAX_FF_GAIN(oi->GetArmFFVoltage());
 }

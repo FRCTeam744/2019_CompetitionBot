@@ -23,23 +23,25 @@ class ShuffleManager {
     public:
     	static ShuffleManager *GetInstance();
 		frc::ShuffleboardTab *DriverTab;
-		frc::ShuffleboardTab *PreCompTab;
+		//frc::ShuffleboardTab *PreCompTab;
 		frc::ShuffleboardTab *ArmWristTab;
 		frc::ShuffleboardTab *VisionTab;
 		frc::ShuffleboardTab *FourbarTab;
+
+		//int shuffleUpdate = 1000;
 
 		//using native hierarchy that RoboRio uses on startup
 		//organized by class
 		//Drivetrain.cpp
 		nt::NetworkTableEntry leftDriveDriver;
 		nt::NetworkTableEntry rightDriveDriver;
-		nt::NetworkTableEntry leftDrivePreComp;
-		nt::NetworkTableEntry rightDrivePreComp;
+		// nt::NetworkTableEntry leftDrivePreComp;
+		// nt::NetworkTableEntry rightDrivePreComp;
 		nt::NetworkTableEntry headingVision;
 		nt::NetworkTableEntry skewVision;
 		nt::NetworkTableEntry currentDistanceInchesVision;
-		nt::NetworkTableEntry speedErrorRightPreComp;
-		nt::NetworkTableEntry speedErrorLeftPreComp;
+		// nt::NetworkTableEntry speedErrorRightPreComp;
+		// nt::NetworkTableEntry speedErrorLeftPreComp;
 
 		nt::NetworkTableEntry limeLightXVision;
 		nt::NetworkTableEntry limelightYVision;
@@ -73,23 +75,29 @@ class ShuffleManager {
 
 		//Arm.cpp
 		nt::NetworkTableEntry armEncoderDriver;
-		nt::NetworkTableEntry armEncoderPreComp;
+		//nt::NetworkTableEntry armEncoderPreComp;
 		nt::NetworkTableEntry wristEncoderDriver;
-		nt::NetworkTableEntry wristEncoderPreComp;
+		//nt::NetworkTableEntry wristEncoderPreComp;
 		nt::NetworkTableEntry leftArmCurrentArmWrist;
 		nt::NetworkTableEntry rightArmCurrentArmWrist;
 		nt::NetworkTableEntry armVelocityErrorArmWrist;
 		nt::NetworkTableEntry armVelocityArmWrist;
 		nt::NetworkTableEntry checkWristModeDriver;
-		nt::NetworkTableEntry checkWristModePreComp;
+		//nt::NetworkTableEntry checkWristModePreComp;
 		nt::NetworkTableEntry checkWristModeArmWrist;
 		nt::NetworkTableEntry targetWristPositionDegreesDriver;
 		nt::NetworkTableEntry checkArmManualDriver;
 		nt::NetworkTableEntry checkWristManualDriver;
 		nt::NetworkTableEntry checkArmManualArmWrist;
 		nt::NetworkTableEntry checkWristManualArmWrist;
-		nt::NetworkTableEntry checkArmManualPreComp;
-		nt::NetworkTableEntry checkWristManualPreComp;
+		// nt::NetworkTableEntry checkArmManualPreComp;
+		// nt::NetworkTableEntry checkWristManualPreComp;
+		// nt::NetworkTableEntry checkArmLimitSwitchDriver;
+		// nt::NetworkTableEntry checkWristLimitSwitchDriver;
+		// nt::NetworkTableEntry checkArmLimitSwitchArmWrist;
+		// nt::NetworkTableEntry checkWristLimitSwitchArmWrist;
+		// nt::NetworkTableEntry checkArmLimitSwitchPreComp;
+		// nt::NetworkTableEntry checkWristLimitSwitchPreComp;
 
 		//OI.cpp
 		nt::NetworkTableEntry checkHatchGripperDriver;

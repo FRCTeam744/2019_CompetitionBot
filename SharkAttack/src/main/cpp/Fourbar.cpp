@@ -115,7 +115,7 @@ void Fourbar::UpdateFourbarSpeed() {
     }
 }
 
-void Fourbar::PrintClimberRPM(){
+void Fourbar::PrintFourbarShuffleInfo(){
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->fourbarEncoderDriver, fourbarEncoder->GetPosition());
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, ShuffleManager::GetInstance()->fourbarEncoderFourbar, fourbarEncoder->GetPosition());
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, ShuffleManager::GetInstance()->fourbarRPMFourbar, fourbarEncoder->GetVelocity());
