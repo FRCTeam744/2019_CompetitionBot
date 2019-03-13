@@ -204,7 +204,7 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
 
     double p_dist_loop = 0;
-    double currentDistanceInches = zDesiredInches; //(LIMELIGHT_HEIGHT_INCHES - TARGET_LOW_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + CROSSHAIR_ANGLE - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+    double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - TARGET_LOW_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + CROSSHAIR_ANGLE - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
     frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
     //Target is to the left of the Robot
