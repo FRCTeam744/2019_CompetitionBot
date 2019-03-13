@@ -35,7 +35,7 @@ public:
 
   void ManualCalibrateArm();
 
-  void Arm::PrintArmShuffleInfo();
+  void PrintArmShuffleInfo();
   void PrintArmInfotoConsole();
 
 

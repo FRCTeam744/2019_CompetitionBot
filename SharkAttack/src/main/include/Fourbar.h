@@ -15,7 +15,7 @@ class Fourbar{
         void ExtendOrRetract(bool extendBut, bool retractBut);
         void UpdateFourbarSpeed();
         void FourbarHome(bool homingBut);
-        void Fourbar::PrintFourbarShuffleInfo();
+        void PrintFourbarShuffleInfo();
         
     private:
 
