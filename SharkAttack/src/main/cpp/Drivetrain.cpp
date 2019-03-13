@@ -136,7 +136,7 @@ void Drivetrain::PutData()
 
 void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank)
 {
-    isFront = true; //For testing!!!
+    // isFront = true; //For testing!!!
     if (!wantLimelight) //when not limelight tracking
     {
         if (isInLLDrive)
@@ -160,10 +160,9 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
             limelightBack->PutNumber("pipeline", 0.0);
         }
         isInLLDrive = true;
-        
     }
 
-    if (isFront) 
+    if (isFront)
     {
         //wait for pipeline change and target acquisition
         if (limelightFront->GetNumber("tv", 0.0) == 0 || limelightFront->GetNumber("getpipe", 0.0) != 0.0)
@@ -197,46 +196,53 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
             isTargetAcquired = true;
             counter = 0;
         }
-        
+
         targetOffsetAngle_Horizontal = limelightBack->GetNumber("tx", 0.0);
         targetOffsetAngle_Vertical = limelightBack->GetNumber("ty", 0.0);
         targetArea = limelightBack->GetNumber("ta", 0.0);
         targetSkew = limelightBack->GetNumber("ts", 0.0);
-
     }
 
     double p_dist_loop = 0;
-    double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - TARGET_LOW_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + CROSSHAIR_ANGLE - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+    double currentDistanceInches = zDesiredInches; //(LIMELIGHT_HEIGHT_INCHES - TARGET_LOW_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + CROSSHAIR_ANGLE - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
     frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
     //Target is to the left of the Robot
     if (targetOffsetAngle_Horizontal < -1.0)
     {
-      adjust = kP_ANGLE * targetOffsetAngle_Horizontal;
+        adjust = kP_ANGLE * targetOffsetAngle_Horizontal;
     }
     //Target is to the right of the Robot
     else if (targetOffsetAngle_Horizontal > 1.0)
     {
-      adjust = kP_ANGLE * targetOffsetAngle_Horizontal;
+        adjust = kP_ANGLE * targetOffsetAngle_Horizontal;
     }
-    else {
+    else
+    {
         adjust = 0;
     }
     frc::SmartDashboard::PutNumber("Adjust", adjust);
+
+    p_dist_loop = kP_DIST_FPS * (zDesiredInches - currentDistanceInches);
     
-    p_dist_loop = kP_DIST_FPS * (DESIRED_DISTANCE_INCHES - currentDistanceInches);
-    if(p_dist_loop > 5) {
+    if (isFront == false)
+    {
+        p_dist_loop = -p_dist_loop;
+    }
+
+    if (p_dist_loop > 5)
+    {
         p_dist_loop = 5;
     }
-    else if(p_dist_loop < -5) {
+    else if (p_dist_loop < -5)
+    {
         p_dist_loop = -5;
     }
     desiredLeftFPS = p_dist_loop + adjust;
     desiredRightFPS = p_dist_loop - adjust;
-    
+
     frc::SmartDashboard::PutNumber("Desired FPS Left", desiredLeftFPS);
     frc::SmartDashboard::PutNumber("Desired FPS Right", desiredRightFPS);
-    
 
     leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
     rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
@@ -252,7 +258,7 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     // rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
     // rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
     // driveTrain->TankDrive(leftPower, rightPower, false);
-  /*else if (xbox->GetBackButton())
+    /*else if (xbox->GetBackButton())
   {
 
     desiredLeftFPS = desiredRightFPS = 2.0;
@@ -397,15 +403,16 @@ void Drivetrain::SetDesiredLLDistances(double xDesiredInches, double zDesiredInc
     this->zDesiredInches = zDesiredInches;
 }
 
-void Drivetrain::SetIsFrontLL(bool isFront) {
+void Drivetrain::SetIsFrontLL(bool isFront)
+{
     this->isFront = isFront;
 }
 
 void Drivetrain::AutoDriveLL(bool wantLimelight, double leftTank, double rightTank)
 {
     zDesiredInches = -36; //for testing!!!
-    isFront = true; //for testing!!!
-    
+    isFront = true;       //for testing!!!
+
     //when Drive by LL button is not pushed
     if (!wantLimelight)
     {
@@ -457,7 +464,6 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, double leftTank, double rightTa
         rawRollBuffer.clear();
         rawPitchBuffer.clear();
         rawYawBuffer.clear();
-        
     }
 
     if (isFront)
@@ -523,7 +529,8 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, double leftTank, double rightTa
     rawPitchBuffer.push_back(pitch);
     rawYawBuffer.push_back(yaw);
 
-    if(rawXBuffer.size() == 10) {
+    if (rawXBuffer.size() == 10)
+    {
         rawXBuffer.erase(rawXBuffer.begin());
         rawYBuffer.erase(rawXBuffer.begin());
         rawZBuffer.erase(rawXBuffer.begin());
