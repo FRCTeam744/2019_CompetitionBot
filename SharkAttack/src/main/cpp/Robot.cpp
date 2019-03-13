@@ -119,8 +119,10 @@ void Robot::TeleopPeriodic()
 
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
   GetDesiredLLDistances(oi->GetTargetArmPosition());
+  drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
   // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
-  drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+  drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode());
+  //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
 //   arm->ManualRotateArm(oi->GetArmInput());
 //   arm->ManualRotateWrist(oi->GetWristInput());
   arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode(), oi->GetIsInBallPickup());
@@ -192,22 +194,51 @@ void Robot::GetDesiredLLDistances(double armTargetPosition)
         xDesiredInches = 0;
         zDesiredInches = 40;
     }
-    if ((armTargetPosition == oi->FRONT_HIGH_HATCH_POSITION) || (armTargetPosition == oi->BACK_HIGH_HATCH_POSITION))
-    {
-        xDesiredInches = 0;
-        zDesiredInches = 40;
-    }
-    if ((armTargetPosition == oi->FRONT_MID_HATCH_POSITION) || (armTargetPosition == oi->BACK_MID_HATCH_POSITION))
-    {
-        xDesiredInches = 0;
-        zDesiredInches = 36;
-    }
-    if ((armTargetPosition == oi->FRONT_LOW_HATCH_POSITION) || (armTargetPosition == oi->BACK_LOW_HATCH_POSITION))
+    if (armTargetPosition == oi->FRONT_HIGH_HATCH_POSITION)
     {
         xDesiredInches = 0;
         zDesiredInches = 22;
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT);
+        drivetrain->SetPipelineNumber(0);        
     }
-
+    if(armTargetPosition == oi->BACK_HIGH_HATCH_POSITION) {
+        xDesiredInches = 0;
+        zDesiredInches = 15;
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_BACK, drivetrain->INTERCEPT_LOW_HIGH_HATCH_BACK);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK);
+        drivetrain->SetPipelineNumber(0);  
+    }
+    if (armTargetPosition == oi->FRONT_MID_HATCH_POSITION)
+    {
+        xDesiredInches = 0;
+        zDesiredInches = 36;
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_MIDDLE_HATCH_FRONT, drivetrain->INTERCEPT_MIDDLE_HATCH_FRONT);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT);
+        drivetrain->SetPipelineNumber(2.0);
+    }
+    if (armTargetPosition == oi->BACK_MID_HATCH_POSITION) {
+        xDesiredInches = 0;
+        zDesiredInches = 23;
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_MIDDLE_HATCH_BACK, drivetrain->INTERCEPT_MIDDLE_HATCH_BACK);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_BACK);
+        drivetrain->SetPipelineNumber(2.0);
+    }
+    if (armTargetPosition == oi->FRONT_LOW_HATCH_POSITION)
+    {
+        xDesiredInches = 0;
+        zDesiredInches = 22;
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT);
+        drivetrain->SetPipelineNumber(0);
+    }
+    if(armTargetPosition == oi->BACK_LOW_HATCH_POSITION) {
+        xDesiredInches = 0;
+        zDesiredInches = 15;
+        drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_BACK, drivetrain->INTERCEPT_LOW_HIGH_HATCH_BACK);
+        drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK);
+        drivetrain->SetPipelineNumber(0);
+    }
     if(armTargetPosition > 0){
       drivetrain->SetIsFrontLL(true);
     }

@@ -79,10 +79,10 @@ class OI
 
 	//TARGET HEIGHTS IN INCHES (USE THESE FOR CALCULATION NOT FOR SETTING)
 	const double HIGH_HATCH_HEIGHT = 67.0;
-	const double MID_HATCH_HEIGHT = 43.0;
+	const double MID_HATCH_HEIGHT = 44.0; //Was 43.0, changed by Robert
 	const double LOW_HATCH_HEIGHT = 19.0;
 	const double HIGH_BALL_HEIGHT = 71.5;
-	const double MID_BALL_HEIGHT = 47.5;
+	const double MID_BALL_HEIGHT = 47;
 	const double LOW_BALL_HEIGHT = 23.5;
 	const double CARGOSHIP_BALL_HEIGHT = 47.5; //Don't know the height yet, needs to be measured
 	const double BALL_PICKUP_HEIGHT = 19.0;	//Don't know the height yet, needs to be measured

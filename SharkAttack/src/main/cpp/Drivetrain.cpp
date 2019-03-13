@@ -87,6 +87,12 @@ Drivetrain::Drivetrain()
     rightBack->ConfigOpenloopRamp(talonRampRate);
 
     isTargetAcquired = false;
+
+    xDesiredInches = 0;
+    zDesiredInches = 36;
+    slopeForAngleCalc = 0.0;
+    interceptForAngleCalc = 0.0;
+    crosshairAngle = 0.0;
 }
 
 //Public Methods
@@ -134,9 +140,8 @@ void Drivetrain::PutData()
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Current Distance", currentDistanceInches);
 }
 
-void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank)
+void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode)
 {
-    // isFront = true; //For testing!!!
     if (!wantLimelight) //when not limelight tracking
     {
         if (isInLLDrive)
@@ -153,11 +158,11 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         //set limelight pipeline and turn on leds, once
         if (isFront)
         {
-            limelightFront->PutNumber("pipeline", 0.0);
+            limelightFront->PutNumber("pipeline", pipelineNumber);
         }
         else
         {
-            limelightBack->PutNumber("pipeline", 0.0);
+            limelightBack->PutNumber("pipeline", pipelineNumber);
         }
         isInLLDrive = true;
     }
@@ -165,14 +170,14 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     if (isFront)
     {
         //wait for pipeline change and target acquisition
-        if (limelightFront->GetNumber("tv", 0.0) == 0 || limelightFront->GetNumber("getpipe", 0.0) != 0.0)
+        if (limelightFront->GetNumber("tv", 0.0) == 0 || limelightFront->GetNumber("getpipe", 0.0) == 1)
         {
             IsTargetNotAcquired(leftTank, rightTank);
             return;
         }
 
         //first time seeing, or re-seeing the target
-        if (limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) == 0.0 && !isTargetAcquired)
+        if (limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) != 1 && !isTargetAcquired)
         {
             isTargetAcquired = true;
             counter = 0;
@@ -185,13 +190,13 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     else
     {
         //wait for pipeline change and target acquisition
-        if (limelightBack->GetNumber("tv", 0.0) == 0 || limelightBack->GetNumber("getpipe", 0.0) != 0.0)
+        if (limelightBack->GetNumber("tv", 0.0) == 0 || limelightBack->GetNumber("getpipe", 0.0) == 1)
         {
             IsTargetNotAcquired(leftTank, rightTank);
             return;
         }
         //first time seeing, or re-seeing the target
-        if (limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) == 0.0 && !isTargetAcquired)
+        if (limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) != 1 && !isTargetAcquired)
         {
             isTargetAcquired = true;
             counter = 0;
@@ -204,23 +209,25 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
 
     double p_dist_loop = 0;
-    double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - TARGET_LOW_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + CROSSHAIR_ANGLE - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+    double targetHeight = TARGET_LOW_HEIGHT_INCHES;
+    if(isBallMode) {
+        targetHeight = TARGET_HIGH_HEIGHT_INCHES;
+    } 
+    double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - targetHeight) / tan((LIMELIGHT_ANGLE + crosshairAngle - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
     frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
-    //Target is to the left of the Robot
-    if (targetOffsetAngle_Horizontal < -1.0)
-    {
-        adjust = kP_ANGLE * targetOffsetAngle_Horizontal;
-    }
-    //Target is to the right of the Robot
-    else if (targetOffsetAngle_Horizontal > 1.0)
-    {
-        adjust = kP_ANGLE * targetOffsetAngle_Horizontal;
-    }
-    else
-    {
-        adjust = 0;
-    }
+    double desiredAngle = currentDistanceInches*slopeForAngleCalc + interceptForAngleCalc;
+    double angleError = targetOffsetAngle_Horizontal-desiredAngle;
+
+    frc::SmartDashboard::PutNumber("Intercept", interceptForAngleCalc);
+    frc::SmartDashboard::PutNumber("Slope", slopeForAngleCalc);
+    frc::SmartDashboard::PutNumber("Crosshair Angle", crosshairAngle);
+    
+
+    adjust = kP_ANGLE*angleError;
+    // adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
+    
+    
     frc::SmartDashboard::PutNumber("Adjust", adjust);
 
     p_dist_loop = kP_DIST_FPS * (zDesiredInches - currentDistanceInches);
@@ -230,14 +237,15 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         p_dist_loop = -p_dist_loop;
     }
 
-    if (p_dist_loop > 5)
+    if (p_dist_loop > LL_MAX_FEET_PER_SEC)
     {
-        p_dist_loop = 5;
+        p_dist_loop = LL_MAX_FEET_PER_SEC;
     }
-    else if (p_dist_loop < -5)
+    else if (p_dist_loop < -LL_MAX_FEET_PER_SEC)
     {
-        p_dist_loop = -5;
+        p_dist_loop = -LL_MAX_FEET_PER_SEC;
     }
+
     desiredLeftFPS = p_dist_loop + adjust;
     desiredRightFPS = p_dist_loop - adjust;
 
@@ -251,13 +259,7 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
     rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
 
-    // leftBack->Set(ControlMode::Velocity, leftPower);
-    // leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
-    // leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
-    // rightBack->Set(ControlMode::Velocity, rightPower);
-    // rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
-    // rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
-    // driveTrain->TankDrive(leftPower, rightPower, false);
+    
     /*else if (xbox->GetBackButton())
   {
 
@@ -372,7 +374,9 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
         isInAutoDrive = true;
 
         desiredLeftFPS = desiredRightFPS = 2.0; //Was 5.0, changed by rObErT
-
+        if(!isFront) {
+            desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;
+        }
         std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
         std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
 
@@ -401,11 +405,25 @@ void Drivetrain::SetDesiredLLDistances(double xDesiredInches, double zDesiredInc
 {
     this->xDesiredInches = xDesiredInches;
     this->zDesiredInches = zDesiredInches;
+    //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
+}
+
+void Drivetrain::SetSlopeInterceptForAngleCalc(double slope, double intercept) {
+    slopeForAngleCalc = slope;
+    interceptForAngleCalc = intercept;
+}
+
+void Drivetrain::SetCrosshairAngle(double crosshairAngle) {
+    this->crosshairAngle = crosshairAngle;
 }
 
 void Drivetrain::SetIsFrontLL(bool isFront)
 {
     this->isFront = isFront;
+}
+
+void Drivetrain::SetPipelineNumber(int pipelineNumber ) {
+    this->pipelineNumber = pipelineNumber;
 }
 
 void Drivetrain::AutoDriveLL(bool wantLimelight, double leftTank, double rightTank)
