@@ -77,6 +77,25 @@ class OI
 
 	std::tuple<bool, std::string, double> SetLimelight();
 
+	//TARGET HEIGHTS IN INCHES (USE THESE FOR CALCULATION NOT FOR SETTING)
+	const double HIGH_HATCH_HEIGHT = 67.0;
+	const double MID_HATCH_HEIGHT = 43.0;
+	const double LOW_HATCH_HEIGHT = 19.0;
+	const double HIGH_BALL_HEIGHT = 71.5;
+	const double MID_BALL_HEIGHT = 47.5;
+	const double LOW_BALL_HEIGHT = 23.5;
+	const double CARGOSHIP_BALL_HEIGHT = 47.5; //Don't know the height yet, needs to be measured
+	const double BALL_PICKUP_HEIGHT = 19.0;	//Don't know the height yet, needs to be measured
+
+	//ARM MEASUREMENTS
+	const double PIVOT_HEIGHT = 46.15;
+	const double ARM_LENGTH = 33.5;
+
+	const double RADIANS_TO_DEGREES = (180.0 / M_PI);
+
+	//add to back and front to compensate for the deadzone in the bands
+	const double DEADZONE_ADJUSTOR = -2.5;
+
 	//ARM POSITIONS IN DEGREES (USE FOR SETTING ENCODER)
 	const double FRONT_HIGH_BALL_POSITION = DEADZONE_ADJUSTOR + (RADIANS_TO_DEGREES * acos((PIVOT_HEIGHT - HIGH_BALL_HEIGHT) / (ARM_LENGTH)));
 	const double FRONT_HIGH_HATCH_POSITION = DEADZONE_ADJUSTOR + (RADIANS_TO_DEGREES * acos((PIVOT_HEIGHT - HIGH_HATCH_HEIGHT) / (ARM_LENGTH)));
@@ -174,22 +193,4 @@ class OI
 
 	double armFFVoltage;
 
-	//TARGET HEIGHTS IN INCHES (USE THESE FOR CALCULATION NOT FOR SETTING)
-	const double HIGH_HATCH_HEIGHT = 67.0;
-	const double MID_HATCH_HEIGHT = 43.0;
-	const double LOW_HATCH_HEIGHT = 19.0;
-	const double HIGH_BALL_HEIGHT = 71.5;
-	const double MID_BALL_HEIGHT = 47.5;
-	const double LOW_BALL_HEIGHT = 23.5;
-	const double CARGOSHIP_BALL_HEIGHT = 47.5; //Don't know the height yet, needs to be measured
-	const double BALL_PICKUP_HEIGHT = 19.0;	//Don't know the height yet, needs to be measured
-
-	//ARM MEASUREMENTS
-	const double PIVOT_HEIGHT = 46.15;
-	const double ARM_LENGTH = 33.5;
-
-	const double RADIANS_TO_DEGREES = (180.0 / M_PI);
-
-	//add to back and front to compensate for the deadzone in the bands
-	const double DEADZONE_ADJUSTOR = -4.0;
 };

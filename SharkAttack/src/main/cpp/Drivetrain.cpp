@@ -134,14 +134,81 @@ void Drivetrain::PutData()
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "Current Distance", currentDistanceInches);
 }
 
-void Drivetrain::AutoDrive()
+void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank)
 {
-    /*
-  if (xbox->GetStartButton())
-  {
-    double p_dist_loop = 0;
-    // double currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+    isFront = true; //For testing!!!
+    if (!wantLimelight) //when not limelight tracking
+    {
+        if (isInLLDrive)
+        {
+            limelightFront->PutNumber("pipeline", 1.0);
+            limelightBack->PutNumber("pipeline", 1.0);
+        }
+        isInLLDrive = false;
+        return;
+    }
 
+    if (!isInLLDrive) //init pipelines
+    {
+        //set limelight pipeline and turn on leds, once
+        if (isFront)
+        {
+            limelightFront->PutNumber("pipeline", 0.0);
+        }
+        else
+        {
+            limelightBack->PutNumber("pipeline", 0.0);
+        }
+        isInLLDrive = true;
+        
+    }
+
+    if (isFront) 
+    {
+        //wait for pipeline change and target acquisition
+        if (limelightFront->GetNumber("tv", 0.0) == 0 || limelightFront->GetNumber("getpipe", 0.0) != 0.0)
+        {
+            IsTargetNotAcquired(leftTank, rightTank);
+            return;
+        }
+
+        //first time seeing, or re-seeing the target
+        if (limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) == 0.0 && !isTargetAcquired)
+        {
+            isTargetAcquired = true;
+            counter = 0;
+        }
+        targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
+        targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
+        targetArea = limelightFront->GetNumber("ta", 0.0);
+        targetSkew = limelightFront->GetNumber("ts", 0.0);
+    }
+    else
+    {
+        //wait for pipeline change and target acquisition
+        if (limelightBack->GetNumber("tv", 0.0) == 0 || limelightBack->GetNumber("getpipe", 0.0) != 0.0)
+        {
+            IsTargetNotAcquired(leftTank, rightTank);
+            return;
+        }
+        //first time seeing, or re-seeing the target
+        if (limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) == 0.0 && !isTargetAcquired)
+        {
+            isTargetAcquired = true;
+            counter = 0;
+        }
+        
+        targetOffsetAngle_Horizontal = limelightBack->GetNumber("tx", 0.0);
+        targetOffsetAngle_Vertical = limelightBack->GetNumber("ty", 0.0);
+        targetArea = limelightBack->GetNumber("ta", 0.0);
+        targetSkew = limelightBack->GetNumber("ts", 0.0);
+
+    }
+
+    double p_dist_loop = 0;
+    double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - TARGET_LOW_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + CROSSHAIR_ANGLE - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+    frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
+    frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
     //Target is to the left of the Robot
     if (targetOffsetAngle_Horizontal < -1.0)
     {
@@ -152,20 +219,40 @@ void Drivetrain::AutoDrive()
     {
       adjust = kP_ANGLE * targetOffsetAngle_Horizontal;
     }
+    else {
+        adjust = 0;
+    }
+    frc::SmartDashboard::PutNumber("Adjust", adjust);
+    
+    p_dist_loop = kP_DIST_FPS * (DESIRED_DISTANCE_INCHES - currentDistanceInches);
+    if(p_dist_loop > 5) {
+        p_dist_loop = 5;
+    }
+    else if(p_dist_loop < -5) {
+        p_dist_loop = -5;
+    }
+    desiredLeftFPS = p_dist_loop + adjust;
+    desiredRightFPS = p_dist_loop - adjust;
+    
+    frc::SmartDashboard::PutNumber("Desired FPS Left", desiredLeftFPS);
+    frc::SmartDashboard::PutNumber("Desired FPS Right", desiredRightFPS);
+    
 
-    p_dist_loop = kP_DIST * (DESIRED_DISTANCE_INCHES - currentDistanceInches);
+    leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
+    rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+    leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+    rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+    rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
 
-    leftPower = adjust + p_dist_loop;
-    rightPower = -adjust + p_dist_loop;
-
-    leftBack->Set(ControlMode::Velocity, leftPower);
-    leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-    rightBack->Set(ControlMode::Velocity, rightPower);
-    rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
-    // frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
+    // leftBack->Set(ControlMode::Velocity, leftPower);
+    // leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+    // leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+    // rightBack->Set(ControlMode::Velocity, rightPower);
+    // rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    // rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
     // driveTrain->TankDrive(leftPower, rightPower, false);
-  }
-  else if (xbox->GetBackButton())
+  /*else if (xbox->GetBackButton())
   {
 
     desiredLeftFPS = desiredRightFPS = 2.0;
@@ -278,7 +365,10 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
     {
         isInAutoDrive = true;
 
-        desiredLeftFPS = desiredRightFPS = 2.0;
+        desiredLeftFPS = desiredRightFPS = 5.0;
+
+        std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
+        std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
 
         leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
         rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
@@ -307,8 +397,16 @@ void Drivetrain::SetDesiredLLDistances(double xDesiredInches, double zDesiredInc
     this->zDesiredInches = zDesiredInches;
 }
 
-void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool isFront, double leftTank, double rightTank)
+void Drivetrain::SetIsFrontLL(bool isFront) {
+    this->isFront = isFront;
+}
+
+void Drivetrain::AutoDriveLL(bool wantLimelight, double leftTank, double rightTank)
 {
+    zDesiredInches = -36; //for testing!!!
+    isFront = true; //for testing!!!
+    
+    //when Drive by LL button is not pushed
     if (!wantLimelight)
     {
         if (isInLLDrive)
@@ -326,7 +424,6 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
     double roll;
     double pitch;
     double yaw;
-    int counter;
 
     if (!isInLLDrive) //init
     {
@@ -353,6 +450,14 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
         prevRoll = 0;
         prevPitch = 0;
         prevYaw = 0;
+
+        rawXBuffer.clear();
+        rawYBuffer.clear();
+        rawZBuffer.clear();
+        rawRollBuffer.clear();
+        rawPitchBuffer.clear();
+        rawYawBuffer.clear();
+        
     }
 
     if (isFront)
@@ -401,11 +506,30 @@ void Drivetrain::AutoDriveLL(bool wantLimelight, bool isHatch, bool isMid, bool 
     yaw = limelightPose.at(5);
     frc::SmartDashboard::PutNumber("yaw", yaw);
 
+    //no or bad signal from solvepnp, what do?
     if (X == 0 && Y == 0 && Z == 0 && roll == 0 && pitch == 0 && yaw == 0)
     {
-        //no signal from solvepnp, what do?
+        //run LL tracker that doesn't track straight on?
         IsTargetNotAcquired(leftTank, rightTank);
+        counter = 0;
         return;
+    }
+
+    //remove sign error
+    rawXBuffer.push_back(X);
+    rawYBuffer.push_back(Y);
+    rawZBuffer.push_back(Z);
+    rawRollBuffer.push_back(roll);
+    rawPitchBuffer.push_back(pitch);
+    rawYawBuffer.push_back(yaw);
+
+    if(rawXBuffer.size() == 10) {
+        rawXBuffer.erase(rawXBuffer.begin());
+        rawYBuffer.erase(rawXBuffer.begin());
+        rawZBuffer.erase(rawXBuffer.begin());
+        rawRollBuffer.erase(rawXBuffer.begin());
+        rawPitchBuffer.erase(rawXBuffer.begin());
+        rawYawBuffer.erase(rawXBuffer.begin());
     }
 
     //filter data (low-pass)
