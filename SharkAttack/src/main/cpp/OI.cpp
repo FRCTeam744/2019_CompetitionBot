@@ -85,7 +85,7 @@ bool OI::GetIsHighGear()
 
 bool OI::GetVelocityTest()
 {
-    return leftStick->GetRawButton(11);
+    return leftStick->GetRawButton(2); //Was 11, changed by Robert
 }
 
 bool OI::SwitchGripper()

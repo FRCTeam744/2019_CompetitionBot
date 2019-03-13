@@ -224,7 +224,7 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Adjust", adjust);
 
     p_dist_loop = kP_DIST_FPS * (zDesiredInches - currentDistanceInches);
-    
+
     if (isFront == false)
     {
         p_dist_loop = -p_dist_loop;
@@ -371,7 +371,7 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
     {
         isInAutoDrive = true;
 
-        desiredLeftFPS = desiredRightFPS = 5.0;
+        desiredLeftFPS = desiredRightFPS = 2.0; //Was 5.0, changed by rObErT
 
         std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
         std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
