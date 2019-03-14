@@ -89,6 +89,27 @@ void LED::LiftOffRed()
     }
 }
 
-void LED::ShutDown() {
-    arduino->Write("S", 1);
+void LED::ShutDown() 
+{
+    if (arduino != NULL){
+        arduino->Write("S", 1);
+    }
+}
+
+void LED::HatchOrBallModeBlue(bool isInBallMode){
+    if(!isInBallMode && arduino != NULL){
+        arduino->Write("W", 1);
+    }
+    else if (arduino != NULL){
+        arduino->Write("X", 1);
+    }
+}
+
+void LED::HatchOrBallModeRed(bool isInBallMode){
+    if(isInBallMode && arduino != NULL){
+        arduino->Write("Y", 1);
+    }
+    else if (arduino != NULL){
+        arduino->Write("Z", 1);
+    }
 }

@@ -20,15 +20,16 @@ void Robot::RobotInit()
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
-  // led = LED::GetInstance();
+  led = LED::GetInstance();
   
-  // shufflemanager = ShuffleManager::GetInstance();
-
-  // shufflemanager->ShuffleInit();
+  shufflemanager = ShuffleManager::GetInstance();
+  shufflemanager->ShuffleInit();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
   frc::SmartDashboard::PutNumber("wristEncoder", 0.1);
+
+  isBeforeMatch = true;
 
   // std::thread vision(VisionThread);
   // vision.detach();
@@ -77,7 +78,6 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   isBeforeMatch = false;
-  
 }
 
 void Robot::AutonomousPeriodic()
@@ -87,19 +87,14 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
-
-  if (alliance == blue)
-  {
-    // led->StartUpBlue();
-  }
-  else if (alliance == red)
-  {
-    // led->StartUpRed();
-  }
+  
 }
 
 void Robot::TeleopPeriodic()
 {
+
+  led->HatchOrBallModeBlue(oi->GetPlacingMode());
+
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
   arm->PrintArmInfotoConsole();
@@ -149,19 +144,17 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit()
 {
-  alliance = frc::DriverStation::GetInstance().GetAlliance();
 }
 
 void Robot::DisabledPeriodic()
 {
-  // if (isBeforeMatch) {
-  //   led->StartUp();
-  // }
+  if (isBeforeMatch) {
+    led->StartUp();
+  }
   
-  // if (!isBeforeMatch) {
-  //   led->ShutDown();
-  // }
-  
+  if (!isBeforeMatch) {
+    led->ShutDown();
+  }
 }
 
 void Robot::TestPeriodic()
