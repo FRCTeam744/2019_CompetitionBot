@@ -8,6 +8,7 @@
 #include "frc/smartdashboard/Smartdashboard.h"
 #include <ctre/Phoenix.h>
 #include "frc/DoubleSolenoid.h"
+#include "frc/Solenoid.h"
 #include <iostream>
 //#include <frc/shuffleboard/Shuffleboard.h>
 
@@ -84,7 +85,7 @@ class Drivetrain
 	TalonSRX *rightMid;
 	TalonSRX *rightBack;
 
-	frc::DoubleSolenoid *gearShifter;
+	frc::Solenoid *gearShifter;
 
 	std::shared_ptr<NetworkTable> limelightFront;
 	std::shared_ptr<NetworkTable> limelightBack;

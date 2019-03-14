@@ -31,7 +31,7 @@ Drivetrain::Drivetrain()
     rightBack = new TalonSRX(RIGHT_BACK_ID);
 
     //Initialize Double Solenoid
-    gearShifter = new frc::DoubleSolenoid(0, 1);
+    gearShifter = new frc::Solenoid(0);
 
     //Initialize limelight
     limelightFront = nt::NetworkTableInstance::GetDefault().GetTable("limelight-front");
@@ -343,11 +343,11 @@ void Drivetrain::CheckSwitchGears(bool isHighGear)
 
     if (isHighGear)
     {
-        gearShifter->Set(frc::DoubleSolenoid::Value::kReverse);
+        gearShifter->Set(false);
     }
     else if (!isHighGear)
     {
-        gearShifter->Set(frc::DoubleSolenoid::Value::kForward);
+        gearShifter->Set(true);
     }
 }
 

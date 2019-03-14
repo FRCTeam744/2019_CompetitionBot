@@ -22,9 +22,9 @@ void Robot::RobotInit()
   fourbar = Fourbar::GetInstance();
   // led = LED::GetInstance();
   
-  // shufflemanager = ShuffleManager::GetInstance();
+  shufflemanager = ShuffleManager::GetInstance();
 
-  // shufflemanager->ShuffleInit();
+  shufflemanager->ShuffleInit();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
@@ -121,8 +121,8 @@ void Robot::TeleopPeriodic()
   // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
   drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode());
   //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
-//   arm->ManualRotateArm(oi->GetArmInput());
-//   arm->ManualRotateWrist(oi->GetWristInput());
+  // arm->ManualRotateArm(oi->GetArmInput());
+  // arm->ManualRotateWrist(oi->GetWristInput());
   arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode(), oi->GetIsInBallPickup());
   //arm->MoveWristToPosition(oi->GetTargetWristPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;

@@ -127,11 +127,11 @@ double OI::GetArmInput()
     }
     else if (armPowerOutput >= ARM_DEADZONE)
     {
-        armPowerOutput = (armPowerOutput - ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
+        armPowerOutput = 0.5 * ((armPowerOutput - ARM_DEADZONE) / (1.0 - ARM_DEADZONE)); //Scales power to 0.0-1.0
     }
     else if (armPowerOutput <= -ARM_DEADZONE)
     {
-        armPowerOutput = (armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
+        armPowerOutput = 0.5 * ((armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE)); //Scales power to 0.0-1.0
     }
 
     if (armPowerOutput != 0.0)
@@ -151,11 +151,11 @@ double OI::GetWristInput()
     }
     else if (wristPowerOutput >= WRIST_DEADZONE)
     {
-        wristPowerOutput = (wristPowerOutput - WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
+        wristPowerOutput = 0.5 * (wristPowerOutput - WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
     }
     else if (armPowerOutput <= -WRIST_DEADZONE)
     {
-        wristPowerOutput = (wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
+        wristPowerOutput = 0.5 * (wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
     }
 
     if (wristPowerOutput != 0.0)

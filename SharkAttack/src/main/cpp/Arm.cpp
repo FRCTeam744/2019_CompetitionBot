@@ -357,8 +357,8 @@ void Arm::PrintArmShuffleInfo()
     // frc::SmartDashboard::PutBoolean("IsArmInManual", isArmInManual);
     // frc::SmartDashboard::PutBoolean("IsWristInManual", isWristInManual); //these
 
-    // frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
-    // frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
+    frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
+    frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
     // frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
     // frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
