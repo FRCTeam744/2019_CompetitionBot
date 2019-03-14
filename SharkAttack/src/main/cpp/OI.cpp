@@ -229,17 +229,17 @@ void OI::PrintToSmartDashboard(double encoderValue)
 
 bool OI::GetFourbarExtend()
 {
-    return xbox->GetStartButton();
+    return leftStick->GetRawButton(15);
 }
 
 bool OI::GetFourbarRetract()
 {
-    return xbox->GetBackButton();
+    return leftStick->GetRawButton(16);
 }
 
 bool OI::GetFourbarHome()
 {
-    return rightStick->GetRawButtonPressed(8);
+    return rightStick->GetRawButtonPressed(16);
 }
 
 //Returns the Target Position to the Arm
