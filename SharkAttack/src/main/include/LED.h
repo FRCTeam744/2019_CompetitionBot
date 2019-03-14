@@ -25,6 +25,8 @@ class LED {
         void LiftOffRed();
         void ShutDown();
 
+        void HatchOrBallMode(bool isInBallMode);
+
     private:
 
         static LED* s_instance;

@@ -112,14 +112,17 @@ void Drivetrain::PrintDriveShuffleInfo(){
   rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//rightDashboardSpeed = NU_TO_FEET;
   leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//leftDashboardSpeed = SECONDS_TO_100MS;
   
+  frc::SmartDashboard::PutNumber("Right Speed FPS", rightDashboardSpeed);
+  frc::SmartDashboard::PutNumber("Left Speed FPS", leftDashboardSpeed);
+
   // frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
   // frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
   // frc::SmartDashboard::PutNumber("Target Area", targetArea);
 
   // old, didnt know if needed ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "NU_PER_REV", targetSkew);
 
-  // frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
-  // frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
+  frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
+  frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
 //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorRightPreComp, desiredRightFPS - rightDashboardSpeed);
 //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorLeftPreComp, desiredLeftFPS - leftDashboardSpeed);
   
