@@ -64,20 +64,72 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
     }   
 }
 
-void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, float val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
-        tab->Add(label, val);
-   }
+// void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, float val){
+//     if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
+//         tab->Add(label, val);
+//    }
+// }
+
+void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, float val){
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+        if(tab == DriverTab){
+             var.SetDouble(val);
+        } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+    }
+    else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
+        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
+            var.SetDouble(val);
+        }
+    }   
 }
+
+// void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, int val){
+//     if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
+//         var.SetDouble((int)val); //check this, no getInt exists
+//    }
+// }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, int val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
-        var.SetDouble((int)val); //check this, no getInt exists
-   }
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+        if(tab == DriverTab){
+             var.SetDouble((int)val);
+        } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+    }
+    else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
+        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
+            var.SetDouble((int)val);
+        }
+    }   
 }
 
-void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
-        tab->Add(label, val);
-   }
+// void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val){
+//     if(frc::DriverStation::GetInstance().IsFMSAttached() == false || tab == DriverTab){
+//         tab->Add(label, val);
+//    }
+// }
+
+void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, const char* val){
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+        if(tab == DriverTab){
+             var.SetString(val);
+        } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+    }
+    else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
+        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
+            var.SetString(val);
+        }
+    }   
+}
+
+void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val){
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+        if(tab == DriverTab){
+             var.SetBoolean(val);
+        } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+    }
+    else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
+        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
+            var.SetBoolean(val);
+        }
+    }   
 }

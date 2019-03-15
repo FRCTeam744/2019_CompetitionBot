@@ -57,9 +57,10 @@ class ShuffleManager {
 
         void ShuffleInit();
 		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val);
-		void OnShfl(frc::ShuffleboardTab *tab, const char* label, float val);
+		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, float val);
 		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, int val);
-		void OnShfl(frc::ShuffleboardTab *tab, const char* label, const char* val);
+		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, const char* val);
+		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val);
 
 		void VariableInit();
 		//void GetShuffleVariable();
