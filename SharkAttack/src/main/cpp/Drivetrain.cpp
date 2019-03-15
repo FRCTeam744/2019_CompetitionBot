@@ -259,7 +259,7 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Desired FPS Left", desiredLeftFPS);
     frc::SmartDashboard::PutNumber("Desired FPS Right", desiredRightFPS);
 
-    if(wantToNotMove) {
+    if(! wantToNotMove) {
         leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
         rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
