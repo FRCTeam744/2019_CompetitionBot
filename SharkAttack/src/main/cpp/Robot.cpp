@@ -23,9 +23,9 @@ void Robot::RobotInit()
   led = LED::GetInstance();
   
   isBeforeMatch = true;
-  // shufflemanager = ShuffleManager::GetInstance();
-  // shufflemanager->VariableInit();
-  // shufflemanager->ShuffleInit();
+  shufflemanager = ShuffleManager::GetInstance();
+  shufflemanager->ShuffleInit();
+  shufflemanager->VariableInit();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
@@ -57,9 +57,9 @@ void Robot::RobotPeriodic()
   //oi->PutOnShuffleboard();
 
   drivetrain->LimelightSet(oi->SetLimelight());
-  // drivetrain->PrintDriveShuffleInfo();
-  // fourbar->PrintFourbarShuffleInfo();
-  // arm->PrintArmShuffleInfo();
+  drivetrain->PrintDriveShuffleInfo();
+  fourbar->PrintFourbarShuffleInfo();
+  arm->PrintArmShuffleInfo();
 
   // arm->SetMAX_FF_GAIN(oi->GetArmFFVoltage());
 }

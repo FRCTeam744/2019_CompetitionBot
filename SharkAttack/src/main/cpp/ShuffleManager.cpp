@@ -45,7 +45,6 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     // checkArmManualPreComp = ShuffleManager::PreCompTab->Add("Arm in Manual?", true).GetEntry();
     // checkWristManualPreComp = ShuffleManager::PreCompTab->Add("Wrist in Manual?", true).GetEntry();
     
-
     armEncoderDriver = ShuffleManager::DriverTab->Add("Arm Encoder", 0.0).GetEntry();
     //armEncoderPreComp = ShuffleManager::PreCompTab->Add("Arm Encoder", 0.0).GetEntry();
     leftArmCurrentArmWrist = ShuffleManager::ArmWristTab->Add("Left Arm Curent", 0.0).GetEntry();
@@ -87,7 +86,8 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
         var.SetDouble(val); //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
        }
     }
-    else
+    //else if(tab == ArmWristTab || tab == VisionTab || tab == FourbarTab) //else
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == false)
     {
         var.SetDouble(val);
     }
