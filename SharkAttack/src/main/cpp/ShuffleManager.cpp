@@ -121,15 +121,15 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
     }   
 }
 
-void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
-        if(tab == DriverTab){
-             var.SetBoolean(val);
-        } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
-    }
-    else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
-        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
-            var.SetBoolean(val);
-        }
-    }   
-}
+// void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val){
+//     if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+//         if(tab == DriverTab){
+//              var.SetBoolean(val);
+//         } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+//     }
+//     else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
+//         if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
+//             var.SetBoolean(val);
+//         }
+//     }   
+// }
