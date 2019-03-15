@@ -21,6 +21,8 @@ Fourbar::Fourbar() {
     fourbarExtender = new rev::CANSparkMax(50, rev::CANSparkMax::MotorType::kBrushless);
     fourbarSpeed = frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1);
 
+    fourbarExtender->SetSmartCurrentLimit(40);
+
     fourbarEncoder = new rev::CANEncoder(*fourbarExtender);
 
     extended = new frc::DigitalInput(1);

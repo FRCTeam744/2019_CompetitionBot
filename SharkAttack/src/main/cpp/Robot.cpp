@@ -24,7 +24,7 @@ void Robot::RobotInit()
   
   isBeforeMatch = true;
   // shufflemanager = ShuffleManager::GetInstance();
-  // //shufflemanager->VariableInit();
+  // shufflemanager->VariableInit();
   // shufflemanager->ShuffleInit();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
