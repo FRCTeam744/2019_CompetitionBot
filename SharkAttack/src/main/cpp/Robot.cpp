@@ -125,7 +125,7 @@ void Robot::TeleopPeriodic()
 {
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
-  arm->PrintArmInfotoConsole();
+  //arm->PrintArmInfotoConsole();
   // frc::SmartDashboard::PutNumber("sampleEncoder Value: ", sampleEncoder->GetRaw()); //Testing
   // std::cout << "sampleEncoder Value: " << sampleEncoder->GetRaw() << std::endl;
 
