@@ -113,7 +113,7 @@ void Fourbar::UpdateFourbarSpeed() {
     }
 }
 
-void Fourbar::PrintClimberRPM(){
+void Fourbar::PrintFourbarShuffleInfo(){
 //    if(isInitialized == false){
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Rotations Counted", rotationsSinceRetractTripped);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Encoder Position", fourbarEncoder->GetPosition());

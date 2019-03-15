@@ -15,7 +15,7 @@ class Fourbar{
         void ExtendOrRetract(bool extendBut, bool retractBut);
         void UpdateFourbarSpeed();
         void FourbarHome(bool homingBut);
-        void PrintClimberRPM();
+        void PrintFourbarShuffleInfo();
 
     private:
 

@@ -78,7 +78,7 @@ Drivetrain::Drivetrain()
 }
 
 //Public Methods
-void Drivetrain::PutData() {
+void Drivetrain::PrintDriveInfotoShuffle() {
 //Send limelight and drivetrain variables to SB
 
   targetOffsetAngle_Horizontal = limelight->GetNumber("tx", 0.0);

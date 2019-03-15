@@ -60,8 +60,9 @@ void Robot::RobotPeriodic()
 
   drivetrain->LimelightSet(oi->SetLimelight());
 
-  fourbar->PrintClimberRPM();
-  arm->PrintArmInfo();
+  drivetrain->PrintDriveInfotoShuffle();
+  fourbar->PrintFourbarShuffleInfo();
+  arm->PrintArmShuffleInfo();
 
   // arm->SetMAX_FF_GAIN(oi->GetArmFFVoltage());
 }
@@ -137,7 +138,7 @@ void Robot::TeleopPeriodic()
     // led->SwimmingShark();
   }
 
-  drivetrain->PutData();
+  //drivetrain->PutData();
   //drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
   arm->ManualRotateArm(oi->GetArmInput());

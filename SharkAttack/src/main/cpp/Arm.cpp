@@ -360,7 +360,7 @@ void Arm::CheckHatchGripper(bool isClosed)
     }
 }
 
-void Arm::PrintArmInfo()
+void Arm::PrintArmShuffleInfo()
 {
     // frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
     // frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
