@@ -92,7 +92,7 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-  led->HatchOrBallMode(oi->GetPlacingMode());
+  led->HatchOrBallMode(oi->GetPlacingMode(), oi->GetDriveByLimelight());
 
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
