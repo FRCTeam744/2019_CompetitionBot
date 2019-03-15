@@ -185,7 +185,7 @@ class Drivetrain
 
 
 	const double DESIRED_DISTANCE_INCHES = 22;									//desired distance from target
-	const double kP_DIST_FPS = -.10;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
+	const double kP_DIST_FPS = -.20;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
 	const double kP_NU_PER_100MS = kP_DIST_FPS * FEET_TO_NU * SECONDS_TO_100MS; //Converted from FPS estimate above to NU/100ms that the talon can use
 	const double LL_DISTANCE_PER_5FEET_FRONT = 100.0;
 	const double LL_DISTANCE_PER_5FEET_BACK = 100.0;
