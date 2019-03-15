@@ -91,7 +91,7 @@ bool OI::GetVelocityTest()
 
 bool OI::SwitchGripper()
 {
-    if (xbox->GetBumperPressed(LEFT_HAND))
+    if (xbox->GetBumperPressed(RIGHT_HAND))
     {
         isGripperClosed = false;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", false);
@@ -100,7 +100,7 @@ bool OI::SwitchGripper()
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed_PRE", isGripperClosed);
         return true;
     }
-    if (xbox->GetBumperPressed(RIGHT_HAND))
+    if (xbox->GetBumperPressed(LEFT_HAND))
     {
         isGripperClosed = true;
         //frc::SmartDashboard::PutBoolean("isGripperClosed", true);
@@ -128,11 +128,11 @@ double OI::GetArmInput()
     }
     else if (armPowerOutput >= ARM_DEADZONE)
     {
-        armPowerOutput = 0.5 * ((armPowerOutput - ARM_DEADZONE) / (1.0 - ARM_DEADZONE)); //Scales power to 0.0-1.0
+        armPowerOutput = 0.2 * ((armPowerOutput - ARM_DEADZONE) / (1.0 - ARM_DEADZONE)); //Scales power to 0.0-1.0
     }
     else if (armPowerOutput <= -ARM_DEADZONE)
     {
-        armPowerOutput = 0.5 * ((armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE)); //Scales power to 0.0-1.0
+        armPowerOutput = 0.2 * ((armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE)); //Scales power to 0.0-1.0
     }
 
     if (armPowerOutput != 0.0)
@@ -140,6 +140,7 @@ double OI::GetArmInput()
         isArmInManual = true;
     }
 
+    frc::SmartDashboard::PutNumber("Arm Control Output", armPowerOutput);
     return -armPowerOutput; //setting negative makes positive values move the arm forward
 }
 
@@ -152,11 +153,11 @@ double OI::GetWristInput()
     }
     else if (wristPowerOutput >= WRIST_DEADZONE)
     {
-        wristPowerOutput = 0.5 * (wristPowerOutput - WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
+        wristPowerOutput = 0.2 * ((wristPowerOutput - WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE)); //Scales power to 0.0-1.0
     }
     else if (armPowerOutput <= -WRIST_DEADZONE)
     {
-        wristPowerOutput = 0.5 * (wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
+        wristPowerOutput = 0.2 * ((wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE)); //Scales power to 0.0-1.0
     }
 
     if (wristPowerOutput != 0.0)
@@ -164,8 +165,8 @@ double OI::GetWristInput()
         isWristInManual = true;
     }
 
-    frc::SmartDashboard::PutNumber("Wrist Control Input", wristPowerOutput);
-    return -wristPowerOutput; //setting negative makes positive values move the wrist forward
+    frc::SmartDashboard::PutNumber("Wrist Control Output", wristPowerOutput);
+    return wristPowerOutput; 
 }
 
 double OI::GetIntakeInput()

@@ -99,15 +99,15 @@ Drivetrain::Drivetrain()
 void Drivetrain::PrintDriveShuffleInfo(){
 //Send limelight and drivetrain variables to SB
 
-    targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
-    targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
-    targetArea = limelightFront->GetNumber("ta", 0.0);
-    targetSkew = limelightFront->GetNumber("ts", 0.0);
+    // targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
+    // targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
+    // targetArea = limelightFront->GetNumber("ta", 0.0);
+    // targetSkew = limelightFront->GetNumber("ts", 0.0);
 
   // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
   // frc::SmartDashboard::PutNumber("Skew", targetSkew);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->headingVision, targetOffsetAngle_Horizontal);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->skewVision, targetSkew);
+//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->headingVision, targetOffsetAngle_Horizontal);
+//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->skewVision, targetSkew);
 
   rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//rightDashboardSpeed = NU_TO_FEET;
   leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//leftDashboardSpeed = SECONDS_TO_100MS;
@@ -367,9 +367,13 @@ void Drivetrain::CheckSwitchGears(bool isHighGear)
 
 void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
 {
+
+    double testPercentOut = frc::SmartDashboard::GetNumber("Test PercentOut Speed", 0.5);
+
     if (isBut && !isVelocityControl)
     {
         isInAutoDrive = true;
+        
 
         leftBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);
         rightBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);

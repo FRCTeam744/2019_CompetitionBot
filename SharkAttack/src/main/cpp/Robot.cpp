@@ -57,7 +57,7 @@ void Robot::RobotPeriodic()
   //oi->PutOnShuffleboard();
 
   drivetrain->LimelightSet(oi->SetLimelight());
-  // drivetrain->PrintDriveShuffleInfo();
+   drivetrain->PrintDriveShuffleInfo();
   // fourbar->PrintFourbarShuffleInfo();
   // arm->PrintArmShuffleInfo();
 
@@ -218,14 +218,14 @@ void Robot::GetDesiredLLDistances(double armTargetPosition)
     if (armTargetPosition == oi->FRONT_HIGH_HATCH_POSITION)
     {
         xDesiredInches = 0;
-        zDesiredInches = 22;
+        zDesiredInches = 33; //26.4; //was 22.6
         drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT);
         drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT);
         drivetrain->SetPipelineNumber(0);        
     }
     if(armTargetPosition == oi->BACK_HIGH_HATCH_POSITION) {
         xDesiredInches = 0;
-        zDesiredInches = 15;
+        zDesiredInches = 24;
         drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_BACK, drivetrain->INTERCEPT_LOW_HIGH_HATCH_BACK);
         drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK);
         drivetrain->SetPipelineNumber(0);  
@@ -248,14 +248,14 @@ void Robot::GetDesiredLLDistances(double armTargetPosition)
     if (armTargetPosition == oi->FRONT_LOW_HATCH_POSITION)
     {
         xDesiredInches = 0;
-        zDesiredInches = 22;
+        zDesiredInches = 33; ///26.4;
         drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT);
         drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT);
         drivetrain->SetPipelineNumber(0);
     }
     if(armTargetPosition == oi->BACK_LOW_HATCH_POSITION) {
         xDesiredInches = 0;
-        zDesiredInches = 15;
+        zDesiredInches = 24;
         drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_BACK, drivetrain->INTERCEPT_LOW_HIGH_HATCH_BACK);
         drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK);
         drivetrain->SetPipelineNumber(0);

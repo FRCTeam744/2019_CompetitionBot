@@ -130,8 +130,8 @@ class OI
 	std::string m_autoSelected;
 
 	//CONTROLLER DEADZONES
-	const double ARM_DEADZONE = 0.07;
-	const double WRIST_DEADZONE = 0.08;
+	const double ARM_DEADZONE = 0.5;
+	const double WRIST_DEADZONE = 0.5;
 
 	//Use LEFT_HAND and RIGHT_HAND constants to designate left and right sides of XboxController in OI.cpp
 	const frc::XboxController::JoystickHand LEFT_HAND = frc::XboxController::kLeftHand;
