@@ -131,11 +131,11 @@ void Drivetrain::PrintDriveShuffleInfo(){
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDriveDriver , rightDashboardSpeed);
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDriveDriver , rightDashboardSpeed);
 
-  currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
+//   currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
+//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
 }
 
-void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode)
+void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove)
 {
     if (!wantLimelight) //when not limelight tracking
     {
@@ -205,12 +205,21 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
 
     double p_dist_loop = 0;
     double targetHeight = TARGET_LOW_HEIGHT_INCHES;
+    double limelightAngle = LIMELIGHT_ANGLE_FRONT;
     double kP_DIST = kP_DIST_FPS;
     if(isBallMode) {
         targetHeight = TARGET_HIGH_HEIGHT_INCHES;
         kP_DIST = kP_DIST_FPS * 10;
     }
-    double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - targetHeight) / tan((LIMELIGHT_ANGLE + crosshairAngle - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+    if(isFront) {
+        kP_DIST = kP_DIST_FPS;
+        limelightAngle = LIMELIGHT_ANGLE_FRONT;
+    }
+    else {
+        kP_DIST = kP_DIST_FPS_BACK;
+        limelightAngle = LIMELIGHT_ANGLE_BACK;
+    }
+    double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - targetHeight) / tan((limelightAngle + crosshairAngle - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
     frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     frc::SmartDashboard::PutNumber("zDesiredInches", zDesiredInches);
     frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
@@ -230,10 +239,10 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     
     p_dist_loop = kP_DIST * (zDesiredInches - currentDistanceInches);
 
-    if (isFront == false)
-    {
-        p_dist_loop = -p_dist_loop;
-    }
+    // if (isFront == false)
+    // {
+    //     p_dist_loop = -p_dist_loop*kP_MULTIPLIER_FRONT_TO_BACK;
+    // }
 
     if (p_dist_loop > LL_MAX_FEET_PER_SEC)
     {
@@ -250,12 +259,14 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Desired FPS Left", desiredLeftFPS);
     frc::SmartDashboard::PutNumber("Desired FPS Right", desiredRightFPS);
 
-    leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
-    rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
-    leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
-    rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
-    leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
-    rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    if(wantToNotMove) {
+        leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
+        rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
 
     
     /*else if (xbox->GetBackButton())

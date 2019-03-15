@@ -40,6 +40,7 @@ class OI
 
 	bool GetAutoDriveForward();
 	bool GetDriveByLimelight();
+	bool GetStopLLMove();
 
 	double GetArmInput();
 	double GetWristInput();

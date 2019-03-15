@@ -113,7 +113,7 @@ void Robot::TeleopPeriodic()
   GetDesiredLLDistances(oi->GetTargetArmPosition());
   drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
   // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
-  drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode());
+  drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
   //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
   arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());

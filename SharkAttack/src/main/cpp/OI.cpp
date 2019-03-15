@@ -513,6 +513,10 @@ bool OI::AlsoLEDButtonPressed()
     return rightStick->GetRawButton(3);
 }
 
+bool OI::GetStopLLMove() {
+    return leftStick->GetRawButton(12);
+}
+
 double OI::GetArmFFVoltage()
 {
 
