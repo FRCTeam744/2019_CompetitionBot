@@ -26,7 +26,7 @@ public:
   void ManualRotateArm(double input);
   void ManualRotateWrist(double input);
   void RunIntake(double input);
-  void MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup); //Degrees
+  void MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode); //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
   void SetArmToCoast();
@@ -47,7 +47,7 @@ private:
   Arm();
 
   void MoveWristToPosition(double wristTargetPosition); //Degrees
-  double FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup);
+  double FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode);
   bool GetArmLimitSwitch();
   bool GetWristLimitSwitch();
   void OpenHatchGripper();
@@ -121,6 +121,9 @@ private:
   const int WRIST_NEUTRAL = 0;
   const int WRIST_BALL_PICKUP_FRONT = -190;
   const int WRIST_BALL_PICKUP_BACK = 190;
+  const int WRIST_CARGO_SHIP_FRONT = -170;
+  const int WRIST_CARGO_SHIP_BACK  = 170;
+  
 
   //Tunables
   const double HOLD_BALL_SPEED = 0.05;

@@ -173,7 +173,7 @@ void Arm::RunIntake(double input)
 
 //Parameter: targetPosition -> Given final position in degrees for arm
 //Work in Progress
-void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup)
+void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
 
     currentArmPos = armEncoder->GetPosition();
@@ -229,7 +229,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
         else {
             //in desired state already
         }
-        MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup));
+        MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup, isInCargoShipMode));
     }
     
     if (!isArmInManual) {
@@ -245,9 +245,15 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
     }
 }
 
-double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup)
+double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
-    if (isInBallPickup && !isArmGoingToBack){
+    if(isInBallMode && !isArmGoingToBack && isInCargoShipMode) {
+        return WRIST_CARGO_SHIP_FRONT;
+    }
+    else if(isInBallMode && isArmGoingToBack && isInCargoShipMode) {
+        return WRIST_CARGO_SHIP_BACK;
+    }
+    else if (isInBallPickup && !isArmGoingToBack){
         return WRIST_BALL_PICKUP_FRONT;
     }
     else if (isInBallPickup && isArmGoingToBack){

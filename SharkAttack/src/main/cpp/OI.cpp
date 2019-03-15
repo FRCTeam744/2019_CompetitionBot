@@ -36,6 +36,7 @@ OI::OI()
 
     isArmInManual = true;
     isWristInManual = true;
+    isInCargoShipMode = false;
 
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
@@ -388,6 +389,10 @@ double OI::GetTargetArmPosition()
     }
     frc::SmartDashboard::PutNumber("Target Arm Position Degrees", targetArmPosition);
     return targetArmPosition;
+}
+
+bool OI::IsInCargoShipMode () {
+    return xbox->GetBButton() || xbox->GetPOV(0) == DPAD_RIGHT;
 }
 
 double OI::GetTargetWristPosition()

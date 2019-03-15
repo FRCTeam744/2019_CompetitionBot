@@ -41,6 +41,7 @@ class OI
 	bool GetAutoDriveForward();
 	bool GetDriveByLimelight();
 	bool GetStopLLMove();
+	bool IsInCargoShipMode();
 
 	double GetArmInput();
 	double GetWristInput();
@@ -191,6 +192,7 @@ class OI
 	bool isInBallPickup;
 	bool isArmInManual;
 	bool isWristInManual;
+	bool isInCargoShipMode;
 
 	double armFFVoltage;
 
