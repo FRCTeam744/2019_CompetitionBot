@@ -114,6 +114,8 @@ void Fourbar::UpdateFourbarSpeed() {
 }
 
 void Fourbar::PrintFourbarShuffleInfo(){
+        ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, ShuffleManager::GetInstance()->fourbarSpeedFourbar, 0.1);
+
 //    if(isInitialized == false){
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Rotations Counted", rotationsSinceRetractTripped);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Fourbar Encoder Position", fourbarEncoder->GetPosition());

@@ -23,7 +23,7 @@ class ShuffleManager {
     public:
     	static ShuffleManager *GetInstance();
 		frc::ShuffleboardTab *DriverTab;
-		frc::ShuffleboardTab *PreCompTab;
+		//frc::ShuffleboardTab *PreCompTab;
 		frc::ShuffleboardTab *ArmWristTab;
 		frc::ShuffleboardTab *VisionTab;
 		frc::ShuffleboardTab *FourbarTab;
@@ -33,24 +33,25 @@ class ShuffleManager {
 		//Drivetrain.cpp
 		nt::NetworkTableEntry leftDriveDriver;
 		nt::NetworkTableEntry rightDriveDriver;
-		nt::NetworkTableEntry leftDrivePreComp;
-		nt::NetworkTableEntry rightDrivePreComp;
+		// nt::NetworkTableEntry leftDrivePreComp;
+		// nt::NetworkTableEntry rightDrivePreComp;
 		nt::NetworkTableEntry headingVision;
 		nt::NetworkTableEntry skewVision;
 		nt::NetworkTableEntry currentDistanceInchesDriver;
-		nt::NetworkTableEntry speedErrorRightPreComp;
-		nt::NetworkTableEntry speedErrorLeftPreComp;
+		//nt::NetworkTableEntry speedErrorRightPreComp;
+		// nt::NetworkTableEntry speedErrorLeftPreComp;
 
 
 		//OI.cpp?
 
 		//Fourbar.cpp
+		nt::NetworkTableEntry fourbarSpeedFourbar;
 
 		//Arm.cpp
 		nt::NetworkTableEntry armEncoderDriver;
-		nt::NetworkTableEntry armEncoderPreComp;
+		//nt::NetworkTableEntry armEncoderPreComp;
 		nt::NetworkTableEntry wristEncoderDriver;
-		nt::NetworkTableEntry wristEncoderPreComp;
+		//nt::NetworkTableEntry wristEncoderPreComp;
 		nt::NetworkTableEntry leftArmCurrentArmWrist;
 		nt::NetworkTableEntry rightArmCurrentArmWrist;
 
