@@ -30,6 +30,7 @@ public:
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
   void SetArmToCoast();
+  void SetToMatchMode();
 
   void UpdateArmAndWristInManual(bool arm, bool wrist);
 
@@ -137,9 +138,11 @@ private:
   const double WRIST_HATCH_LIMIT = 90;
 
   //Arm PID Values
-  const double MAX_MOTOR_OUTPUT = 0.35; //percent output
+  const double MAX_MOTOR_OUTPUT_FIELD = 0.45; //percent output
+  const double MAX_MOTOR_OUTPUT_PIT = 0.35; //percent output
   const double TIME_TO_MAX_MOTOR_OUTPUT = 0.5; //secs
-  const double RAMP_RATE = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT;
+  const double RAMP_RATE_FIELD = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT_FIELD;
+  const double RAMP_RATE_PIT = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT_PIT;
 
   const double MAX_FF_GAIN = 0.67; //Volts required to hold arm at 90 degrees
   const double ARM_FF_GAIN = 0;
@@ -147,8 +150,10 @@ private:
   const double I_GAIN_ARM = 0;
   const double I_ZONE_ARM = 0;
   const double D_GAIN_ARM = P_GAIN_ARM * 20.0 * 8.0; //8.0 = 2^3 //Rule of thumb for DGain is to multiply P by 20, then keep doubling it (we doubled it three times in this case)
-  const double MAX_POWER_ARM = MAX_MOTOR_OUTPUT;
-  const double MIN_POWER_ARM = -MAX_MOTOR_OUTPUT;
+  const double MAX_POWER_ARM_FIELD = MAX_MOTOR_OUTPUT_FIELD;
+  const double MIN_POWER_ARM_FIELD = -MAX_MOTOR_OUTPUT_FIELD;
+  const double MAX_POWER_ARM_PIT = MAX_MOTOR_OUTPUT_PIT;
+  const double MIN_POWER_ARM_PIT = -MAX_MOTOR_OUTPUT_PIT;
 
   //Wrist PID Values
   const double P_GAIN_WRIST = 0.025;

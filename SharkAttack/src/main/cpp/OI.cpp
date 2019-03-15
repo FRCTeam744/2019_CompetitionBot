@@ -535,3 +535,8 @@ double OI::GetArmFFVoltage()
 
     return armFFVoltage;
 }
+
+bool OI::GetFakeFMSConnected(){
+    std::cout << "Button 7 working" << std::endl;
+    return leftStick->GetRawButton(7);
+}

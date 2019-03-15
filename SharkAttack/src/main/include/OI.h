@@ -16,6 +16,7 @@
 #include <cameraserver/CameraServer.h>
 #include <frc/smartdashboard/Smartdashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+#include <iostream>
 
 #include "ShuffleManager.h"
 
@@ -64,6 +65,8 @@ class OI
 
 	bool LEDButtonPressed();
 	bool AlsoLEDButtonPressed();
+
+	bool GetFakeFMSConnected();
 
 	// bool SetArmFrontHigh();
 	// bool SetArmFrontMid();
