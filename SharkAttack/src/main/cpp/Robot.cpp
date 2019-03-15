@@ -20,7 +20,7 @@ void Robot::RobotInit()
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
-  led = LED::GetInstance();
+  // led = LED::GetInstance();
   
   isBeforeMatch = true;
   // shufflemanager = ShuffleManager::GetInstance();
@@ -92,7 +92,7 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-  led->HatchOrBallMode(oi->GetPlacingMode(), oi->GetDriveByLimelight());
+  // led->HatchOrBallMode(oi->GetPlacingMode(), oi->GetDriveByLimelight());
 
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
@@ -100,14 +100,14 @@ void Robot::TeleopPeriodic()
   // frc::SmartDashboard::PutNumber("sampleEncoder Value: ", sampleEncoder->GetRaw()); //Testing
   // std::cout << "sampleEncoder Value: " << sampleEncoder->GetRaw() << std::endl;
 
-  if (oi->LEDButtonPressed())
-  {
-    // led->LEDsOff();
-  }
-  if (oi->AlsoLEDButtonPressed())
-  {
-    // led->SwimmingShark();
-  }
+  // if (oi->LEDButtonPressed())
+  // {
+  //   // led->LEDsOff();
+  // }
+  // if (oi->AlsoLEDButtonPressed())
+  // {
+  //   // led->SwimmingShark();
+  // }
 
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
   GetDesiredLLDistances(oi->GetTargetArmPosition());
@@ -143,18 +143,18 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit()
 {
-  alliance = frc::DriverStation::GetInstance().GetAlliance();
+  // alliance = frc::DriverStation::GetInstance().GetAlliance();
 }
 
 void Robot::DisabledPeriodic()
 {
-  if (isBeforeMatch) {
-    led->StartUp();
-  }
+  // if (isBeforeMatch) {
+  //   led->StartUp();
+  // }
   
-  if (!isBeforeMatch) {
-    led->ShutDown();
-  }
+  // if (!isBeforeMatch) {
+  //   led->ShutDown();
+  // }
 }
 
 void Robot::TestPeriodic()
