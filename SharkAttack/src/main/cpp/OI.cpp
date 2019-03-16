@@ -52,22 +52,23 @@ bool OI::GetAutoDriveForward()
     return leftStick->GetRawButton(8);
 }
 
+bool OI::GetDriveByLimelight()
+{
+    return rightStick->GetRawButton(2);
+}
+
 bool OI::SwitchGears()
 {
     if (leftStick->GetRawButtonPressed(1))
     {
         isHighGear = false;
-        //frc::SmartDashboard::PutBoolean("isHighGear", false);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
+            ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkDriveTrainGearDriver, isHighGear); 
         return true;
     }
     if (rightStick->GetRawButtonPressed(1))
     {
         isHighGear = true;
-        //frc::SmartDashboard::PutBoolean("isHighGear", true);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
+            ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkDriveTrainGearDriver, isHighGear);
         return true;
     }
     return false;
@@ -80,7 +81,7 @@ bool OI::GetIsHighGear()
 
 bool OI::GetVelocityTest()
 {
-    return leftStick->GetRawButton(11);
+    return leftStick->GetRawButton(2); //Was 11, changed by Robert
 }
 
 bool OI::SwitchGripper()
@@ -115,19 +116,21 @@ double OI::GetArmInput()
 {
     armPowerOutput = xbox->GetY(LEFT_HAND);
     frc::SmartDashboard::PutNumber("Xbox Y Left", armPowerOutput);
-    //shuffleboard here
     if (armPowerOutput < ARM_DEADZONE && armPowerOutput > -ARM_DEADZONE)
     {
         armPowerOutput = 0.0;
     }
-    else if (armPowerOutput >= ARM_DEADZONE){
+    else if (armPowerOutput >= ARM_DEADZONE)
+    {
         armPowerOutput = (armPowerOutput - ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
     }
-    else if (armPowerOutput <= -ARM_DEADZONE) {
+    else if (armPowerOutput <= -ARM_DEADZONE)
+    {
         armPowerOutput = (armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
     }
 
-    if(armPowerOutput != 0.0){
+    if (armPowerOutput != 0.0)
+    {
         isArmInManual = true;
     }
 
@@ -141,14 +144,17 @@ double OI::GetWristInput()
     {
         wristPowerOutput = 0.0;
     }
-    else if (wristPowerOutput >= WRIST_DEADZONE){
+    else if (wristPowerOutput >= WRIST_DEADZONE)
+    {
         wristPowerOutput = (wristPowerOutput - WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
     }
-    else if (armPowerOutput <= -WRIST_DEADZONE) {
+    else if (armPowerOutput <= -WRIST_DEADZONE)
+    {
         wristPowerOutput = (wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
     }
 
-    if (wristPowerOutput != 0.0){
+    if (wristPowerOutput != 0.0)
+    {
         isWristInManual = true;
     }
 
@@ -174,20 +180,30 @@ double OI::GetIntakeInput()
     }
 }
 
-bool OI::GetPlacingMode(){
-    if(xbox->GetStickButtonPressed(LEFT_HAND)){
+bool OI::GetPlacingMode()
+{
+    if (xbox->GetStickButtonPressed(LEFT_HAND))
+    {
         isInBallMode = false;
     }
-    else if(xbox->GetStickButtonPressed(RIGHT_HAND)){
+    else if (xbox->GetStickButtonPressed(RIGHT_HAND))
+    {
         isInBallMode = true;
     }
     return isInBallMode;
 }
 
-bool OI::GetIsArmInManual(){
+bool OI::GetIsInBallPickup()
+{
+    return isInBallPickup;
+}
+
+bool OI::GetIsArmInManual()
+{
     return isArmInManual;
 }
-bool OI::GetIsWristInManual(){
+bool OI::GetIsWristInManual()
+{
     return isWristInManual;
 }
 
@@ -232,6 +248,7 @@ double OI::GetTargetArmPosition()
             targetArmPosition = FRONT_HIGH_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
+            isInBallPickup = false;
         }
 
         if (xbox->GetBButtonPressed())
@@ -239,13 +256,15 @@ double OI::GetTargetArmPosition()
             targetArmPosition = FRONT_MID_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
+            isInBallPickup = false;
         }
 
         if (xbox->GetXButtonPressed())
         {
-            targetArmPosition = NEUTRAL_ARM_POSITION;
+            targetArmPosition = FRONT_BALL_PICKUP_POSITION;
             isArmInManual = false;
             isWristInManual = false;
+            isInBallPickup = true;
         }
 
         if (xbox->GetAButtonPressed())
@@ -253,6 +272,7 @@ double OI::GetTargetArmPosition()
             targetArmPosition = FRONT_LOW_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
+            isInBallPickup = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_UP)
@@ -260,13 +280,15 @@ double OI::GetTargetArmPosition()
             targetArmPosition = BACK_HIGH_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
+            isInBallPickup = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_LEFT)
         {
-            targetArmPosition = NEUTRAL_ARM_POSITION;
+            targetArmPosition = BACK_BALL_PICKUP_POSITION;
             isArmInManual = false;
             isWristInManual = false;
+            isInBallPickup = true;
         }
 
         if (xbox->GetPOV(0) == DPAD_RIGHT)
@@ -274,6 +296,7 @@ double OI::GetTargetArmPosition()
             targetArmPosition = BACK_MID_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
+            isInBallPickup = false;
         }
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
@@ -281,10 +304,21 @@ double OI::GetTargetArmPosition()
             targetArmPosition = BACK_LOW_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
+            isInBallPickup = false;
+        }
+
+        if (xbox->GetStartButtonPressed()){
+            targetArmPosition = NEUTRAL_ARM_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
+            isInBallPickup = false;
         }
     }
     else
     {
+
+        isInBallPickup = false;
+
         if (xbox->GetYButtonPressed())
         {
             targetArmPosition = FRONT_HIGH_HATCH_POSITION;
@@ -336,6 +370,12 @@ double OI::GetTargetArmPosition()
 
         if (xbox->GetPOV(0) == DPAD_LEFT)
         {
+            targetArmPosition = NEUTRAL_ARM_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
+        }
+
+        if (xbox->GetStartButtonPressed()){
             targetArmPosition = NEUTRAL_ARM_POSITION;
             isArmInManual = false;
             isWristInManual = false;
@@ -448,11 +488,11 @@ std::tuple<bool, std::string, double> OI::SetLimelight()
     }
     else if (leftStick->GetRawButtonPressed(6))
     {
-        return std::make_tuple(true, "camMode", 0.0);
+        return std::make_tuple(true, "pipeline", 0.0);
     }
     else if (leftStick->GetRawButtonPressed(9))
     {
-        return std::make_tuple(true, "camMode", 1.0);
+        return std::make_tuple(true, "pipeline", 1.0);
     }
 
     return std::make_tuple(false, "", 0.0);
@@ -460,12 +500,12 @@ std::tuple<bool, std::string, double> OI::SetLimelight()
 
 bool OI::LEDButtonPressed()
 {
-    return leftStick->GetRawButton(2);
+    return leftStick->GetRawButton(3);
 }
 
 bool OI::AlsoLEDButtonPressed()
 {
-    return rightStick->GetRawButton(2);
+    return rightStick->GetRawButton(3);
 }
 
 double OI::GetArmFFVoltage()

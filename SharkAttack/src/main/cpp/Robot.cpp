@@ -9,17 +9,13 @@
 
 static void VisionThread()
 {
-  cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
-  USBCam.SetResolution(640,480);
-  USBCam.SetFPS(12);
+  // cs::UsbCamera USBCam = frc::CameraServer::GetInstance()->StartAutomaticCapture();
+  // USBCam.SetResolution(640,480);
+  // USBCam.SetFPS(12);
 }
 
 void Robot::RobotInit()
 {
-  m_chooser.SetDefaultOption(kAutoDrive1, kAutoDrive1);
-  m_chooser.AddOption(kAutoDrive2, kAutoDrive2);
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-
   drivetrain = Drivetrain::GetInstance();
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
@@ -34,8 +30,8 @@ void Robot::RobotInit()
 
   frc::SmartDashboard::PutNumber("wristEncoder", 0.1);
 
-  std::thread vision(VisionThread);
-  vision.detach();
+  // std::thread vision(VisionThread);
+  // vision.detach();
 
   //Testing
   // frc::Encoder *sampleEncoder = new frc::Encoder(0, 1, false, frc::Encoder::EncodingType::k4X);
@@ -59,8 +55,7 @@ void Robot::RobotPeriodic()
   fourbar->UpdateFourbarSpeed();
 
   drivetrain->LimelightSet(oi->SetLimelight());
-
-  drivetrain->PrintDriveInfotoShuffle();
+  drivetrain->PrintDriveShuffleInfo();
   fourbar->PrintFourbarShuffleInfo();
   arm->PrintArmShuffleInfo();
 
@@ -81,31 +76,12 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   isBeforeMatch = false;
-  m_autoSelected = m_chooser.GetSelected();
-  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
-  //     kAutoNameDefault);
-  std::cout << "Auto selected: " << m_autoSelected << std::endl;
-
-  if (m_autoSelected == kAutoDrive2)
-  {
-    // Custom Auto goes here
-  }
-  else
-  {
-    // Default Auto goes here
-  }
+  
 }
 
 void Robot::AutonomousPeriodic()
 {
-  if (m_autoSelected == kAutoDrive2)
-  {
-    // Custom Auto goes here
-  }
-  else
-  {
-    // Default Auto goes here
-  }
+  TeleopPeriodic();
 }
 
 void Robot::TeleopInit()
@@ -138,12 +114,18 @@ void Robot::TeleopPeriodic()
     // led->SwimmingShark();
   }
 
-  //drivetrain->PutData();
   //drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
 
   arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());
-  arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode());
+  // arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode());
+  drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
+  GetDesiredLLDistances(oi->GetTargetArmPosition());
+  // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+  drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
+//   arm->ManualRotateArm(oi->GetArmInput());
+//   arm->ManualRotateWrist(oi->GetWristInput());
+  arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode(), oi->GetIsInBallPickup());
   //arm->MoveWristToPosition(oi->GetTargetWristPosition());
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
@@ -194,3 +176,44 @@ int main()
   return frc::StartRobot<Robot>();
 }
 #endif
+
+void Robot::GetDesiredLLDistances(double armTargetPosition)
+{
+    if ((armTargetPosition == oi->FRONT_HIGH_BALL_POSITION) || (armTargetPosition == oi->BACK_HIGH_BALL_POSITION))
+    {
+        xDesiredInches = 0;
+        zDesiredInches = 40;
+    }
+    if ((armTargetPosition == oi->FRONT_MID_BALL_POSITION) || (armTargetPosition == oi->BACK_MID_BALL_POSITION))
+    {
+        xDesiredInches = 0;
+        zDesiredInches = 40;
+    }
+    if ((armTargetPosition == oi->FRONT_LOW_BALL_POSITION) || (armTargetPosition == oi->BACK_LOW_BALL_POSITION))
+    {
+        xDesiredInches = 0;
+        zDesiredInches = 40;
+    }
+    if ((armTargetPosition == oi->FRONT_HIGH_HATCH_POSITION) || (armTargetPosition == oi->BACK_HIGH_HATCH_POSITION))
+    {
+        xDesiredInches = 0;
+        zDesiredInches = 40;
+    }
+    if ((armTargetPosition == oi->FRONT_MID_HATCH_POSITION) || (armTargetPosition == oi->BACK_MID_HATCH_POSITION))
+    {
+        xDesiredInches = 0;
+        zDesiredInches = 36;
+    }
+    if ((armTargetPosition == oi->FRONT_LOW_HATCH_POSITION) || (armTargetPosition == oi->BACK_LOW_HATCH_POSITION))
+    {
+        xDesiredInches = 0;
+        zDesiredInches = 22;
+    }
+
+    if(armTargetPosition > 0){
+      drivetrain->SetIsFrontLL(true);
+    }
+    else {
+      drivetrain->SetIsFrontLL(false);
+    }
+}
