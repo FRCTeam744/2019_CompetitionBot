@@ -19,8 +19,6 @@ class Drivetrain
   public:
 	static Drivetrain *GetInstance();
 
-	static Drivetrain* GetInstance();
-
 	void PrintDriveShuffleInfo();
 	void AutoDrive(bool wantLimelight, double leftTank, double rightTank);
 	void TankDrive(double leftValue, double rightValue);

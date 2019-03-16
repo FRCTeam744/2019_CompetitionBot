@@ -76,7 +76,6 @@ class ShuffleManager {
 		nt::NetworkTableEntry fourbarRotationsToHomeFourbar;
 		nt::NetworkTableEntry fourbarCurrentFourbar;
 		nt::NetworkTableEntry fourbarRPMFourbar;
-		nt::NetworkTableEntry fourbarSpeedFourbar;
 		nt::NetworkTableEntry fourbarRotationsSinceRetractFourbar;
 
 		//Arm.cpp

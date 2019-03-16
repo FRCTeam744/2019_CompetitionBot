@@ -92,7 +92,7 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
         } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
     }
     else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
-        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
+        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab || !DriverTab){
             var.SetDouble(val);
         }
     }   
@@ -111,7 +111,7 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
         } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
     }
     else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
-        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
+        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab || !DriverTab){
             var.SetDouble((double)val);
         }
     }   
@@ -130,7 +130,7 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
         } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
     }
     else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
-        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
+        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab || !DriverTab){
             var.SetDouble((double)val);
         }
     }   
@@ -149,21 +149,21 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
         } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
     }
     else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
-        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
+        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab || !DriverTab){
             var.SetString(val);
         }
     }   
 }
 
-// void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val){
-//     if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
-//         if(tab == DriverTab){
-//              var.SetBoolean(val);
-//         } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
-//     }
-//     else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
-//         if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab){
-//             var.SetBoolean(val);
-//         }
-//     }   
-// }
+void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val){
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+        if(tab == DriverTab){
+             var.SetBoolean(val);
+        } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+    }
+    else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
+        if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab || !DriverTab){
+            var.SetBoolean(val);
+        }
+    }   
+}

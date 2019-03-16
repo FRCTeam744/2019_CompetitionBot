@@ -23,8 +23,8 @@ void Robot::RobotInit()
   // led = LED::GetInstance();
   
   shufflemanager = ShuffleManager::GetInstance();
+
   shufflemanager->ShuffleInit();
-  shufflemanager->VariableInit();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
@@ -53,6 +53,7 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   fourbar->UpdateFourbarSpeed();
+  //oi->PutOnShuffleboard();
 
   drivetrain->LimelightSet(oi->SetLimelight());
   drivetrain->PrintDriveShuffleInfo();
@@ -114,11 +115,6 @@ void Robot::TeleopPeriodic()
     // led->SwimmingShark();
   }
 
-  //drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
-
-  arm->ManualRotateArm(oi->GetArmInput());
-  arm->ManualRotateWrist(oi->GetWristInput());
-  // arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode());
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
   GetDesiredLLDistances(oi->GetTargetArmPosition());
   // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
