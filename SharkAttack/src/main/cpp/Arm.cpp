@@ -102,6 +102,7 @@ Arm::Arm()
     isArmSwitchingSides = false;
     isArmMoving = false;
     isWristMoving = false;
+    isArmInDefenseMode = false;
 }
 
 //Public Methods
@@ -241,6 +242,10 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
         MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup, isInCargoShipMode));
     }
 
+    // if(isArmInDefenseMode) {
+    //     targetPosition = 0.0;
+    // }
+
     if (!isArmInManual)
     {
         armPID->SetReference(targetPosition, rev::ControlType::kPosition, 0, FFVoltage);
@@ -349,25 +354,25 @@ void Arm::CheckHatchGripper(bool isClosed)
 
 void Arm::PrintArmShuffleInfo()
 {
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->leftArmCurrentArmWrist, leftArm->GetOutputCurrent());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->rightArmCurrentArmWrist, rightArm->GetOutputCurrent());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->armEncoderDriver, armEncoder->GetPosition());
-    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->armEncoderPreComp, armEncoder->GetPosition());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->wristEncoderDriver, wristEncoder->GetPosition());
-    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->wristEncoderPreComp, wristEncoder->GetPosition());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->leftArmCurrentArmWrist, leftArm->GetOutputCurrent());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->rightArmCurrentArmWrist, rightArm->GetOutputCurrent());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->armEncoderDriver, armEncoder->GetPosition());
+    // //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->armEncoderPreComp, armEncoder->GetPosition());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->wristEncoderDriver, wristEncoder->GetPosition());
+    // //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->wristEncoderPreComp, wristEncoder->GetPosition());
 
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkHatchGripperDriver, isHatchGripperClosed);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristModeDriver, isInHatchMode);
-    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkWristModePreComp, isInHatchMode);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristModeArmWrist, isInHatchMode);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkHatchGripperDriver, isHatchGripperClosed);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristModeDriver, isInHatchMode);
+    // //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkWristModePreComp, isInHatchMode);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristModeArmWrist, isInHatchMode);
 
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->armVelocityArmWrist, armEncoder->GetVelocity());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->armVelocityErrorArmWrist, 15 - armEncoder->GetVelocity());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->armVelocityArmWrist, armEncoder->GetVelocity());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->armVelocityErrorArmWrist, 15 - armEncoder->GetVelocity());
 
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkArmManualDriver, isArmInManual);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristManualDriver, isWristInManual);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkArmManualArmWrist, isArmInManual);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristManualArmWrist, isWristInManual);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkArmManualDriver, isArmInManual);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristManualDriver, isWristInManual);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkArmManualArmWrist, isArmInManual);
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristManualArmWrist, isWristInManual);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkArmManualPreComp, isArmInManual);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkWristManualPreComp, isWristInManual);
 
@@ -378,6 +383,8 @@ void Arm::PrintArmShuffleInfo()
 
     // frc::SmartDashboard::PutBoolean("IsArmInManual", isArmInManual);
     // frc::SmartDashboard::PutBoolean("IsWristInManual", isWristInManual); //these
+
+    frc::SmartDashboard::PutBoolean("Is Gripper Closed", isHatchGripperClosed);
 
     frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
@@ -453,3 +460,28 @@ void Arm::SetToMatchMode()
     armPID->SetOutputRange(MIN_POWER_ARM_FIELD, MAX_POWER_ARM_FIELD);
     std::cout << "Set to Match Mode is working " << std::endl;
 }
+
+// void Arm::ToggleDefenseMode(bool isInDefenseMode) {
+//     if(!isArmInDefenseMode) {
+//         leftArm->SetIdleMode(BRAKE);
+//         rightArm->SetIdleMode(BRAKE);
+//         armPID->SetP(P_GAIN_ARM_DEFENSE);
+//         armPID->SetD(D_GAIN_ARM_DEFENSE);
+//         armPID->SetI(I_GAIN_ARM_DEFENSE);
+//         armPID->SetIZone(I_ZONE_ARM_DEFENSE);
+//         // armPID->SetFF(ARM_FF_GAIN_DEFNSE);
+         
+
+//         isArmInDefenseMode = true;
+//     }
+//     else {
+//         leftArm->SetIdleMode(BRAKE);
+//         rightArm->SetIdleMode(COAST);
+//         armPID->SetP(P_GAIN_ARM);
+//         armPID->SetD(D_GAIN_ARM);
+//         armPID->SetI(I_GAIN_ARM);
+//         armPID->SetIZone(I_ZONE_ARM);
+//         // armPID->SetFF(ARM_FF_GAIN_DEFNSE);        
+//         isArmInDefenseMode = false;
+//     }
+// }

@@ -43,22 +43,22 @@ class ShuffleManager {
 		// nt::NetworkTableEntry speedErrorRightPreComp;
 		// nt::NetworkTableEntry speedErrorLeftPreComp;
 
-		nt::NetworkTableEntry limeLightXVision;
-		nt::NetworkTableEntry limelightYVision;
-		nt::NetworkTableEntry limeLightZVision;
-		nt::NetworkTableEntry limeLightFilteredXVision;
-		nt::NetworkTableEntry limelightFilteredYVision;
-		nt::NetworkTableEntry limeLightFilteredZVision;
-		nt::NetworkTableEntry limeLightRollVision;
-		nt::NetworkTableEntry limelightPitchVision;
-		nt::NetworkTableEntry limeLightYawVision;
-		nt::NetworkTableEntry limeLightFilteredRollVision;
-		nt::NetworkTableEntry limelightFilteredPitchVision;
-		nt::NetworkTableEntry limeLightFilteredYawVision;
-		nt::NetworkTableEntry limeLightThetaDesiredVision;
-		nt::NetworkTableEntry limelightThetaErrorVision;
-		nt::NetworkTableEntry limeLightXErrorVision;
-		nt::NetworkTableEntry limelightZErrorVision;
+		// nt::NetworkTableEntry limeLightXVision;
+		// nt::NetworkTableEntry limelightYVision;
+		// nt::NetworkTableEntry limeLightZVision;
+		// nt::NetworkTableEntry limeLightFilteredXVision;
+		// nt::NetworkTableEntry limelightFilteredYVision;
+		// nt::NetworkTableEntry limeLightFilteredZVision;
+		// nt::NetworkTableEntry limeLightRollVision;
+		// nt::NetworkTableEntry limelightPitchVision;
+		// nt::NetworkTableEntry limeLightYawVision;
+		// nt::NetworkTableEntry limeLightFilteredRollVision;
+		// nt::NetworkTableEntry limelightFilteredPitchVision;
+		// nt::NetworkTableEntry limeLightFilteredYawVision;
+		// nt::NetworkTableEntry limeLightThetaDesiredVision;
+		// nt::NetworkTableEntry limelightThetaErrorVision;
+		// nt::NetworkTableEntry limeLightXErrorVision;
+		// nt::NetworkTableEntry limelightZErrorVision;
 
 		//Fourbar.cpp
 		nt::NetworkTableEntry checkRetractedTrippedDriver;

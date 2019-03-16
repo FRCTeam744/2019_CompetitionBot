@@ -59,9 +59,11 @@ void Robot::RobotPeriodic()
   drivetrain->LimelightSet(oi->SetLimelight());
   drivetrain->PrintDriveShuffleInfo();
   // fourbar->PrintFourbarShuffleInfo();
-  // arm->PrintArmShuffleInfo();
+  arm->PrintArmShuffleInfo();
 
   // arm->SetMAX_FF_GAIN(oi->GetArmFFVoltage());
+
+  arm->ToggleDefenseMode(oi->GetIsArmInDefenseMode());
 }
 
 /**
@@ -157,17 +159,17 @@ void Robot::DisabledPeriodic()
   //   led->ShutDown();
   // }
 
-  std::cout << "DisabledPeriodic running" << std::endl;
-  std::cout << "hasSetUpForMatch: " << hasSetUpForMatch << std::endl;
-  if (hasSetUpForMatch == false)
-  {
-    //Speed things up
-    if ((oi->GetFakeFMSConnected() == true))
-    {
-      arm->SetToMatchMode();
-      hasSetUpForMatch = true;
-    }
-  }
+  // std::cout << "DisabledPeriodic running" << std::endl;
+  // std::cout << "hasSetUpForMatch: " << hasSetUpForMatch << std::endl;
+  // if (hasSetUpForMatch == false)
+  // {
+  //   //Speed things up
+  //   if ((oi->GetFakeFMSConnected() == true))
+  //   {
+  //     arm->SetToMatchMode();
+  //     hasSetUpForMatch = true;
+  //   }
+  // }
 }
 
 void Robot::TestPeriodic()

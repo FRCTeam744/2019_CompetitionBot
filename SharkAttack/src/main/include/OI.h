@@ -66,7 +66,7 @@ class OI
 	bool LEDButtonPressed();
 	bool AlsoLEDButtonPressed();
 
-	bool GetFakeFMSConnected();
+	// bool GetIsArmInDefenseMode();
 
 	// bool SetArmFrontHigh();
 	// bool SetArmFrontMid();
@@ -196,6 +196,7 @@ class OI
 	bool isArmInManual;
 	bool isWristInManual;
 	bool isInCargoShipMode;
+	bool isArmInDefenseMode;
 
 	double armFFVoltage;
 

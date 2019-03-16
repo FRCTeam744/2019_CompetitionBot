@@ -37,6 +37,7 @@ OI::OI()
     isArmInManual = true;
     isWristInManual = true;
     isInCargoShipMode = false;
+    isArmInDefenseMode = false;
 
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
@@ -536,7 +537,14 @@ double OI::GetArmFFVoltage()
     return armFFVoltage;
 }
 
-bool OI::GetFakeFMSConnected(){
-    std::cout << "Button 7 working" << std::endl;
-    return leftStick->GetRawButton(7);
-}
+// bool OI::GetIsArmInDefenseMode(){
+//     // std::cout << "Button 7 working" << std::endl;
+//     if (leftStick->GetRawButtonPressed(9)){
+//         isArmInDefenseMode = false;
+//     }
+//     else if (leftStick->GetRawButtonPressed(10)){
+//         isArmInDefenseMode = true;
+//     }
+//     frc::SmartDashboard::PutBoolean("isArmInDefenseMode", isArmInDefenseMode);
+//     return isArmInDefenseMode;
+// }

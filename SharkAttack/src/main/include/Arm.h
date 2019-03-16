@@ -38,6 +38,7 @@ public:
 
   void PrintArmShuffleInfo();
   void PrintArmInfotoConsole();
+  // void ToggleDefenseMode(bool isArmInDefenseMode);
 
 
   double GetMAX_FF_GAIN();
@@ -93,6 +94,8 @@ private:
   bool isHatchGripperClosed = true;
   bool wantHatchGripperClosed = true;
 
+  bool isArmInDefenseMode = false;
+
   bool areWheelsVeryDown;
   bool willArmEnterDZ;
   bool areWheelsUp;
@@ -122,8 +125,8 @@ private:
   const int WRIST_NEUTRAL = 0;
   const int WRIST_BALL_PICKUP_FRONT = -190;
   const int WRIST_BALL_PICKUP_BACK = 190;
-  const int WRIST_CARGO_SHIP_FRONT = -170;
-  const int WRIST_CARGO_SHIP_BACK  = 170;
+  const int WRIST_CARGO_SHIP_FRONT = -155;
+  const int WRIST_CARGO_SHIP_BACK  = 155;
   
 
   //Tunables
@@ -139,7 +142,7 @@ private:
 
   //Arm PID Values
   const double MAX_MOTOR_OUTPUT_FIELD = 0.45; //percent output
-  const double MAX_MOTOR_OUTPUT_PIT = 0.35; //percent output
+  const double MAX_MOTOR_OUTPUT_PIT = 0.45; //percent output - was .35
   const double TIME_TO_MAX_MOTOR_OUTPUT = 0.5; //secs
   const double RAMP_RATE_FIELD = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT_FIELD;
   const double RAMP_RATE_PIT = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT_PIT;
@@ -150,6 +153,10 @@ private:
   const double I_GAIN_ARM = 0;
   const double I_ZONE_ARM = 0;
   const double D_GAIN_ARM = P_GAIN_ARM * 20.0 * 8.0; //8.0 = 2^3 //Rule of thumb for DGain is to multiply P by 20, then keep doubling it (we doubled it three times in this case)
+  const double P_GAIN_ARM_DEFENSE = 0.05;
+  const double I_GAIN_ARM_DEFENSE = 0;
+  const double I_ZONE_ARM_DEFENSE = 0;
+  const double D_GAIN_ARM_DEFENSE = P_GAIN_ARM_DEFENSE * 20.0 * 8.0; //8.0 = 2^3 //Rule of thumb for DGain is to multiply P by 20, then keep doubling it (we doubled it three times in this case)
   const double MAX_POWER_ARM_FIELD = MAX_MOTOR_OUTPUT_FIELD;
   const double MIN_POWER_ARM_FIELD = -MAX_MOTOR_OUTPUT_FIELD;
   const double MAX_POWER_ARM_PIT = MAX_MOTOR_OUTPUT_PIT;
