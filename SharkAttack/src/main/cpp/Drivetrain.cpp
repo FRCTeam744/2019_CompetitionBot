@@ -109,6 +109,19 @@ void Drivetrain::PrintDriveShuffleInfo(){
 //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->headingVision, targetOffsetAngle_Horizontal);
 //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->skewVision, targetSkew);
 
+void Drivetrain::PrintDriveShuffleInfo() {
+//Send limelight and drivetrain variables to SB
+
+    targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
+    targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
+    targetArea = limelightFront->GetNumber("ta", 0.0);
+    targetSkew = limelightFront->GetNumber("ts", 0.0);
+
+  // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
+  // frc::SmartDashboard::PutNumber("Skew", targetSkew);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->headingVision, targetOffsetAngle_Horizontal);
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->skewVision, targetSkew);
+
   rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//rightDashboardSpeed = NU_TO_FEET;
   leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//leftDashboardSpeed = SECONDS_TO_100MS;
   
@@ -123,16 +136,18 @@ void Drivetrain::PrintDriveShuffleInfo(){
 
   frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
   frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorRightPreComp, desiredRightFPS - rightDashboardSpeed);
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorLeftPreComp, desiredLeftFPS - leftDashboardSpeed);
+  // frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
+  // frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorRightPreComp, desiredRightFPS - rightDashboardSpeed);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorLeftPreComp, desiredLeftFPS - leftDashboardSpeed);
   
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDrivePreComp , rightDashboardSpeed);
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDrivePreComp , rightDashboardSpeed);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDrivePreComp , rightDashboardSpeed);
+  // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDrivePreComp , rightDashboardSpeed);
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDriveDriver , rightDashboardSpeed);
   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDriveDriver , rightDashboardSpeed);
 
-//   currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
+  currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
 }
 
 void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove)

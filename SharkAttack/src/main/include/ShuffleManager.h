@@ -39,7 +39,12 @@ class ShuffleManager {
 		// nt::NetworkTableEntry rightDrivePreComp;
 		nt::NetworkTableEntry headingVision;
 		nt::NetworkTableEntry skewVision;
-		nt::NetworkTableEntry currentDistanceInchesVision;
+		nt::NetworkTableEntry currentDistanceInchesDriver;
+		//nt::NetworkTableEntry speedErrorRightPreComp;
+		// nt::NetworkTableEntry speedErrorLeftPreComp;
+
+		//Fourbar.cpp
+		nt::NetworkTableEntry fourbarSpeedFourbar;
 		// nt::NetworkTableEntry speedErrorRightPreComp;
 		// nt::NetworkTableEntry speedErrorLeftPreComp;
 

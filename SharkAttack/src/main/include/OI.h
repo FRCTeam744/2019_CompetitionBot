@@ -179,7 +179,6 @@ class OI
 	frc::Joystick *rightStick;
 	frc::Joystick *leftStick;
 	frc::XboxController *xbox;
-	//bool isInitialized = false;
 
 	frc::Preferences *preferences;
 

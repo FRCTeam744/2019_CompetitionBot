@@ -16,7 +16,7 @@ class Fourbar{
         void UpdateFourbarSpeed();
         void FourbarHome(bool homingBut);
         void PrintFourbarShuffleInfo();
-        
+
     private:
 
         static Fourbar* s_instance;
