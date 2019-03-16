@@ -43,11 +43,6 @@ class ShuffleManager {
 		//nt::NetworkTableEntry speedErrorRightPreComp;
 		// nt::NetworkTableEntry speedErrorLeftPreComp;
 
-		//Fourbar.cpp
-		nt::NetworkTableEntry fourbarSpeedFourbar;
-		// nt::NetworkTableEntry speedErrorRightPreComp;
-		// nt::NetworkTableEntry speedErrorLeftPreComp;
-
 		nt::NetworkTableEntry limeLightXVision;
 		nt::NetworkTableEntry limelightYVision;
 		nt::NetworkTableEntry limeLightZVision;
