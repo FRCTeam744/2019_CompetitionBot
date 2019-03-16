@@ -155,7 +155,7 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
     }   
 }
 
-void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val){
+void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val){
     if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
         if(tab == DriverTab){
              var.SetBoolean(val);
