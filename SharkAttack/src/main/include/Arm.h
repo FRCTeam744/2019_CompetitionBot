@@ -38,7 +38,7 @@ public:
 
   void PrintArmShuffleInfo();
   void PrintArmInfotoConsole();
-  // void ToggleDefenseMode(bool isArmInDefenseMode);
+  void ToggleDefenseMode(bool isArmInDefenseMode);
 
 
   double GetMAX_FF_GAIN();
@@ -153,7 +153,7 @@ private:
   const double I_GAIN_ARM = 0;
   const double I_ZONE_ARM = 0;
   const double D_GAIN_ARM = P_GAIN_ARM * 20.0 * 8.0; //8.0 = 2^3 //Rule of thumb for DGain is to multiply P by 20, then keep doubling it (we doubled it three times in this case)
-  const double P_GAIN_ARM_DEFENSE = 0.05;
+  const double P_GAIN_ARM_DEFENSE = 0.1;
   const double I_GAIN_ARM_DEFENSE = 0;
   const double I_ZONE_ARM_DEFENSE = 0;
   const double D_GAIN_ARM_DEFENSE = P_GAIN_ARM_DEFENSE * 20.0 * 8.0; //8.0 = 2^3 //Rule of thumb for DGain is to multiply P by 20, then keep doubling it (we doubled it three times in this case)

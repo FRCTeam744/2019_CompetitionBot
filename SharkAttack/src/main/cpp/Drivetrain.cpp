@@ -225,6 +225,15 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
     double desiredAngle = currentDistanceInches*slopeForAngleCalc + interceptForAngleCalc;
     double angleError = targetOffsetAngle_Horizontal-desiredAngle;
+    if(angleError > 30) {
+        angleError = 30;
+    }
+    else if(angleError < -30) {
+        angleError = -30;
+    }
+    frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle);
+    frc::SmartDashboard::PutNumber("Angle Error", angleError);
+    
 
     frc::SmartDashboard::PutNumber("Intercept", interceptForAngleCalc);
     frc::SmartDashboard::PutNumber("Slope", slopeForAngleCalc);

@@ -190,7 +190,13 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
     FFVoltage = MAX_FF_GAIN * (sin(currentArmPos * M_PI / 180));
     frc::SmartDashboard::PutNumber("FFVoltage", FFVoltage);
 
-    if (isArmInDZ)
+     if(isArmInDefenseMode) {
+        targetPosition = 0.0;
+        MoveWristToPosition(WRIST_NEUTRAL);
+        CloseHatchGripper();
+    }
+
+    else if (isArmInDZ)
     {
         if (!isHatchGripperClosed)
         {
@@ -242,9 +248,6 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
         MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup, isInCargoShipMode));
     }
 
-    // if(isArmInDefenseMode) {
-    //     targetPosition = 0.0;
-    // }
 
     if (!isArmInManual)
     {
@@ -461,27 +464,27 @@ void Arm::SetToMatchMode()
     std::cout << "Set to Match Mode is working " << std::endl;
 }
 
-// void Arm::ToggleDefenseMode(bool isInDefenseMode) {
-//     if(!isArmInDefenseMode) {
-//         leftArm->SetIdleMode(BRAKE);
-//         rightArm->SetIdleMode(BRAKE);
-//         armPID->SetP(P_GAIN_ARM_DEFENSE);
-//         armPID->SetD(D_GAIN_ARM_DEFENSE);
-//         armPID->SetI(I_GAIN_ARM_DEFENSE);
-//         armPID->SetIZone(I_ZONE_ARM_DEFENSE);
-//         // armPID->SetFF(ARM_FF_GAIN_DEFNSE);
+void Arm::ToggleDefenseMode(bool wantsDefenseMode) {
+    if(wantsDefenseMode && !isArmInDefenseMode) {
+        leftArm->SetIdleMode(BRAKE);
+        rightArm->SetIdleMode(BRAKE);
+        armPID->SetP(P_GAIN_ARM_DEFENSE);
+        armPID->SetD(D_GAIN_ARM_DEFENSE);
+        armPID->SetI(I_GAIN_ARM_DEFENSE);
+        armPID->SetIZone(I_ZONE_ARM_DEFENSE);
+        // armPID->SetFF(ARM_FF_GAIN_DEFNSE);
          
 
-//         isArmInDefenseMode = true;
-//     }
-//     else {
-//         leftArm->SetIdleMode(BRAKE);
-//         rightArm->SetIdleMode(COAST);
-//         armPID->SetP(P_GAIN_ARM);
-//         armPID->SetD(D_GAIN_ARM);
-//         armPID->SetI(I_GAIN_ARM);
-//         armPID->SetIZone(I_ZONE_ARM);
-//         // armPID->SetFF(ARM_FF_GAIN_DEFNSE);        
-//         isArmInDefenseMode = false;
-//     }
-// }
+        isArmInDefenseMode = true;
+    }
+    else if(!wantsDefenseMode && isArmInDefenseMode) {
+        leftArm->SetIdleMode(BRAKE);
+        rightArm->SetIdleMode(COAST);
+        armPID->SetP(P_GAIN_ARM);
+        armPID->SetD(D_GAIN_ARM);
+        armPID->SetI(I_GAIN_ARM);
+        armPID->SetIZone(I_ZONE_ARM);
+        // armPID->SetFF(ARM_FF_GAIN_DEFNSE);        
+        isArmInDefenseMode = false;
+    }
+}

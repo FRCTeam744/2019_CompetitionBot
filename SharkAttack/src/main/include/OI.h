@@ -66,7 +66,7 @@ class OI
 	bool LEDButtonPressed();
 	bool AlsoLEDButtonPressed();
 
-	// bool GetIsArmInDefenseMode();
+	bool GetIsArmInDefenseMode();
 
 	// bool SetArmFrontHigh();
 	// bool SetArmFrontMid();
