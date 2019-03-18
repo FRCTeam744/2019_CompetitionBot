@@ -65,6 +65,7 @@ private:
 
   const frc::DriverStation::Alliance blue = frc::DriverStation::Alliance::kBlue;
   const frc::DriverStation::Alliance red = frc::DriverStation::Alliance::kRed;
+  bool hasSetUpForMatch = false;
 
   frc::Encoder *sampleEncoder; //Testing
 };

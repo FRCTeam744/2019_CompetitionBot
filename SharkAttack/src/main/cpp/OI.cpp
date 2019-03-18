@@ -36,6 +36,7 @@ OI::OI()
 
     isArmInManual = true;
     isWristInManual = true;
+    isInCargoShipMode = false;
 
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
@@ -62,17 +63,13 @@ bool OI::SwitchGears()
     if (leftStick->GetRawButtonPressed(1))
     {
         isHighGear = false;
-        //frc::SmartDashboard::PutBoolean("isHighGear", false);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
+            ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkDriveTrainGearDriver, isHighGear); 
         return true;
     }
     if (rightStick->GetRawButtonPressed(1))
     {
         isHighGear = true;
-        //frc::SmartDashboard::PutBoolean("isHighGear", true);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isHighGear", isHighGear);
-        // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
+            ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkDriveTrainGearDriver, isHighGear);
         return true;
     }
     return false;
@@ -120,18 +117,17 @@ double OI::GetArmInput()
 {
     armPowerOutput = xbox->GetY(LEFT_HAND);
     frc::SmartDashboard::PutNumber("Xbox Y Left", armPowerOutput);
-    //shuffleboard here
     if (armPowerOutput < ARM_DEADZONE && armPowerOutput > -ARM_DEADZONE)
     {
         armPowerOutput = 0.0;
     }
     else if (armPowerOutput >= ARM_DEADZONE)
     {
-        armPowerOutput = (armPowerOutput - ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
+        armPowerOutput = 0.2 * ((armPowerOutput - ARM_DEADZONE) / (1.0 - ARM_DEADZONE)); //Scales power to 0.0-1.0
     }
     else if (armPowerOutput <= -ARM_DEADZONE)
     {
-        armPowerOutput = (armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE); //Scales power to 0.0-1.0
+        armPowerOutput = 0.2 * ((armPowerOutput + ARM_DEADZONE) / (1.0 - ARM_DEADZONE)); //Scales power to 0.0-1.0
     }
 
     if (armPowerOutput != 0.0)
@@ -139,6 +135,7 @@ double OI::GetArmInput()
         isArmInManual = true;
     }
 
+    frc::SmartDashboard::PutNumber("Arm Control Output", armPowerOutput);
     return -armPowerOutput; //setting negative makes positive values move the arm forward
 }
 
@@ -151,11 +148,11 @@ double OI::GetWristInput()
     }
     else if (wristPowerOutput >= WRIST_DEADZONE)
     {
-        wristPowerOutput = (wristPowerOutput - WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
+        wristPowerOutput = 0.2 * ((wristPowerOutput - WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE)); //Scales power to 0.0-1.0
     }
     else if (armPowerOutput <= -WRIST_DEADZONE)
     {
-        wristPowerOutput = (wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE); //Scales power to 0.0-1.0
+        wristPowerOutput = 0.2 * ((wristPowerOutput + WRIST_DEADZONE) / (1.0 - WRIST_DEADZONE)); //Scales power to 0.0-1.0
     }
 
     if (wristPowerOutput != 0.0)
@@ -163,8 +160,8 @@ double OI::GetWristInput()
         isWristInManual = true;
     }
 
-    frc::SmartDashboard::PutNumber("Wrist Control Input", wristPowerOutput);
-    return -wristPowerOutput; //setting negative makes positive values move the wrist forward
+    frc::SmartDashboard::PutNumber("Wrist Control Output", wristPowerOutput);
+    return wristPowerOutput; 
 }
 
 double OI::GetIntakeInput()
@@ -229,17 +226,17 @@ void OI::PrintToSmartDashboard(double encoderValue)
 
 bool OI::GetFourbarExtend()
 {
-    return xbox->GetStartButton();
+    return leftStick->GetRawButton(15);
 }
 
 bool OI::GetFourbarRetract()
 {
-    return xbox->GetBackButton();
+    return leftStick->GetRawButton(16);
 }
 
 bool OI::GetFourbarHome()
 {
-    return rightStick->GetRawButtonPressed(8);
+    return rightStick->GetRawButtonPressed(16);
 }
 
 //Returns the Target Position to the Arm
@@ -390,6 +387,10 @@ double OI::GetTargetArmPosition()
     return targetArmPosition;
 }
 
+bool OI::IsInCargoShipMode () {
+    return xbox->GetBButton() || xbox->GetPOV(0) == DPAD_RIGHT;
+}
+
 double OI::GetTargetWristPosition()
 {
     //Ball Placement and Pickup Presets
@@ -513,6 +514,10 @@ bool OI::AlsoLEDButtonPressed()
     return rightStick->GetRawButton(3);
 }
 
+bool OI::GetStopLLMove() {
+    return leftStick->GetRawButton(12);
+}
+
 double OI::GetArmFFVoltage()
 {
 
@@ -524,4 +529,9 @@ double OI::GetArmFFVoltage()
     }
 
     return armFFVoltage;
+}
+
+bool OI::GetFakeFMSConnected(){
+    std::cout << "Button 7 working" << std::endl;
+    return leftStick->GetRawButton(7);
 }

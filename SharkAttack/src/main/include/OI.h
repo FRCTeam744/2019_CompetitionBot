@@ -16,6 +16,7 @@
 #include <cameraserver/CameraServer.h>
 #include <frc/smartdashboard/Smartdashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+#include <iostream>
 
 #include "ShuffleManager.h"
 
@@ -40,6 +41,8 @@ class OI
 
 	bool GetAutoDriveForward();
 	bool GetDriveByLimelight();
+	bool GetStopLLMove();
+	bool IsInCargoShipMode();
 
 	double GetArmInput();
 	double GetWristInput();
@@ -62,6 +65,8 @@ class OI
 
 	bool LEDButtonPressed();
 	bool AlsoLEDButtonPressed();
+
+	bool GetFakeFMSConnected();
 
 	// bool SetArmFrontHigh();
 	// bool SetArmFrontMid();
@@ -128,8 +133,8 @@ class OI
 	std::string m_autoSelected;
 
 	//CONTROLLER DEADZONES
-	const double ARM_DEADZONE = 0.07;
-	const double WRIST_DEADZONE = 0.08;
+	const double ARM_DEADZONE = 0.5;
+	const double WRIST_DEADZONE = 0.5;
 
 	//Use LEFT_HAND and RIGHT_HAND constants to designate left and right sides of XboxController in OI.cpp
 	const frc::XboxController::JoystickHand LEFT_HAND = frc::XboxController::kLeftHand;
@@ -174,7 +179,6 @@ class OI
 	frc::Joystick *rightStick;
 	frc::Joystick *leftStick;
 	frc::XboxController *xbox;
-	//bool isInitialized = false;
 
 	frc::Preferences *preferences;
 
@@ -190,6 +194,7 @@ class OI
 	bool isInBallPickup;
 	bool isArmInManual;
 	bool isWristInManual;
+	bool isInCargoShipMode;
 
 	double armFFVoltage;
 

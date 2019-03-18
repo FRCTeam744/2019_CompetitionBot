@@ -25,8 +25,7 @@ class LED {
         void LiftOffRed();
         void ShutDown();
 
-        void HatchOrBallModeBlue(bool isInBallMode);
-        void HatchOrBallModeRed(bool isInBallMode);
+        void HatchOrBallMode(bool isInBallMode, bool isVisionTracking);
 
     private:
 
