@@ -179,8 +179,14 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         }
         targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
         targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
-        targetArea = limelightFront->GetNumber("ta", 0.0);
+        currentArea = limelightFront->GetNumber("ta", 0.0);
         targetSkew = limelightFront->GetNumber("ts", 0.0);
+        tx0 = limelightFront->GetNumber("tx0", 0.0);
+        ty0 = limelightFront->GetNumber("ty0", 0.0);
+        tx1 = limelightFront->GetNumber("tx1", 0.0);
+        ty1 = limelightFront->GetNumber("ty1", 0.0);
+        tx2 = limelightFront->GetNumber("tx2", 0.0);
+        ty2 = limelightFront->GetNumber("ty2", 0.0);
     }
     else
     {
@@ -199,8 +205,14 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
 
         targetOffsetAngle_Horizontal = limelightBack->GetNumber("tx", 0.0);
         targetOffsetAngle_Vertical = limelightBack->GetNumber("ty", 0.0);
-        targetArea = limelightBack->GetNumber("ta", 0.0);
+        currentArea = limelightBack->GetNumber("ta", 0.0);
         targetSkew = limelightBack->GetNumber("ts", 0.0);
+        tx0 = limelightBack->GetNumber("tx0", 0.0);
+        ty0 = limelightBack->GetNumber("ty0", 0.0);
+        tx1 = limelightBack->GetNumber("tx1", 0.0);
+        ty1 = limelightBack->GetNumber("ty1", 0.0);
+        tx2 = limelightBack->GetNumber("tx2", 0.0);
+        ty2 = limelightBack->GetNumber("ty2", 0.0);
     }
 
     double p_dist_loop = 0;
@@ -223,14 +235,15 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     frc::SmartDashboard::PutNumber("zDesiredInches", zDesiredInches);
     frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
-    double desiredAngle = currentDistanceInches*slopeForAngleCalc + interceptForAngleCalc;
+    // double desiredAngle = currentDistanceInches*slopeForAngleCalc + interceptForAngleCalc;
+    double desiredAngle = targetOffsetAngle_Vertical*slopeForAngleCalc + interceptForAngleCalc;
     double angleError = targetOffsetAngle_Horizontal-desiredAngle;
-    if(angleError > 30) {
-        angleError = 30;
-    }
-    else if(angleError < -30) {
-        angleError = -30;
-    }
+    // if(angleError > 30) {
+    //     angleError = 30;
+    // }
+    // else if(angleError < -30) {
+    //     angleError = -30;
+    // }
     frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle);
     frc::SmartDashboard::PutNumber("Angle Error", angleError);
     
@@ -240,13 +253,24 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Crosshair Angle", crosshairAngle);
     
 
-    adjust = kP_ANGLE*angleError;
+
+    frc::SmartDashboard::PutNumber("Raw Target 0 X", tx0);
+    frc::SmartDashboard::PutNumber("Raw Target 0 Y", ty0);
+    frc::SmartDashboard::PutNumber("Raw Target 1 X", tx1);
+    frc::SmartDashboard::PutNumber("Raw Target 1 Y", ty1);
+    frc::SmartDashboard::PutNumber("Raw Target 2 X", tx2);
+    frc::SmartDashboard::PutNumber("Raw Target 2 Y", ty2);
+
+    adjust = 0.5*kP_ANGLE*angleError;
     // adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
     
     
     frc::SmartDashboard::PutNumber("Adjust", adjust);
+    frc::SmartDashboard::PutNumber("Current Area", currentArea);
+    frc::SmartDashboard::PutNumber("targetSkew", targetSkew);
     
     p_dist_loop = kP_DIST * (zDesiredInches - currentDistanceInches);
+    // p_dist_loop = kP_DIST * -3 * (8.8 - currentArea); // (zDesiredInches - currentDistanceInches);
 
     // if (isFront == false)
     // {
@@ -336,6 +360,8 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
 
 void Drivetrain::TankDrive(double leftValue, double rightValue)
 {
+    leftValue = leftValue*0.5;
+    rightValue = rightValue*0.5;
     if (!isInAutoDrive && !isInLLDrive)
     {
         leftBack->Set(ControlMode::PercentOutput, leftValue);

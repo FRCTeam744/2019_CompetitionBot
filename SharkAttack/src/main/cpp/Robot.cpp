@@ -268,10 +268,14 @@ void Robot::GetDesiredLLDistances(double armTargetPosition)
   if (armTargetPosition == oi->FRONT_LOW_HATCH_POSITION)
   {
     xDesiredInches = 0;
-    zDesiredInches = 33; ///26.4;
-    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT);
-    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT);
-    drivetrain->SetPipelineNumber(0);
+    zDesiredInches = 22; ///26.4;
+    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT_NEW, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT_NEW);
+    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT_NEW);
+    drivetrain->SetPipelineNumber(4);
+    // zDesiredInches = 33; ///26.4;
+    // drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT);
+    // drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT);
+    // drivetrain->SetPipelineNumber(0);
   }
   if (armTargetPosition == oi->BACK_LOW_HATCH_POSITION)
   {

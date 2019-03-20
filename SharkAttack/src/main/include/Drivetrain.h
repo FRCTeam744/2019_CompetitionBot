@@ -38,6 +38,7 @@ class Drivetrain
 	//measured crosshair angles
 	//FRONT
 	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT = 0.5; 
+	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT_NEW = 10.9; 
 	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT   = -3.6; 
 	const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 13.55; 
 	const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT = 0;
@@ -51,6 +52,9 @@ class Drivetrain
 	//HATCH FRONT
 	const double SLOPE_LOW_HIGH_HATCH_FRONT = 0.2608; 
 	const double INTERCEPT_LOW_HIGH_HATCH_FRONT = -8.206;
+	const double SLOPE_LOW_HIGH_HATCH_FRONT_NEW = 0.790512334;
+	const double INTERCEPT_LOW_HIGH_HATCH_FRONT_NEW = 0.0;
+
 	const double SLOPE_MIDDLE_HATCH_FRONT = 0.15; 
 	const double INTERCEPT_MIDDLE_HATCH_FRONT = -3.31;
 
@@ -120,8 +124,14 @@ class Drivetrain
 
 	double targetOffsetAngle_Horizontal;
 	double targetOffsetAngle_Vertical;
-	double targetArea;
+	double currentArea;
 	double targetSkew;
+	double tx0;
+	double ty0;
+	double tx1;
+	double ty1;
+	double tx2;
+	double ty2;
 	std::vector<double> limelightPose;
 	std::vector<double> rawXBuffer;
 	std::vector<double> rawYBuffer;
@@ -185,7 +195,7 @@ class Drivetrain
 
 
 	const double DESIRED_DISTANCE_INCHES = 22;									//desired distance from target
-	const double kP_DIST_FPS = -.20;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
+	const double kP_DIST_FPS = -.15;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
 	const double kP_NU_PER_100MS = kP_DIST_FPS * FEET_TO_NU * SECONDS_TO_100MS; //Converted from FPS estimate above to NU/100ms that the talon can use
 	const double LL_DISTANCE_PER_5FEET_FRONT = 100.0;
 	const double LL_DISTANCE_PER_5FEET_BACK = 100.0;
