@@ -24,7 +24,7 @@ LED::LED()
     try
     {
         arduino = new frc::SerialPort(9600, frc::SerialPort::kUSB);
-        arduino->SetTimeout(0.001);
+        arduino->SetTimeout(0.01);
     }
     catch (const std::exception &e)
     {
