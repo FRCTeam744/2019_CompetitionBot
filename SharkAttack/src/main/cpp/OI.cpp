@@ -92,19 +92,19 @@ bool OI::GetVelocityTest()
 
 bool OI::SwitchGripper()
 {
-    if (xbox->GetBumperPressed(LEFT_HAND))
+    if (xbox->GetBumper(RIGHT_HAND))
     {
         isGripperClosed = false;
-        //frc::SmartDashboard::PutBoolean("isGripperClosed", false);
+        frc::SmartDashboard::PutBoolean("isGripperClosed", false);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed_TEST", isGripperClosed);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed_PRE", isGripperClosed);
         return true;
     }
-    if (xbox->GetBumperPressed(RIGHT_HAND))
+    if (!xbox->GetBumper(RIGHT_HAND))
     {
         isGripperClosed = true;
-        //frc::SmartDashboard::PutBoolean("isGripperClosed", true);
+        frc::SmartDashboard::PutBoolean("isGripperClosed", true);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed_TEST", isGripperClosed);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed_PRE", isGripperClosed);
@@ -232,12 +232,12 @@ void OI::PrintToSmartDashboard(double encoderValue)
 
 bool OI::GetFourbarExtend()
 {
-    return leftStick->GetRawButton(15);
+    return xbox->GetStartButton();
 }
 
 bool OI::GetFourbarRetract()
 {
-    return leftStick->GetRawButton(16);
+    return xbox->GetBackButton();
 }
 
 bool OI::GetFourbarHome()
@@ -315,7 +315,7 @@ double OI::GetTargetArmPosition()
             isInBallPickup = false;
         }
 
-        if (xbox->GetStartButtonPressed()){
+        if (xbox->GetBumperPressed(LEFT_HAND)){
             targetArmPosition = NEUTRAL_ARM_POSITION;
             isArmInManual = false;
             isWristInManual = false;
@@ -383,7 +383,7 @@ double OI::GetTargetArmPosition()
             isWristInManual = false;
         }
 
-        if (xbox->GetStartButtonPressed()){
+        if (xbox->GetBumperPressed(LEFT_HAND)){
             targetArmPosition = NEUTRAL_ARM_POSITION;
             isArmInManual = false;
             isWristInManual = false;

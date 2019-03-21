@@ -96,7 +96,7 @@ class Drivetrain
 	//Distances
 	//Front
 	const double HATCH_LOW_HIGH_FRONT_DESIRED_INCHES = 22;
-	const double HATCH_MID_FRONT_DESIRED_INCHES = 36;
+	const double HATCH_MID_FRONT_DESIRED_INCHES = 50;
 	const double CARGO_SHIP_FRONT_DESIRED_INCHES = 24;
 	const double FRONT_INIT_PIPELINE_DESIRED_INCHES = 20;
 
@@ -246,7 +246,7 @@ class Drivetrain
 	// const double CROSSHAIR_ANGLE = 6.5; //17.3
 
 	const double kP_ANGLE = 0.08; //FOR ANGLE CORRECTION TODO
-	const double kI_ANGLE = 0.000; //FOR ANGLE CORRECTION TODO
+	const double kI_ANGLE = 0.0008; //FOR ANGLE CORRECTION TODO
 	const double I_ZONE_ANGLE = 3; //degrees
 
 	const double MIN_COMMAND = 0.23;
