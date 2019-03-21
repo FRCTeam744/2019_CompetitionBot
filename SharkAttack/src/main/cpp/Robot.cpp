@@ -186,92 +186,92 @@ int main()
 void Robot::GetDesiredLLDistances(double armTargetPosition)
 {
   if (armTargetPosition == oi->FRONT_HIGH_BALL_POSITION)
-  {
-    xDesiredInches = 0;
-    zDesiredInches = 10.52; // TODO CHANGE
-    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_FRONT, drivetrain->INTERCEPT_LOW_HIGH_BALL_FRONT);
-    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT);
-    drivetrain->SetPipelineNumber(3);
+  { //NOT USED NOW
+    // xDesiredInches = 0;
+    // zDesiredInches = 10.52; // TODO CHANGE
+    // drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_FRONT, drivetrain->INTERCEPT_LOW_HIGH_BALL_FRONT);
+    // drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT);
+    // drivetrain->SetPipelineNumber(3);
   }
   if (armTargetPosition == oi->BACK_HIGH_BALL_POSITION)
-  {
-    xDesiredInches = 0;
-    zDesiredInches = 22; // TODO CHANGE
-    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_BACK, drivetrain->INTERCEPT_LOW_HIGH_BALL_BACK);
-    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK);
-    drivetrain->SetPipelineNumber(3);
+  { //NOT USED NOW
+    // xDesiredInches = 0;
+    // zDesiredInches = 22; // TODO CHANGE
+    // drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_BACK, drivetrain->INTERCEPT_LOW_HIGH_BALL_BACK);
+    // drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK);
+    // drivetrain->SetPipelineNumber(3);
   }
-  if (armTargetPosition == oi->FRONT_MID_BALL_POSITION)
-  {
+  if (armTargetPosition == oi->FRONT_MID_BALL_POSITION || armTargetPosition == oi->FRONT_CARGOSHIP_BALL_POSITION)
+  { //USED FOR CARGO BAY
     xDesiredInches = 0;
-    zDesiredInches = 22; // TODO CHANGE
-    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_MID_BALL_FRONT, drivetrain->INTERCEPT_MID_BALL_FRONT);
-    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT);
-    drivetrain->SetPipelineNumber(4);
+    zDesiredInches = drivetrain->CARGO_SHIP_FRONT_DESIRED_INCHES; // TODO CHANGE
+    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_CARGO_SHIP_BALL_FRONT, drivetrain->INTERCEPT_CARGO_SHIP_BALL_FRONT);
+    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_CARGO_SHIP_FRONT);
+    drivetrain->SetPipelineNumber(drivetrain->BALL_CARGO_SHIP_PIPELINE);
   }
-  if (armTargetPosition == oi->BACK_MID_BALL_POSITION)
-  {
+  if (armTargetPosition == oi->BACK_MID_BALL_POSITION || armTargetPosition == oi->BACK_CARGOSHIP_BALL_POSITION)
+  { //USED FOR CARGO BAY
     xDesiredInches = 0;
-    zDesiredInches = 22; // TODO CHANGE
-    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_MID_BALL_BACK, drivetrain->INTERCEPT_MID_BALL_BACK);
-    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_MIDDLE_BACK);
-    drivetrain->SetPipelineNumber(4);
+    zDesiredInches = drivetrain->CARGO_SHIP_BACK_DESIRED_INCHES; // TODO CHANGE
+    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_CARGO_SHIP_BALL_BACK, drivetrain->INTERCEPT_CARGO_SHIP_BALL_BACK);
+    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_CARGO_SHIP_BACK);
+    drivetrain->SetPipelineNumber(drivetrain->BALL_CARGO_SHIP_PIPELINE);
   }
   if (armTargetPosition == oi->FRONT_LOW_BALL_POSITION)
-  {
-    xDesiredInches = 0;
-    zDesiredInches = 10.52; // TODO CHANGE
-    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_FRONT, drivetrain->INTERCEPT_LOW_HIGH_BALL_FRONT);
-    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT);
-    drivetrain->SetPipelineNumber(3);
+  { //NOT USED NOW
+    // xDesiredInches = 0;
+    // zDesiredInches = 10.52; // TODO CHANGE
+    // drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_FRONT, drivetrain->INTERCEPT_LOW_HIGH_BALL_FRONT);
+    // drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT);
+    // drivetrain->SetPipelineNumber(3);
   }
   if (armTargetPosition == oi->BACK_LOW_BALL_POSITION)
-  {
-    xDesiredInches = 0;
-    zDesiredInches = 13.39; // TODO CHANGE
-    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_BACK, drivetrain->INTERCEPT_LOW_HIGH_BALL_BACK);
-    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK);
-    drivetrain->SetPipelineNumber(3);
+  { //NOT USED NOW
+    // xDesiredInches = 0;
+    // zDesiredInches = 13.39; // TODO CHANGE
+    // drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_BALL_BACK, drivetrain->INTERCEPT_LOW_HIGH_BALL_BACK);
+    // drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK);
+    // drivetrain->SetPipelineNumber(3);
   }
   if (armTargetPosition == oi->FRONT_HIGH_HATCH_POSITION)
   {
     xDesiredInches = 0;
-    zDesiredInches = 33; //26.4; //was 22.6
+    zDesiredInches = drivetrain->HATCH_LOW_HIGH_FRONT_DESIRED_INCHES; //26.4; //was 22.6
     drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT);
     drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT);
-    drivetrain->SetPipelineNumber(0);
+    drivetrain->SetPipelineNumber(drivetrain->HATCH_LOW_HIGH_FINAL_PIPELINE);
   }
   if (armTargetPosition == oi->BACK_HIGH_HATCH_POSITION)
   {
     xDesiredInches = 0;
-    zDesiredInches = 24;
+    zDesiredInches = drivetrain->HATCH_LOW_HIGH_BACK_DESIRED_INCHES;
     drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_BACK, drivetrain->INTERCEPT_LOW_HIGH_HATCH_BACK);
     drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK);
-    drivetrain->SetPipelineNumber(0);
+    drivetrain->SetPipelineNumber(drivetrain->HATCH_LOW_HIGH_FINAL_PIPELINE);
   }
   if (armTargetPosition == oi->FRONT_MID_HATCH_POSITION)
   {
     xDesiredInches = 0;
-    zDesiredInches = 36;
+    zDesiredInches = drivetrain->HATCH_MID_FRONT_DESIRED_INCHES;
     drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_MIDDLE_HATCH_FRONT, drivetrain->INTERCEPT_MIDDLE_HATCH_FRONT);
     drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT);
-    drivetrain->SetPipelineNumber(2.0);
+    drivetrain->SetPipelineNumber(drivetrain->HATCH_MID_FINAL_PIPELINE);
   }
   if (armTargetPosition == oi->BACK_MID_HATCH_POSITION)
   {
     xDesiredInches = 0;
-    zDesiredInches = 23;
+    zDesiredInches = drivetrain->HATCH_MID_BACK_DESIRED_INCHES;
     drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_MIDDLE_HATCH_BACK, drivetrain->INTERCEPT_MIDDLE_HATCH_BACK);
     drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_BACK);
-    drivetrain->SetPipelineNumber(2.0);
+    drivetrain->SetPipelineNumber(drivetrain->HATCH_MID_FINAL_PIPELINE);
   }
   if (armTargetPosition == oi->FRONT_LOW_HATCH_POSITION)
   {
     xDesiredInches = 0;
-    zDesiredInches = 22; ///26.4;
-    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT_NEW, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT_NEW);
-    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT_NEW);
-    drivetrain->SetPipelineNumber(4);
+    zDesiredInches = drivetrain->HATCH_LOW_HIGH_FRONT_DESIRED_INCHES; ///26.4;
+    drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT);
+    drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT);
+    drivetrain->SetPipelineNumber(drivetrain->HATCH_LOW_HIGH_FINAL_PIPELINE);
     // zDesiredInches = 33; ///26.4;
     // drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_FRONT, drivetrain->INTERCEPT_LOW_HIGH_HATCH_FRONT);
     // drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT);
@@ -280,12 +280,12 @@ void Robot::GetDesiredLLDistances(double armTargetPosition)
   if (armTargetPosition == oi->BACK_LOW_HATCH_POSITION)
   {
     xDesiredInches = 0;
-    zDesiredInches = 24;
+    zDesiredInches = drivetrain->HATCH_LOW_HIGH_BACK_DESIRED_INCHES;
     drivetrain->SetSlopeInterceptForAngleCalc(drivetrain->SLOPE_LOW_HIGH_HATCH_BACK, drivetrain->INTERCEPT_LOW_HIGH_HATCH_BACK);
     drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK);
-    drivetrain->SetPipelineNumber(0);
+    drivetrain->SetPipelineNumber(drivetrain->HATCH_LOW_HIGH_FINAL_PIPELINE);
   }
-  if (armTargetPosition > 0)
+  if (armTargetPosition >= 0)
   {
     drivetrain->SetIsFrontLL(true);
   }

@@ -141,8 +141,8 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     {
         if (isInLLDrive)
         {
-            limelightFront->PutNumber("pipeline", 1.0);
-            limelightBack->PutNumber("pipeline", 1.0);
+            limelightFront->PutNumber("pipeline", DRIVER_PIPELINE);
+            limelightBack->PutNumber("pipeline", DRIVER_PIPELINE);
         }
         isInLLDrive = false;
         return;
@@ -164,23 +164,50 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
 
     if (isFront)
     {
+        tv = limelightFront->GetNumber("tv", 0.0);
+        actualPipeline = tv = limelightFront->GetNumber("pipeline", 0.0);
+        targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
+        targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
+        currentArea = limelightFront->GetNumber("ta", 0.0);
+        targetSkew = limelightFront->GetNumber("ts", 0.0);
+        frc::SmartDashboard::PutNumber("Num Targets", tv);
+        frc::SmartDashboard::PutNumber("Actual Pipeline", pipelineNumber);
+        frc::SmartDashboard::PutNumber("Angle Offset (tx)", targetOffsetAngle_Horizontal);
+        frc::SmartDashboard::PutNumber("ty", targetOffsetAngle_Vertical);
+        frc::SmartDashboard::PutNumber("Current Area", currentArea);
+        frc::SmartDashboard::PutNumber("targetSkew", targetSkew);
+    
+    
         //wait for pipeline change and target acquisition
-        if (limelightFront->GetNumber("tv", 0.0) == 0 || limelightFront->GetNumber("getpipe", 0.0) == 1)
+        if (limelightFront->GetNumber("tv", 0.0) == 0 || limelightFront->GetNumber("getpipe", 0.0) == DRIVER_PIPELINE)
         {
             IsTargetNotAcquired(leftTank, rightTank);
             return;
         }
 
-        //first time seeing, or re-seeing the target
-        if (limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) != 1 && !isTargetAcquired)
+        //only 1 valid target
+        if (limelightFront->GetNumber("tv", 0.0) > 0 && limelightFront->GetNumber("getpipe", 0.0) != DRIVER_PIPELINE && !isTargetAcquired)
         {
             isTargetAcquired = true;
+            overrideEnabled = false;
             counter = 0;
+            limelightFront->PutNumber("pipeline", pipelineNumber);
+            accumAngleError = 0;
+            prevDistanceError = 100; 
+            prevAngleError = 100;
+            prevDistance = 0; 
+            prevAngle = 0; 
         }
-        targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
-        targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
-        currentArea = limelightFront->GetNumber("ta", 0.0);
-        targetSkew = limelightFront->GetNumber("ts", 0.0);
+        //multiple valid target
+        // else if (limelightFront->GetNumber("tv", 0.0) > 1 && limelightFront->GetNumber("getpipe", 0.0) != 1)
+        // {
+        //     isTargetAcquired = false;
+        //     // limelightFront->PutNumber("pipeline", pipelineNumber);
+        // }
+        // targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
+        // targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
+        // currentArea = limelightFront->GetNumber("ta", 0.0);
+        // targetSkew = limelightFront->GetNumber("ts", 0.0);
         tx0 = limelightFront->GetNumber("tx0", 0.0);
         ty0 = limelightFront->GetNumber("ty0", 0.0);
         tx1 = limelightFront->GetNumber("tx1", 0.0);
@@ -190,23 +217,49 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
     else
     {
-        //wait for pipeline change and target acquisition
-        if (limelightBack->GetNumber("tv", 0.0) == 0 || limelightBack->GetNumber("getpipe", 0.0) == 1)
-        {
-            IsTargetNotAcquired(leftTank, rightTank);
-            return;
-        }
-        //first time seeing, or re-seeing the target
-        if (limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) != 1 && !isTargetAcquired)
-        {
-            isTargetAcquired = true;
-            counter = 0;
-        }
-
+        tv = limelightBack->GetNumber("tv", 0.0);
+        actualPipeline = tv = limelightBack->GetNumber("pipeline", 0.0);
         targetOffsetAngle_Horizontal = limelightBack->GetNumber("tx", 0.0);
         targetOffsetAngle_Vertical = limelightBack->GetNumber("ty", 0.0);
         currentArea = limelightBack->GetNumber("ta", 0.0);
         targetSkew = limelightBack->GetNumber("ts", 0.0);
+        
+        frc::SmartDashboard::PutNumber("Num Targets", tv);
+        frc::SmartDashboard::PutNumber("Actual Pipeline", pipelineNumber);
+        frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
+        frc::SmartDashboard::PutNumber("ty", targetOffsetAngle_Vertical);
+        frc::SmartDashboard::PutNumber("Current Area", currentArea);
+        frc::SmartDashboard::PutNumber("targetSkew", targetSkew);
+    
+
+        //wait for pipeline change and target acquisition
+        if (limelightBack->GetNumber("tv", 0.0) == 0 || limelightBack->GetNumber("getpipe", 0.0) == DRIVER_PIPELINE)
+        {
+            IsTargetNotAcquired(leftTank, rightTank);
+            return;
+        }
+        if (limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) != DRIVER_PIPELINE && !isTargetAcquired)
+        {
+            isTargetAcquired = true;
+            overrideEnabled = false;
+            counter = 0;
+            limelightBack->PutNumber("pipeline", pipelineNumber);
+            accumAngleError = 0;
+            prevDistanceError = 100; 
+            prevAngleError = 100;
+            prevDistance = 0; 
+            prevAngle = 0;
+        }
+        //first time seeing, or re-seeing the target
+        // else if (limelightBack->GetNumber("tv", 0.0) > 1 && limelightBack->GetNumber("getpipe", 0.0) != 1)
+        // {
+        //     isTargetAcquired = false;
+        // }
+
+        // targetOffsetAngle_Horizontal = limelightBack->GetNumber("tx", 0.0);
+        // targetOffsetAngle_Vertical = limelightBack->GetNumber("ty", 0.0);
+        // currentArea = limelightBack->GetNumber("ta", 0.0);
+        // targetSkew = limelightBack->GetNumber("ts", 0.0);
         tx0 = limelightBack->GetNumber("tx0", 0.0);
         ty0 = limelightBack->GetNumber("ty0", 0.0);
         tx1 = limelightBack->GetNumber("tx1", 0.0);
@@ -219,10 +272,6 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     double targetHeight = TARGET_LOW_HEIGHT_INCHES;
     double limelightAngle = LIMELIGHT_ANGLE_FRONT;
     double kP_DIST = kP_DIST_FPS;
-    if(isBallMode) {
-        targetHeight = TARGET_HIGH_HEIGHT_INCHES;
-        kP_DIST = kP_DIST_FPS * 10;
-    }
     if(isFront) {
         kP_DIST = kP_DIST_FPS;
         limelightAngle = LIMELIGHT_ANGLE_FRONT;
@@ -234,16 +283,12 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - targetHeight) / tan((limelightAngle + crosshairAngle - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
     frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     frc::SmartDashboard::PutNumber("zDesiredInches", zDesiredInches);
-    frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
-    // double desiredAngle = currentDistanceInches*slopeForAngleCalc + interceptForAngleCalc;
     double desiredAngle = targetOffsetAngle_Vertical*slopeForAngleCalc + interceptForAngleCalc;
     double angleError = targetOffsetAngle_Horizontal-desiredAngle;
-    // if(angleError > 30) {
-    //     angleError = 30;
-    // }
-    // else if(angleError < -30) {
-    //     angleError = -30;
-    // }
+    if(abs(angleError) < I_ZONE_ANGLE) {
+        accumAngleError += angleError;
+    }
+    else { accumAngleError = 0;}
     frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle);
     frc::SmartDashboard::PutNumber("Angle Error", angleError);
     
@@ -260,23 +305,15 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Raw Target 1 Y", ty1);
     frc::SmartDashboard::PutNumber("Raw Target 2 X", tx2);
     frc::SmartDashboard::PutNumber("Raw Target 2 Y", ty2);
-
-    adjust = 0.5*kP_ANGLE*angleError;
+    
+    adjust = 0.5*kP_ANGLE*angleError + kI_ANGLE*accumAngleError;
     // adjust = kP_ANGLE*targetOffsetAngle_Horizontal;
     
     
     frc::SmartDashboard::PutNumber("Adjust", adjust);
-    frc::SmartDashboard::PutNumber("Current Area", currentArea);
-    frc::SmartDashboard::PutNumber("targetSkew", targetSkew);
     
-    p_dist_loop = kP_DIST * (zDesiredInches - currentDistanceInches);
-    // p_dist_loop = kP_DIST * -3 * (8.8 - currentArea); // (zDesiredInches - currentDistanceInches);
-
-    // if (isFront == false)
-    // {
-    //     p_dist_loop = -p_dist_loop*kP_MULTIPLIER_FRONT_TO_BACK;
-    // }
-
+    double distanceError = (zDesiredInches - currentDistanceInches);
+    p_dist_loop = kP_DIST * distanceError;
     if (p_dist_loop > LL_MAX_FEET_PER_SEC)
     {
         p_dist_loop = LL_MAX_FEET_PER_SEC;
@@ -291,8 +328,35 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
 
     frc::SmartDashboard::PutNumber("Desired FPS Left", desiredLeftFPS);
     frc::SmartDashboard::PutNumber("Desired FPS Right", desiredRightFPS);
+    frc::SmartDashboard::PutNumber("Distance Error", distanceError);
+    frc::SmartDashboard::PutNumber("Prev Distance", prevDistance);
+    frc::SmartDashboard::PutNumber("Prev Angle", prevAngle);
+    std::cout << "PrevDistErr," << prevDistanceError;
+    std::cout << " PrevAngleErr," << prevAngleError;
+    std::cout << " Dist," << currentDistanceInches;
+    std::cout << " Angle," << targetOffsetAngle_Horizontal;
+    std::cout << " PrevDist," << prevDistance;
+    std::cout << " PrevAngle," << prevAngle;
 
-    if(! wantToNotMove) {
+
+    if(abs(prevDistanceError) < 10 && abs(prevAngleError) < 5) { //close to target{
+        if(abs(currentDistanceInches - prevDistance) > 5 || //sudden jump in target
+            abs(prevAngle-targetOffsetAngle_Horizontal) > 5) {
+                overrideEnabled = true;
+            }
+    }
+    std::cout << " wantToNotMove," << wantToNotMove << std::endl;
+
+
+    if(wantToNotMove || overrideEnabled) {
+        leftBack->Set(ControlMode::PercentOutput, 0.0); 
+        rightBack->Set(ControlMode::PercentOutput, 0.0);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
+    else {
         leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
         rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
@@ -301,67 +365,17 @@ void Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
     }
 
+    prevDistance = currentDistanceInches;
+	prevAngle = targetOffsetAngle_Horizontal;
+    prevDistanceError = distanceError;
+    prevAngleError = angleError;
     
-    /*else if (xbox->GetBackButton())
-  {
-
-    desiredLeftFPS = desiredRightFPS = 2.0;
-
-    leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
-    leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-    rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
-    rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
-  }
-  
-  //looking at what type of drive system is active based on buttons
-  else if (!arcadeDrive)
-  {
-    if (driveWithXbox)
-    {
-
-      leftPower = -xbox->GetY(leftHand);
-      rightPower = -xbox->GetY(rightHand);
-
-      // speedTankDrive(xbox->GetY(leftHand), xbox->GetY(rightHand));
-      leftBack->Set(ControlMode::PercentOutput, leftPower);
-      leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-      rightBack->Set(ControlMode::PercentOutput, rightPower);
-      rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
-    }
-    else
-    {
-
-      leftPower = -leftStick->GetY();
-      rightPower = -rightStick->GetY();
-
-      // speedTankDrive(leftStick->GetY(), rightStick->GetY());
-      leftBack->Set(ControlMode::PercentOutput, leftPower);
-      leftFront->Set(ControlMode::Follower, LEFT_TALON_MASTER);
-      rightBack->Set(ControlMode::PercentOutput, rightPower);
-      rightFront->Set(ControlMode::Follower, RIGHT_TALON_MASTER);
-    }
-  }
-  else
-  {
-    if (driveWithXbox)
-    {
-      // driveTrain->ArcadeDrive(xbox->GetY(leftHand), xbox->GetX(rightHand), false);
-    }
-    else
-    {
-      // driveTrain->ArcadeDrive(leftStick->GetY(), rightStick->GetX(), false);
-    }
-  }
-
-  frc::SmartDashboard::PutNumber("Left Power", leftPower);
-  frc::SmartDashboard::PutNumber("Right Power", rightPower);
-  */
 }
 
 void Drivetrain::TankDrive(double leftValue, double rightValue)
 {
-    leftValue = leftValue*0.5;
-    rightValue = rightValue*0.5;
+    // leftValue = leftValue*0.5;
+    // rightValue = rightValue*0.5;
     if (!isInAutoDrive && !isInLLDrive)
     {
         leftBack->Set(ControlMode::PercentOutput, leftValue);

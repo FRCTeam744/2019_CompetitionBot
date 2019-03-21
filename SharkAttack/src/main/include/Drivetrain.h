@@ -37,44 +37,75 @@ class Drivetrain
 
 	//measured crosshair angles
 	//FRONT
-	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT = 0.5; 
-	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT_NEW = 10.9; 
-	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT   = -3.6; 
-	const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 13.55; 
-	const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT = 0;
+	// const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT = 0.5; 
+	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT  = -17.86;// 10.9; 
+	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT    = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT; 
+	const double CROSSHAIR_TY_ANGLE_BALL_CARGO_SHIP_FRONT = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT;
+	const double CROSSHAIR_TY_ANGLE_CARGO_SHIP_FRONT_INIT = 0.0;
+	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 13.55; 
+	// const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT = 0;
 
 	//BACK
 	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK = 9.10; 
-	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_BACK   = 4.04; 
-	const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK = 0; 
-	const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_BACK = 0;
+	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_BACK   = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK; 
+	const double CROSSHAIR_TY_ANGLE_BALL_CARGO_SHIP_BACK = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK;
+	const double CROSSHAIR_TY_ANGLE_CARGO_SHIP_BACK_INIT = 0.0;
+	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK = 0; 
+	// const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_BACK = 0;
 
-	//HATCH FRONT
-	const double SLOPE_LOW_HIGH_HATCH_FRONT = 0.2608; 
-	const double INTERCEPT_LOW_HIGH_HATCH_FRONT = -8.206;
-	const double SLOPE_LOW_HIGH_HATCH_FRONT_NEW = 0.790512334;
-	const double INTERCEPT_LOW_HIGH_HATCH_FRONT_NEW = 0.0;
-
-	const double SLOPE_MIDDLE_HATCH_FRONT = 0.15; 
-	const double INTERCEPT_MIDDLE_HATCH_FRONT = -3.31;
-
-	//HATCH BACK
-	const double SLOPE_LOW_HIGH_HATCH_BACK = -0.35; 
-	const double INTERCEPT_LOW_HIGH_HATCH_BACK = 7.51;
-	const double SLOPE_MIDDLE_HATCH_BACK = -0.344; 
-	const double INTERCEPT_MIDDLE_HATCH_BACK = 14.86;
+	//FRONT
+	// const double SLOPE_LOW_HIGH_HATCH_FRONT = 0.2608; --old
+	// const double INTERCEPT_LOW_HIGH_HATCH_FRONT = -8.206; --old
+	const double SLOPE_LOW_HIGH_HATCH_FRONT      = 0.6786874594;//0.790512334;
+	const double INTERCEPT_LOW_HIGH_HATCH_FRONT  = 0.0;
+	const double SLOPE_MIDDLE_HATCH_FRONT        = SLOPE_LOW_HIGH_HATCH_FRONT; 
+	const double INTERCEPT_MIDDLE_HATCH_FRONT    = INTERCEPT_LOW_HIGH_HATCH_FRONT;
+	const double SLOPE_CARGO_SHIP_BALL_FRONT     = SLOPE_LOW_HIGH_HATCH_FRONT; 
+	const double INTERCEPT_CARGO_SHIP_BALL_FRONT = INTERCEPT_LOW_HIGH_HATCH_FRONT;
+	const double SLOPE_INIT_FRONT_PIPELINE       = 0.790512334;
+	//BACK
+	const double SLOPE_LOW_HIGH_HATCH_BACK      = -0.35; 
+	const double INTERCEPT_LOW_HIGH_HATCH_BACK  = 7.51;
+	const double SLOPE_MIDDLE_HATCH_BACK        = SLOPE_LOW_HIGH_HATCH_BACK; 
+	const double INTERCEPT_MIDDLE_HATCH_BACK    = INTERCEPT_LOW_HIGH_HATCH_BACK;
+	const double SLOPE_CARGO_SHIP_BALL_BACK     = SLOPE_LOW_HIGH_HATCH_BACK; 
+	const double INTERCEPT_CARGO_SHIP_BALL_BACK = INTERCEPT_LOW_HIGH_HATCH_BACK;
 
 	//BALL FRONT
-	const double SLOPE_LOW_HIGH_BALL_FRONT = 2.6758579; 
-	const double INTERCEPT_LOW_HIGH_BALL_FRONT = -26.96;
-	const double SLOPE_MID_BALL_FRONT = 0.15; 
-	const double INTERCEPT_MID_BALL_FRONT = -3.31;
+	// const double SLOPE_LOW_HIGH_BALL_FRONT = 2.6758579; 
+	// const double INTERCEPT_LOW_HIGH_BALL_FRONT = -26.96;
+	// const double SLOPE_MID_BALL_FRONT = 0.15; 
+	// const double INTERCEPT_MID_BALL_FRONT = -3.31;
 
-	//BALL BACK
-	const double SLOPE_LOW_HIGH_BALL_BACK = -0.55; 
-	const double INTERCEPT_LOW_HIGH_BALL_BACK = 4.7;
-	const double SLOPE_MID_BALL_BACK = -0.344; 
-	const double INTERCEPT_MID_BALL_BACK = 14.86;
+	// //BALL BACK
+	// const double SLOPE_LOW_HIGH_BALL_BACK = -0.55; 
+	// const double INTERCEPT_LOW_HIGH_BALL_BACK = 4.7;
+	// const double SLOPE_MID_BALL_BACK = -0.344;
+	// const double INTERCEPT_MID_BALL_BACK = 14.86;
+
+
+	//Pipelines
+	const double INIT_PIPELINE = 5;
+	const double HATCH_LOW_HIGH_FINAL_PIPELINE = 4; //was 0
+	// const double HATCH_LOW_HIGH_INIT_PIPELINE  = INIT_PIPELINE; 
+	const double HATCH_MID_FINAL_PIPELINE      = HATCH_LOW_HIGH_FINAL_PIPELINE; //was 2
+	// const double HATCH_MID_INIT_PIPELINE       = INIT_PIPELINE;
+	const double BALL_CARGO_SHIP_PIPELINE      = HATCH_LOW_HIGH_FINAL_PIPELINE;//6;
+	const double DRIVER_PIPELINE 			   = 1;
+
+	//Distances
+	//Front
+	const double HATCH_LOW_HIGH_FRONT_DESIRED_INCHES = 22;
+	const double HATCH_MID_FRONT_DESIRED_INCHES = 36;
+	const double CARGO_SHIP_FRONT_DESIRED_INCHES = 24;
+	const double FRONT_INIT_PIPELINE_DESIRED_INCHES = 20;
+
+	//Back
+	const double HATCH_LOW_HIGH_BACK_DESIRED_INCHES  = 24;
+	const double HATCH_MID_BACK_DESIRED_INCHES  = 23;
+	const double CARGO_SHIP_BACK_DESIRED_INCHES  = 24;
+	const double BACK_INIT_PIPELINE_DESIRED_INCHES = 20;
+
 
   private:
 	static Drivetrain *s_instance;
@@ -126,6 +157,8 @@ class Drivetrain
 	double targetOffsetAngle_Vertical;
 	double currentArea;
 	double targetSkew;
+	double tv;
+	double actualPipeline;
 	double tx0;
 	double ty0;
 	double tx1;
@@ -160,6 +193,13 @@ class Drivetrain
     double interceptForAngleCalc;
     double crosshairAngle;
 	int pipelineNumber;
+	double prevDistance;
+	double prevAngle;
+	double accumAngleError;
+	double prevDistanceError;
+	double prevAngleError;
+	bool overrideEnabled;
+
 
 	//CONSTANTS FOR DRIVE
 	const double NU_PER_REV = 4096.0;
@@ -206,6 +246,8 @@ class Drivetrain
 	// const double CROSSHAIR_ANGLE = 6.5; //17.3
 
 	const double kP_ANGLE = 0.08; //FOR ANGLE CORRECTION TODO
+	const double kI_ANGLE = 0.000; //FOR ANGLE CORRECTION TODO
+	const double I_ZONE_ANGLE = 3; //degrees
 
 	const double MIN_COMMAND = 0.23;
 
