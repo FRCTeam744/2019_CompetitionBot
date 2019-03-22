@@ -24,7 +24,8 @@ void Robot::RobotInit()
   isBeforeMatch = true;
   
   shufflemanager = ShuffleManager::GetInstance();
-  shufflemanager->ShuffleInit();
+ // shufflemanager->ShuffleInit();
+ // shufflemanager->VariableInit();
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
@@ -88,6 +89,9 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+  shufflemanager->ShuffleInit();
+  shufflemanager->VariableInit();
+
 }
 
 void Robot::TeleopPeriodic()
@@ -158,8 +162,8 @@ void Robot::DisabledPeriodic()
   //   led->ShutDown();
   // }
 
-  std::cout << "DisabledPeriodic running" << std::endl;
-  std::cout << "hasSetUpForMatch: " << hasSetUpForMatch << std::endl;
+  // std::cout << "DisabledPeriodic running" << std::endl;
+  // std::cout << "hasSetUpForMatch: " << hasSetUpForMatch << std::endl;
   if (hasSetUpForMatch == false)
   {
     //Speed things up

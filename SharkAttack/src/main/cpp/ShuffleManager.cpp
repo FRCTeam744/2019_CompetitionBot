@@ -31,8 +31,10 @@ void ShuffleManager::ShuffleInit(){ //variables were declared in .h, giving them
 }
 
 void ShuffleManager::VariableInit(){ //variables were declared in .h, giving them values/initializing them here
-    leftDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
-    rightDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
+    // leftDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
+    rightDriveDriver = ShuffleManager::DriverTab->Add("test", 1).GetEntry();   //->Add("Ft-Sec-Right", 0.0).GetEntry();
+    
+    //rightDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     // leftDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     // rightDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     currentDistanceInchesVision = ShuffleManager::VisionTab->Add("Current Distance Inches", 0.0).GetEntry();    
