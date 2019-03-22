@@ -10,6 +10,7 @@
 #include "frc/DoubleSolenoid.h"
 #include "frc/Solenoid.h"
 #include <iostream>
+#include "frc/Timer.h"
 //#include <frc/shuffleboard/Shuffleboard.h>
 
 #include "ShuffleManager.h"
@@ -20,7 +21,7 @@ class Drivetrain
   public:
 	static Drivetrain *GetInstance();
 
-	void AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove);
+	bool AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove);
 	void PrintDriveShuffleInfo();
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightSet(std::tuple<bool, std::string, double>);
@@ -34,14 +35,13 @@ class Drivetrain
 	void SetSlopeInterceptForAngleCalc(double slope, double intercept);
 	void SetCrosshairAngle(double crosshairAngle);
 	void SetPipelineNumber(int pipelineNumber);
+	void StopMotors();
 
 	//measured crosshair angles
 	//FRONT
-	// const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT = 0.5; 
 	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT  = -17.86;// 10.9; 
 	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT    = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT; 
 	const double CROSSHAIR_TY_ANGLE_BALL_CARGO_SHIP_FRONT = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT;
-	const double CROSSHAIR_TY_ANGLE_CARGO_SHIP_FRONT_INIT = 0.0;
 	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 13.55; 
 	// const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT = 0;
 
@@ -49,20 +49,17 @@ class Drivetrain
 	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK = 9.10; 
 	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_BACK   = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK; 
 	const double CROSSHAIR_TY_ANGLE_BALL_CARGO_SHIP_BACK = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK;
-	const double CROSSHAIR_TY_ANGLE_CARGO_SHIP_BACK_INIT = 0.0;
 	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK = 0; 
 	// const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_BACK = 0;
 
 	//FRONT
-	// const double SLOPE_LOW_HIGH_HATCH_FRONT = 0.2608; --old
-	// const double INTERCEPT_LOW_HIGH_HATCH_FRONT = -8.206; --old
 	const double SLOPE_LOW_HIGH_HATCH_FRONT      = 0.6786874594;//0.790512334;
 	const double INTERCEPT_LOW_HIGH_HATCH_FRONT  = 0.0;
 	const double SLOPE_MIDDLE_HATCH_FRONT        = SLOPE_LOW_HIGH_HATCH_FRONT; 
 	const double INTERCEPT_MIDDLE_HATCH_FRONT    = INTERCEPT_LOW_HIGH_HATCH_FRONT;
 	const double SLOPE_CARGO_SHIP_BALL_FRONT     = SLOPE_LOW_HIGH_HATCH_FRONT; 
 	const double INTERCEPT_CARGO_SHIP_BALL_FRONT = INTERCEPT_LOW_HIGH_HATCH_FRONT;
-	const double SLOPE_INIT_FRONT_PIPELINE       = 0.790512334;
+	
 	//BACK
 	const double SLOPE_LOW_HIGH_HATCH_BACK      = -0.35; 
 	const double INTERCEPT_LOW_HIGH_HATCH_BACK  = 7.51;
@@ -85,11 +82,8 @@ class Drivetrain
 
 
 	//Pipelines
-	const double INIT_PIPELINE = 5;
 	const double HATCH_LOW_HIGH_FINAL_PIPELINE = 4; //was 0
-	// const double HATCH_LOW_HIGH_INIT_PIPELINE  = INIT_PIPELINE; 
 	const double HATCH_MID_FINAL_PIPELINE      = HATCH_LOW_HIGH_FINAL_PIPELINE; //was 2
-	// const double HATCH_MID_INIT_PIPELINE       = INIT_PIPELINE;
 	const double BALL_CARGO_SHIP_PIPELINE      = HATCH_LOW_HIGH_FINAL_PIPELINE;//6;
 	const double DRIVER_PIPELINE 			   = 1;
 
@@ -127,6 +121,8 @@ class Drivetrain
 	TalonSRX *rightBack;
 
 	frc::Solenoid *gearShifter;
+
+	frc::Timer *hatchPlaceTimer;
 
 	std::shared_ptr<NetworkTable> limelightFront;
 	std::shared_ptr<NetworkTable> limelightBack;
@@ -199,6 +195,8 @@ class Drivetrain
 	double prevDistanceError;
 	double prevAngleError;
 	bool overrideEnabled;
+	bool wantToDriveHatchInPlace;
+	
 
 
 	//CONSTANTS FOR DRIVE

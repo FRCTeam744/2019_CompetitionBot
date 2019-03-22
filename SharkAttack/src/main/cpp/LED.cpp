@@ -101,9 +101,21 @@ void LED::HatchOrBallMode(bool isInBallMode, bool isVisionTracking){
         LEDsOff();
     }
     else if (!isInBallMode && arduino != NULL){
-        arduino->Write("W");
+        arduino->Write("W", 1);
     }
     else if (arduino != NULL){
-        arduino->Write("X");
+        arduino->Write("X", 1);
+    }
+}
+
+void LED::IsHatchOpen(bool isHatchGripperOpen, bool isVisionTracking){
+    if(isVisionTracking){
+        LEDsOff();
+    }
+    else if(!isHatchGripperOpen){
+        arduino->Write("G", 1);
+    }
+    else {
+        arduino->Write("R", 1);
     }
 }

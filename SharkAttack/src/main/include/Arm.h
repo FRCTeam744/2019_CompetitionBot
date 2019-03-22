@@ -40,6 +40,8 @@ public:
   void PrintArmInfotoConsole();
   void ToggleDefenseMode(bool isArmInDefenseMode);
 
+  bool GetIsGripperGripped();
+
 
   double GetMAX_FF_GAIN();
   void SetMAX_FF_GAIN(double ArmFFVoltage);

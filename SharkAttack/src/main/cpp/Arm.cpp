@@ -146,29 +146,6 @@ void Arm::UpdateArmAndWristInManual(bool arm, bool wrist)
 
 void Arm::RunIntake(double input)
 {
-
-    // if (in != 0.0 && !hasBall)
-    // {
-    //     intake->Set(motorcontrol::ControlMode::PercentOutput, in);
-
-    //     // if(pdp->GetCurrent(INTAKE_PDP_PORT) < INTAKE_MAX_CURRENT){
-    //     //     hasBall = true;
-    //     // }
-    // }
-    // else if (in != 0.0 && hasBall)
-    // {
-    //     intake->Set(motorcontrol::ControlMode::PercentOutput, HOLD_BALL_SPEED);
-    // }
-    // else if (out != 0.0)
-    // {
-    //     hasBall = false;
-    //     intake->Set(motorcontrol::ControlMode::PercentOutput, -out);
-    // }
-    // else
-    // {
-    //     hasBall = false;
-    //     intake->Set(motorcontrol::ControlMode::PercentOutput, 0.0);
-    // }
     intake->Set(motorcontrol::ControlMode::PercentOutput, input);
 }
 
@@ -487,4 +464,8 @@ void Arm::ToggleDefenseMode(bool wantsDefenseMode) {
         // armPID->SetFF(ARM_FF_GAIN_DEFNSE);        
         isArmInDefenseMode = false;
     }
+}
+
+bool Arm::GetIsGripperGripped(){
+    return isHatchGripperClosed;
 }
