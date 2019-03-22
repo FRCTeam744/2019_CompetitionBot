@@ -20,7 +20,7 @@ class Drivetrain
   public:
 	static Drivetrain *GetInstance();
 
-	void AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode);
+	void AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove);
 	void PrintDriveShuffleInfo();
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightSet(std::tuple<bool, std::string, double>);
@@ -36,31 +36,37 @@ class Drivetrain
 	void SetPipelineNumber(int pipelineNumber);
 
 	//measured crosshair angles
-	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT = 6.5; 
+	//FRONT
+	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT = 0.5; 
 	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT   = -3.6; 
 	const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 13.55; 
 	const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT = 0;
 
-	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK = 17; 
+	//BACK
+	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK = 9.10; 
 	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_BACK   = 4.04; 
 	const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK = 0; 
 	const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_BACK = 0;
 
-	const double SLOPE_LOW_HIGH_HATCH_FRONT = 0.32; 
-	const double INTERCEPT_LOW_HIGH_HATCH_FRONT = -5.7874;
+	//HATCH FRONT
+	const double SLOPE_LOW_HIGH_HATCH_FRONT = 0.2608; 
+	const double INTERCEPT_LOW_HIGH_HATCH_FRONT = -8.206;
 	const double SLOPE_MIDDLE_HATCH_FRONT = 0.15; 
 	const double INTERCEPT_MIDDLE_HATCH_FRONT = -3.31;
 
-	const double SLOPE_LOW_HIGH_HATCH_BACK = -0.55; 
-	const double INTERCEPT_LOW_HIGH_HATCH_BACK = 4.7;
+	//HATCH BACK
+	const double SLOPE_LOW_HIGH_HATCH_BACK = -0.35; 
+	const double INTERCEPT_LOW_HIGH_HATCH_BACK = 7.51;
 	const double SLOPE_MIDDLE_HATCH_BACK = -0.344; 
 	const double INTERCEPT_MIDDLE_HATCH_BACK = 14.86;
 
+	//BALL FRONT
 	const double SLOPE_LOW_HIGH_BALL_FRONT = 2.6758579; 
 	const double INTERCEPT_LOW_HIGH_BALL_FRONT = -26.96;
 	const double SLOPE_MID_BALL_FRONT = 0.15; 
 	const double INTERCEPT_MID_BALL_FRONT = -3.31;
 
+	//BALL BACK
 	const double SLOPE_LOW_HIGH_BALL_BACK = -0.55; 
 	const double INTERCEPT_LOW_HIGH_BALL_BACK = 4.7;
 	const double SLOPE_MID_BALL_BACK = -0.344; 
@@ -179,23 +185,15 @@ class Drivetrain
 
 
 	const double DESIRED_DISTANCE_INCHES = 22;									//desired distance from target
-	const double kP_DIST_FPS = -.10;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
+	const double kP_DIST_FPS = -.20;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
 	const double kP_NU_PER_100MS = kP_DIST_FPS * FEET_TO_NU * SECONDS_TO_100MS; //Converted from FPS estimate above to NU/100ms that the talon can use
+	const double LL_DISTANCE_PER_5FEET_FRONT = 100.0;
+	const double LL_DISTANCE_PER_5FEET_BACK = 100.0;
+	const double kP_DIST_FPS_BACK = -kP_DIST_FPS * (LL_DISTANCE_PER_5FEET_FRONT/LL_DISTANCE_PER_5FEET_BACK);
 	const double LIMELIGHT_HEIGHT_INCHES = 45;
-	const double LIMELIGHT_ANGLE = 26.0;
-	const double CROSSHAIR_ANGLE = 6.5; //17.3
-
-	 
-	// const double SLOPE_LOW_HIGH_HATCH_FRONT = 0; 
-	// const double INTERCEPT_LOW_HIGH_HATCH_FRONT = 0; 
-	// const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT   = -3.6; 
-	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 0; 
-	// const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT = 0;
-
-	// const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK = 6.5; 
-	// const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_BACK   = -3.6; 
-	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK = 0; 
-	// const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_BACK = 0;
+	const double LIMELIGHT_ANGLE_FRONT = 26.0;
+	const double LIMELIGHT_ANGLE_BACK = 25.0;
+	// const double CROSSHAIR_ANGLE = 6.5; //17.3
 
 	const double kP_ANGLE = 0.08; //FOR ANGLE CORRECTION TODO
 

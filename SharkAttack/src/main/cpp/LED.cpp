@@ -29,6 +29,7 @@ LED::LED()
     catch (const std::exception &e)
     {
         frc::SmartDashboard::PutString("LED Data", "Error: Could not connect to arduino");
+        std::cout << "ERROR: Could not connect to arduino!";
     }
 }
 
@@ -96,9 +97,11 @@ void LED::ShutDown() {
     }
 }
 
-void LED::HatchOrBallMode(bool isInBallMode){
-
-    if (!isInBallMode && arduino != NULL){
+void LED::HatchOrBallMode(bool isInBallMode, bool isVisionTracking){
+    if(isVisionTracking) {
+        LEDsOff();
+    }
+    else if (!isInBallMode && arduino != NULL){
         arduino->Write("W");
     }
     else if (arduino != NULL){

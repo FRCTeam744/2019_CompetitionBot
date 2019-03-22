@@ -40,8 +40,8 @@ Arm::Arm()
     wristPID = new rev::CANPIDController(*leftWrist);
 
     //ARM PositionPID SETUP
-    rightArm->SetClosedLoopRampRate(RAMP_RATE);
-    leftArm->SetClosedLoopRampRate(RAMP_RATE);
+    rightArm->SetClosedLoopRampRate(RAMP_RATE_PIT);
+    leftArm->SetClosedLoopRampRate(RAMP_RATE_PIT);
 
     armPID->SetP(P_GAIN_ARM);
     armPID->SetD(D_GAIN_ARM);
@@ -49,7 +49,7 @@ Arm::Arm()
     armPID->SetIZone(I_ZONE_ARM);
     armPID->SetFF(ARM_FF_GAIN);
 
-    armPID->SetOutputRange(MIN_POWER_ARM, MAX_POWER_ARM);
+    armPID->SetOutputRange(MIN_POWER_ARM_PIT, MAX_POWER_ARM_PIT);
 
     //WRIST PositionPID SETUP
     wristPID->SetP(P_GAIN_WRIST);
@@ -173,7 +173,7 @@ void Arm::RunIntake(double input)
 
 //Parameter: targetPosition -> Given final position in degrees for arm
 //Work in Progress
-void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup)
+void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
 
     currentArmPos = armEncoder->GetPosition();
@@ -183,7 +183,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
     willArmEnterDZ = ((currentArmPos < -ARM_DANGERZONE && targetPosition > -ARM_DANGERZONE) || (currentArmPos > ARM_DANGERZONE && targetPosition < ARM_DANGERZONE));
     areWheelsUp = (currentWristPos < 1.0 && currentWristPos > -1.0);
     isArmInDZ = (currentArmPos > -ARM_DANGERZONE && currentArmPos < ARM_DANGERZONE);
-    
+
     isArmGoingToBack = (targetPosition < 0);
 
     FFVoltage = MAX_FF_GAIN * (sin(currentArmPos * M_PI / 180));
@@ -191,66 +191,87 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
 
     if (isArmInDZ)
     {
-        if(!isHatchGripperClosed) {
+        if (!isHatchGripperClosed)
+        {
             CloseHatchGripper();
         }
 
-        if(areWheelsVeryDown){
+        if (areWheelsVeryDown)
+        {
             isArmInManual = true;
             isWristInManual = true;
         }
-        else if(areWheelsUp){
+        else if (areWheelsUp)
+        {
             MoveWristToPosition(WRIST_NEUTRAL);
         }
-        else {
+        else
+        {
             targetPosition = currentArmPos;
             MoveWristToPosition(WRIST_NEUTRAL);
         }
     }
     else if (willArmEnterDZ)
     {
-        if(!isHatchGripperClosed) {
+        if (!isHatchGripperClosed)
+        {
             CloseHatchGripper();
         }
         MoveWristToPosition(WRIST_NEUTRAL);
 
-        if(!areWheelsUp){
+        if (!areWheelsUp)
+        {
             targetPosition = copysign(ARM_CHECKPOINT, currentArmPos);
         }
     }
     else if (!isArmInDZ && !willArmEnterDZ)
     {
-        if(isHatchGripperClosed == true && wantHatchGripperClosed == false) {
+        if (isHatchGripperClosed == true && wantHatchGripperClosed == false)
+        {
             OpenHatchGripper();
         }
-        else if(isHatchGripperClosed == false && wantHatchGripperClosed == true) {
+        else if (isHatchGripperClosed == false && wantHatchGripperClosed == true)
+        {
             CloseHatchGripper();
         }
-        else {
+        else
+        {
             //in desired state already
         }
-        MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup));
+        MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup, isInCargoShipMode));
     }
-    
-    if (!isArmInManual) {
+
+    if (!isArmInManual)
+    {
         armPID->SetReference(targetPosition, rev::ControlType::kPosition, 0, FFVoltage);
     }
 
     if (isInBallMode == true)
     {
-        if (isHatchGripperClosed){
+        if (isHatchGripperClosed)
+        {
             // OpenHatchGripper();
             wantHatchGripperClosed = false;
         }
     }
 }
 
-double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup)
+double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
-    if (isInBallPickup && !isArmGoingToBack){
+    if (isInBallMode && !isArmGoingToBack && isInCargoShipMode)
+    {
+        return WRIST_CARGO_SHIP_FRONT;
+    }
+    else if (isInBallMode && isArmGoingToBack && isInCargoShipMode)
+    {
+        return WRIST_CARGO_SHIP_BACK;
+    }
+    else if (isInBallPickup && !isArmGoingToBack)
+    {
         return WRIST_BALL_PICKUP_FRONT;
     }
-    else if (isInBallPickup && isArmGoingToBack){
+    else if (isInBallPickup && isArmGoingToBack)
+    {
         return WRIST_BALL_PICKUP_BACK;
     }
     else if (!isInBallMode && !isArmGoingToBack)
@@ -302,12 +323,14 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
     }
 }
 
-void Arm::OpenHatchGripper() {
+void Arm::OpenHatchGripper()
+{
     hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
     isHatchGripperClosed = false;
 }
 
-void Arm::CloseHatchGripper() {
+void Arm::CloseHatchGripper()
+{
     hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
     isHatchGripperClosed = true;
 }
@@ -347,18 +370,30 @@ void Arm::PrintArmShuffleInfo()
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristManualArmWrist, isWristInManual);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkArmManualPreComp, isArmInManual);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkWristManualPreComp, isWristInManual);
-
-
+  
     //frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
     //frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
     // frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
     // frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
+
 
     // frc::SmartDashboard::PutBoolean("IsArmInManual", isArmInManual);
     // frc::SmartDashboard::PutBoolean("IsWristInManual", isWristInManual); //these
 
     frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
+
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->leftArmCurrentArmWrist, leftArm->GetOutputCurrent());
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->rightArmCurrentArmWrist, rightArm->GetOutputCurrent()); 
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->armEncoderDriver , armEncoder->GetPosition());
+    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->armEncoderPreComp, armEncoder->GetPosition());
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->wristEncoderDriver, wristEncoder->GetPosition());
+    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->wristEncoderPreComp, wristEncoder->GetPosition());
+    // frc::SmartDashboard::PutBoolean("IsArmInManual", isArmInManual);
+    // frc::SmartDashboard::PutBoolean("IsWristInManual", isWristInManual); //these
+
+    // frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
+    // frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
     // frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
     // frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
     // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
@@ -375,15 +410,15 @@ void Arm::PrintArmInfotoConsole()
             std::cout << "Arm Amps Right: " << rightArm->GetOutputCurrent();
             compPrintCount = 0;
         }
-        else
+    }
+    else
+    {
+        printCount++;
+        if (printCount > 30)
         {
-            printCount++;
-            if (printCount > 30)
-            {
-                std::cout << "Arm Amps Testing Left: " << leftArm->GetOutputCurrent();
-                std::cout << "Arm Amps Testing Right: " << rightArm->GetOutputCurrent();
-                printCount = 0;
-            }
+        std::cout << "Arm Amps Testing Left: " << leftArm->GetOutputCurrent();
+        std::cout << "Arm Amps Testing Right: " << rightArm->GetOutputCurrent();
+        printCount = 0;
         }
     }
 }
@@ -423,3 +458,11 @@ bool Arm::GetWristLimitSwitch()
 // {
 //     MAX_FF_GAIN = ArmFFVoltage;
 // }
+
+void Arm::SetToMatchMode()
+{
+    rightArm->SetClosedLoopRampRate(RAMP_RATE_FIELD);
+    leftArm->SetClosedLoopRampRate(RAMP_RATE_FIELD);
+    armPID->SetOutputRange(MIN_POWER_ARM_FIELD, MAX_POWER_ARM_FIELD);
+    std::cout << "Set to Match Mode is working " << std::endl;
+}
