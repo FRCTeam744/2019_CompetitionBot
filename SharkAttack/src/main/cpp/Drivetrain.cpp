@@ -236,7 +236,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         if (limelightBack->GetNumber("tv", 0.0) == 0 || limelightBack->GetNumber("getpipe", 0.0) == DRIVER_PIPELINE)
         {
             IsTargetNotAcquired(leftTank, rightTank);
-            return;
+            return false;
         }
         if (limelightBack->GetNumber("tv", 0.0) > 0 && limelightBack->GetNumber("getpipe", 0.0) != DRIVER_PIPELINE && !isTargetAcquired)
         {
@@ -303,12 +303,12 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Distance Error", distanceError);
     frc::SmartDashboard::PutNumber("Prev Distance", prevDistance);
     frc::SmartDashboard::PutNumber("Prev Angle", prevAngle);
-    std::cout << "PrevDistErr," << prevDistanceError;
-    std::cout << " PrevAngleErr," << prevAngleError;
-    std::cout << " Dist," << currentDistanceInches;
-    std::cout << " Angle," << targetOffsetAngle_Horizontal;
-    std::cout << " PrevDist," << prevDistance;
-    std::cout << " PrevAngle," << prevAngle;
+    // std::cout << "PrevDistErr," << prevDistanceError;
+    // std::cout << " PrevAngleErr," << prevAngleError;
+    // std::cout << " Dist," << currentDistanceInches;
+    // std::cout << " Angle," << targetOffsetAngle_Horizontal;
+    // std::cout << " PrevDist," << prevDistance;
+    // std::cout << " PrevAngle," << prevAngle;
 
 
     if(abs(prevDistanceError) < 10 && abs(prevAngleError) < 5) { //close to target{
