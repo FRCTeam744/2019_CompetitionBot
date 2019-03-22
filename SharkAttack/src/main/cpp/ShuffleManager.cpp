@@ -85,20 +85,9 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val){
     if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
-<<<<<<< HEAD
-       if(tab == DriverTab){
-        var.SetDouble(val); //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
-       }
-    }
-    //else if(tab == ArmWristTab || tab == VisionTab || tab == FourbarTab) //else
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == false)
-    {
-        var.SetDouble(val);
-=======
         if(tab == DriverTab){
              var.SetDouble(val);
         } //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
->>>>>>> bbb447ee85e9b37c34868798d4631cd4e4e47cf6
     }
     else if(frc::DriverStation::GetInstance().IsFMSAttached() == false){
         if(tab == VisionTab || tab == ArmWristTab || tab == FourbarTab || !DriverTab){
