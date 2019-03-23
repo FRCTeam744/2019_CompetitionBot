@@ -26,6 +26,12 @@ void Robot::RobotInit()
   shufflemanager = ShuffleManager::GetInstance();
   shufflemanager->ShuffleInit();
 
+  m_chooser.SetDefaultOption(kAutoRunTeleop, kAutoRunTeleop);
+  m_chooser.AddOption("Cargo Autonomous", kAutoHatchCargo);
+  m_chooser.AddOption("Rocket Autonomous", kAutoHatchRocket);
+  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+}
+
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
   frc::SmartDashboard::PutNumber("wristEncoder", 0.1);
@@ -79,11 +85,42 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   isBeforeMatch = false;
+
+  m_autoSelected = m_chooser.GetSelected();
+  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
+  //     kAutoNameDefault);
+  std::cout << "Auto selected: " << m_autoSelected << std::endl;
+
+  if (m_autoSelected == kAutoHatchCargo) {
+    // Custom Auto goes here
+  } else if(m_autoSelected == kAutoHatchRocket){
+  
+    // Another Custom Auto goes here
+
+  } else  if(m_autoSelected == kAutoRunTeleop){ 
+    TeleopPeriodic();
+    // Default Auto goes here
+  } else {
+    TeleopPeriodic();
+  }
 }
 
 void Robot::AutonomousPeriodic()
 {
-  TeleopPeriodic();
+  if (m_autoSelected == kAutoHatchCargo) {
+
+    // Custom Auto goes here
+
+  } else if(m_autoSelected == kAutoHatchRocket){
+  
+    // Another Custom Auto goes here
+
+  } else if(m_autoSelected == kAutoRunTeleop){ 
+    TeleopPeriodic();
+    // Default Auto goes here
+  } else {
+    TeleopPeriodic();
+  }
 }
 
 void Robot::TeleopInit()
