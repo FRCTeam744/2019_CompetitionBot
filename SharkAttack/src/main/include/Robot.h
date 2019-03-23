@@ -48,8 +48,9 @@ public:
 
 private:
   frc::SendableChooser<std::string> m_chooser;
-  const std::string kAutoDrive1 = "Drive Off Level 1";
-  const std::string kAutoDrive2 = "Drive Off Level 2";
+  const std::string kAutoHatchCargo = "Place 2 Hatches on the Cargo Ship";
+  const std::string kAutoHatchRocket = "Place 2 Hatches on the Rocket";
+  const std::string kAutoRunTeleop = "Run Teleop Rather Than Autonomous";
   std::string m_autoSelected;
 
   Drivetrain *drivetrain;
