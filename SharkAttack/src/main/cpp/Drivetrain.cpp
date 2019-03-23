@@ -139,50 +139,49 @@ void Drivetrain::PrintDriveShuffleInfo()
     //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
 }
 
+std::string Drivetrain::get_trajectory_file(std::string name)
+{
+    wpi::SmallString<256> path;
+    frc::filesystem::GetDeployDirectory(path);
+    wpi::sys::path::append(path, "paths", name + ".pf1.csv");
+    if (!wpi::sys::fs::exists(path))
+    {
+        throw std::runtime_error("Path " + std::string(path.c_str()) + " does not exist!");
+    }
+    return std::string(path.c_str());
+}
+
+int Drivetrain::get_trajectory(std::string name, Segment *traj_out)
+{
+    FILE *fp = fopen(get_trajectory_file(name).c_str(), "r");
+    int len = pathfinder_deserialize_csv(fp, traj_out);
+    fclose(fp);
+    return len;
+}
+
+double Drivetrain::pathfinder_follow_encoder(Segment s, int trajectory_length)
+{
+    return s.velocity;
+}
+
 void Drivetrain::AutonomousInit()
 {
-    int left_trajectory = PathfinderFRC.getTrajectory(k_path_name + ".right", ); //This is supposed to be flipped! This is a bug in FRC's libraries
-    int right_trajectory = PathfinderFRC.getTrajectory(k_path_name + ".left"); //This is supposed to be flipped! This is a bug in FRC's libraries
-
-    m_left_follower = new EncoderFollower(left_trajectory);
-    m_right_follower = new EncoderFollower(right_trajectory);
-
-    m_left_follower.configureEncoder(m_left_encoder.get(), k_ticks_per_rev, k_wheel_diameter);
-    // You must tune the PID values on the following line!
-    m_left_follower.configurePIDVA(1.0, 0.0, 0.0, 1, 0);
-
-    m_right_follower.configureEncoder(m_right_encoder.get(), k_ticks_per_rev, k_wheel_diameter);
-    // You must tune the PID values on the following line!
-    m_right_follower.configurePIDVA(1.0, 0.0, 0.0, 1, 0);
-
-    // m_follower_notifier = new frc::Notifier(this::FollowPath);
-    // m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
+    left_trajectory_length = get_trajectory("CenterPlatformToLeftShip.right.pf1.csv", leftTrajectory);  //This is supposed to be flipped! This is a bug in FRC's libraries
+    right_trajectory_length = get_trajectory("CenterPlatformToLeftShip.left.pf1.csv", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
 }
 
 void Drivetrain::FollowPath()
 {
-    if (m_left_follower.isFinished() || m_right_follower.isFinished())
+    while (left_trajectory_length > 0)
     {
-        // m_follower_notifier.stop();
-    }
-    else
-    {
-        double r = pathfinder_follow_encoder(rightConfig, &rightFollower, rightTrajectory, trajectory_length, r_encoder_value);
-        
-        double left_speed = m_left_follower.calculate(m_left_encoder.get());
-        double right_speed = m_right_follower.calculate(m_right_encoder.get());
-        // double heading = m_gyro.getAngle();
-        // double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
-        // double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
-        // double turn = 0.8 * (-1.0 / 80.0) * heading_difference;
-        // m_left_motor.set(left_speed + turn);
-        // m_right_motor.set(right_speed - turn);
-        leftBack->Set(ControlMode::Velocity, left_speed * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
-        rightBack->Set(ControlMode::Velocity, right_speed * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
-        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
-        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
-        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
-        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        // leftBack->Set(ControlMode::Velocity, leftTrajectory[750 - left_trajectory_length].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
+        // rightBack->Set(ControlMode::Velocity, rightTrajectory[750 - left_trajectory_length].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+        // leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        // rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        // leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        // rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+
+        left_trajectory_length--;
     }
 }
 

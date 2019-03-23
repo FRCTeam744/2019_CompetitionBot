@@ -83,7 +83,8 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-  TeleopPeriodic();
+  //TeleopPeriodic();
+  drivetrain->FollowPath();
 }
 
 void Robot::TeleopInit()

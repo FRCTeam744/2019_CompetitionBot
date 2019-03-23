@@ -24,6 +24,9 @@ class Drivetrain
   public:
 	static Drivetrain *GetInstance();
 
+	std::string get_trajectory_file(std::string name);
+	int get_trajectory(std::string name, Segment *traj_out);
+	double pathfinder_follow_encoder(Segment s, int trajectory_length);
 	void AutonomousInit();
 	void FollowPath();
 	bool AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove);
@@ -269,6 +272,12 @@ class Drivetrain
 	//Pathfinding
 	EncoderFollower m_left_follower;
 	EncoderFollower m_right_follower;
+
+	Segment leftTrajectory[750];
+	Segment rightTrajectory[750];
+
+	int left_trajectory_length = 0;
+	int right_trajectory_length = 0;
 
 	// frc::Notifier m_follower_notifier;
 };
