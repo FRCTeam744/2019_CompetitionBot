@@ -109,10 +109,12 @@ void Robot::AutonomousPeriodic()
 {
   if (m_autoSelected == kAutoHatchCargo) {
 
+    drivetrain->FollowPath();
     // Custom Auto goes here
 
   } else if(m_autoSelected == kAutoHatchRocket){
-  
+    
+    drivetrain->FollowPath();
     // Another Custom Auto goes here
 
   } else if(m_autoSelected == kAutoRunTeleop){ 
@@ -121,6 +123,7 @@ void Robot::AutonomousPeriodic()
   } else {
     TeleopPeriodic();
   }
+  
 }
 
 void Robot::TeleopInit()
