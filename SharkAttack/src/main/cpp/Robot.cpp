@@ -30,7 +30,7 @@ void Robot::RobotInit()
   m_chooser.AddOption("Cargo Autonomous", kAutoHatchCargo);
   m_chooser.AddOption("Rocket Autonomous", kAutoHatchRocket);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-}
+
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
@@ -85,9 +85,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   isBeforeMatch = false;
-<<<<<<< HEAD
   drivetrain->AutonomousInit();
-=======
 
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
@@ -106,7 +104,6 @@ void Robot::AutonomousInit()
   } else {
     TeleopPeriodic();
   }
->>>>>>> c4e30a31ef5aa384983812503eb5eb7d3ef6fef6
 }
 
 void Robot::AutonomousPeriodic()
