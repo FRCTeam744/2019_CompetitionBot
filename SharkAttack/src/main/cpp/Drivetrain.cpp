@@ -144,6 +144,8 @@ std::string Drivetrain::get_trajectory_file(std::string name)
     wpi::SmallString<256> path;
     frc::filesystem::GetDeployDirectory(path);
     wpi::sys::path::append(path, "paths", name + ".pf1.csv");
+
+    std::cout << "Path: " << path << std::endl;
     if (!wpi::sys::fs::exists(path))
     {
         throw std::runtime_error("Path " + std::string(path.c_str()) + " does not exist!");
@@ -166,14 +168,31 @@ double Drivetrain::pathfinder_follow_encoder(Segment s, int trajectory_length)
 
 void Drivetrain::AutonomousInit()
 {
-    left_trajectory_length = get_trajectory("CenterPlatformToLeftShip.right.pf1.csv", leftTrajectory);  //This is supposed to be flipped! This is a bug in FRC's libraries
-    right_trajectory_length = get_trajectory("CenterPlatformToLeftShip.left.pf1.csv", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
+    left_trajectory_length = get_trajectory("CenterPlatformToLeftShip.right", leftTrajectory);   //This is supposed to be flipped! This is a bug in FRC's libraries
+    right_trajectory_length = get_trajectory("CenterPlatformToLeftShip.left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
 }
 
 void Drivetrain::FollowPath()
 {
     while (left_trajectory_length > 0)
     {
+        std::cout << "leftAcceleration: " << leftTrajectory[750 - left_trajectory_length].acceleration << std::endl;
+        std::cout << "rightAcceleration: " << rightTrajectory[750 - left_trajectory_length].acceleration << std::endl;
+        std::cout << "leftDt: " << leftTrajectory[750 - left_trajectory_length].dt << std::endl;
+        std::cout << "rightDt: " << rightTrajectory[750 - left_trajectory_length].dt << std::endl;
+        std::cout << "leftHeading: " << leftTrajectory[750 - left_trajectory_length].heading << std::endl;
+        std::cout << "rightHeading: " << rightTrajectory[750 - left_trajectory_length].heading << std::endl;
+        std::cout << "leftJerk: " << leftTrajectory[750 - left_trajectory_length].jerk << std::endl;
+        std::cout << "rightJerk: " << rightTrajectory[750 - left_trajectory_length].jerk << std::endl;
+        std::cout << "leftPosition: " << leftTrajectory[750 - left_trajectory_length].position << std::endl;
+        std::cout << "rightPosition: " << rightTrajectory[750 - left_trajectory_length].position << std::endl;
+        std::cout << "leftVelocity: " << leftTrajectory[750 - left_trajectory_length].velocity << std::endl;
+        std::cout << "rightVelocity: " << rightTrajectory[750 - left_trajectory_length].velocity << std::endl;
+        std::cout << "leftX: " << leftTrajectory[750 - left_trajectory_length].x << std::endl;
+        std::cout << "rightX: " << rightTrajectory[750 - left_trajectory_length].x << std::endl;
+        std::cout << "leftY: " << leftTrajectory[750 - left_trajectory_length].y << std::endl;
+        std::cout << "rightY: " << rightTrajectory[750 - left_trajectory_length].y << std::endl;
+
         // leftBack->Set(ControlMode::Velocity, leftTrajectory[750 - left_trajectory_length].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
         // rightBack->Set(ControlMode::Velocity, rightTrajectory[750 - left_trajectory_length].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
         // leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);

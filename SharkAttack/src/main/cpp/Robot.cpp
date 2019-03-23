@@ -79,6 +79,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
   isBeforeMatch = false;
+  drivetrain->AutonomousInit();
 }
 
 void Robot::AutonomousPeriodic()
