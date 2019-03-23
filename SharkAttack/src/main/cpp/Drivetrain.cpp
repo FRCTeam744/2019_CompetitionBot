@@ -99,43 +99,91 @@ Drivetrain::Drivetrain()
 }
 
 //Public Methods
-void Drivetrain::PrintDriveShuffleInfo(){
-//Send limelight and drivetrain variables to SB
+void Drivetrain::PrintDriveShuffleInfo()
+{
+    //Send limelight and drivetrain variables to SB
 
     // targetOffsetAngle_Horizontal = limelightFront->GetNumber("tx", 0.0);
     // targetOffsetAngle_Vertical = limelightFront->GetNumber("ty", 0.0);
     // targetArea = limelightFront->GetNumber("ta", 0.0);
     // targetSkew = limelightFront->GetNumber("ts", 0.0);
 
-  // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
-  // frc::SmartDashboard::PutNumber("Skew", targetSkew);
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->headingVision, targetOffsetAngle_Horizontal);
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->skewVision, targetSkew);
+    // frc::SmartDashboard::PutNumber("Heading", targetOffsetAngle_Horizontal);
+    // frc::SmartDashboard::PutNumber("Skew", targetSkew);
+    //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->headingVision, targetOffsetAngle_Horizontal);
+    //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->skewVision, targetSkew);
 
-  rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//rightDashboardSpeed = NU_TO_FEET;
-  leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;//leftDashboardSpeed = SECONDS_TO_100MS;
-  
-  frc::SmartDashboard::PutNumber("Right Speed FPS", rightDashboardSpeed);
-  frc::SmartDashboard::PutNumber("Left Speed FPS", leftDashboardSpeed);
+    rightDashboardSpeed = rightBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS; //rightDashboardSpeed = NU_TO_FEET;
+    leftDashboardSpeed = leftBack->GetSelectedSensorVelocity(0) * NU_TO_FEET * SECONDS_TO_100MS;   //leftDashboardSpeed = SECONDS_TO_100MS;
 
-  // frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
-  // frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
-  // frc::SmartDashboard::PutNumber("Target Area", targetArea);
+    frc::SmartDashboard::PutNumber("Right Speed FPS", rightDashboardSpeed);
+    frc::SmartDashboard::PutNumber("Left Speed FPS", leftDashboardSpeed);
 
-  // old, didnt know if needed ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "NU_PER_REV", targetSkew);
+    // frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
+    // frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
+    // frc::SmartDashboard::PutNumber("Target Area", targetArea);
 
-  frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
-  frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorRightPreComp, desiredRightFPS - rightDashboardSpeed);
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorLeftPreComp, desiredLeftFPS - leftDashboardSpeed);
-  
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDrivePreComp , rightDashboardSpeed);
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDrivePreComp , rightDashboardSpeed);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDriveDriver , rightDashboardSpeed);
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDriveDriver , rightDashboardSpeed);
+    // old, didnt know if needed ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, "NU_PER_REV", targetSkew);
 
-//   currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
-//   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
+    frc::SmartDashboard::PutNumber("Speed Error Right", desiredRightFPS - rightDashboardSpeed);
+    frc::SmartDashboard::PutNumber("Speed Error Left", desiredLeftFPS - leftDashboardSpeed);
+    //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorRightPreComp, desiredRightFPS - rightDashboardSpeed);
+    //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->speedErrorLeftPreComp, desiredLeftFPS - leftDashboardSpeed);
+
+    //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDrivePreComp , rightDashboardSpeed);
+    //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDrivePreComp , rightDashboardSpeed);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDriveDriver, rightDashboardSpeed);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDriveDriver, rightDashboardSpeed);
+
+    //   currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
+    //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
+}
+
+void Drivetrain::AutonomousInit()
+{
+    int left_trajectory = PathfinderFRC.getTrajectory(k_path_name + ".right", ); //This is supposed to be flipped! This is a bug in FRC's libraries
+    int right_trajectory = PathfinderFRC.getTrajectory(k_path_name + ".left"); //This is supposed to be flipped! This is a bug in FRC's libraries
+
+    m_left_follower = new EncoderFollower(left_trajectory);
+    m_right_follower = new EncoderFollower(right_trajectory);
+
+    m_left_follower.configureEncoder(m_left_encoder.get(), k_ticks_per_rev, k_wheel_diameter);
+    // You must tune the PID values on the following line!
+    m_left_follower.configurePIDVA(1.0, 0.0, 0.0, 1, 0);
+
+    m_right_follower.configureEncoder(m_right_encoder.get(), k_ticks_per_rev, k_wheel_diameter);
+    // You must tune the PID values on the following line!
+    m_right_follower.configurePIDVA(1.0, 0.0, 0.0, 1, 0);
+
+    // m_follower_notifier = new frc::Notifier(this::FollowPath);
+    // m_follower_notifier.startPeriodic(left_trajectory.get(0).dt);
+}
+
+void Drivetrain::FollowPath()
+{
+    if (m_left_follower.isFinished() || m_right_follower.isFinished())
+    {
+        // m_follower_notifier.stop();
+    }
+    else
+    {
+        double r = pathfinder_follow_encoder(rightConfig, &rightFollower, rightTrajectory, trajectory_length, r_encoder_value);
+        
+        double left_speed = m_left_follower.calculate(m_left_encoder.get());
+        double right_speed = m_right_follower.calculate(m_right_encoder.get());
+        // double heading = m_gyro.getAngle();
+        // double desired_heading = Pathfinder.r2d(m_left_follower.getHeading());
+        // double heading_difference = Pathfinder.boundHalfDegrees(desired_heading - heading);
+        // double turn = 0.8 * (-1.0 / 80.0) * heading_difference;
+        // m_left_motor.set(left_speed + turn);
+        // m_right_motor.set(right_speed - turn);
+        leftBack->Set(ControlMode::Velocity, left_speed * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
+        rightBack->Set(ControlMode::Velocity, right_speed * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
 }
 
 bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove)
@@ -153,12 +201,15 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
 
     //drive hatch into place, and skip LL code if you've gotten near the target
-    if(wantToDriveHatchInPlace) {
-        if(hatchPlaceTimer->Get() > 0.3) {
+    if (wantToDriveHatchInPlace)
+    {
+        if (hatchPlaceTimer->Get() > 0.3)
+        {
             StopMotors();
             return true;
         }
-        else {
+        else
+        {
             AutoDriveForward(false, true);
             return false;
         }
@@ -192,8 +243,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         // frc::SmartDashboard::PutNumber("ty", targetOffsetAngle_Vertical);
         // frc::SmartDashboard::PutNumber("Current Area", currentArea);
         // frc::SmartDashboard::PutNumber("targetSkew", targetSkew);
-    
-    
+
         //wait for pipeline change and target acquisition
         if (limelightFront->GetNumber("tv", 0.0) == 0 || limelightFront->GetNumber("getpipe", 0.0) == DRIVER_PIPELINE)
         {
@@ -209,9 +259,9 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
             counter = 0;
             limelightFront->PutNumber("pipeline", pipelineNumber);
             accumAngleError = 0;
-            prevDistanceError = 100; 
+            prevDistanceError = 100;
             prevAngleError = 100;
-            prevDistance = 0; 
+            prevDistance = 0;
             prevAngle = 0;
         }
     }
@@ -223,14 +273,13 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         targetOffsetAngle_Vertical = limelightBack->GetNumber("ty", 0.0);
         currentArea = limelightBack->GetNumber("ta", 0.0);
         targetSkew = limelightBack->GetNumber("ts", 0.0);
-        
+
         // frc::SmartDashboard::PutNumber("Num Targets", tv);
         // frc::SmartDashboard::PutNumber("Actual Pipeline", pipelineNumber);
         // frc::SmartDashboard::PutNumber("Angle Offset", targetOffsetAngle_Horizontal);
         // frc::SmartDashboard::PutNumber("ty", targetOffsetAngle_Vertical);
         // frc::SmartDashboard::PutNumber("Current Area", currentArea);
         // frc::SmartDashboard::PutNumber("targetSkew", targetSkew);
-    
 
         //wait for pipeline change and target acquisition
         if (limelightBack->GetNumber("tv", 0.0) == 0 || limelightBack->GetNumber("getpipe", 0.0) == DRIVER_PIPELINE)
@@ -245,9 +294,9 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
             counter = 0;
             limelightBack->PutNumber("pipeline", pipelineNumber);
             accumAngleError = 0;
-            prevDistanceError = 100; 
+            prevDistanceError = 100;
             prevAngleError = 100;
-            prevDistance = 0; 
+            prevDistance = 0;
             prevAngle = 0;
         }
     }
@@ -256,34 +305,39 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     double targetHeight = TARGET_LOW_HEIGHT_INCHES;
     double limelightAngle = LIMELIGHT_ANGLE_FRONT;
     double kP_DIST = kP_DIST_FPS;
-    if(isFront) {
+    if (isFront)
+    {
         kP_DIST = kP_DIST_FPS;
         limelightAngle = LIMELIGHT_ANGLE_FRONT;
     }
-    else {
+    else
+    {
         kP_DIST = kP_DIST_FPS_BACK;
         limelightAngle = LIMELIGHT_ANGLE_BACK;
     }
-    double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - targetHeight) / tan((limelightAngle + crosshairAngle - targetOffsetAngle_Vertical) * (M_PI/180)); //current distance from target
+    double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - targetHeight) / tan((limelightAngle + crosshairAngle - targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
     frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     frc::SmartDashboard::PutNumber("zDesiredInches", zDesiredInches);
-    double desiredAngle = targetOffsetAngle_Vertical*slopeForAngleCalc + interceptForAngleCalc;
-    double angleError = targetOffsetAngle_Horizontal-desiredAngle;
-    if(abs(angleError) < I_ZONE_ANGLE) {
+    double desiredAngle = targetOffsetAngle_Vertical * slopeForAngleCalc + interceptForAngleCalc;
+    double angleError = targetOffsetAngle_Horizontal - desiredAngle;
+    if (abs(angleError) < I_ZONE_ANGLE)
+    {
         accumAngleError += angleError;
     }
-    else { accumAngleError = 0;}
+    else
+    {
+        accumAngleError = 0;
+    }
     frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle);
     frc::SmartDashboard::PutNumber("Angle Error", angleError);
-    
 
     frc::SmartDashboard::PutNumber("Intercept", interceptForAngleCalc);
     frc::SmartDashboard::PutNumber("Slope", slopeForAngleCalc);
     frc::SmartDashboard::PutNumber("Crosshair Angle", crosshairAngle);
-    
-    adjust = 0.5*kP_ANGLE*angleError + kI_ANGLE*accumAngleError;
+
+    adjust = 0.5 * kP_ANGLE * angleError + kI_ANGLE * accumAngleError;
     frc::SmartDashboard::PutNumber("Adjust", adjust);
-    
+
     double distanceError = (zDesiredInches - currentDistanceInches);
     p_dist_loop = kP_DIST * distanceError;
     if (p_dist_loop > LL_MAX_FEET_PER_SEC)
@@ -310,33 +364,37 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     // std::cout << " PrevDist," << prevDistance;
     // std::cout << " PrevAngle," << prevAngle;
 
-
-    if(abs(prevDistanceError) < 10 && abs(prevAngleError) < 5) { //close to target{
-        if(abs(currentDistanceInches - prevDistance) > 5 || //sudden jump in target
-            abs(prevAngle-targetOffsetAngle_Horizontal) > 5) {
-                overrideEnabled = true;
-            }
+    if (abs(prevDistanceError) < 10 && abs(prevAngleError) < 5)
+    {                                                        //close to target{
+        if (abs(currentDistanceInches - prevDistance) > 5 || //sudden jump in target
+            abs(prevAngle - targetOffsetAngle_Horizontal) > 5)
+        {
+            overrideEnabled = true;
+        }
     }
     std::cout << " wantToNotMove," << wantToNotMove << std::endl;
 
-    
-    if(abs(distanceError)  < 1 && abs(angleError) < 1) {
-        if(isBallMode) {
+    if (abs(distanceError) < 1 && abs(angleError) < 1)
+    {
+        if (isBallMode)
+        {
             StopMotors();
             return true;
         }
-        else {
+        else
+        {
             wantToDriveHatchInPlace = true;
             hatchPlaceTimer->Reset();
             hatchPlaceTimer->Start();
         }
     }
 
-
-    if(wantToNotMove || overrideEnabled) {
+    if (wantToNotMove || overrideEnabled)
+    {
         StopMotors();
     }
-    else {
+    else
+    {
         leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
         rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
@@ -346,15 +404,15 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
 
     prevDistance = currentDistanceInches;
-	prevAngle = targetOffsetAngle_Horizontal;
+    prevAngle = targetOffsetAngle_Horizontal;
     prevDistanceError = distanceError;
     prevAngleError = angleError;
     return false;
-    
 }
 
 void Drivetrain::TankDrive(double leftValue, double rightValue)
 {
+    // m_follower_notifier.Stop();
     // leftValue = leftValue*0.5;
     // rightValue = rightValue*0.5;
     if (!isInAutoDrive && !isInLLDrive)
@@ -403,7 +461,6 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
     if (isBut && !isVelocityControl)
     {
         isInAutoDrive = true;
-        
 
         leftBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);
         rightBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);
@@ -417,7 +474,8 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
         isInAutoDrive = true;
 
         desiredLeftFPS = desiredRightFPS = 2.0; //Was 5.0, changed by rObErT
-        if(!isFront) {
+        if (!isFront)
+        {
             desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;
         }
         std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
@@ -451,12 +509,14 @@ void Drivetrain::SetDesiredLLDistances(double xDesiredInches, double zDesiredInc
     //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
 }
 
-void Drivetrain::SetSlopeInterceptForAngleCalc(double slope, double intercept) {
+void Drivetrain::SetSlopeInterceptForAngleCalc(double slope, double intercept)
+{
     slopeForAngleCalc = slope;
     interceptForAngleCalc = intercept;
 }
 
-void Drivetrain::SetCrosshairAngle(double crosshairAngle) {
+void Drivetrain::SetCrosshairAngle(double crosshairAngle)
+{
     this->crosshairAngle = crosshairAngle;
 }
 
@@ -465,12 +525,14 @@ void Drivetrain::SetIsFrontLL(bool isFront)
     this->isFront = isFront;
 }
 
-void Drivetrain::SetPipelineNumber(int pipelineNumber ) {
+void Drivetrain::SetPipelineNumber(int pipelineNumber)
+{
     this->pipelineNumber = pipelineNumber;
 }
 
-void Drivetrain::StopMotors(){
-    leftBack->Set(ControlMode::PercentOutput, 0.0); 
+void Drivetrain::StopMotors()
+{
+    leftBack->Set(ControlMode::PercentOutput, 0.0);
     rightBack->Set(ControlMode::PercentOutput, 0.0);
     leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
     rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);

@@ -15,12 +15,17 @@
 
 #include "ShuffleManager.h"
 
+// #include "frc/Notifier.h"
+#include <pathfinder-frc.h>
+
 class Drivetrain
 {
 
   public:
 	static Drivetrain *GetInstance();
 
+	void AutonomousInit();
+	void FollowPath();
 	bool AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove);
 	void PrintDriveShuffleInfo();
 	void TankDrive(double leftValue, double rightValue);
@@ -39,53 +44,52 @@ class Drivetrain
 
 	//measured crosshair angles
 	//FRONT
-	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT  = -17.86;// 10.9; 
-	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT    = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT; 
+	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT = -17.86; // 10.9;
+	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_FRONT = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT;
 	const double CROSSHAIR_TY_ANGLE_BALL_CARGO_SHIP_FRONT = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_FRONT;
-	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 13.55; 
+	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_FRONT = 13.55;
 	// const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_FRONT = 0;
 
 	//BACK
-	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK = 9.10; 
-	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_BACK   = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK; 
+	const double CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK = 9.10;
+	const double CROSSHAIR_TY_ANGLE_MIDDLE_HATCH_BACK = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK;
 	const double CROSSHAIR_TY_ANGLE_BALL_CARGO_SHIP_BACK = CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK;
-	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK = 0; 
+	// const double CROSSHAIR_TY_ANGLE_BALL_LOW_HIGH_BACK = 0;
 	// const double CROSSHAIR_TY_ANGLE_BALL_MIDDLE_BACK = 0;
 
 	//FRONT
-	const double SLOPE_LOW_HIGH_HATCH_FRONT      = 0.6786874594;//0.790512334;
-	const double INTERCEPT_LOW_HIGH_HATCH_FRONT  = 0.0;
-	const double SLOPE_MIDDLE_HATCH_FRONT        = SLOPE_LOW_HIGH_HATCH_FRONT; 
-	const double INTERCEPT_MIDDLE_HATCH_FRONT    = INTERCEPT_LOW_HIGH_HATCH_FRONT;
-	const double SLOPE_CARGO_SHIP_BALL_FRONT     = SLOPE_LOW_HIGH_HATCH_FRONT; 
+	const double SLOPE_LOW_HIGH_HATCH_FRONT = 0.6786874594; //0.790512334;
+	const double INTERCEPT_LOW_HIGH_HATCH_FRONT = 0.0;
+	const double SLOPE_MIDDLE_HATCH_FRONT = SLOPE_LOW_HIGH_HATCH_FRONT;
+	const double INTERCEPT_MIDDLE_HATCH_FRONT = INTERCEPT_LOW_HIGH_HATCH_FRONT;
+	const double SLOPE_CARGO_SHIP_BALL_FRONT = SLOPE_LOW_HIGH_HATCH_FRONT;
 	const double INTERCEPT_CARGO_SHIP_BALL_FRONT = INTERCEPT_LOW_HIGH_HATCH_FRONT;
-	
+
 	//BACK
-	const double SLOPE_LOW_HIGH_HATCH_BACK      = -0.35; 
-	const double INTERCEPT_LOW_HIGH_HATCH_BACK  = 7.51;
-	const double SLOPE_MIDDLE_HATCH_BACK        = SLOPE_LOW_HIGH_HATCH_BACK; 
-	const double INTERCEPT_MIDDLE_HATCH_BACK    = INTERCEPT_LOW_HIGH_HATCH_BACK;
-	const double SLOPE_CARGO_SHIP_BALL_BACK     = SLOPE_LOW_HIGH_HATCH_BACK; 
+	const double SLOPE_LOW_HIGH_HATCH_BACK = -0.35;
+	const double INTERCEPT_LOW_HIGH_HATCH_BACK = 7.51;
+	const double SLOPE_MIDDLE_HATCH_BACK = SLOPE_LOW_HIGH_HATCH_BACK;
+	const double INTERCEPT_MIDDLE_HATCH_BACK = INTERCEPT_LOW_HIGH_HATCH_BACK;
+	const double SLOPE_CARGO_SHIP_BALL_BACK = SLOPE_LOW_HIGH_HATCH_BACK;
 	const double INTERCEPT_CARGO_SHIP_BALL_BACK = INTERCEPT_LOW_HIGH_HATCH_BACK;
 
 	//BALL FRONT
-	// const double SLOPE_LOW_HIGH_BALL_FRONT = 2.6758579; 
+	// const double SLOPE_LOW_HIGH_BALL_FRONT = 2.6758579;
 	// const double INTERCEPT_LOW_HIGH_BALL_FRONT = -26.96;
-	// const double SLOPE_MID_BALL_FRONT = 0.15; 
+	// const double SLOPE_MID_BALL_FRONT = 0.15;
 	// const double INTERCEPT_MID_BALL_FRONT = -3.31;
 
 	// //BALL BACK
-	// const double SLOPE_LOW_HIGH_BALL_BACK = -0.55; 
+	// const double SLOPE_LOW_HIGH_BALL_BACK = -0.55;
 	// const double INTERCEPT_LOW_HIGH_BALL_BACK = 4.7;
 	// const double SLOPE_MID_BALL_BACK = -0.344;
 	// const double INTERCEPT_MID_BALL_BACK = 14.86;
 
-
 	//Pipelines
-	const double HATCH_LOW_HIGH_FINAL_PIPELINE = 4; //was 0
-	const double HATCH_MID_FINAL_PIPELINE      = HATCH_LOW_HIGH_FINAL_PIPELINE; //was 2
-	const double BALL_CARGO_SHIP_PIPELINE      = HATCH_LOW_HIGH_FINAL_PIPELINE;//6;
-	const double DRIVER_PIPELINE 			   = 1;
+	const double HATCH_LOW_HIGH_FINAL_PIPELINE = 4;						   //was 0
+	const double HATCH_MID_FINAL_PIPELINE = HATCH_LOW_HIGH_FINAL_PIPELINE; //was 2
+	const double BALL_CARGO_SHIP_PIPELINE = HATCH_LOW_HIGH_FINAL_PIPELINE; //6;
+	const double DRIVER_PIPELINE = 1;
 
 	//Distances
 	//Front
@@ -95,11 +99,10 @@ class Drivetrain
 	const double FRONT_INIT_PIPELINE_DESIRED_INCHES = 20;
 
 	//Back
-	const double HATCH_LOW_HIGH_BACK_DESIRED_INCHES  = 24;
-	const double HATCH_MID_BACK_DESIRED_INCHES  = 23;
-	const double CARGO_SHIP_BACK_DESIRED_INCHES  = 24;
+	const double HATCH_LOW_HIGH_BACK_DESIRED_INCHES = 24;
+	const double HATCH_MID_BACK_DESIRED_INCHES = 23;
+	const double CARGO_SHIP_BACK_DESIRED_INCHES = 24;
 	const double BACK_INIT_PIPELINE_DESIRED_INCHES = 20;
-
 
   private:
 	static Drivetrain *s_instance;
@@ -186,8 +189,8 @@ class Drivetrain
 	bool isInLLDrive;
 	bool isFront;
 	double slopeForAngleCalc;
-    double interceptForAngleCalc;
-    double crosshairAngle;
+	double interceptForAngleCalc;
+	double crosshairAngle;
 	int pipelineNumber;
 	double prevDistance;
 	double prevAngle;
@@ -196,8 +199,6 @@ class Drivetrain
 	double prevAngleError;
 	bool overrideEnabled;
 	bool wantToDriveHatchInPlace;
-	
-
 
 	//CONSTANTS FOR DRIVE
 	const double NU_PER_REV = 4096.0;
@@ -225,32 +226,31 @@ class Drivetrain
 	const double LL_FRONT_THETA_OFFSET = 15;
 	const double LL_FRONT_X_OFFSET = 12.5;
 	const double kP_FORWARD = 0; //.2 / 10;
-	const double kP_THETA = 0; //.2 / 30;
+	const double kP_THETA = 0;   //.2 / 30;
 	const double START_FILTERING_JUMPS = 15;
 	bool isTargetAcquired;
-	
-    int counter = 0;
 
+	int counter = 0;
 
 	const double DESIRED_DISTANCE_INCHES = 22;									//desired distance from target
 	const double kP_DIST_FPS = -.15;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
 	const double kP_NU_PER_100MS = kP_DIST_FPS * FEET_TO_NU * SECONDS_TO_100MS; //Converted from FPS estimate above to NU/100ms that the talon can use
 	const double LL_DISTANCE_PER_5FEET_FRONT = 100.0;
 	const double LL_DISTANCE_PER_5FEET_BACK = 100.0;
-	const double kP_DIST_FPS_BACK = -kP_DIST_FPS * (LL_DISTANCE_PER_5FEET_FRONT/LL_DISTANCE_PER_5FEET_BACK);
+	const double kP_DIST_FPS_BACK = -kP_DIST_FPS * (LL_DISTANCE_PER_5FEET_FRONT / LL_DISTANCE_PER_5FEET_BACK);
 	const double LIMELIGHT_HEIGHT_INCHES = 45;
 	const double LIMELIGHT_ANGLE_FRONT = 26.0;
 	const double LIMELIGHT_ANGLE_BACK = 25.0;
 	// const double CROSSHAIR_ANGLE = 6.5; //17.3
 
-	const double kP_ANGLE = 0.08; //FOR ANGLE CORRECTION TODO
+	const double kP_ANGLE = 0.08;   //FOR ANGLE CORRECTION TODO
 	const double kI_ANGLE = 0.0008; //FOR ANGLE CORRECTION TODO
-	const double I_ZONE_ANGLE = 3; //degrees
+	const double I_ZONE_ANGLE = 3;  //degrees
 
 	const double MIN_COMMAND = 0.23;
 
 	//Constants for the PID of talon
-	const double kP_SPEED = 0.2; //FOR SPEED CONTROL
+	const double kP_SPEED = 0.2;						 //FOR SPEED CONTROL
 	const double kD_SPEED_RIGHT = kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
 	const double kD_SPEED_LEFT = kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
 
@@ -265,4 +265,10 @@ class Drivetrain
 	const double talonRampRate = 0.25;
 
 	const double LL_MAX_FEET_PER_SEC = 3.5;
+
+	//Pathfinding
+	EncoderFollower m_left_follower;
+	EncoderFollower m_right_follower;
+
+	// frc::Notifier m_follower_notifier;
 };
