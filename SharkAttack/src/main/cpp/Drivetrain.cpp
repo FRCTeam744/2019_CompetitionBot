@@ -168,39 +168,40 @@ double Drivetrain::pathfinder_follow_encoder(Segment s, int trajectory_length)
 
 void Drivetrain::AutonomousInit()
 {
-    left_trajectory_length = get_trajectory("CenterPlatformToLeftShip.right", leftTrajectory);   //This is supposed to be flipped! This is a bug in FRC's libraries
-    right_trajectory_length = get_trajectory("CenterPlatformToLeftShip.left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
+    left_trajectory_length = get_trajectory("TestPath.right", leftTrajectory);   //This is supposed to be flipped! This is a bug in FRC's libraries
+    right_trajectory_length = get_trajectory("TestPath.left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
+    follow_path_counter = 0;
 }
 
 void Drivetrain::FollowPath()
 {
-    while (left_trajectory_length > 0)
+    if (follow_path_counter < left_trajectory_length)
     {
-        std::cout << "leftAcceleration: " << leftTrajectory[750 - left_trajectory_length].acceleration << std::endl;
-        std::cout << "rightAcceleration: " << rightTrajectory[750 - left_trajectory_length].acceleration << std::endl;
-        std::cout << "leftDt: " << leftTrajectory[750 - left_trajectory_length].dt << std::endl;
-        std::cout << "rightDt: " << rightTrajectory[750 - left_trajectory_length].dt << std::endl;
-        std::cout << "leftHeading: " << leftTrajectory[750 - left_trajectory_length].heading << std::endl;
-        std::cout << "rightHeading: " << rightTrajectory[750 - left_trajectory_length].heading << std::endl;
-        std::cout << "leftJerk: " << leftTrajectory[750 - left_trajectory_length].jerk << std::endl;
-        std::cout << "rightJerk: " << rightTrajectory[750 - left_trajectory_length].jerk << std::endl;
-        std::cout << "leftPosition: " << leftTrajectory[750 - left_trajectory_length].position << std::endl;
-        std::cout << "rightPosition: " << rightTrajectory[750 - left_trajectory_length].position << std::endl;
-        std::cout << "leftVelocity: " << leftTrajectory[750 - left_trajectory_length].velocity << std::endl;
-        std::cout << "rightVelocity: " << rightTrajectory[750 - left_trajectory_length].velocity << std::endl;
-        std::cout << "leftX: " << leftTrajectory[750 - left_trajectory_length].x << std::endl;
-        std::cout << "rightX: " << rightTrajectory[750 - left_trajectory_length].x << std::endl;
-        std::cout << "leftY: " << leftTrajectory[750 - left_trajectory_length].y << std::endl;
-        std::cout << "rightY: " << rightTrajectory[750 - left_trajectory_length].y << std::endl;
+        std::cout << "leftAcceleration: " << leftTrajectory[follow_path_counter].acceleration << std::endl;
+        std::cout << "rightAcceleration: " << rightTrajectory[follow_path_counter].acceleration << std::endl;
+        std::cout << "leftDt: " << leftTrajectory[follow_path_counter].dt << std::endl;
+        std::cout << "rightDt: " << rightTrajectory[follow_path_counter].dt << std::endl;
+        std::cout << "leftHeading: " << leftTrajectory[follow_path_counter].heading << std::endl;
+        std::cout << "rightHeading: " << rightTrajectory[follow_path_counter].heading << std::endl;
+        std::cout << "leftJerk: " << leftTrajectory[follow_path_counter].jerk << std::endl;
+        std::cout << "rightJerk: " << rightTrajectory[follow_path_counter].jerk << std::endl;
+        std::cout << "leftPosition: " << leftTrajectory[follow_path_counter].position << std::endl;
+        std::cout << "rightPosition: " << rightTrajectory[follow_path_counter].position << std::endl;
+        std::cout << "leftVelocity: " << leftTrajectory[follow_path_counter].velocity << std::endl;
+        std::cout << "rightVelocity: " << rightTrajectory[follow_path_counter].velocity << std::endl;
+        std::cout << "leftX: " << leftTrajectory[follow_path_counter].x << std::endl;
+        std::cout << "rightX: " << rightTrajectory[follow_path_counter].x << std::endl;
+        std::cout << "leftY: " << leftTrajectory[follow_path_counter].y << std::endl;
+        std::cout << "rightY: " << rightTrajectory[follow_path_counter].y << std::endl;
 
-        // leftBack->Set(ControlMode::Velocity, leftTrajectory[750 - left_trajectory_length].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
-        // rightBack->Set(ControlMode::Velocity, rightTrajectory[750 - left_trajectory_length].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
-        // leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
-        // rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
-        // leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
-        // rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftBack->Set(ControlMode::Velocity, leftTrajectory[follow_path_counter].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
+        rightBack->Set(ControlMode::Velocity, rightTrajectory[follow_path_counter].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
 
-        left_trajectory_length--;
+        follow_path_counter++;
     }
 }
 

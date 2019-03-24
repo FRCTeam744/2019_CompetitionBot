@@ -279,5 +279,7 @@ class Drivetrain
 	int left_trajectory_length = 0;
 	int right_trajectory_length = 0;
 
+	int follow_path_counter = 0;
+
 	// frc::Notifier m_follower_notifier;
 };
