@@ -210,8 +210,8 @@ bool Drivetrain::FollowPath(bool isReverse)
             rightVelocity =  rightTrajectory[follow_path_counter].velocity;
         }
 
-        leftBack->Set(ControlMode::Velocity, leftVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
-        rightBack->Set(ControlMode::Velocity, rightVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+        leftBack->Set(ControlMode::Velocity, (leftVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)*.75); //in feet/s
+        rightBack->Set(ControlMode::Velocity, (rightVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)*.75);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
         leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
