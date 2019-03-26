@@ -173,35 +173,56 @@ void Drivetrain::AutonomousInit()
     follow_path_counter = 0;
 }
 
-void Drivetrain::FollowPath()
+void Drivetrain::FollowPathInit(std::string pathName) {
+    left_trajectory_length = get_trajectory(pathName + ".right", leftTrajectory);   //This is supposed to be flipped! This is a bug in FRC's libraries
+    right_trajectory_length = get_trajectory(pathName + ".left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
+    follow_path_counter = 0;
+}
+
+bool Drivetrain::FollowPath(bool isReverse)
 {
     if (follow_path_counter < left_trajectory_length)
     {
-        std::cout << "leftAcceleration: " << leftTrajectory[follow_path_counter].acceleration << std::endl;
-        std::cout << "rightAcceleration: " << rightTrajectory[follow_path_counter].acceleration << std::endl;
-        std::cout << "leftDt: " << leftTrajectory[follow_path_counter].dt << std::endl;
-        std::cout << "rightDt: " << rightTrajectory[follow_path_counter].dt << std::endl;
-        std::cout << "leftHeading: " << leftTrajectory[follow_path_counter].heading << std::endl;
-        std::cout << "rightHeading: " << rightTrajectory[follow_path_counter].heading << std::endl;
-        std::cout << "leftJerk: " << leftTrajectory[follow_path_counter].jerk << std::endl;
-        std::cout << "rightJerk: " << rightTrajectory[follow_path_counter].jerk << std::endl;
-        std::cout << "leftPosition: " << leftTrajectory[follow_path_counter].position << std::endl;
-        std::cout << "rightPosition: " << rightTrajectory[follow_path_counter].position << std::endl;
-        std::cout << "leftVelocity: " << leftTrajectory[follow_path_counter].velocity << std::endl;
-        std::cout << "rightVelocity: " << rightTrajectory[follow_path_counter].velocity << std::endl;
-        std::cout << "leftX: " << leftTrajectory[follow_path_counter].x << std::endl;
-        std::cout << "rightX: " << rightTrajectory[follow_path_counter].x << std::endl;
-        std::cout << "leftY: " << leftTrajectory[follow_path_counter].y << std::endl;
-        std::cout << "rightY: " << rightTrajectory[follow_path_counter].y << std::endl;
+        // std::cout << "leftAcceleration: " << leftTrajectory[follow_path_counter].acceleration << std::endl;
+        // std::cout << "rightAcceleration: " << rightTrajectory[follow_path_counter].acceleration << std::endl;
+        // std::cout << "leftDt: " << leftTrajectory[follow_path_counter].dt << std::endl;
+        // std::cout << "rightDt: " << rightTrajectory[follow_path_counter].dt << std::endl;
+        // std::cout << "leftHeading: " << leftTrajectory[follow_path_counter].heading << std::endl;
+        // std::cout << "rightHeading: " << rightTrajectory[follow_path_counter].heading << std::endl;
+        // std::cout << "leftJerk: " << leftTrajectory[follow_path_counter].jerk << std::endl;
+        // std::cout << "rightJerk: " << rightTrajectory[follow_path_counter].jerk << std::endl;
+        // std::cout << "leftPosition: " << leftTrajectory[follow_path_counter].position << std::endl;
+        // std::cout << "rightPosition: " << rightTrajectory[follow_path_counter].position << std::endl;
+        // std::cout << "leftVelocity: " << leftTrajectory[follow_path_counter].velocity << std::endl;
+        // std::cout << "rightVelocity: " << rightTrajectory[follow_path_counter].velocity << std::endl;
+        // std::cout << "leftX: " << leftTrajectory[follow_path_counter].x << std::endl;
+        // std::cout << "rightX: " << rightTrajectory[follow_path_counter].x << std::endl;
+        // std::cout << "leftY: " << leftTrajectory[follow_path_counter].y << std::endl;
+        // std::cout << "rightY: " << rightTrajectory[follow_path_counter].y << std::endl;
+        double leftVelocity  = 0;
+        double rightVelocity = 0;
+        if(isReverse) {
+            leftVelocity = -1 * rightTrajectory[follow_path_counter].velocity;
+            rightVelocity = -1 * leftTrajectory[follow_path_counter].velocity;
+        } 
+        else {
+            leftVelocity = leftTrajectory[follow_path_counter].velocity;
+            rightVelocity =  rightTrajectory[follow_path_counter].velocity;
+        }
 
-        leftBack->Set(ControlMode::Velocity, leftTrajectory[follow_path_counter].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
-        rightBack->Set(ControlMode::Velocity, rightTrajectory[follow_path_counter].velocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+        leftBack->Set(ControlMode::Velocity, leftVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
+        rightBack->Set(ControlMode::Velocity, rightVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
         leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
 
         follow_path_counter++;
+        return false;
+    }
+    else {
+        StopMotors();
+        return true;
     }
 }
 
@@ -432,8 +453,8 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
 void Drivetrain::TankDrive(double leftValue, double rightValue)
 {
     // m_follower_notifier.Stop();
-    // leftValue = leftValue*0.5;
-    // rightValue = rightValue*0.5;
+    //  leftValue = leftValue*0.5;
+    //  rightValue = rightValue*0.5;
     if (!isInAutoDrive && !isInLLDrive)
     {
         leftBack->Set(ControlMode::PercentOutput, leftValue);

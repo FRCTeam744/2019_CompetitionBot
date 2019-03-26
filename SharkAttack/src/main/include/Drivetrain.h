@@ -28,7 +28,8 @@ class Drivetrain
 	int get_trajectory(std::string name, Segment *traj_out);
 	double pathfinder_follow_encoder(Segment s, int trajectory_length);
 	void AutonomousInit();
-	void FollowPath();
+	void FollowPathInit(std::string pathName);
+	bool FollowPath(bool isReverse);
 	bool AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove);
 	void PrintDriveShuffleInfo();
 	void TankDrive(double leftValue, double rightValue);
@@ -106,6 +107,10 @@ class Drivetrain
 	const double HATCH_MID_BACK_DESIRED_INCHES = 23;
 	const double CARGO_SHIP_BACK_DESIRED_INCHES = 24;
 	const double BACK_INIT_PIPELINE_DESIRED_INCHES = 20;
+
+	//Path Following
+	const bool REVERSE = true;
+	const bool FORWARD = false;
 
   private:
 	static Drivetrain *s_instance;
@@ -280,6 +285,8 @@ class Drivetrain
 	int right_trajectory_length = 0;
 
 	int follow_path_counter = 0;
+
+	
 
 	// frc::Notifier m_follower_notifier;
 };

@@ -21,10 +21,11 @@ void Robot::RobotInit()
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
   led = LED::GetInstance();
+  hatchDelayTimer = new frc::Timer();
+  armMoveDelayTimer = new frc::Timer();
 
   isBeforeMatch = true;
   shufflemanager = ShuffleManager::GetInstance();
-  shufflemanager->ShuffleInit();
 
   m_chooser.SetDefaultOption(kAutoRunTeleop, kAutoRunTeleop);
   m_chooser.AddOption("Cargo Autonomous", kAutoHatchCargo);
@@ -84,21 +85,65 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
+  if(isShufflePopulated == false){
+    shufflemanager->ShuffleInit();
+    shufflemanager->VariableInit();
+    isShufflePopulated = true;
+  }
+
+
+
   isBeforeMatch = false;
-  drivetrain->AutonomousInit();
+  // drivetrain->AutonomousInit();
 
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   //     kAutoNameDefault);
   std::cout << "Auto selected: " << m_autoSelected << std::endl;
+  path_count = 0;
+  autoIsGripperClosed = true;
+  armMoveDelayTimer->Reset();
+  armMoveDelayTimer->Start();
+
+  autoPathNames.clear();
+  autoPathDirections.clear();
+  autoArmPresets.clear();
+            
 
   if (m_autoSelected == kAutoHatchCargo) {
     // Custom Auto goes here
-  } else if(m_autoSelected == kAutoHatchRocket){
+    // autoPathNames = testPaths;
+    // autoPathDirections = testDirections;
+    // autoArmPresets = testArmPresets;
+    autoPathNames.push_back("TestPath");
+    autoPathNames.push_back("TestPath");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoPathDirections.push_back(drivetrain->REVERSE);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+    
+    drivetrain->FollowPathInit(autoPathNames.at(path_count));
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    auto_state = FOLLOW_PATH_STATE;
+  } 
+  else if(m_autoSelected == kAutoHatchRocket){
   
     // Another Custom Auto goes here
-
-  } else  if(m_autoSelected == kAutoRunTeleop){ 
+    // autoPathNames = testPaths;
+    // autoPathDirections = testDirections;
+    // autoArmPresets = testArmPresets;
+    autoPathNames.push_back("TestPath");
+    autoPathNames.push_back("TestPath");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoPathDirections.push_back(drivetrain->REVERSE);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+    
+    drivetrain->FollowPathInit(autoPathNames.at(path_count));
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    auto_state = FOLLOW_PATH_STATE;
+  } 
+  else  if(m_autoSelected == kAutoRunTeleop){ 
     TeleopPeriodic();
     // Default Auto goes here
   } else {
@@ -109,13 +154,13 @@ void Robot::AutonomousInit()
 void Robot::AutonomousPeriodic()
 {
   if (m_autoSelected == kAutoHatchCargo) {
-
-    drivetrain->FollowPath();
+    AutoStateMachine();
+    // drivetrain->FollowPath(drivetrain->FORWARD);
     // Custom Auto goes here
 
   } else if(m_autoSelected == kAutoHatchRocket){
-    
-    drivetrain->FollowPath();
+    AutoStateMachine();
+    // drivetrain->FollowPath(drivetrain->FORWARD);
     // Another Custom Auto goes here
 
   } else if(m_autoSelected == kAutoRunTeleop){ 
@@ -127,8 +172,82 @@ void Robot::AutonomousPeriodic()
   
 }
 
+void Robot::AutoStateMachine() {
+  switch (auto_state) {
+    case FOLLOW_PATH_STATE:
+      {
+        //if arm delay timer is finished, move arm
+        if(armMoveDelayTimer->Get() > ARM_MOVE_DELAY) {
+          arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+        }
+
+        //follow path until it's done, then switch to Drive by LL state
+        bool isPathDone = drivetrain->FollowPath(autoPathDirections[path_count]);
+        if(isPathDone) {
+          auto_state = DRIVE_BY_LL_STATE;
+        }
+      }
+      break;
+    case DRIVE_BY_LL_STATE:
+      {
+        //keep active control of arm at current path preset
+        arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+
+        //drive by limelight
+        GetDesiredLLDistances(autoArmPresets.at(path_count));
+        drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
+        bool isLLDriveDone = drivetrain->AutoDrive(true, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
+
+        //if done with drive by ll
+        if(isLLDriveDone) {
+          //Toggle Hatch Panel Gripper
+          autoIsGripperClosed = !autoIsGripperClosed;
+          arm->CheckHatchGripper(autoIsGripperClosed);
+
+          //start and reset timer to wait for hatch mechanism to grip/release 
+          hatchDelayTimer->Reset();
+          hatchDelayTimer->Start();
+
+          //switch state
+          auto_state = DELAY_STATE;
+        }
+      }
+      break;
+    case DELAY_STATE:
+      {
+        //if done waiting for hatch gripper to move
+        if(hatchDelayTimer->Get() > TOGGLE_HATCH_DELAY) {
+          path_count++;
+          //if no more paths, go to teleop
+          std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
+          if(path_count >= autoPathNames.size()) {
+            auto_state = TELEOP_STATE;
+          } 
+          //otherwise, initialize next path, reset arm move timer, and go to path follow state
+          else {
+            drivetrain->FollowPathInit(autoPathNames.at(path_count));
+            armMoveDelayTimer->Reset();
+            armMoveDelayTimer->Start();
+            auto_state = FOLLOW_PATH_STATE;
+          }
+          
+        }
+      }
+      break;
+    case TELEOP_STATE:
+      {
+        TeleopPeriodic();
+      }
+  }
+}
+
 void Robot::TeleopInit()
 {
+if(isShufflePopulated == false){
+    shufflemanager->ShuffleInit();
+    shufflemanager->VariableInit();
+    isShufflePopulated = true;
+  }
 }
 
 void Robot::TeleopPeriodic()
