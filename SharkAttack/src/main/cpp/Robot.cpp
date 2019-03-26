@@ -20,7 +20,7 @@ void Robot::RobotInit()
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
-  led = LED::GetInstance();
+  // led = LED::GetInstance();
   hatchDelayTimer = new frc::Timer();
   armMoveDelayTimer = new frc::Timer();
 
@@ -115,12 +115,12 @@ void Robot::AutonomousInit()
     // autoPathNames = testPaths;
     // autoPathDirections = testDirections;
     // autoArmPresets = testArmPresets;
-    autoPathNames.push_back("TestPath");
-    autoPathNames.push_back("TestPath");
+    autoPathNames.push_back("CenterPlatformToLeftShip");
+    // autoPathNames.push_back("CenterPlatformToLeftShip");
     autoPathDirections.push_back(drivetrain->FORWARD);
-    autoPathDirections.push_back(drivetrain->REVERSE);
+    // autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
-    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+    // autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
     
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
@@ -252,7 +252,7 @@ if(isShufflePopulated == false){
 
 void Robot::TeleopPeriodic()
 {
-  led->IsHatchOpen(arm->GetIsGripperGripped(), oi->GetDriveByLimelight());
+  // led->IsHatchOpen(arm->GetIsGripperGripped(), oi->GetDriveByLimelight());
 
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
@@ -299,15 +299,15 @@ void Robot::DisabledInit()
 void Robot::DisabledPeriodic()
 {
 
-  if (isBeforeMatch)
-  {
-    led->StartUp();
-  }
+  // if (isBeforeMatch)
+  // {
+  //   led->StartUp();
+  // }
 
-  if (!isBeforeMatch)
-  {
-    led->ShutDown();
-  }
+  // if (!isBeforeMatch)
+  // {
+  //   led->ShutDown();
+  // }
 
   // std::cout << "DisabledPeriodic running" << std::endl;
   // std::cout << "hasSetUpForMatch: " << hasSetUpForMatch << std::endl;
