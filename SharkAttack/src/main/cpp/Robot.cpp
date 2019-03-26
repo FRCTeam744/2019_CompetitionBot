@@ -31,8 +31,12 @@ void Robot::RobotInit()
   m_chooser.SetDefaultOption(kAutoRunTeleop, kAutoRunTeleop);
   m_chooser.AddOption("Cargo Autonomous", kAutoHatchCargo);
   m_chooser.AddOption("Rocket Autonomous", kAutoHatchRocket);
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+  //frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
+  // m_pCanScale.AddOption("Yes", true);
+  // m _pCanScale.SetDefaultOption("No", false);
+
+  frc::Shuffleboard::GetTab("DriverView").Add("Auto Modes", m_chooser).WithWidget(frc::BuiltInWidgets::kSplitButtonChooser);
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 

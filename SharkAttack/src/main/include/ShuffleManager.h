@@ -9,6 +9,7 @@
 #include "frc/WPILib.h"
 #include <frc/smartdashboard/Smartdashboard.h>
 #include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/smartdashboard/SendableChooser.h>
 #include <frc/Preferences.h>
 
 #include "networktables/NetworkTable.h"
@@ -59,6 +60,7 @@ class ShuffleManager {
 		// nt::NetworkTableEntry limelightThetaErrorVision;
 		// nt::NetworkTableEntry limeLightXErrorVision;
 		// nt::NetworkTableEntry limelightZErrorVision;
+		
 
 		//Fourbar.cpp
 		nt::NetworkTableEntry checkRetractedTrippedDriver;
