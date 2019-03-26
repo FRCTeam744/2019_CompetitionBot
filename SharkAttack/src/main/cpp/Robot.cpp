@@ -27,6 +27,7 @@ void Robot::RobotInit()
   isBeforeMatch = true;
   shufflemanager = ShuffleManager::GetInstance();
 
+    
   m_chooser.SetDefaultOption(kAutoRunTeleop, kAutoRunTeleop);
   m_chooser.AddOption("Cargo Autonomous", kAutoHatchCargo);
   m_chooser.AddOption("Rocket Autonomous", kAutoHatchRocket);
@@ -115,8 +116,8 @@ void Robot::AutonomousInit()
     // autoPathNames = testPaths;
     // autoPathDirections = testDirections;
     // autoArmPresets = testArmPresets;
+    // autoPathNames.push_back("TestPath");
     autoPathNames.push_back("CenterPlatformToLeftShip");
-    // autoPathNames.push_back("CenterPlatformToLeftShip");
     autoPathDirections.push_back(drivetrain->FORWARD);
     // autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
