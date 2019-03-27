@@ -182,9 +182,10 @@ double Drivetrain::pathfinder_follow_encoder(Segment s, int trajectory_length)
 
 void Drivetrain::AutonomousInit()
 {
-    left_trajectory_length = get_trajectory("TestPath.right", leftTrajectory);  //This is supposed to be flipped! This is a bug in FRC's libraries
-    right_trajectory_length = get_trajectory("TestPath.left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
-    follow_path_counter = 0;
+    // left_trajectory_length = get_trajectory("TestPath.right", leftTrajectory);  //This is supposed to be flipped! This is a bug in FRC's libraries
+    // right_trajectory_length = get_trajectory("TestPath.left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
+    // follow_path_counter = 0;
+    ahrs->ZeroYaw();
 }
 
 void Drivetrain::FollowPathInit(std::string pathName)
@@ -206,26 +207,34 @@ bool Drivetrain::FollowPath(bool isReverse)
 
         double gyro_heading = ahrs->GetYaw();
         double desired_heading = r2d(leftTrajectory[follow_path_counter].heading);
-        double angle_difference = desired_heading - gyro_heading;
+        
 
-        angle_difference = std::fmod(angle_difference, 360.0);
-        if (std::abs(angle_difference) > 180.0)
-        {
-            angle_difference = (angle_difference > 0) ? angle_difference - 360 : angle_difference + 360;
-        }
-
-        double turn = 0.8 * (-1.0/80.0) * angle_difference;
 
         if (isReverse)
         {
             leftVelocity = -1 * rightTrajectory[follow_path_counter].velocity;
             rightVelocity = -1 * leftTrajectory[follow_path_counter].velocity;
+            // turn *= -1;
+            desired_heading -= 180;
         }
         else
         {
             leftVelocity = leftTrajectory[follow_path_counter].velocity;
             rightVelocity = rightTrajectory[follow_path_counter].velocity;
         }
+
+        double angle_difference = desired_heading - gyro_heading;
+        frc::SmartDashboard::PutNumber("Follow Path Desired Heading", desired_heading);
+        angle_difference = std::fmod(angle_difference, 360.0);
+        if (std::abs(angle_difference) > 180.0)
+        {
+            angle_difference = (angle_difference > 0) ? angle_difference - 360 : angle_difference + 360;
+        }
+        frc::SmartDashboard::PutNumber("Follow Path Angle Error", angle_difference);
+
+
+        double turn = 0.1 * angle_difference; //was -0.002
+        frc::SmartDashboard::PutNumber("Follow Path Turn", turn);
 
         leftBack->Set(ControlMode::Velocity, ((leftVelocity + turn) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)); //in feet/s
         rightBack->Set(ControlMode::Velocity, ((rightVelocity - turn) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS));
