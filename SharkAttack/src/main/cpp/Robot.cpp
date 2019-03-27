@@ -27,9 +27,12 @@ void Robot::RobotInit()
   isBeforeMatch = true;
   shufflemanager = ShuffleManager::GetInstance();
 
+    
   m_chooser.SetDefaultOption(kAutoRunTeleop, kAutoRunTeleop);
-  m_chooser.AddOption("Cargo Autonomous", kAutoHatchCargo);
-  m_chooser.AddOption("Rocket Autonomous", kAutoHatchRocket);
+  m_chooser.AddOption("Right Cargo Autonomous", kAutoHatchRightCargo);
+  m_chooser.AddOption("Left Cargo Autonomous", kAutoHatchLeftCargo);
+  m_chooser.AddOption("Right Rocket Autonomous", kAutoHatchRightRocket);
+  m_chooser.AddOption("Left Rocket Autonomous", kAutoHatchLeftRocket);
   //frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
   // m_pCanScale.AddOption("Yes", true);
@@ -114,23 +117,26 @@ void Robot::AutonomousInit()
   autoArmPresets.clear();
             
 
-  if (m_autoSelected == kAutoHatchCargo) {
+  if (m_autoSelected == kAutoHatchRightCargo) {
     // Custom Auto goes here
     // autoPathNames = testPaths;
     // autoPathDirections = testDirections;
     // autoArmPresets = testArmPresets;
+    // autoPathNames.push_back("TestPath");
     autoPathNames.push_back("CenterPlatformToLeftShip");
-    // autoPathNames.push_back("CenterPlatformToLeftShip");
     autoPathDirections.push_back(drivetrain->FORWARD);
-    // autoPathDirections.push_back(drivetrain->REVERSE);
+    autoPathNames.push_back("LeftShipToLoadingStation");
+    autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
-    // autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
     
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
-  } 
-  else if(m_autoSelected == kAutoHatchRocket){
+  } else if (m_autoSelected == kAutoHatchLeftCargo) {
+
+  }
+  else if(m_autoSelected == kAutoHatchRightRocket){
   
     // Another Custom Auto goes here
     // autoPathNames = testPaths;
@@ -146,7 +152,9 @@ void Robot::AutonomousInit()
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
-  } 
+  } else if(m_autoSelected == kAutoHatchLeftRocket){
+
+  }
   else  if(m_autoSelected == kAutoRunTeleop){ 
     TeleopPeriodic();
     // Default Auto goes here
@@ -157,17 +165,27 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-  if (m_autoSelected == kAutoHatchCargo) {
+  if (m_autoSelected == kAutoHatchRightCargo) {
     AutoStateMachine();
     // drivetrain->FollowPath(drivetrain->FORWARD);
     // Custom Auto goes here
 
-  } else if(m_autoSelected == kAutoHatchRocket){
+  } else if(m_autoSelected == kAutoHatchLeftCargo) {
+    AutoStateMachine();
+    // drivetrain->FollowPath(drivetrain->FORWARD);
+    // Custom Auto goes here
+  }
+  else if(m_autoSelected == kAutoHatchRightRocket){
     AutoStateMachine();
     // drivetrain->FollowPath(drivetrain->FORWARD);
     // Another Custom Auto goes here
 
-  } else if(m_autoSelected == kAutoRunTeleop){ 
+  } else if(m_autoSelected == kAutoHatchLeftRocket){
+     AutoStateMachine();
+    // drivetrain->FollowPath(drivetrain->FORWARD);
+    // Another Custom Auto goes here    
+  }
+  else if(m_autoSelected == kAutoRunTeleop){ 
     TeleopPeriodic();
     // Default Auto goes here
   } else {

@@ -135,8 +135,8 @@ void Drivetrain::PrintDriveShuffleInfo()
 
     //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDrivePreComp , rightDashboardSpeed);
     //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDrivePreComp , rightDashboardSpeed);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDriveDriver, rightDashboardSpeed);
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDriveDriver, rightDashboardSpeed);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDriveVision, rightDashboardSpeed);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDriveVision, leftDashboardSpeed);
 
     //   currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
     //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
@@ -218,8 +218,8 @@ bool Drivetrain::FollowPath(bool isReverse)
             rightVelocity =  rightTrajectory[follow_path_counter].velocity;
         }
 
-        leftBack->Set(ControlMode::Velocity, (leftVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)*.75); //in feet/s
-        rightBack->Set(ControlMode::Velocity, (rightVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)*.75);
+        leftBack->Set(ControlMode::Velocity, (leftVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)); //in feet/s
+        rightBack->Set(ControlMode::Velocity, (rightVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS));
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
         leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
@@ -422,7 +422,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
     std::cout << " wantToNotMove," << wantToNotMove << std::endl;
 
-    if (abs(distanceError) < 1 && abs(angleError) < 1)
+    if (abs(distanceError) < 5 && abs(angleError) < 1.5)
     {
         if (isBallMode)
         {

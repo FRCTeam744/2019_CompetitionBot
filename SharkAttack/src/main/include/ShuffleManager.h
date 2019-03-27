@@ -29,13 +29,11 @@ class ShuffleManager {
 		frc::ShuffleboardTab *VisionTab;
 		frc::ShuffleboardTab *FourbarTab;
 
-		//int shuffleUpdate = 1000;
-
 		//using native hierarchy that RoboRio uses on startup
 		//organized by class
 		//Drivetrain.cpp
-		nt::NetworkTableEntry leftDriveDriver;
-		nt::NetworkTableEntry rightDriveDriver;
+		nt::NetworkTableEntry leftDriveVision;
+		nt::NetworkTableEntry rightDriveVision;
 		// nt::NetworkTableEntry leftDrivePreComp;
 		// nt::NetworkTableEntry rightDrivePreComp;
 		nt::NetworkTableEntry headingVision;
