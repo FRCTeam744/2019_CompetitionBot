@@ -251,8 +251,8 @@ class Drivetrain
 	const double LIMELIGHT_ANGLE_BACK = 25.0;
 	// const double CROSSHAIR_ANGLE = 6.5; //17.3
 
-	const double kP_ANGLE = 0.08;   //FOR ANGLE CORRECTION TODO
-	const double kI_ANGLE = 0.0008; //FOR ANGLE CORRECTION TODO
+	const double kP_ANGLE = 0.10;   //FOR ANGLE CORRECTION TODO
+	const double kI_ANGLE = 0.0030; //FOR ANGLE CORRECTION TODO
 	const double I_ZONE_ANGLE = 3;  //degrees
 
 	const double MIN_COMMAND = 0.23;
