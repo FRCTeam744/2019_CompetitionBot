@@ -82,7 +82,7 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     fourbarRotationsToHomeFourbar = ShuffleManager::FourbarTab->Add("FB Rotations to Home", 0.0).GetEntry();
     fourbarSpeedFourbar = ShuffleManager::FourbarTab->Add("FB Speed", 0.0).GetEntry();
 
-    
+    getYaw = ShuffleManager::DriverTab->Add("Gyro Yaw", 0.0).GetEntry();
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val){

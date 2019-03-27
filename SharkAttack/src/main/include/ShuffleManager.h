@@ -105,7 +105,7 @@ class ShuffleManager {
 		nt::NetworkTableEntry checkHatchGripperDriver;
 		nt::NetworkTableEntry checkDriveTrainGearDriver;
 
-
+		nt::NetworkTableEntry getYaw;
 
         void ShuffleInit();
 		void OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val);
