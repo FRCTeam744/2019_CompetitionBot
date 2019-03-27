@@ -98,7 +98,7 @@ Drivetrain::Drivetrain()
     crosshairAngle = 0.0;
 
     //Gyro
-    ahrs = new AHRS(SerialPort::kUSB);
+    ahrs = new AHRS(SerialPort::Port::kUSB);
 }
 
 //Public Methods
@@ -137,20 +137,20 @@ void Drivetrain::PrintDriveShuffleInfo()
     //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDrivePreComp , rightDashboardSpeed);
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->rightDriveVision, rightDashboardSpeed);
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->leftDriveVision, leftDashboardSpeed);
-    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->limeLightAngleErrorVision, angleError); 
-    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->limeLightDistanceErrorVision, distanceError); 
+    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->limeLightAngleErrorVision, angleError);
+    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->limeLightDistanceErrorVision, distanceError);
     //   currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
     //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
 
     //Gyro
-    SmartDashboard::PutBoolean( "IMU_Connected", ahrs->IsConnected());
+    SmartDashboard::PutBoolean("IMU_Connected", ahrs->IsConnected());
     SmartDashboard::PutNumber("IMU_Yaw", ahrs->GetYaw());
-    SmartDashboard::PutBoolean( "IMU_IsCalibrating", ahrs->IsCalibrating());
+    SmartDashboard::PutBoolean("IMU_IsCalibrating", ahrs->IsCalibrating());
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->gyroYaw, ahrs->GetYaw());
 
-    std::cout << "IMU_Connected: " << ahrs->IsConnected() << std::endl;
-    std::cout << "Gyro Yaw: " << ahrs->GetYaw() << std::endl;
-    std::cout << "IMU_IsCalibrating: " << ahrs->IsCalibrating() << std::endl;
+    // std::cout << "IMU_Connected: " << ahrs->IsConnected() << std::endl;
+    // std::cout << "Gyro Yaw: " << ahrs->GetYaw() << std::endl;
+    // std::cout << "IMU_IsCalibrating: " << ahrs->IsCalibrating() << std::endl;
 }
 
 std::string Drivetrain::get_trajectory_file(std::string name)
@@ -182,13 +182,14 @@ double Drivetrain::pathfinder_follow_encoder(Segment s, int trajectory_length)
 
 void Drivetrain::AutonomousInit()
 {
-    left_trajectory_length = get_trajectory("TestPath.right", leftTrajectory);   //This is supposed to be flipped! This is a bug in FRC's libraries
+    left_trajectory_length = get_trajectory("TestPath.right", leftTrajectory);  //This is supposed to be flipped! This is a bug in FRC's libraries
     right_trajectory_length = get_trajectory("TestPath.left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
     follow_path_counter = 0;
 }
 
-void Drivetrain::FollowPathInit(std::string pathName) {
-    left_trajectory_length = get_trajectory(pathName + ".right", leftTrajectory);   //This is supposed to be flipped! This is a bug in FRC's libraries
+void Drivetrain::FollowPathInit(std::string pathName)
+{
+    left_trajectory_length = get_trajectory(pathName + ".right", leftTrajectory);  //This is supposed to be flipped! This is a bug in FRC's libraries
     right_trajectory_length = get_trajectory(pathName + ".left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
     follow_path_counter = 0;
 }
@@ -197,35 +198,37 @@ bool Drivetrain::FollowPath(bool isReverse)
 {
     if (follow_path_counter < left_trajectory_length)
     {
-        // std::cout << "leftAcceleration: " << leftTrajectory[follow_path_counter].acceleration << std::endl;
-        // std::cout << "rightAcceleration: " << rightTrajectory[follow_path_counter].acceleration << std::endl;
-        // std::cout << "leftDt: " << leftTrajectory[follow_path_counter].dt << std::endl;
-        // std::cout << "rightDt: " << rightTrajectory[follow_path_counter].dt << std::endl;
         // std::cout << "leftHeading: " << leftTrajectory[follow_path_counter].heading << std::endl;
         // std::cout << "rightHeading: " << rightTrajectory[follow_path_counter].heading << std::endl;
-        // std::cout << "leftJerk: " << leftTrajectory[follow_path_counter].jerk << std::endl;
-        // std::cout << "rightJerk: " << rightTrajectory[follow_path_counter].jerk << std::endl;
-        // std::cout << "leftPosition: " << leftTrajectory[follow_path_counter].position << std::endl;
-        // std::cout << "rightPosition: " << rightTrajectory[follow_path_counter].position << std::endl;
-        // std::cout << "leftVelocity: " << leftTrajectory[follow_path_counter].velocity << std::endl;
-        // std::cout << "rightVelocity: " << rightTrajectory[follow_path_counter].velocity << std::endl;
-        // std::cout << "leftX: " << leftTrajectory[follow_path_counter].x << std::endl;
-        // std::cout << "rightX: " << rightTrajectory[follow_path_counter].x << std::endl;
-        // std::cout << "leftY: " << leftTrajectory[follow_path_counter].y << std::endl;
-        // std::cout << "rightY: " << rightTrajectory[follow_path_counter].y << std::endl;
-        double leftVelocity  = 0;
+
+        double leftVelocity = 0;
         double rightVelocity = 0;
-        if(isReverse) {
-            leftVelocity = -1 * rightTrajectory[follow_path_counter].velocity;
-            rightVelocity = -1 * leftTrajectory[follow_path_counter].velocity;
-        } 
-        else {
-            leftVelocity = leftTrajectory[follow_path_counter].velocity;
-            rightVelocity =  rightTrajectory[follow_path_counter].velocity;
+
+        double gyro_heading = ahrs->GetYaw();
+        double desired_heading = r2d(leftTrajectory[follow_path_counter].heading);
+        double angle_difference = desired_heading - gyro_heading;
+
+        angle_difference = std::fmod(angle_difference, 360.0);
+        if (std::abs(angle_difference) > 180.0)
+        {
+            angle_difference = (angle_difference > 0) ? angle_difference - 360 : angle_difference + 360;
         }
 
-        leftBack->Set(ControlMode::Velocity, (leftVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)); //in feet/s
-        rightBack->Set(ControlMode::Velocity, (rightVelocity * FEET_TO_NU * CONVERT_100MS_TO_SECONDS));
+        double turn = 0.8 * (-1.0/80.0) * angle_difference;
+
+        if (isReverse)
+        {
+            leftVelocity = -1 * rightTrajectory[follow_path_counter].velocity;
+            rightVelocity = -1 * leftTrajectory[follow_path_counter].velocity;
+        }
+        else
+        {
+            leftVelocity = leftTrajectory[follow_path_counter].velocity;
+            rightVelocity = rightTrajectory[follow_path_counter].velocity;
+        }
+
+        leftBack->Set(ControlMode::Velocity, ((leftVelocity + turn) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)); //in feet/s
+        rightBack->Set(ControlMode::Velocity, ((rightVelocity - turn) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS));
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
         leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
@@ -234,7 +237,8 @@ bool Drivetrain::FollowPath(bool isReverse)
         follow_path_counter++;
         return false;
     }
-    else {
+    else
+    {
         StopMotors();
         return true;
     }
