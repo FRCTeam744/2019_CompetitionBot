@@ -38,7 +38,7 @@ void Robot::RobotInit()
   // m_pCanScale.AddOption("Yes", true);
   // m _pCanScale.SetDefaultOption("No", false);
 
-  frc::Shuffleboard::GetTab("DriverView").Add("Auto Modes", m_chooser).WithWidget(frc::BuiltInWidgets::kSplitButtonChooser);
+  frc::Shuffleboard::GetTab("DriverView").Add("Auto Modes", m_chooser).WithWidget(frc::BuiltInWidgets::kComboBoxChooser);
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
