@@ -17,6 +17,7 @@
 
 // #include "frc/Notifier.h"
 #include <pathfinder-frc.h>
+#include "AHRS.h"
 
 class Drivetrain
 {
@@ -286,7 +287,8 @@ class Drivetrain
 
 	int follow_path_counter = 0;
 
-	
+	//Gyro
+	AHRS *ahrs;
 
 	// frc::Notifier m_follower_notifier;
 };

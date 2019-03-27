@@ -96,6 +96,9 @@ Drivetrain::Drivetrain()
     slopeForAngleCalc = 0.0;
     interceptForAngleCalc = 0.0;
     crosshairAngle = 0.0;
+
+    //Gyro
+    ahrs = new AHRS(SerialPort::kUSB);
 }
 
 //Public Methods
@@ -137,6 +140,11 @@ void Drivetrain::PrintDriveShuffleInfo()
 
     //   currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
     //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
+
+    //Gyro
+    SmartDashboard::PutBoolean( "IMU_Connected", ahrs->IsConnected());
+    SmartDashboard::PutNumber("IMU_Yaw", ahrs->GetYaw());
+    SmartDashboard::PutBoolean( "IMU_IsCalibrating", ahrs->IsCalibrating());
 }
 
 std::string Drivetrain::get_trajectory_file(std::string name)
