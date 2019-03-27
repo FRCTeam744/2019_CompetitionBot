@@ -147,6 +147,8 @@ void Drivetrain::PrintDriveShuffleInfo()
     SmartDashboard::PutNumber("IMU_Yaw", ahrs->GetYaw());
     SmartDashboard::PutBoolean( "IMU_IsCalibrating", ahrs->IsCalibrating());
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->getYaw,getYawDriver);
+
+    std::cout << "Gyro Yaw: " << ahrs->GetYaw() << std::endl;
 }
 
 std::string Drivetrain::get_trajectory_file(std::string name)
