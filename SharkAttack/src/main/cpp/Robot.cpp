@@ -268,8 +268,8 @@ if(isShufflePopulated == false){
   }
 
   ShuffleboardLayout armStuff = Shuffleboard.GetTab("DriverView").GetLayout("Arm Stuff", frc::BuiltInLayouts::kGrid);
-  armStuff.Add(DriverTab->Add())
-elevatorCommands.add(new ElevatorUpCommand());
+//   armStuff.Add(DriverTab->Add())
+// elevatorCommands.add(new ElevatorUpCommand());
 }
 
 void Robot::TeleopPeriodic()
