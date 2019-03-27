@@ -34,10 +34,6 @@ void Robot::RobotInit()
   m_chooser.AddOption("Right Rocket Autonomous", kAutoHatchRightRocket);
   m_chooser.AddOption("Left Rocket Autonomous", kAutoHatchLeftRocket);
   //frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-
-  // m_pCanScale.AddOption("Yes", true);
-  // m _pCanScale.SetDefaultOption("No", false);
-
   frc::Shuffleboard::GetTab("DriverView").Add("Auto Modes", m_chooser).WithWidget(frc::BuiltInWidgets::kComboBoxChooser);
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
@@ -280,6 +276,10 @@ if(isShufflePopulated == false){
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }
+
+  ShuffleboardLayout armStuff = Shuffleboard.GetTab("DriverView").GetLayout("Arm Stuff", frc::BuiltInLayouts::kGrid);
+//   armStuff.Add(DriverTab->Add())
+// elevatorCommands.add(new ElevatorUpCommand());
 }
 
 void Robot::TeleopPeriodic()
