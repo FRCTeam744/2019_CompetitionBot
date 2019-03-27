@@ -67,6 +67,8 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     headingVision = ShuffleManager::VisionTab->Add("Heading", 0.0).GetEntry();
     skewVision = ShuffleManager::VisionTab->Add("Skew", 0.0).GetEntry();
     currentDistanceInchesVision = ShuffleManager::VisionTab->Add("Current Distance Inches", 0.0).GetEntry();
+    limeLightAngleErrorVision = ShuffleManager::VisionTab->Add("Angle Error", 0.0).GetEntry();
+    limeLightDistanceErrorVision = ShuffleManager::VisionTab->("Distance Error", 0.0).GetEntry();
 
     fourbarEncoderDriver = ShuffleManager::DriverTab->Add("FB Encoder", 0.0).GetEntry();
     checkRetractedTrippedDriver = ShuffleManager::DriverTab->Add("Retracted?", true).GetEntry();
