@@ -64,7 +64,7 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     // checkWristLimitSwitchDriver = ShuffleManager::DriverTab->Add("Wrist Limit Switch Tripped?", 0.0).GetEntry();
     // checkWristLimitSwitchPreComp = ShuffleManager::PreCompTab->Add("Wrist Limit Switch Tripped?", 0.0).GetEntry();
     
-    getYawDriver = ShuffleManager::DriverTab->Add("Get Yaw Test", 0.0).GetEntry();
+    gyroYaw = ShuffleManager::DriverTab->Add("Gyro Yaw", 0.0).GetEntry();
 
     headingVision = ShuffleManager::VisionTab->Add("Heading", 0.0).GetEntry();
     skewVision = ShuffleManager::VisionTab->Add("Skew", 0.0).GetEntry();
