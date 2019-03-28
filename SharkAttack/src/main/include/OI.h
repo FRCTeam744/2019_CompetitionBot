@@ -58,6 +58,7 @@ class OI
 	bool GetIsInBallPickup();
 	bool GetIsArmInManual();
 	bool GetIsWristInManual();
+	void SetArmWristInManual(bool isArmManual, bool isWristManual);
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();
@@ -91,7 +92,7 @@ class OI
 	const double HIGH_BALL_HEIGHT = 71.5;
 	const double MID_BALL_HEIGHT = 47;
 	const double LOW_BALL_HEIGHT = 23.5;
-	const double CARGOSHIP_BALL_HEIGHT = 47.5; //Don't know the height yet, needs to be measured
+	const double CARGOSHIP_BALL_HEIGHT = 43; //Don't know the height yet, needs to be measured
 	const double BALL_PICKUP_HEIGHT = 19.0;	//Don't know the height yet, needs to be measured
 
 	//ARM MEASUREMENTS

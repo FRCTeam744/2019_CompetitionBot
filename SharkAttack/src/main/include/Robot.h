@@ -85,10 +85,10 @@ private:
   bool autoIsGripperClosed = true;
 
   frc::Timer *hatchDelayTimer;
-  const double TOGGLE_HATCH_DELAY = 0.3;
+  const double TOGGLE_HATCH_DELAY = 2;
 
   frc::Timer *armMoveDelayTimer;
-  const double ARM_MOVE_DELAY = .5;
+  const double ARM_MOVE_DELAY = 2.0;
 
   // std::vector<std::string> autoPathNames;
   // std::vector<bool> autoPathDirections;

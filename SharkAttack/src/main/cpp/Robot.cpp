@@ -27,7 +27,6 @@ void Robot::RobotInit()
   isBeforeMatch = true;
   shufflemanager = ShuffleManager::GetInstance();
 
-    
   m_chooser.SetDefaultOption(kAutoRunTeleop, kAutoRunTeleop);
   m_chooser.AddOption("Right Cargo Autonomous", kAutoHatchRightCargo);
   m_chooser.AddOption("Left Cargo Autonomous", kAutoHatchLeftCargo);
@@ -88,13 +87,12 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
-  if(isShufflePopulated == false){
+  if (isShufflePopulated == false)
+  {
     shufflemanager->ShuffleInit();
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }
-
-
 
   isBeforeMatch = false;
   drivetrain->AutonomousInit();
@@ -111,12 +109,16 @@ void Robot::AutonomousInit()
   autoPathNames.clear();
   autoPathDirections.clear();
   autoArmPresets.clear();
-            
 
-  if (m_autoSelected == kAutoHatchRightCargo) {
+  if (m_autoSelected == kAutoHatchRightCargo)
+  {
+    oi->SetArmWristInManual(false, false);
+    arm->UpdateArmAndWristInManual(false, false);
+
     autoPathNames.push_back("CenterPlatformToRightShip");
     autoPathDirections.push_back(drivetrain->FORWARD);
-    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);;
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
+    ;
 
     autoPathNames.push_back("RightShipToRightStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
@@ -125,37 +127,48 @@ void Robot::AutonomousInit()
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
-  } 
-  else if (m_autoSelected == kAutoHatchLeftCargo) {
+  }
+  else if (m_autoSelected == kAutoHatchLeftCargo)
+  {
     // Custom Auto goes here
+    oi->SetArmWristInManual(false, false);
+    arm->UpdateArmAndWristInManual(false, false);
+
     autoPathNames.push_back("CenterPlatformToLeftShip");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
-    
+
     autoPathNames.push_back("LeftShipToLeftStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
-    
+
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
-  else if(m_autoSelected == kAutoHatchRightRocket){
-  
+  else if (m_autoSelected == kAutoHatchRightRocket)
+  {
+    oi->SetArmWristInManual(false, false);
+    arm->UpdateArmAndWristInManual(false, false);
+
     // Another Custom Auto goes here
     autoPathNames.push_back("TestPath");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
-    
-    
+
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
-  } 
-  else if(m_autoSelected == kAutoHatchLeftRocket){
+  }
+  else if (m_autoSelected == kAutoHatchLeftRocket)
+  {
+    oi->SetArmWristInManual(false, false);
+    arm->UpdateArmAndWristInManual(false, false);
+
     autoPathNames.push_back("LeftPlatformToLeftFrontRocket");
     autoPathDirections.push_back(drivetrain->FORWARD);
-    autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);;
+    autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
+    ;
 
     autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
@@ -169,125 +182,141 @@ void Robot::AutonomousInit()
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
-  else  if(m_autoSelected == kAutoRunTeleop){ 
+  else if (m_autoSelected == kAutoRunTeleop)
+  {
     TeleopPeriodic();
-  } 
-  else {
+  }
+  else
+  {
     TeleopPeriodic();
   }
 }
 
 void Robot::AutonomousPeriodic()
 {
-  if (m_autoSelected == kAutoHatchRightCargo) {
-    AutoStateMachine();
-  } 
-  else if(m_autoSelected == kAutoHatchLeftCargo) {
+  if (m_autoSelected == kAutoHatchRightCargo)
+  {
     AutoStateMachine();
   }
-  else if(m_autoSelected == kAutoHatchRightRocket){
+  else if (m_autoSelected == kAutoHatchLeftCargo)
+  {
     AutoStateMachine();
-  } 
-  else if(m_autoSelected == kAutoHatchLeftRocket){
-     AutoStateMachine();
   }
-  else if(m_autoSelected == kAutoRunTeleop){ 
+  else if (m_autoSelected == kAutoHatchRightRocket)
+  {
+    AutoStateMachine();
+  }
+  else if (m_autoSelected == kAutoHatchLeftRocket)
+  {
+    AutoStateMachine();
+  }
+  else if (m_autoSelected == kAutoRunTeleop)
+  {
     TeleopPeriodic();
-  } 
-  else {
+  }
+  else
+  {
     TeleopPeriodic();
   }
-  
 }
 
-void Robot::AutoStateMachine() {
+void Robot::AutoStateMachine()
+{
   //switch to teleop if needed
-  if(oi->GetStopLLMove()) {
+  if (oi->GetStopLLMove())
+  {
     auto_state = TELEOP_STATE;
   }
 
-  switch (auto_state) {
-    case FOLLOW_PATH_STATE:
+  switch (auto_state)
+  {
+  case FOLLOW_PATH_STATE:
+  {
+    //if arm delay timer is finished, move arm
+    if (armMoveDelayTimer->Get() > ARM_MOVE_DELAY)
+    {
+      arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+      oi->SetTargetArmPosition(autoArmPresets.at(path_count));
+      oi->SetPlacingMode(false);
+    }
+
+    //follow path until it's done, then switch to Drive by LL state
+    bool isPathDone = drivetrain->FollowPath(autoPathDirections[path_count]);
+    if (isPathDone)
+    {
+      auto_state = DRIVE_BY_LL_STATE;
+    }
+  }
+  break;
+  case DRIVE_BY_LL_STATE:
+  {
+    //keep active control of arm at current path preset
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+
+    //drive by limelight
+    GetDesiredLLDistances(autoArmPresets.at(path_count));
+    drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
+    bool isLLDriveDone = drivetrain->AutoDrive(true, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
+
+    //if done with drive by ll
+    if (isLLDriveDone)
+    {
+      //Toggle Hatch Panel Gripper
+      autoIsGripperClosed = !autoIsGripperClosed;
+      arm->CheckHatchGripper(autoIsGripperClosed);
+
+      //start and reset timer to wait for hatch mechanism to grip/release
+      hatchDelayTimer->Reset();
+      hatchDelayTimer->Start();
+
+      //switch state
+      auto_state = DELAY_STATE;
+    }
+  }
+  break;
+  case DELAY_STATE:
+  {
+    //if done waiting for hatch gripper to move
+    if (hatchDelayTimer->Get() > TOGGLE_HATCH_DELAY)
+    {
+      path_count++;
+      //if no more paths, go to teleop
+      std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
+      if (path_count >= autoPathNames.size())
       {
-        //if arm delay timer is finished, move arm
-        if(armMoveDelayTimer->Get() > ARM_MOVE_DELAY) {
-          arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
-          oi->SetTargetArmPosition(autoArmPresets.at(path_count));
-          oi->SetPlacingMode(false);
-        }
-
-        //follow path until it's done, then switch to Drive by LL state
-        bool isPathDone = drivetrain->FollowPath(autoPathDirections[path_count]);
-        if(isPathDone) {
-          auto_state = DRIVE_BY_LL_STATE;
-        }
+        auto_state = TELEOP_STATE;
       }
-      break;
-    case DRIVE_BY_LL_STATE:
+      //otherwise, initialize next path, reset arm move timer, and go to path follow state
+      else
       {
-        //keep active control of arm at current path preset
-        arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
-
-        //drive by limelight
-        GetDesiredLLDistances(autoArmPresets.at(path_count));
-        drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
-        bool isLLDriveDone = drivetrain->AutoDrive(true, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
-
-        //if done with drive by ll
-        if(isLLDriveDone) {
-          //Toggle Hatch Panel Gripper
-          autoIsGripperClosed = !autoIsGripperClosed;
-          arm->CheckHatchGripper(autoIsGripperClosed);
-
-          //start and reset timer to wait for hatch mechanism to grip/release 
-          hatchDelayTimer->Reset();
-          hatchDelayTimer->Start();
-
-          //switch state
-          auto_state = DELAY_STATE;
-        }
+        drivetrain->FollowPathInit(autoPathNames.at(path_count));
+        armMoveDelayTimer->Reset();
+        armMoveDelayTimer->Start();
+        drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
+        auto_state = FOLLOW_PATH_STATE;
       }
-      break;
-    case DELAY_STATE:
-      {
-        //if done waiting for hatch gripper to move
-        if(hatchDelayTimer->Get() > TOGGLE_HATCH_DELAY) {
-          path_count++;
-          //if no more paths, go to teleop
-          std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
-          if(path_count >= autoPathNames.size()) {
-            auto_state = TELEOP_STATE;
-          } 
-          //otherwise, initialize next path, reset arm move timer, and go to path follow state
-          else {
-            drivetrain->FollowPathInit(autoPathNames.at(path_count));
-            armMoveDelayTimer->Reset();
-            armMoveDelayTimer->Start();
-            drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
-            auto_state = FOLLOW_PATH_STATE;
-          }
-          
-        }
-      }
-      break;
-    case TELEOP_STATE:
-      {
-        TeleopPeriodic();
-      }
+    }
+  }
+  break;
+  case TELEOP_STATE:
+  {
+    TeleopPeriodic();
+  }
   }
 }
 
 void Robot::TeleopInit()
 {
-if(isShufflePopulated == false){
+  if (isShufflePopulated == false)
+  {
     shufflemanager->ShuffleInit();
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }
 
   // ShuffleboardLayout armStuff = Shuffleboard.GetTab("DriverView").GetLayout("Arm Stuff", frc::BuiltInLayouts::kGrid);
-//   armStuff.Add(DriverTab->Add())
-// elevatorCommands.add(new ElevatorUpCommand());
+  //   armStuff.Add(DriverTab->Add())
+  // elevatorCommands.add(new ElevatorUpCommand());
 }
 
 void Robot::TeleopPeriodic()
@@ -315,9 +344,11 @@ void Robot::TeleopPeriodic()
   //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;
   arm->RunIntake(oi->GetIntakeInput());
 
-  fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
-  fourbar->FourbarHome(oi->GetFourbarHome());
-
+  // if (oi->GetTargetArmPosition() != oi->NEUTRAL_ARM_POSITION)
+  // {
+    fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
+    fourbar->FourbarHome(oi->GetFourbarHome());
+  // }
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
   if (oi->SwitchGears())
@@ -338,7 +369,8 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
-  if(isShufflePopulated == false){
+  if (isShufflePopulated == false)
+  {
     shufflemanager->ShuffleInit();
     shufflemanager->VariableInit();
     isShufflePopulated = true;

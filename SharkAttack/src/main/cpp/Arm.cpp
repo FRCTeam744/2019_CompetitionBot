@@ -234,11 +234,16 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
 
     if (isInBallMode == true)
     {
+        wasInBallMode = true;
         if (isHatchGripperClosed)
         {
             // OpenHatchGripper();
             wantHatchGripperClosed = false;
         }
+    }
+    else if (!isInBallMode && wasInBallMode){
+        wantHatchGripperClosed = true;
+        wasInBallMode = false;
     }
 }
 

@@ -96,6 +96,8 @@ private:
   bool isHatchGripperClosed = true;
   bool wantHatchGripperClosed = true;
 
+  bool wasInBallMode = false;
+
   bool isArmInDefenseMode = false;
 
   bool areWheelsVeryDown;
@@ -127,8 +129,8 @@ private:
   const int WRIST_NEUTRAL = 0;
   const int WRIST_BALL_PICKUP_FRONT = -190;
   const int WRIST_BALL_PICKUP_BACK = 190;
-  const int WRIST_CARGO_SHIP_FRONT = -155;
-  const int WRIST_CARGO_SHIP_BACK  = 155;
+  const int WRIST_CARGO_SHIP_FRONT = -130;
+  const int WRIST_CARGO_SHIP_BACK  = 130;
   
 
   //Tunables

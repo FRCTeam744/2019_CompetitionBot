@@ -270,7 +270,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     //drive hatch into place, and skip LL code if you've gotten near the target
     if (wantToDriveHatchInPlace)
     {
-        if (hatchPlaceTimer->Get() > 0.3)
+        if (hatchPlaceTimer->Get() > 0.4)
         {
             StopMotors();
             return true;
@@ -541,7 +541,7 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
     {
         isInAutoDrive = true;
 
-        desiredLeftFPS = desiredRightFPS = 2.0; //Was 5.0, changed by rObErT
+        desiredLeftFPS = desiredRightFPS = 2.5; //Was 5.0, changed by rObErT
         if (!isFront)
         {
             desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;

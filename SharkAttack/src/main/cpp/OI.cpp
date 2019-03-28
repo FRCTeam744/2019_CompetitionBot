@@ -92,19 +92,17 @@ bool OI::GetVelocityTest()
 
 bool OI::SwitchGripper()
 {
-    if (xbox->GetBumper(RIGHT_HAND))
+    if (isGripperClosed && xbox->GetBumper(RIGHT_HAND))
     {
         isGripperClosed = false;
-        frc::SmartDashboard::PutBoolean("isGripperClosed", false);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed_TEST", isGripperClosed);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed_PRE", isGripperClosed);
         return true;
     }
-    if (!xbox->GetBumper(RIGHT_HAND))
+    if (!isGripperClosed && !xbox->GetBumper(RIGHT_HAND))
     {
         isGripperClosed = true;
-        frc::SmartDashboard::PutBoolean("isGripperClosed", true);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, "isGripperClosed", isGripperClosed);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "isGripperClosed_TEST", isGripperClosed);
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isGripperClosed_PRE", isGripperClosed);
@@ -264,9 +262,17 @@ double OI::GetTargetArmPosition()
             isInBallPickup = false;
         }
 
-        if (xbox->GetBButtonPressed())
+        if (xbox->GetBButtonReleased())
         {
             targetArmPosition = FRONT_MID_BALL_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
+            isInBallPickup = false;
+        }
+
+        if (xbox->GetBButton())
+        {
+            targetArmPosition = FRONT_CARGOSHIP_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
             isInBallPickup = false;
@@ -557,4 +563,9 @@ bool OI::GetIsArmInDefenseMode(){
     }
     frc::SmartDashboard::PutBoolean("isArmInDefenseMode", isArmInDefenseMode);
     return isArmInDefenseMode;
+}
+
+void OI::SetArmWristInManual(bool isArmManual, bool isWristManual){
+    isArmInManual = isArmManual;
+    isWristInManual = isWristManual;
 }
