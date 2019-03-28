@@ -72,7 +72,7 @@ void Robot::RobotPeriodic()
 
   // arm->SetMAX_FF_GAIN(oi->GetArmFFVoltage());
 
-  arm->ToggleDefenseMode(oi->GetIsArmInDefenseMode());
+  // arm->ToggleDefenseMode(oi->GetIsArmInDefenseMode());
 }
 
 /**
@@ -163,7 +163,7 @@ void Robot::AutonomousInit()
 
     autoPathNames.push_back("LeftLoadingStationToLeftBackRocket");
     autoPathDirections.push_back(drivetrain->FORWARD);
-    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+    autoArmPresets.push_back(oi->BACK_HIGH_HATCH_POSITION);
 
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);

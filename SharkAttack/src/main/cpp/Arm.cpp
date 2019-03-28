@@ -228,6 +228,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
 
     if (!isArmInManual)
     {
+        std::cout << "Set arm reference: " << targetPosition << std::endl;
         armPID->SetReference(targetPosition, rev::ControlType::kPosition, 0, FFVoltage);
     }
 
