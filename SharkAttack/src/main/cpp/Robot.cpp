@@ -20,7 +20,7 @@ void Robot::RobotInit()
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
-  // led = LED::GetInstance();
+  led = LED::GetInstance();
   hatchDelayTimer = new frc::Timer();
   armMoveDelayTimer = new frc::Timer();
 
@@ -296,6 +296,10 @@ void Robot::AutoStateMachine()
         auto_state = FOLLOW_PATH_STATE;
       }
     }
+    else
+    {
+      arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    }
   }
   break;
   case TELEOP_STATE:
@@ -321,7 +325,7 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-  // led->IsHatchOpen(arm->GetIsGripperGripped(), oi->GetDriveByLimelight());
+  led->IsHatchOpen(arm->GetIsGripperGripped(), oi->GetDriveByLimelight());
 
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
@@ -344,11 +348,13 @@ void Robot::TeleopPeriodic()
   //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;
   arm->RunIntake(oi->GetIntakeInput());
 
-  // if (oi->GetTargetArmPosition() != oi->NEUTRAL_ARM_POSITION)
-  // {
-    fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
-    fourbar->FourbarHome(oi->GetFourbarHome());
-  // }
+  if (oi->GetTargetArmPosition() != oi->NEUTRAL_ARM_POSITION)
+  {
+  }
+
+  fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
+  fourbar->FourbarHome(oi->GetFourbarHome());
+
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
   if (oi->SwitchGears())
@@ -376,15 +382,15 @@ void Robot::DisabledPeriodic()
     isShufflePopulated = true;
   }
 
-  // if (isBeforeMatch)
-  // {
-  //   led->StartUp();
-  // }
+  if (isBeforeMatch)
+  {
+    led->StartUp();
+  }
 
-  // if (!isBeforeMatch)
-  // {
-  //   led->ShutDown();
-  // }
+  if (!isBeforeMatch)
+  {
+    led->ShutDown();
+  }
 
   // std::cout << "DisabledPeriodic running" << std::endl;
   // std::cout << "hasSetUpForMatch: " << hasSetUpForMatch << std::endl;
