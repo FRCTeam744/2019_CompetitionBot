@@ -50,9 +50,11 @@ class OI
 	double GetWristEncoder();
 	double GetIntakeInput();
 	double GetTargetArmPosition();
+	void SetTargetArmPosition(double targetArmPosition);
 	double GetTargetWristPosition();
 
 	bool GetPlacingMode();
+	void SetPlacingMode(bool isInBallMode);
 	bool GetIsInBallPickup();
 	bool GetIsArmInManual();
 	bool GetIsWristInManual();

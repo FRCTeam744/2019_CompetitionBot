@@ -201,6 +201,11 @@ bool OI::GetPlacingMode()
     return isInBallMode;
 }
 
+void OI::SetPlacingMode(bool isBallMode)
+{
+    isInBallMode = isBallMode;
+}
+
 bool OI::GetIsInBallPickup()
 {
     return isInBallPickup;
@@ -391,6 +396,11 @@ double OI::GetTargetArmPosition()
     }
     frc::SmartDashboard::PutNumber("Target Arm Position Degrees", targetArmPosition);
     return targetArmPosition;
+}
+
+void OI::SetTargetArmPosition(double targetArmPos)
+{
+    targetArmPosition = targetArmPos;
 }
 
 bool OI::IsInCargoShipMode () {

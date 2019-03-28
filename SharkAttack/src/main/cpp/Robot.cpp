@@ -153,12 +153,26 @@ void Robot::AutonomousInit()
     auto_state = FOLLOW_PATH_STATE;
   } 
   else if(m_autoSelected == kAutoHatchLeftRocket){
+    autoPathNames.push_back("LeftPlatformToLeftFrontRocket");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);;
 
+    autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
+    autoPathDirections.push_back(drivetrain->REVERSE);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    autoPathNames.push_back("LeftLoadingStationToLeftBackRocket");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    drivetrain->FollowPathInit(autoPathNames.at(path_count));
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    auto_state = FOLLOW_PATH_STATE;
   }
   else  if(m_autoSelected == kAutoRunTeleop){ 
     TeleopPeriodic();
-    // Default Auto goes here
-  } else {
+  } 
+  else {
     TeleopPeriodic();
   }
 }
@@ -167,28 +181,20 @@ void Robot::AutonomousPeriodic()
 {
   if (m_autoSelected == kAutoHatchRightCargo) {
     AutoStateMachine();
-    // drivetrain->FollowPath(drivetrain->FORWARD);
-    // Custom Auto goes here
-
-  } else if(m_autoSelected == kAutoHatchLeftCargo) {
+  } 
+  else if(m_autoSelected == kAutoHatchLeftCargo) {
     AutoStateMachine();
-    // drivetrain->FollowPath(drivetrain->FORWARD);
-    // Custom Auto goes here
   }
   else if(m_autoSelected == kAutoHatchRightRocket){
     AutoStateMachine();
-    // drivetrain->FollowPath(drivetrain->FORWARD);
-    // Another Custom Auto goes here
-
-  } else if(m_autoSelected == kAutoHatchLeftRocket){
+  } 
+  else if(m_autoSelected == kAutoHatchLeftRocket){
      AutoStateMachine();
-    // drivetrain->FollowPath(drivetrain->FORWARD);
-    // Another Custom Auto goes here    
   }
   else if(m_autoSelected == kAutoRunTeleop){ 
     TeleopPeriodic();
-    // Default Auto goes here
-  } else {
+  } 
+  else {
     TeleopPeriodic();
   }
   
@@ -206,6 +212,8 @@ void Robot::AutoStateMachine() {
         //if arm delay timer is finished, move arm
         if(armMoveDelayTimer->Get() > ARM_MOVE_DELAY) {
           arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+          oi->SetTargetArmPosition(autoArmPresets.at(path_count));
+          oi->SetPlacingMode(false);
         }
 
         //follow path until it's done, then switch to Drive by LL state
@@ -277,7 +285,7 @@ if(isShufflePopulated == false){
     isShufflePopulated = true;
   }
 
-  ShuffleboardLayout armStuff = Shuffleboard.GetTab("DriverView").GetLayout("Arm Stuff", frc::BuiltInLayouts::kGrid);
+  // ShuffleboardLayout armStuff = Shuffleboard.GetTab("DriverView").GetLayout("Arm Stuff", frc::BuiltInLayouts::kGrid);
 //   armStuff.Add(DriverTab->Add())
 // elevatorCommands.add(new ElevatorUpCommand());
 }

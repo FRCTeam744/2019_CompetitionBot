@@ -85,7 +85,7 @@ private:
   bool autoIsGripperClosed = true;
 
   frc::Timer *hatchDelayTimer;
-  const double TOGGLE_HATCH_DELAY = 0.25;
+  const double TOGGLE_HATCH_DELAY = 0.3;
 
   frc::Timer *armMoveDelayTimer;
   const double ARM_MOVE_DELAY = .5;
