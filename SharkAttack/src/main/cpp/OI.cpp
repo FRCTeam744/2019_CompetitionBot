@@ -45,6 +45,8 @@ OI::OI()
     // camera.SetFPS(framerate);
 
     armFFVoltage = preferences->GetDouble("armFFVoltage", 0.0);
+
+    wasDPADRightPressed = false;
 }
 
 //Public Methods
@@ -309,14 +311,24 @@ double OI::GetTargetArmPosition()
             isWristInManual = false;
             isInBallPickup = true;
         }
+        
 
-        if (xbox->GetPOV(0) == DPAD_RIGHT)
-        {
+        //if DPAD RIGHT released
+        if(xbox->GetPOV(0) != DPAD_RIGHT && wasDPADRightPressed) { 
             targetArmPosition = BACK_MID_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
             isInBallPickup = false;
         }
+        if (xbox->GetPOV(0) == DPAD_RIGHT)
+        {
+            targetArmPosition = BACK_CARGOSHIP_BALL_POSITION;
+            isArmInManual = false;
+            isWristInManual = false;
+            isInBallPickup = false;
+        }
+        wasDPADRightPressed = xbox->GetPOV(0) == DPAD_RIGHT;
+        // std::cout << "Was DPAD RIght Pressed: " << wasDPADRightPressed << std::endl;
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
         {

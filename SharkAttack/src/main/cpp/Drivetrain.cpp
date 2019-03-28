@@ -98,7 +98,7 @@ Drivetrain::Drivetrain()
     crosshairAngle = 0.0;
 
     //Gyro
-    ahrs = new AHRS(SerialPort::Port::kUSB);
+    // ahrs = new AHRS(SerialPort::Port::kUSB1);
 }
 
 //Public Methods
@@ -142,11 +142,11 @@ void Drivetrain::PrintDriveShuffleInfo()
     //   currentDistanceInches = (TARGET_LOW_HEIGHT_INCHES - LIMELIGHT_HEIGHT_INCHES) / tan((LIMELIGHT_ANGLE + targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
     //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
 
-    //Gyro
-    SmartDashboard::PutBoolean("IMU_Connected", ahrs->IsConnected());
-    SmartDashboard::PutNumber("IMU_Yaw", ahrs->GetYaw());
-    SmartDashboard::PutBoolean("IMU_IsCalibrating", ahrs->IsCalibrating());
-    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->gyroYaw, ahrs->GetYaw());
+    // //Gyro
+    // SmartDashboard::PutBoolean("IMU_Connected", ahrs->IsConnected());
+    // SmartDashboard::PutNumber("IMU_Yaw", ahrs->GetYaw());
+    // SmartDashboard::PutBoolean("IMU_IsCalibrating", ahrs->IsCalibrating());
+    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->gyroYaw, ahrs->GetYaw());
 
     // std::cout << "IMU_Connected: " << ahrs->IsConnected() << std::endl;
     // std::cout << "Gyro Yaw: " << ahrs->GetYaw() << std::endl;
@@ -182,10 +182,7 @@ double Drivetrain::pathfinder_follow_encoder(Segment s, int trajectory_length)
 
 void Drivetrain::AutonomousInit()
 {
-    // left_trajectory_length = get_trajectory("TestPath.right", leftTrajectory);  //This is supposed to be flipped! This is a bug in FRC's libraries
-    // right_trajectory_length = get_trajectory("TestPath.left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
-    // follow_path_counter = 0;
-    ahrs->ZeroYaw();
+    // ahrs->ZeroYaw();
 }
 
 void Drivetrain::FollowPathInit(std::string pathName)
@@ -205,7 +202,7 @@ bool Drivetrain::FollowPath(bool isReverse)
         double leftVelocity = 0;
         double rightVelocity = 0;
 
-        double gyro_heading = ahrs->GetYaw();
+        double gyro_heading = 0.0; //ahrs->GetYaw();
         double desired_heading = r2d(leftTrajectory[follow_path_counter].heading);
         
 

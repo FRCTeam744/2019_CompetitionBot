@@ -203,4 +203,6 @@ class OI
 
 	double armFFVoltage;
 
+	bool wasDPADRightPressed;
+
 };
