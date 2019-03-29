@@ -338,6 +338,10 @@ void Arm::CheckHatchGripper(bool isClosed)
     }
 }
 
+bool Arm::GetDesiredHatchGripperState() {
+    return wantHatchGripperClosed;
+}
+
 void Arm::PrintArmShuffleInfo()
 {
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->leftArmCurrentArmWrist, leftArm->GetOutputCurrent());

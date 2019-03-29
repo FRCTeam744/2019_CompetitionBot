@@ -90,6 +90,9 @@ private:
   frc::Timer *armMoveDelayTimer;
   const double ARM_MOVE_DELAY = 1.0;
 
+  frc::Timer *intakeEjectDelayTimer;
+  const double INTAKE_EJECT_DELAY = 0.5;
+
   // std::vector<std::string> autoPathNames;
   // std::vector<bool> autoPathDirections;
   // std::vector<double> autoArmPresets;
@@ -110,4 +113,5 @@ private:
 	// double cargoShipRightArmPresets[CARGO_SHIP_RIGHT_AUTO_STEPS] 
   //             = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION, oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
 
+  bool prevIsLLDriveFinished = false;
 };

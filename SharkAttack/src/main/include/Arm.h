@@ -41,6 +41,7 @@ public:
   void ToggleDefenseMode(bool isArmInDefenseMode);
 
   bool GetIsGripperGripped();
+  bool GetDesiredHatchGripperState();
 
 
   double GetMAX_FF_GAIN();

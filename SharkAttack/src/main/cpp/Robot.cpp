@@ -350,7 +350,7 @@ void Robot::TeleopPeriodic()
   GetDesiredLLDistances(oi->GetTargetArmPosition());
   drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
   // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
-  drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
+  bool isLLDriveFinished = drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
   //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
   arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());
@@ -359,7 +359,7 @@ void Robot::TeleopPeriodic()
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
   //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;
-  arm->RunIntake(oi->GetIntakeInput());
+  
 
   if (oi->GetTargetArmPosition() != oi->NEUTRAL_ARM_POSITION)
   {
@@ -379,6 +379,21 @@ void Robot::TeleopPeriodic()
   {
     arm->CheckHatchGripper(oi->GetIsGripperClosed());
   }
+
+  if(isLLDriveFinished && !prevIsLLDriveFinished) {
+    arm->CheckHatchGripper(!arm->GetDesiredHatchGripperState());
+    intakeEjectDelayTimer->Reset();
+    intakeEjectDelayTimer->Start();
+  }
+
+  if(intakeEjectDelayTimer->Get() > INTAKE_EJECT_DELAY) {
+    arm->RunIntake(oi->GetIntakeInput());
+  }
+  else {
+    arm->RunIntake(-1.0);
+  }
+
+  prevIsLLDriveFinished = isLLDriveFinished;
 }
 
 void Robot::DisabledInit()

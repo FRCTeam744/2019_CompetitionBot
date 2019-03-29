@@ -455,7 +455,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
 
     if (wantToNotMove || overrideEnabled)
     {
-        frc::SmartDashboard::PutString("test string", "I am in want to not move");
+        // frc::SmartDashboard::PutString("test string", "I am in want to not move");
         StopMotors();
     }
     else
