@@ -20,7 +20,7 @@ void Robot::RobotInit()
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
-  led = LED::GetInstance();
+  // led = LED::GetInstance();
   hatchDelayTimer = new frc::Timer();
   armMoveDelayTimer = new frc::Timer();
 
@@ -325,7 +325,7 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-  led->IsHatchOpen(arm->GetIsGripperGripped(), oi->GetDriveByLimelight());
+  // led->IsHatchOpen(arm->GetIsGripperGripped(), oi->GetDriveByLimelight());
 
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
@@ -382,15 +382,15 @@ void Robot::DisabledPeriodic()
     isShufflePopulated = true;
   }
 
-  if (isBeforeMatch)
-  {
-    led->StartUp();
-  }
+  // if (isBeforeMatch)
+  // {
+  //   led->StartUp();
+  // }
 
-  if (!isBeforeMatch)
-  {
-    led->ShutDown();
-  }
+  // if (!isBeforeMatch)
+  // {
+  //   led->ShutDown();
+  // }
 
   // std::cout << "DisabledPeriodic running" << std::endl;
   // std::cout << "hasSetUpForMatch: " << hasSetUpForMatch << std::endl;

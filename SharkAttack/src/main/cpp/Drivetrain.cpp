@@ -98,7 +98,7 @@ Drivetrain::Drivetrain()
     crosshairAngle = 0.0;
 
     //Gyro
-    // ahrs = new AHRS(SerialPort::Port::kUSB1);
+    ahrs = new AHRS(SerialPort::Port::kUSB);
 }
 
 //Public Methods
@@ -143,10 +143,10 @@ void Drivetrain::PrintDriveShuffleInfo()
     //   ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->VisionTab, ShuffleManager::GetInstance()->currentDistanceInchesVision , currentDistanceInches);
 
     // //Gyro
-    // SmartDashboard::PutBoolean("IMU_Connected", ahrs->IsConnected());
-    // SmartDashboard::PutNumber("IMU_Yaw", ahrs->GetYaw());
-    // SmartDashboard::PutBoolean("IMU_IsCalibrating", ahrs->IsCalibrating());
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->gyroYaw, ahrs->GetYaw());
+    SmartDashboard::PutBoolean("IMU_Connected", ahrs->IsConnected());
+    SmartDashboard::PutNumber("IMU_Yaw", ahrs->GetYaw());
+    SmartDashboard::PutBoolean("IMU_IsCalibrating", ahrs->IsCalibrating());
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->gyroYaw, ahrs->GetYaw());
 
     // std::cout << "IMU_Connected: " << ahrs->IsConnected() << std::endl;
     // std::cout << "Gyro Yaw: " << ahrs->GetYaw() << std::endl;
@@ -182,7 +182,7 @@ double Drivetrain::pathfinder_follow_encoder(Segment s, int trajectory_length)
 
 void Drivetrain::AutonomousInit()
 {
-    // ahrs->ZeroYaw();
+    ahrs->ZeroYaw();
 }
 
 void Drivetrain::FollowPathInit(std::string pathName)
@@ -202,7 +202,7 @@ bool Drivetrain::FollowPath(bool isReverse)
         double leftVelocity = 0;
         double rightVelocity = 0;
 
-        double gyro_heading = 0.0; //ahrs->GetYaw();
+        double gyro_heading = ahrs->GetYaw();
         double desired_heading = r2d(leftTrajectory[follow_path_counter].heading);
         
 
