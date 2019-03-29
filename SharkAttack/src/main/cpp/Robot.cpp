@@ -96,6 +96,7 @@ void Robot::AutonomousInit()
 
   isBeforeMatch = false;
   drivetrain->AutonomousInit();
+  arm->CheckHatchGripper(true);
 
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
@@ -232,9 +233,12 @@ void Robot::AutoStateMachine()
   {
   case FOLLOW_PATH_STATE:
   {
+    // std::cout << "FOLLOW PATH STATE, path_count: " << path_count << std::endl;
     //if arm delay timer is finished, move arm
     if (armMoveDelayTimer->Get() > ARM_MOVE_DELAY)
     {
+      // std::cout << "Can move arm, moving to: " << autoArmPresets.at(path_count) << std::endl;
+      
       arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
       oi->SetTargetArmPosition(autoArmPresets.at(path_count));
       oi->SetPlacingMode(false);
@@ -244,14 +248,18 @@ void Robot::AutoStateMachine()
     bool isPathDone = drivetrain->FollowPath(autoPathDirections[path_count]);
     if (isPathDone)
     {
+      std::cout << "Path is done, switch to DRIVE_BY_LL" << std::endl;
       auto_state = DRIVE_BY_LL_STATE;
     }
   }
   break;
   case DRIVE_BY_LL_STATE:
   {
+    // std::cout << "DRIVE_BY_LL STATE, path_count: " << path_count << std::endl;
+
     //keep active control of arm at current path preset
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    // std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
 
     //drive by limelight
     GetDesiredLLDistances(autoArmPresets.at(path_count));
@@ -261,10 +269,14 @@ void Robot::AutoStateMachine()
     //if done with drive by ll
     if (isLLDriveDone)
     {
+      std::cout << "Drive by LL Done" << std::endl;
+
       //Toggle Hatch Panel Gripper
       autoIsGripperClosed = !autoIsGripperClosed;
+      std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
       arm->CheckHatchGripper(autoIsGripperClosed);
-
+      std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
+      
       //start and reset timer to wait for hatch mechanism to grip/release
       hatchDelayTimer->Reset();
       hatchDelayTimer->Start();
@@ -292,6 +304,8 @@ void Robot::AutoStateMachine()
         drivetrain->FollowPathInit(autoPathNames.at(path_count));
         armMoveDelayTimer->Reset();
         armMoveDelayTimer->Start();
+        std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
+      
         drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
         auto_state = FOLLOW_PATH_STATE;
       }
@@ -299,6 +313,7 @@ void Robot::AutoStateMachine()
     else
     {
       arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+      std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
     }
   }
   break;

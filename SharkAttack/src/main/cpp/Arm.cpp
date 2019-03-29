@@ -113,6 +113,7 @@ void Arm::ManualRotateArm(double input)
     if (input != 0.0)
     {
         isArmInManual = true;
+        // std::cout << "set arm to manual 1" <<std::endl;
         rightArm->Set(input);
     }
     if (input == 0.0 && isArmInManual)
@@ -141,6 +142,8 @@ void Arm::ManualRotateWrist(double input)
 void Arm::UpdateArmAndWristInManual(bool arm, bool wrist)
 {
     isArmInManual = arm;
+    // std::cout << "set arm to manual 2" <<std::endl;
+
     isWristInManual = wrist;
 }
 
@@ -153,7 +156,7 @@ void Arm::RunIntake(double input)
 //Work in Progress
 void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
-
+    // std::cout << "Target pos" << targetPosition << std::endl;
     currentArmPos = armEncoder->GetPosition();
     currentWristPos = wristEncoder->GetPosition();
 
@@ -161,7 +164,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
     willArmEnterDZ = ((currentArmPos < -ARM_DANGERZONE && targetPosition > -ARM_DANGERZONE) || (currentArmPos > ARM_DANGERZONE && targetPosition < ARM_DANGERZONE));
     areWheelsUp = (currentWristPos < 1.0 && currentWristPos > -1.0);
     isArmInDZ = (currentArmPos > -ARM_DANGERZONE && currentArmPos < ARM_DANGERZONE);
-
+    // std::cout << "isArmInDZ: " << isArmInDZ << std::endl;
     isArmGoingToBack = (targetPosition < 0);
 
     FFVoltage = MAX_FF_GAIN * (sin(currentArmPos * M_PI / 180));
@@ -183,6 +186,8 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
         if (areWheelsVeryDown)
         {
             isArmInManual = true;
+            // std::cout << "set arm to manual 3" <<std::endl;
+
             isWristInManual = true;
         }
         else if (areWheelsUp)
@@ -225,7 +230,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
         MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup, isInCargoShipMode));
     }
 
-
+    // std::cout << "isArmInManual" << isArmInManual << std::endl;
     if (!isArmInManual)
     {
         std::cout << "Set arm reference: " << targetPosition << std::endl;
@@ -317,12 +322,14 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
 void Arm::OpenHatchGripper()
 {
     hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
+    std::cout << "Open Hatch Gripper" << std::endl;
     isHatchGripperClosed = false;
 }
 
 void Arm::CloseHatchGripper()
 {
     hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
+    std::cout << "Close Hatch Gripper" << std::endl;
     isHatchGripperClosed = true;
 }
 
@@ -336,6 +343,7 @@ void Arm::CheckHatchGripper(bool isClosed)
     {
         wantHatchGripperClosed = false;
     }
+    std::cout << "wantHatchGripperClosed: " << wantHatchGripperClosed << std::endl;
 }
 
 void Arm::PrintArmShuffleInfo()

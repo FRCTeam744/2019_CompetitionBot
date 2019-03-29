@@ -139,7 +139,7 @@ private:
   const double LIMIT_SWITCH_OFFSET = 5.0;
 
   //ARM "NO ROTATE ZONE" ANGLE
-  const double ARM_DANGERZONE = 30.0;
+  const double ARM_DANGERZONE = 20.0;
   const double ARM_CHECKPOINT = 36.0;
 
   const double WRIST_HATCH_LIMIT = 90;
