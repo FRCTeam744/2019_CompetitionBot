@@ -118,11 +118,14 @@ void Robot::AutonomousInit()
     autoPathNames.push_back("CenterPlatformToRightShip");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
-    ;
 
     autoPathNames.push_back("RightShipToRightStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    autoPathNames.push_back("RightStationToRIghtSideShip");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
@@ -142,6 +145,10 @@ void Robot::AutonomousInit()
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
 
+    autoPathNames.push_back("LeftStationToLeftSideShip");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
+
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
@@ -151,10 +158,17 @@ void Robot::AutonomousInit()
     oi->SetArmWristInManual(false, false);
     arm->UpdateArmAndWristInManual(false, false);
 
-    // Another Custom Auto goes here
-    autoPathNames.push_back("TestPath");
+    autoPathNames.push_back("RightPlatformToRightFrontRocket");
     autoPathDirections.push_back(drivetrain->FORWARD);
-    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
+    autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
+
+    autoPathNames.push_back("RightFrontRocketToRightLoadingStation");
+    autoPathDirections.push_back(drivetrain->REVERSE);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    autoPathNames.push_back("RightLoadingStationToRightBackRocket");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->BACK_HIGH_HATCH_POSITION);
 
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
@@ -168,7 +182,6 @@ void Robot::AutonomousInit()
     autoPathNames.push_back("LeftPlatformToLeftFrontRocket");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
-    ;
 
     autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
