@@ -179,15 +179,14 @@ void Robot::AutonomousInit()
     autoPathNames.push_back("LeftPlatformToLeftFrontRocket");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
-    ;
-
+  
     autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
 
-    autoPathNames.push_back("LeftLoadingStationToLeftBackRocket");
+    autoPathNames.push_back("LeftStationToLeftFrontRocket");
     autoPathDirections.push_back(drivetrain->FORWARD);
-    autoArmPresets.push_back(oi->BACK_HIGH_HATCH_POSITION);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
