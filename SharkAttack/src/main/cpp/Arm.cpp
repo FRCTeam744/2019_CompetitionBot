@@ -161,7 +161,7 @@ void Arm::RunIntake(double input)
 void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
     isInHatchMode = !isInBallMode;
-    // std::cout << "Target pos" << targetPosition << std::endl;
+    std::cout << "Target pos" << targetPosition << std::endl;
     currentArmPos = armEncoder->GetPosition();
     currentWristPos = wristEncoder->GetPosition();
 

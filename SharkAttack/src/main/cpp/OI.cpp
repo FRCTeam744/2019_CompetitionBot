@@ -328,7 +328,7 @@ double OI::GetTargetArmPosition()
             isInBallPickup = false;
         }
         wasDPADRightPressed = xbox->GetPOV(0) == DPAD_RIGHT;
-        // std::cout << "Was DPAD RIght Pressed: " << wasDPADRightPressed << std::endl;
+        std::cout << "Was DPAD Right Pressed: " << wasDPADRightPressed << std::endl;
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
         {
