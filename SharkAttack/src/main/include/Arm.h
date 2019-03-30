@@ -31,6 +31,7 @@ public:
   void SetArmToBrake();
   void SetArmToCoast();
   void SetToMatchMode();
+  double GetCurrentArmPosition();
 
   void UpdateArmAndWristInManual(bool arm, bool wrist);
 

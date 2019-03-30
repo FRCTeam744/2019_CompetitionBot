@@ -111,6 +111,8 @@ void Robot::AutonomousInit()
   autoPathDirections.clear();
   autoArmPresets.clear();
 
+  lowestArmAngle = oi->FRONT_HIGH_HATCH_POSITION+10;
+  
   if (m_autoSelected == kAutoHatchRightCargo)
   {
     oi->SetArmWristInManual(false, false);
@@ -124,6 +126,10 @@ void Robot::AutonomousInit()
     autoPathNames.push_back("RightShipToRightStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    autoPathNames.push_back("RightStationToSecondHatch");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
@@ -142,6 +148,10 @@ void Robot::AutonomousInit()
     autoPathNames.push_back("LeftShipToLeftStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    autoPathNames.push_back("LeftStationToSecondHatch");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
     drivetrain->FollowPathInit(autoPathNames.at(path_count));
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
@@ -243,6 +253,15 @@ void Robot::AutoStateMachine()
       oi->SetTargetArmPosition(autoArmPresets.at(path_count));
       oi->SetPlacingMode(false);
     }
+    else if(armMoveDelayTimer->Get() < ARM_MOVE_DELAY && path_count != 0) {
+      if(abs(arm->GetCurrentArmPosition()) < abs(lowestArmAngle)) {
+        lowestArmAngle = arm->GetCurrentArmPosition(); 
+      }
+      arm->MoveArmToPosition(lowestArmAngle, false, false, false);
+      
+      oi->SetTargetArmPosition(arm->GetCurrentArmPosition());
+      oi->SetPlacingMode(false);
+    }
 
     //follow path until it's done, then switch to Drive by LL state
     bool isPathDone = drivetrain->FollowPath(autoPathDirections[path_count]);
@@ -308,6 +327,7 @@ void Robot::AutoStateMachine()
       
         drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
         auto_state = FOLLOW_PATH_STATE;
+        lowestArmAngle = arm->GetCurrentArmPosition();
       }
     }
     else

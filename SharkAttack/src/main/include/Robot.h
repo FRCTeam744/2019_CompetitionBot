@@ -88,7 +88,7 @@ private:
   const double TOGGLE_HATCH_DELAY = 0.5;
 
   frc::Timer *armMoveDelayTimer;
-  const double ARM_MOVE_DELAY = 1.0;
+  const double ARM_MOVE_DELAY = 3.0;
 
   // std::vector<std::string> autoPathNames;
   // std::vector<bool> autoPathDirections;
@@ -109,5 +109,5 @@ private:
   //             = {drivetrain->FORWARD, drivetrain->REVERSE, drivetrain->FORWARD, drivetrain->REVERSE};
 	// double cargoShipRightArmPresets[CARGO_SHIP_RIGHT_AUTO_STEPS] 
   //             = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION, oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
-
+  double lowestArmAngle;
 };

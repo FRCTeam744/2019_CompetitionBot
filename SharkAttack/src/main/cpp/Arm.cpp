@@ -139,6 +139,10 @@ void Arm::ManualRotateWrist(double input)
     }
 }
 
+double Arm::GetCurrentArmPosition() {
+    return armEncoder->GetPosition();
+}
+
 void Arm::UpdateArmAndWristInManual(bool arm, bool wrist)
 {
     isArmInManual = arm;
@@ -156,6 +160,7 @@ void Arm::RunIntake(double input)
 //Work in Progress
 void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
+    isInHatchMode = !isInBallMode;
     // std::cout << "Target pos" << targetPosition << std::endl;
     currentArmPos = armEncoder->GetPosition();
     currentWristPos = wristEncoder->GetPosition();
@@ -355,8 +360,8 @@ void Arm::PrintArmShuffleInfo()
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->wristEncoderDriver, wristEncoder->GetPosition());
     // //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->wristEncoderPreComp, wristEncoder->GetPosition());
 
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkHatchGripperDriver, isHatchGripperClosed);
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristModeDriver, isInHatchMode);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkHatchGripperDriver, isHatchGripperClosed);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristModeDriver, isInHatchMode);
     // //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkWristModePreComp, isInHatchMode);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristModeArmWrist, isInHatchMode);
 
