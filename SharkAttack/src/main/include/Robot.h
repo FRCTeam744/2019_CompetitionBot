@@ -45,6 +45,7 @@ public:
   void TestPeriodic() override;
   void GetDesiredLLDistances(double armTargetPosition);
   void AutoStateMachine();
+  void PrintMatchTimeToShuffle();
 
   double xDesiredInches;
   double zDesiredInches;
@@ -89,6 +90,8 @@ private:
 
   frc::Timer *armMoveDelayTimer;
   const double ARM_MOVE_DELAY = 3.0;
+
+  frc::Timer *periodTimeRemaining;
 
   // std::vector<std::string> autoPathNames;
   // std::vector<bool> autoPathDirections;

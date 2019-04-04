@@ -23,6 +23,7 @@ void Robot::RobotInit()
   // led = LED::GetInstance();
   hatchDelayTimer = new frc::Timer();
   armMoveDelayTimer = new frc::Timer();
+  periodTimeRemaining = new frc::Timer();
 
   isBeforeMatch = true;
   shufflemanager = ShuffleManager::GetInstance();
@@ -34,6 +35,7 @@ void Robot::RobotInit()
   m_chooser.AddOption("Left Rocket Autonomous", kAutoHatchLeftRocket);
   //frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
   frc::Shuffleboard::GetTab("DriverView").Add("Auto Modes", m_chooser).WithWidget(frc::BuiltInWidgets::kComboBoxChooser);
+  //frc::Shuffleboard::GetTab("DriverView").Add()
 
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
 
@@ -62,12 +64,11 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic()
 {
   fourbar->UpdateFourbarSpeed();
-  //oi->PutOnShuffleboard();
-
   drivetrain->LimelightSet(oi->SetLimelight());
   drivetrain->PrintDriveShuffleInfo();
   fourbar->PrintFourbarShuffleInfo();
   arm->PrintArmShuffleInfo();
+  PrintMatchTimeToShuffle();
 
   // arm->SetMAX_FF_GAIN(oi->GetArmFFVoltage());
 
@@ -106,6 +107,7 @@ void Robot::AutonomousInit()
   autoIsGripperClosed = true;
   armMoveDelayTimer->Reset();
   armMoveDelayTimer->Start();
+  periodTimeRemaining->GetMatchTime();
 
   autoPathNames.clear();
   autoPathDirections.clear();
@@ -200,6 +202,11 @@ void Robot::AutonomousInit()
   {
     TeleopPeriodic();
   }
+}
+
+void Robot::PrintMatchTimeToShuffle()
+{
+      ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->periodMatchTimeFMS, periodTimeRemaining->GetMatchTime());
 }
 
 void Robot::AutonomousPeriodic()
@@ -351,10 +358,6 @@ void Robot::TeleopInit()
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }
-
-  // ShuffleboardLayout armStuff = Shuffleboard.GetTab("DriverView").GetLayout("Arm Stuff", frc::BuiltInLayouts::kGrid);
-  //   armStuff.Add(DriverTab->Add())
-  // elevatorCommands.add(new ElevatorUpCommand());
 }
 
 void Robot::TeleopPeriodic()

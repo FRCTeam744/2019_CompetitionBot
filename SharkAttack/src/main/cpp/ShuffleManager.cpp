@@ -31,8 +31,8 @@ void ShuffleManager::ShuffleInit(){ //variables were declared in .h, giving them
 }
 
 void ShuffleManager::VariableInit(){ //variables were declared in .h, giving them values/initializing them here
-    leftDriveVision = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
-    rightDriveVision = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
+    // leftDriveVision = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
+    // rightDriveVision = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     // leftDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     // rightDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     checkDriveTrainGearDriver = ShuffleManager::DriverTab->Add("In High Gear?", false).GetEntry(); //temp false 
@@ -84,7 +84,7 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     fourbarRotationsToHomeFourbar = ShuffleManager::FourbarTab->Add("FB Rotations to Home", 0.0).GetEntry();
     fourbarSpeedFourbar = ShuffleManager::FourbarTab->Add("FB Speed", 0.0).GetEntry();
 
-    
+    periodMatchTimeFMS = ShuffleManager::DriverTab->Add("Approx. Match Time", 0.0).GetEntry();
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val){

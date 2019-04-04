@@ -62,6 +62,9 @@ class ShuffleManager {
 		// nt::NetworkTableEntry limeLightAngleErrorVision;
 		// nt::NetworkTableEntry limeLightDistanceErrorVision;
 
+		//Robot.cpp
+		nt::NetworkTableEntry periodMatchTimeFMS;
+
 		//Fourbar.cpp
 		nt::NetworkTableEntry checkRetractedTrippedDriver;
 		nt::NetworkTableEntry checkExtendedTrippedDriver;
