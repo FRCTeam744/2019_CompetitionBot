@@ -79,7 +79,8 @@
     "set": "cpp",
     "string": "cpp",
     "string_view": "cpp",
-    "numeric": "cpp"
+    "numeric": "cpp",
+    "iomanip": "cpp"
   },
   "C_Cpp.intelliSenseEngineFallback": "Enabled"
 }
