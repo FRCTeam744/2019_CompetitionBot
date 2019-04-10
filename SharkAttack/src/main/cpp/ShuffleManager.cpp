@@ -74,10 +74,10 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
 
     fourbarEncoderDriver = ShuffleManager::DriverTab->Add("FB Encoder", 0.0).GetEntry();
     checkRetractedTrippedDriver = ShuffleManager::DriverTab->Add("Retracted?", true).GetEntry();
-    checkExtendedTrippedDriver = ShuffleManager::DriverTab->Add("Extended?", true).GetEntry();
+    checkExtendedTrippedDriver = ShuffleManager::DriverTab->Add("Extended?", false).GetEntry();
     fourbarEncoderFourbar = ShuffleManager::FourbarTab->Add("FB Encoder", 0.0).GetEntry();
     checkExtendedTrippedFourbar = ShuffleManager::FourbarTab->Add("Retracted?", true).GetEntry();
-    checkRetractedTrippedFourbar = ShuffleManager::FourbarTab->Add("Extended?", true).GetEntry();
+    checkRetractedTrippedFourbar = ShuffleManager::FourbarTab->Add("Extended?", false).GetEntry();
     fourbarCurrentFourbar = ShuffleManager::FourbarTab->Add("FB Current", 0.0).GetEntry();
     fourbarRotationsSinceRetractFourbar = ShuffleManager::FourbarTab->Add("FB Rotations Since Retract", 0.0).GetEntry();
     fourbarRPMFourbar = ShuffleManager::FourbarTab->Add("FB RPM", 0.0).GetEntry();
