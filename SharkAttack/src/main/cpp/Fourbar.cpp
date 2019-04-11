@@ -122,7 +122,6 @@ void Fourbar::PrintFourbarShuffleInfo(){
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, ShuffleManager::GetInstance()->fourbarEncoderFourbar, fourbarEncoder->GetPosition());
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, ShuffleManager::GetInstance()->fourbarRPMFourbar, fourbarEncoder->GetVelocity());
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, ShuffleManager::GetInstance()->fourbarCurrentFourbar, fourbarExtender->GetOutputCurrent());
-    //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->fourbarRotationsSinceRetractFourbar, fourbarEncoder->;
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, ShuffleManager::GetInstance()->fourbarRotationsToHomeFourbar, ROTATIONS_TO_HOME);
 }
 
