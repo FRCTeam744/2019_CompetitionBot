@@ -89,7 +89,7 @@ private:
   const double TOGGLE_HATCH_DELAY = 0.5;
 
   frc::Timer *armMoveDelayTimer;
-  const double ARM_MOVE_DELAY = 3.0;
+  const double ARM_MOVE_DELAY = 1.5;
 
   frc::Timer *periodTimeRemaining;
 

@@ -123,7 +123,6 @@ void Robot::AutonomousInit()
     autoPathNames.push_back("CenterPlatformToRightShip");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
-    ;
 
     autoPathNames.push_back("RightShipToRightStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
