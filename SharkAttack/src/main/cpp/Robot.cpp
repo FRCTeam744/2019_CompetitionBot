@@ -181,6 +181,10 @@ void Robot::AutonomousInit()
     autoPathNames.push_back("LeftPlatformToLeftFrontRocket");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
+
+    // autoPathNames.push_back("LeftPlatformToLeftFrontRocketMid");
+    // autoPathDirections.push_back(drivetrain->FORWARD);
+    // autoArmPresets.push_back(oi->FRONT_MID_HATCH_POSITION);
   
     autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
