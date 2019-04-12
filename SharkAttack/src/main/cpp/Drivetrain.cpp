@@ -97,6 +97,7 @@ Drivetrain::Drivetrain()
     slopeForAngleCalc = 0.0;
     interceptForAngleCalc = 0.0;
     crosshairAngle = 0.0;
+    prevT = 0;
 
     //Gyro
     ahrs = new AHRS(SerialPort::Port::kUSB);
@@ -185,6 +186,7 @@ void Drivetrain::RobotInit()
 {
     angleDGainTimer->Reset();
     angleDGainTimer->Start();
+    prevT = 0;
 }
 
 void Drivetrain::AutonomousInit()
@@ -270,6 +272,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         wantToDriveHatchInPlace = false;
         return false;
     }
+    double currentTime = angleDGainTimer->Get();
 
     //drive hatch into place, and skip LL code if you've gotten near the target
     if (wantToDriveHatchInPlace)
@@ -403,7 +406,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
 
     //D Gain component
-
+    double slopeError = (angleError-prevAngleError)/(currentTime-prevT);
 
     frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle);
     frc::SmartDashboard::PutNumber("Angle Error", angleError);
@@ -412,7 +415,9 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Slope", slopeForAngleCalc);
     frc::SmartDashboard::PutNumber("Crosshair Angle", crosshairAngle);
 
-    adjust = kP_ANGLE * angleError + kI_ANGLE * accumAngleError;
+    adjust = kP_ANGLE * angleError 
+            + kI_ANGLE * accumAngleError
+            - kD_ANGLE * slopeError;
     frc::SmartDashboard::PutNumber("Adjust", adjust);
 
     double distanceError = (zDesiredInches - currentDistanceInches);
@@ -451,7 +456,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
     std::cout << " wantToNotMove," << wantToNotMove << std::endl;
 
-    if (abs(distanceError) < 5 && abs(angleError) < 1.5)
+    if (abs(distanceError) < 5 && abs(angleError) < ALLOWED_ANGLE_ERROR_LL)
     {
         if (isBallMode)
         {
@@ -485,6 +490,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     prevAngle = targetOffsetAngle_Horizontal;
     prevDistanceError = distanceError;
     prevAngleError = angleError;
+    prevT = currentTime;
     return false;
 }
 
