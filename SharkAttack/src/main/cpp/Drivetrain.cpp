@@ -35,6 +35,7 @@ Drivetrain::Drivetrain()
 
     //Initialize Timer for end of LL drive
     hatchPlaceTimer = new frc::Timer();
+    angleDGainTimer = new frc::Timer();
 
     //Initialize limelight
     limelightFront = nt::NetworkTableInstance::GetDefault().GetTable("limelight-front");
@@ -178,6 +179,12 @@ int Drivetrain::get_trajectory(std::string name, Segment *traj_out)
 double Drivetrain::pathfinder_follow_encoder(Segment s, int trajectory_length)
 {
     return s.velocity;
+}
+
+void Drivetrain::RobotInit()
+{
+    angleDGainTimer->Reset();
+    angleDGainTimer->Start();
 }
 
 void Drivetrain::AutonomousInit()
@@ -384,6 +391,8 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("zDesiredInches", zDesiredInches);
     double desiredAngle = targetOffsetAngle_Vertical * slopeForAngleCalc + interceptForAngleCalc;
     double angleError = targetOffsetAngle_Horizontal - desiredAngle;
+
+    //I Gain component
     if (abs(angleError) < I_ZONE_ANGLE)
     {
         accumAngleError += angleError;
@@ -392,6 +401,10 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     {
         accumAngleError = 0;
     }
+
+    //D Gain component
+
+
     frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle);
     frc::SmartDashboard::PutNumber("Angle Error", angleError);
 
@@ -399,7 +412,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Slope", slopeForAngleCalc);
     frc::SmartDashboard::PutNumber("Crosshair Angle", crosshairAngle);
 
-    adjust = 0.5 * kP_ANGLE * angleError + kI_ANGLE * accumAngleError;
+    adjust = kP_ANGLE * angleError + kI_ANGLE * accumAngleError;
     frc::SmartDashboard::PutNumber("Adjust", adjust);
 
     double distanceError = (zDesiredInches - currentDistanceInches);

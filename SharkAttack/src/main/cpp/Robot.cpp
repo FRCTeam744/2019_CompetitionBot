@@ -41,6 +41,8 @@ void Robot::RobotInit()
 
   frc::SmartDashboard::PutNumber("wristEncoder", 0.1);
 
+  drivetrain->RobotInit();
+
   // std::thread vision(VisionThread);
   // vision.detach();
 
@@ -181,9 +183,9 @@ void Robot::AutonomousInit()
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
 
-    autoPathNames.push_back("LeftPlatformToLeftFrontRocketMid");
-    autoPathDirections.push_back(drivetrain->FORWARD);
-    autoArmPresets.push_back(oi->FRONT_MID_HATCH_POSITION);
+    // autoPathNames.push_back("LeftPlatformToLeftFrontRocketMid");
+    // autoPathDirections.push_back(drivetrain->FORWARD);
+    // autoArmPresets.push_back(oi->FRONT_MID_HATCH_POSITION);
   
     autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
     autoPathDirections.push_back(drivetrain->REVERSE);

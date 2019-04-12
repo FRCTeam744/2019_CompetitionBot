@@ -28,6 +28,7 @@ class Drivetrain
 	std::string get_trajectory_file(std::string name);
 	int get_trajectory(std::string name, Segment *traj_out);
 	double pathfinder_follow_encoder(Segment s, int trajectory_length);
+	void RobotInit();
 	void AutonomousInit();
 	void FollowPathInit(std::string pathName);
 	bool FollowPath(bool isReverse);
@@ -136,6 +137,8 @@ class Drivetrain
 
 	frc::Timer *hatchPlaceTimer;
 
+	frc::Timer *angleDGainTimer;
+
 	std::shared_ptr<NetworkTable> limelightFront;
 	std::shared_ptr<NetworkTable> limelightBack;
 
@@ -206,6 +209,7 @@ class Drivetrain
 	double accumAngleError;
 	double prevDistanceError;
 	double prevAngleError;
+	double prevT;
 	bool overrideEnabled;
 	bool wantToDriveHatchInPlace;
 
@@ -252,7 +256,7 @@ class Drivetrain
 	const double LIMELIGHT_ANGLE_BACK = 25.0;
 	// const double CROSSHAIR_ANGLE = 6.5; //17.3
 
-	const double kP_ANGLE = 0.10;   //FOR ANGLE CORRECTION TODO
+	const double kP_ANGLE = 0.20;   //FOR ANGLE CORRECTION TODO
 	const double kI_ANGLE = 0.0030; //FOR ANGLE CORRECTION TODO
 	const double I_ZONE_ANGLE = 3;  //degrees
 
