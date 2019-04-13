@@ -80,7 +80,14 @@ private:
 
   //Auto Paths
   int path_count = 0;
-  enum auto_states {FOLLOW_PATH_STATE, DRIVE_BY_LL_STATE, DELAY_STATE, BACKUP_STATE, TELEOP_STATE};
+  enum auto_states
+  {
+    FOLLOW_PATH_STATE,
+    DRIVE_BY_LL_STATE,
+    DELAY_STATE,
+    BACKUP_STATE,
+    TELEOP_STATE
+  };
   enum auto_states auto_state;
 
   bool autoIsGripperClosed = true;
@@ -94,7 +101,6 @@ private:
   frc::Timer *backupDelayTimer;
   const double BACKUP_AUTO_DELAY = .25;
 
-
   frc::Timer *periodTimeRemaining;
 
   // std::vector<std::string> autoPathNames;
@@ -103,18 +109,20 @@ private:
 
   //TEST AUTO
   std::vector<std::string> autoPathNames;
-	std::vector<bool> autoPathDirections;
-              // = {drivetrain->FORWARD, drivetrain->REVERSE};
-	std::vector<double> autoArmPresets;
-              // = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
+  std::vector<bool> autoPathDirections;
+  // = {drivetrain->FORWARD, drivetrain->REVERSE};
+  std::vector<double> autoArmPresets;
+  // = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
 
   //CARGO SHIP RIGHT
   // const int CARGO_SHIP_RIGHT_AUTO_STEPS = 4;
-  // std::string cargoShipRightPaths[CARGO_SHIP_RIGHT_AUTO_STEPS] 
+  // std::string cargoShipRightPaths[CARGO_SHIP_RIGHT_AUTO_STEPS]
   //             = {"TestPath", "TestPath", "TestPath", "TestPath"};
-	// bool   cargoShipRightPathDirections[CARGO_SHIP_RIGHT_AUTO_STEPS] 
+  // bool   cargoShipRightPathDirections[CARGO_SHIP_RIGHT_AUTO_STEPS]
   //             = {drivetrain->FORWARD, drivetrain->REVERSE, drivetrain->FORWARD, drivetrain->REVERSE};
-	// double cargoShipRightArmPresets[CARGO_SHIP_RIGHT_AUTO_STEPS] 
+  // double cargoShipRightArmPresets[CARGO_SHIP_RIGHT_AUTO_STEPS]
   //             = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION, oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
   double lowestArmAngle;
+
+  int ToggleGrippersTimer = 0;
 };

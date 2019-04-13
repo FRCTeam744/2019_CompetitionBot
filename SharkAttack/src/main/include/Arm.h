@@ -15,7 +15,6 @@
 #include <iostream>
 #include <string>
 
-
 #include "ShuffleManager.h"
 
 class Arm
@@ -42,7 +41,6 @@ public:
   void ToggleDefenseMode(bool isArmInDefenseMode);
 
   bool GetIsGripperGripped();
-
 
   double GetMAX_FF_GAIN();
   void SetMAX_FF_GAIN(double ArmFFVoltage);
@@ -131,8 +129,7 @@ private:
   const int WRIST_BALL_PICKUP_FRONT = -190;
   const int WRIST_BALL_PICKUP_BACK = 190;
   const int WRIST_CARGO_SHIP_FRONT = -130;
-  const int WRIST_CARGO_SHIP_BACK  = 130;
-  
+  const int WRIST_CARGO_SHIP_BACK = 130;
 
   //Tunables
   const double HOLD_BALL_SPEED = 0.05;
@@ -146,11 +143,11 @@ private:
   const double WRIST_HATCH_LIMIT = 90;
 
   //Arm PID Values
-  const double MAX_MOTOR_OUTPUT_FIELD = 0.45; //percent output
-  const double MAX_MOTOR_OUTPUT_PIT = 0.45; //percent output - was .35
+  const double MAX_MOTOR_OUTPUT_FIELD = 0.45;  //percent output
+  const double MAX_MOTOR_OUTPUT_PIT = 0.45;    //percent output - was .35
   const double TIME_TO_MAX_MOTOR_OUTPUT = 0.5; //secs
-  const double RAMP_RATE_FIELD = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT_FIELD;
-  const double RAMP_RATE_PIT = TIME_TO_MAX_MOTOR_OUTPUT/MAX_MOTOR_OUTPUT_PIT;
+  const double RAMP_RATE_FIELD = TIME_TO_MAX_MOTOR_OUTPUT / MAX_MOTOR_OUTPUT_FIELD;
+  const double RAMP_RATE_PIT = TIME_TO_MAX_MOTOR_OUTPUT / MAX_MOTOR_OUTPUT_PIT;
 
   const double MAX_FF_GAIN = 0.67; //Volts required to hold arm at 90 degrees
   const double ARM_FF_GAIN = 0;

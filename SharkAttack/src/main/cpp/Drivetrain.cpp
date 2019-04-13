@@ -213,8 +213,6 @@ bool Drivetrain::FollowPath(bool isReverse)
 
         double gyro_heading = ahrs->GetYaw();
         double desired_heading = r2d(leftTrajectory[follow_path_counter].heading);
-        
-
 
         if (isReverse)
         {
@@ -237,7 +235,6 @@ bool Drivetrain::FollowPath(bool isReverse)
             angle_difference = (angle_difference > 0) ? angle_difference - 360 : angle_difference + 360;
         }
         frc::SmartDashboard::PutNumber("Follow Path Angle Error", angle_difference);
-
 
         double turn = 0.1 * angle_difference; //was -0.002
         frc::SmartDashboard::PutNumber("Follow Path Turn", turn);
@@ -279,11 +276,16 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     {
         if (hatchPlaceTimer->Get() > 0.4)
         {
-            StopMotors();
+            if (StopMotorsTimer == 0)
+            {
+                StopMotors();
+                StopMotorsTimer++;
+            }
             return true;
         }
         else
         {
+            StopMotorsTimer = 0;
             AutoDriveForward(false, true);
             return false;
         }
@@ -406,7 +408,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
 
     //D Gain component
-    double slopeError = (angleError-prevAngleError)/(currentTime-prevT);
+    double slopeError = (angleError - prevAngleError) / (currentTime - prevT);
 
     frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle);
     frc::SmartDashboard::PutNumber("Angle Error", angleError);
@@ -415,9 +417,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Slope", slopeForAngleCalc);
     frc::SmartDashboard::PutNumber("Crosshair Angle", crosshairAngle);
 
-    adjust = kP_ANGLE * angleError 
-            + kI_ANGLE * accumAngleError
-            - kD_ANGLE * slopeError;
+    adjust = kP_ANGLE * angleError + kI_ANGLE * accumAngleError - kD_ANGLE * slopeError;
     frc::SmartDashboard::PutNumber("Adjust", adjust);
 
     double distanceError = (zDesiredInches - currentDistanceInches);

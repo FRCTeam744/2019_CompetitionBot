@@ -420,10 +420,48 @@ void Robot::TeleopPeriodic()
   GetDesiredLLDistances(oi->GetTargetArmPosition());
   drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
   // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
-  bool isLLFinished = drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
+  bool isLLFinished = drivetrain->AutoDrive((oi->GetDriveByLimelightPickup() || oi->GetDriveByLimelightPlace()), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
+  // bool isLLFinishedPlace = drivetrain->AutoDrive(oi->GetDriveByLimelightPlace(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
+  
+  if (oi->GetDriveByLimelightPickup())
+  {
+    if (isLLFinished == false)
+    {
+      arm->CheckHatchGripper(false); //Open grippers
+      ToggleGrippersTimer = 0;
+    }
+    if (isLLFinished)
+    {
+      arm->CheckHatchGripper(true); //Close grippers
+      ToggleGrippersTimer++;
+      if (ToggleGrippersTimer > 30)
+      {
+        drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+      }
+    }
+  }
+
+  if (oi->GetDriveByLimelightPlace())
+  {
+    if (isLLFinished == false)
+    {
+      arm->CheckHatchGripper(true); //Close grippers
+      ToggleGrippersTimer = 0;
+    }
+    if (isLLFinished)
+    {
+      arm->CheckHatchGripper(false); //Open grippers
+      ToggleGrippersTimer++;
+      if (ToggleGrippersTimer > 30)
+      {
+        drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+      }
+    }
+  }
+
   if (isLLFinished)
   {
-    arm->RunIntake(-.2);
+    arm->RunIntake(-.2); //Close grippers
   }
   //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
   arm->ManualRotateArm(oi->GetArmInput());
@@ -433,7 +471,7 @@ void Robot::TeleopPeriodic()
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
   //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;
-  if (isLLFinished == false)
+  if (!isLLFinished)
   {
     arm->RunIntake(oi->GetIntakeInput());
   }

@@ -299,4 +299,6 @@ class Drivetrain
 	AHRS *ahrs;
 
 	// frc::Notifier m_follower_notifier;
+
+	int StopMotorsTimer = 0;
 };

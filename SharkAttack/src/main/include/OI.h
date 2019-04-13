@@ -40,7 +40,8 @@ class OI
 	double GetRightDriveInput();
 
 	bool GetAutoDriveForward();
-	bool GetDriveByLimelight();
+	bool GetDriveByLimelightPickup();
+	bool GetDriveByLimelightPlace();
 	bool GetStopLLMove();
 	bool IsInCargoShipMode();
 

@@ -163,7 +163,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
 {
     isInHatchMode = !isInBallMode;
     std::cout << "Target pos" << targetPosition << std::endl;
-    currentArmPos = armEncoder->GetPosition();
+    currentArmPos = targetPosition; //TODO: CHANGE THIS BACK!!! armEncoder->GetPosition();
     currentWristPos = wristEncoder->GetPosition();
 
     areWheelsVeryDown = (currentWristPos > 60 || currentWristPos < -60);
