@@ -39,6 +39,7 @@ class Drivetrain
 	double LimelightGet(std::string key);
 	void CheckSwitchGears(bool isHighGear);
 	void AutoDriveForward(bool isBut, bool isVelocityControl);
+	void AutoDriveBackwards(bool isBut, bool isVelocityControl);
 	void SetDesiredLLDistances(double xDesiredInches, double zDesiredInches);
 	void SetIsFrontLL(bool isFront);
 	void AutoDriveLL(bool wantLimelight, double leftTank, double rightTank);

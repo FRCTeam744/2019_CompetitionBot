@@ -153,6 +153,7 @@ void Arm::UpdateArmAndWristInManual(bool arm, bool wrist)
 
 void Arm::RunIntake(double input)
 {
+    std::cout << "Intake input: " << input << std::endl;
     intake->Set(motorcontrol::ControlMode::PercentOutput, input);
 }
 

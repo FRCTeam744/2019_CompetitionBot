@@ -578,6 +578,47 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
     }
 }
 
+void Drivetrain::AutoDriveBackwards(bool isBut, bool isVelocityControl)
+{
+
+    // double testPercentOut = frc::SmartDashboard::GetNumber("Test PercentOut Speed", 0.5);
+
+    if (isBut && !isVelocityControl)
+    {
+        isInAutoDrive = true;
+
+        leftBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);
+        rightBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
+    else if (isVelocityControl)
+    {
+        isInAutoDrive = true;
+
+        desiredLeftFPS = desiredRightFPS = -2.5; //Was 5.0, changed by rObErT
+        if (!isFront)
+        {
+            desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;
+        }
+        std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
+        std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
+
+        leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
+        rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
+    else
+    {
+        isInAutoDrive = false;
+    }
+}
+
 void Drivetrain::IsTargetNotAcquired(double leftTank, double rightTank)
 {
     isInLLDrive = false;

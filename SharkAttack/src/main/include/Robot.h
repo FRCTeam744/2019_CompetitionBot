@@ -80,7 +80,7 @@ private:
 
   //Auto Paths
   int path_count = 0;
-  enum auto_states {FOLLOW_PATH_STATE, DRIVE_BY_LL_STATE, DELAY_STATE, TELEOP_STATE};
+  enum auto_states {FOLLOW_PATH_STATE, DRIVE_BY_LL_STATE, DELAY_STATE, BACKUP_STATE, TELEOP_STATE};
   enum auto_states auto_state;
 
   bool autoIsGripperClosed = true;
@@ -90,6 +90,10 @@ private:
 
   frc::Timer *armMoveDelayTimer;
   const double ARM_MOVE_DELAY = 1.5;
+
+  frc::Timer *backupDelayTimer;
+  const double BACKUP_AUTO_DELAY = .25;
+
 
   frc::Timer *periodTimeRemaining;
 
