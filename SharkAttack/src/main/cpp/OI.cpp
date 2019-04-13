@@ -63,7 +63,7 @@ bool OI::GetDriveByLimelightPickup()
 
 bool OI::GetDriveByLimelightPlace()
 {
-    return rightStick->GetRawButton(3);
+    return rightStick->GetRawButton(4);
 }
 
 bool OI::SwitchGears()
