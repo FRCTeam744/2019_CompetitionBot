@@ -50,13 +50,16 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     //armEncoderPreComp = ShuffleManager::PreCompTab->Add("Arm Encoder", 0.0).GetEntry();
     leftArmCurrentArmWrist = ShuffleManager::ArmWristTab->Add("Left Arm Curent", 0.0).GetEntry();
     rightArmCurrentArmWrist = ShuffleManager::ArmWristTab->Add("Right Arm Current", 0.0).GetEntry();
-    checkHatchGripperDriver = ShuffleManager::DriverTab->Add("Hatch Gripper Open?", false).GetEntry(); //temp false
+    checkHatchGripperDriver = ShuffleManager::DriverTab->Add("Hatch Gripper Gripping?", false).GetEntry(); //temp false
     checkWristModeDriver = ShuffleManager::DriverTab->Add("In Ball Mode?", false).GetEntry();
     checkWristModeArmWrist = ShuffleManager::ArmWristTab->Add("In Ball Mode?", false).GetEntry();
     // checkWristModePreComp = ShuffleManager::PreCompTab->Add("In Ball Mode?", false).GetEntry();
     wristEncoderDriver = ShuffleManager::DriverTab->Add("Wrist Encoder", 0.0).GetEntry();
     // wristEncoderPreComp = ShuffleManager::PreCompTab->Add("Wrist Encoder", 0.0).GetEntry();
     targetWristPositionDegreesDriver = ShuffleManager::DriverTab->Add("Wrist Target Position", 0.0).GetEntry();
+    targetArmPositionDegreesDriver = ShuffleManager::DriverTab->Add("Arm Target Position", 0.0).GetEntry();
+    targetWristPositionDegreesArmWrist = ShuffleManager::ArmWristTab->Add("Wrist Target Position", 0.0).GetEntry();
+    targetArmPositionDegreesArmWrist = ShuffleManager::ArmWristTab->Add("Arm Target Position", 0.0).GetEntry();
     // checkArmLimitSwitchArmWrist = ShuffleManager::ArmWristTab->Add("Arm Limit Switch Tripped?", 0.0).GetEntry();
     // checkArmLimitSwitchDriver = ShuffleManager::DriverTab->Add("Arm Limit Switch Tripped?", 0.0).GetEntry();
     // checkArmLimitSwitchPreComp = ShuffleManager::PreCompTab->Add("Arm Limit Switch Tripped?", 0.0).GetEntry();

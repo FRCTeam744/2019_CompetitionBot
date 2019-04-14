@@ -81,6 +81,8 @@ private:
   bool isWristInManual;
   double previousTargetPosition;
   double previousTargetWristPosition;
+  double wristTargetPositionShuffle;
+  double armTargetPositionShuffle;
 
   double FFVoltage = 0.0;
 
