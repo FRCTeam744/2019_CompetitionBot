@@ -97,6 +97,7 @@ Drivetrain::Drivetrain()
     slopeForAngleCalc = 0.0;
     interceptForAngleCalc = 0.0;
     crosshairAngle = 0.0;
+    prevT = 0;
 
     //Gyro
     ahrs = new AHRS(SerialPort::Port::kUSB);
@@ -185,6 +186,7 @@ void Drivetrain::RobotInit()
 {
     angleDGainTimer->Reset();
     angleDGainTimer->Start();
+    prevT = 0;
 }
 
 void Drivetrain::AutonomousInit()
@@ -201,7 +203,7 @@ void Drivetrain::FollowPathInit(std::string pathName)
 
 bool Drivetrain::FollowPath(bool isReverse)
 {
-    if (follow_path_counter < left_trajectory_length)
+    if (follow_path_counter < (left_trajectory_length - PATH_CUTOFF_TIME/0.02)) //adjust if needed 
     {
         // std::cout << "leftHeading: " << leftTrajectory[follow_path_counter].heading << std::endl;
         // std::cout << "rightHeading: " << rightTrajectory[follow_path_counter].heading << std::endl;
@@ -211,8 +213,6 @@ bool Drivetrain::FollowPath(bool isReverse)
 
         double gyro_heading = ahrs->GetYaw();
         double desired_heading = r2d(leftTrajectory[follow_path_counter].heading);
-        
-
 
         if (isReverse)
         {
@@ -235,7 +235,6 @@ bool Drivetrain::FollowPath(bool isReverse)
             angle_difference = (angle_difference > 0) ? angle_difference - 360 : angle_difference + 360;
         }
         frc::SmartDashboard::PutNumber("Follow Path Angle Error", angle_difference);
-
 
         double turn = 0.1 * angle_difference; //was -0.002
         frc::SmartDashboard::PutNumber("Follow Path Turn", turn);
@@ -270,17 +269,23 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         wantToDriveHatchInPlace = false;
         return false;
     }
+    double currentTime = angleDGainTimer->Get();
 
     //drive hatch into place, and skip LL code if you've gotten near the target
     if (wantToDriveHatchInPlace)
     {
         if (hatchPlaceTimer->Get() > 0.4)
         {
-            StopMotors();
+            if (StopMotorsTimer == 0)
+            {
+                StopMotors();
+                StopMotorsTimer++;
+            }
             return true;
         }
         else
         {
+            StopMotorsTimer = 0;
             AutoDriveForward(false, true);
             return false;
         }
@@ -403,7 +408,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
 
     //D Gain component
-
+    double slopeError = (angleError - prevAngleError) / (currentTime - prevT);
 
     frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle);
     frc::SmartDashboard::PutNumber("Angle Error", angleError);
@@ -412,7 +417,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Slope", slopeForAngleCalc);
     frc::SmartDashboard::PutNumber("Crosshair Angle", crosshairAngle);
 
-    adjust = kP_ANGLE * angleError + kI_ANGLE * accumAngleError;
+    adjust = kP_ANGLE * angleError + kI_ANGLE * accumAngleError - kD_ANGLE * slopeError;
     frc::SmartDashboard::PutNumber("Adjust", adjust);
 
     double distanceError = (zDesiredInches - currentDistanceInches);
@@ -451,7 +456,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
     std::cout << " wantToNotMove," << wantToNotMove << std::endl;
 
-    if (abs(distanceError) < 5 && abs(angleError) < 1.5)
+    if (abs(distanceError) < 5 && abs(angleError) < ALLOWED_ANGLE_ERROR_LL)
     {
         if (isBallMode)
         {
@@ -485,6 +490,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     prevAngle = targetOffsetAngle_Horizontal;
     prevDistanceError = distanceError;
     prevAngleError = angleError;
+    prevT = currentTime;
     return false;
 }
 
@@ -552,6 +558,47 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
         isInAutoDrive = true;
 
         desiredLeftFPS = desiredRightFPS = 2.5; //Was 5.0, changed by rObErT
+        if (!isFront)
+        {
+            desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;
+        }
+        std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
+        std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
+
+        leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
+        rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
+    else
+    {
+        isInAutoDrive = false;
+    }
+}
+
+void Drivetrain::AutoDriveBackwards(bool isBut, bool isVelocityControl)
+{
+
+    // double testPercentOut = frc::SmartDashboard::GetNumber("Test PercentOut Speed", 0.5);
+
+    if (isBut && !isVelocityControl)
+    {
+        isInAutoDrive = true;
+
+        leftBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);
+        rightBack->Set(ControlMode::PercentOutput, TEST_PERCENT_OUTPUT);
+        leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
+        leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
+        rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
+    }
+    else if (isVelocityControl)
+    {
+        isInAutoDrive = true;
+
+        desiredLeftFPS = desiredRightFPS = -2.5; //Was 5.0, changed by rObErT
         if (!isFront)
         {
             desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;

@@ -39,6 +39,7 @@ class Drivetrain
 	double LimelightGet(std::string key);
 	void CheckSwitchGears(bool isHighGear);
 	void AutoDriveForward(bool isBut, bool isVelocityControl);
+	void AutoDriveBackwards(bool isBut, bool isVelocityControl);
 	void SetDesiredLLDistances(double xDesiredInches, double zDesiredInches);
 	void SetIsFrontLL(bool isFront);
 	void AutoDriveLL(bool wantLimelight, double leftTank, double rightTank);
@@ -221,6 +222,7 @@ class Drivetrain
 	const double FEET_TO_NU = 1.0 / NU_TO_FEET;
 	const double SECONDS_TO_100MS = 10;
 	const double CONVERT_100MS_TO_SECONDS = 0.1;
+	const double PATH_CUTOFF_TIME = 0.5; //adjustable
 
 	const double MAX_TALON_OUTPUT = 1023.0; //instead of 0-100% power it is now 0-1023'%' where 1023 is the new 100%
 
@@ -256,9 +258,12 @@ class Drivetrain
 	const double LIMELIGHT_ANGLE_BACK = 25.0;
 	// const double CROSSHAIR_ANGLE = 6.5; //17.3
 
-	const double kP_ANGLE = 0.20;   //FOR ANGLE CORRECTION TODO
-	const double kI_ANGLE = 0.0030; //FOR ANGLE CORRECTION TODO
+	const double kP_ANGLE = 0.23;   //FOR ANGLE CORRECTION TODO
+	const double kI_ANGLE = 0;//0.0030; //FOR ANGLE CORRECTION TODO
+	const double kD_ANGLE = -0.03; 		//FOR ANGLE CORRECTION TODO
 	const double I_ZONE_ANGLE = 3;  //degrees
+
+	const double ALLOWED_ANGLE_ERROR_LL = 1;
 
 	const double MIN_COMMAND = 0.23;
 
@@ -295,4 +300,6 @@ class Drivetrain
 	AHRS *ahrs;
 
 	// frc::Notifier m_follower_notifier;
+
+	int StopMotorsTimer = 0;
 };

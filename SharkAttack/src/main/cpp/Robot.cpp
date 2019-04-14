@@ -24,6 +24,7 @@ void Robot::RobotInit()
   hatchDelayTimer = new frc::Timer();
   armMoveDelayTimer = new frc::Timer();
   periodTimeRemaining = new frc::Timer();
+  backupDelayTimer = new frc::Timer();
 
   isBeforeMatch = true;
   shufflemanager = ShuffleManager::GetInstance();
@@ -31,8 +32,11 @@ void Robot::RobotInit()
   m_chooser.SetDefaultOption(kAutoRunTeleop, kAutoRunTeleop);
   m_chooser.AddOption("Right Cargo Autonomous", kAutoHatchRightCargo);
   m_chooser.AddOption("Left Cargo Autonomous", kAutoHatchLeftCargo);
-  m_chooser.AddOption("Right Rocket Autonomous", kAutoHatchRightRocket);
-  m_chooser.AddOption("Left Rocket Autonomous", kAutoHatchLeftRocket);
+  m_chooser.AddOption("Low Right Rocket Autonomous", kAutoHatchLowRightRocket);
+  m_chooser.AddOption("Low Left Rocket Autonomous", kAutoHatchLowLeftRocket);
+  m_chooser.AddOption("High Right Rocket Autonomous", kAutoHatchHighRightRocket);
+  m_chooser.AddOption("High Left Rocket Autonomous", kAutoHatchHighLeftRocket);
+  m_chooser.AddOption("TEST Path", kAutoTest);
   //frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
   frc::Shuffleboard::GetTab("DriverView").Add("Auto Modes", m_chooser).WithWidget(frc::BuiltInWidgets::kComboBoxChooser);
   //frc::Shuffleboard::GetTab("DriverView").Add()
@@ -90,6 +94,8 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
+    std::cout << "Auto Init Start Here" << std::endl;
+
   if (isShufflePopulated == false)
   {
     shufflemanager->ShuffleInit();
@@ -109,14 +115,17 @@ void Robot::AutonomousInit()
   autoIsGripperClosed = true;
   armMoveDelayTimer->Reset();
   armMoveDelayTimer->Start();
+  backupDelayTimer->Reset();
+  backupDelayTimer->Start();
+
   periodTimeRemaining->GetMatchTime();
 
   autoPathNames.clear();
   autoPathDirections.clear();
   autoArmPresets.clear();
 
-  lowestArmAngle = oi->FRONT_HIGH_HATCH_POSITION+10;
-  
+  lowestArmAngle = oi->FRONT_HIGH_HATCH_POSITION + 10;
+
   if (m_autoSelected == kAutoHatchRightCargo)
   {
     oi->SetArmWristInManual(false, false);
@@ -160,7 +169,7 @@ void Robot::AutonomousInit()
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
-  else if (m_autoSelected == kAutoHatchRightRocket)
+  else if (m_autoSelected == kAutoTest)
   {
     oi->SetArmWristInManual(false, false);
     arm->UpdateArmAndWristInManual(false, false);
@@ -174,7 +183,7 @@ void Robot::AutonomousInit()
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
-  else if (m_autoSelected == kAutoHatchLeftRocket)
+  else if (m_autoSelected == kAutoHatchHighLeftRocket)
   {
     oi->SetArmWristInManual(false, false);
     arm->UpdateArmAndWristInManual(false, false);
@@ -183,15 +192,52 @@ void Robot::AutonomousInit()
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
 
-    // autoPathNames.push_back("LeftPlatformToLeftFrontRocketMid");
-    // autoPathDirections.push_back(drivetrain->FORWARD);
-    // autoArmPresets.push_back(oi->FRONT_MID_HATCH_POSITION);
-  
     autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
 
-    autoPathNames.push_back("LeftStationToLeftFrontRocket");
+    //autoPathNames.push_back("LeftStationToLeftFrontRocket"); //high on opposite side
+    //autoPathDirections.push_back(drivetrain->FORWARD);
+    //autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
+
+    drivetrain->FollowPathInit(autoPathNames.at(path_count));
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    auto_state = FOLLOW_PATH_STATE;
+  }
+  else if (m_autoSelected == kAutoHatchLowLeftRocket)
+  {
+    oi->SetArmWristInManual(false, false);
+    arm->UpdateArmAndWristInManual(false, false);
+
+    autoPathNames.push_back("LeftPlatformToLeftFrontRocket");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
+
+    autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
+    autoPathDirections.push_back(drivetrain->REVERSE);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    //autoPathNames.push_back("LeftStationToLeftFrontRocket"); //high on opposite side
+    //autoPathDirections.push_back(drivetrain->FORWARD);
+    //autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
+
+    drivetrain->FollowPathInit(autoPathNames.at(path_count));
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    auto_state = FOLLOW_PATH_STATE;
+  }
+  else if(m_autoSelected == kAutoHatchHighRightRocket)
+  {
+//autoPathNames.push_back(""); //make right rocket path
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
+
+    drivetrain->FollowPathInit(autoPathNames.at(path_count));
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    auto_state = FOLLOW_PATH_STATE;
+  }
+  else if(m_autoSelected == kAutoHatchLowRightRocket)
+  {
+    //autoPathNames.push_back("");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
@@ -199,6 +245,7 @@ void Robot::AutonomousInit()
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
+
   else if (m_autoSelected == kAutoRunTeleop)
   {
     TeleopPeriodic();
@@ -211,7 +258,7 @@ void Robot::AutonomousInit()
 
 void Robot::PrintMatchTimeToShuffle()
 {
-      ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->periodMatchTimeFMS, periodTimeRemaining->GetMatchTime());
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->periodMatchTimeFMS, periodTimeRemaining->GetMatchTime());
 }
 
 void Robot::AutonomousPeriodic()
@@ -224,11 +271,23 @@ void Robot::AutonomousPeriodic()
   {
     AutoStateMachine();
   }
-  else if (m_autoSelected == kAutoHatchRightRocket)
+  else if (m_autoSelected == kAutoHatchHighRightRocket)
   {
     AutoStateMachine();
   }
-  else if (m_autoSelected == kAutoHatchLeftRocket)
+  else if (m_autoSelected == kAutoHatchLowRightRocket)
+  {
+    AutoStateMachine();
+  }
+  else if (m_autoSelected == kAutoHatchHighLeftRocket)
+  {
+    AutoStateMachine();
+  }
+  else if (m_autoSelected == kAutoHatchLowLeftRocket)
+  {
+    AutoStateMachine();
+  }
+  else if (m_autoSelected == kAutoTest)
   {
     AutoStateMachine();
   }
@@ -259,17 +318,19 @@ void Robot::AutoStateMachine()
     if (armMoveDelayTimer->Get() > ARM_MOVE_DELAY)
     {
       // std::cout << "Can move arm, moving to: " << autoArmPresets.at(path_count) << std::endl;
-      
+
       arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
       oi->SetTargetArmPosition(autoArmPresets.at(path_count));
       oi->SetPlacingMode(false);
     }
-    else if(armMoveDelayTimer->Get() < ARM_MOVE_DELAY && path_count != 0) {
-      if(abs(arm->GetCurrentArmPosition()) < abs(lowestArmAngle)) {
-        lowestArmAngle = arm->GetCurrentArmPosition(); 
+    else if (armMoveDelayTimer->Get() < ARM_MOVE_DELAY && path_count != 0)
+    {
+      if (abs(arm->GetCurrentArmPosition()) < abs(lowestArmAngle))
+      {
+        lowestArmAngle = arm->GetCurrentArmPosition();
       }
       arm->MoveArmToPosition(lowestArmAngle, false, false, false);
-      
+
       oi->SetTargetArmPosition(arm->GetCurrentArmPosition());
       oi->SetPlacingMode(false);
     }
@@ -306,7 +367,7 @@ void Robot::AutoStateMachine()
       std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
       arm->CheckHatchGripper(autoIsGripperClosed);
       std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
-      
+
       //start and reset timer to wait for hatch mechanism to grip/release
       hatchDelayTimer->Reset();
       hatchDelayTimer->Start();
@@ -334,8 +395,10 @@ void Robot::AutoStateMachine()
         drivetrain->FollowPathInit(autoPathNames.at(path_count));
         armMoveDelayTimer->Reset();
         armMoveDelayTimer->Start();
+        backupDelayTimer->Reset();
+        backupDelayTimer->Start();
         std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
-      
+
         drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
         auto_state = FOLLOW_PATH_STATE;
         lowestArmAngle = arm->GetCurrentArmPosition();
@@ -344,6 +407,39 @@ void Robot::AutoStateMachine()
     else
     {
       arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+      std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
+    }
+  }
+  break;
+  case BACKUP_STATE:
+  {
+    if (backupDelayTimer->Get() > BACKUP_AUTO_DELAY)
+    {
+      path_count++;
+      //if no more paths, go to teleop
+      std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
+      if (path_count >= autoPathNames.size())
+      {
+        auto_state = TELEOP_STATE;
+      }
+      //otherwise, initialize next path, reset arm move timer, and go to path follow state
+      else
+      {
+        drivetrain->FollowPathInit(autoPathNames.at(path_count));
+        armMoveDelayTimer->Reset();
+        armMoveDelayTimer->Start();
+        std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
+
+        drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
+        auto_state = FOLLOW_PATH_STATE;
+        lowestArmAngle = arm->GetCurrentArmPosition();
+        arm->MoveArmToPosition(lowestArmAngle, false, false, false);
+      }
+    }
+    else
+    {
+      arm->MoveArmToPosition(lowestArmAngle, false, false, false);
+      drivetrain->AutoDriveBackwards(false, true);
       std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
     }
   }
@@ -379,7 +475,49 @@ void Robot::TeleopPeriodic()
   GetDesiredLLDistances(oi->GetTargetArmPosition());
   drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
   // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
-  drivetrain->AutoDrive(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
+  bool isLLFinished = drivetrain->AutoDrive((oi->GetDriveByLimelightPickup() || oi->GetDriveByLimelightPlace()), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
+  // bool isLLFinishedPlace = drivetrain->AutoDrive(oi->GetDriveByLimelightPlace(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
+  
+  if (oi->GetDriveByLimelightPickup())
+  {
+    if (isLLFinished == false)
+    {
+      arm->CheckHatchGripper(false); //Open grippers
+      ToggleGrippersTimer = 0;
+    }
+    if (isLLFinished)
+    {
+      arm->CheckHatchGripper(true); //Close grippers
+      ToggleGrippersTimer++;
+      if (ToggleGrippersTimer > 30)
+      {
+        drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+      }
+    }
+  }
+
+  if (oi->GetDriveByLimelightPlace())
+  {
+    if (isLLFinished == false)
+    {
+      arm->CheckHatchGripper(true); //Close grippers
+      ToggleGrippersTimer = 0;
+    }
+    if (isLLFinished)
+    {
+      arm->CheckHatchGripper(false); //Open grippers
+      ToggleGrippersTimer++;
+      if (ToggleGrippersTimer > 30)
+      {
+        drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+      }
+    }
+  }
+
+  if (isLLFinished)
+  {
+    arm->RunIntake(-.2); //Close grippers
+  }
   //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
   arm->ManualRotateArm(oi->GetArmInput());
   arm->ManualRotateWrist(oi->GetWristInput());
@@ -388,7 +526,10 @@ void Robot::TeleopPeriodic()
   //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
 
   //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;
-  arm->RunIntake(oi->GetIntakeInput());
+  if (!isLLFinished)
+  {
+    arm->RunIntake(oi->GetIntakeInput());
+  }
 
   if (oi->GetTargetArmPosition() != oi->NEUTRAL_ARM_POSITION)
   {

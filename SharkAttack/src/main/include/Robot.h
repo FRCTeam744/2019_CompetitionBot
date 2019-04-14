@@ -56,9 +56,14 @@ private:
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoHatchRightCargo = "Place 2 Hatches on the Right Cargo Ship";
   const std::string kAutoHatchLeftCargo = "Place 2 Hatches on the Left Cargo Ship";
-  const std::string kAutoHatchRightRocket = "Place 2 Hatches on the Right Rocket";
-  const std::string kAutoHatchLeftRocket = "Place 2 Hatches on the Left Rocket";
+  const std::string kAutoTest = "TEST";
+  // const std::string kAutoHatchLeftRocket = "Place 2 Hatches on the Left Rocket";
   const std::string kAutoRunTeleop = "Run Teleop Rather Than Autonomous";
+  const std::string kAutoHatchHighRightRocket = "Place 2 Hatches on High Right Rocket";
+  const std::string kAutoHatchLowRightRocket = "Place 2 Hatches on Low Right Rocket";
+  const std::string kAutoHatchHighLeftRocket = "Place 2 Hatches on High Left Rocket";
+  const std::string kAutoHatchLowLeftRocket = "Place 2 Hatches on Low Left Rocket";
+
   std::string m_autoSelected;
 
   Drivetrain *drivetrain;
@@ -80,7 +85,14 @@ private:
 
   //Auto Paths
   int path_count = 0;
-  enum auto_states {FOLLOW_PATH_STATE, DRIVE_BY_LL_STATE, DELAY_STATE, TELEOP_STATE};
+  enum auto_states
+  {
+    FOLLOW_PATH_STATE,
+    DRIVE_BY_LL_STATE,
+    DELAY_STATE,
+    BACKUP_STATE,
+    TELEOP_STATE
+  };
   enum auto_states auto_state;
 
   bool autoIsGripperClosed = true;
@@ -89,7 +101,10 @@ private:
   const double TOGGLE_HATCH_DELAY = 0.5;
 
   frc::Timer *armMoveDelayTimer;
-  const double ARM_MOVE_DELAY = 1.5;
+  const double ARM_MOVE_DELAY = 1.0; //was 3.0
+
+  frc::Timer *backupDelayTimer;
+  const double BACKUP_AUTO_DELAY = .25;
 
   frc::Timer *periodTimeRemaining;
 
@@ -99,18 +114,20 @@ private:
 
   //TEST AUTO
   std::vector<std::string> autoPathNames;
-	std::vector<bool> autoPathDirections;
-              // = {drivetrain->FORWARD, drivetrain->REVERSE};
-	std::vector<double> autoArmPresets;
-              // = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
+  std::vector<bool> autoPathDirections;
+  // = {drivetrain->FORWARD, drivetrain->REVERSE};
+  std::vector<double> autoArmPresets;
+  // = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
 
   //CARGO SHIP RIGHT
   // const int CARGO_SHIP_RIGHT_AUTO_STEPS = 4;
-  // std::string cargoShipRightPaths[CARGO_SHIP_RIGHT_AUTO_STEPS] 
+  // std::string cargoShipRightPaths[CARGO_SHIP_RIGHT_AUTO_STEPS]
   //             = {"TestPath", "TestPath", "TestPath", "TestPath"};
-	// bool   cargoShipRightPathDirections[CARGO_SHIP_RIGHT_AUTO_STEPS] 
+  // bool   cargoShipRightPathDirections[CARGO_SHIP_RIGHT_AUTO_STEPS]
   //             = {drivetrain->FORWARD, drivetrain->REVERSE, drivetrain->FORWARD, drivetrain->REVERSE};
-	// double cargoShipRightArmPresets[CARGO_SHIP_RIGHT_AUTO_STEPS] 
+  // double cargoShipRightArmPresets[CARGO_SHIP_RIGHT_AUTO_STEPS]
   //             = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION, oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
   double lowestArmAngle;
+
+  int ToggleGrippersTimer = 0;
 };

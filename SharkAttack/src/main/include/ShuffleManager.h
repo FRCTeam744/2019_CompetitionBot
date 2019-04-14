@@ -90,7 +90,10 @@ class ShuffleManager {
 		nt::NetworkTableEntry checkWristModeDriver;
 		//nt::NetworkTableEntry checkWristModePreComp;
 		nt::NetworkTableEntry checkWristModeArmWrist;
+		nt::NetworkTableEntry targetArmPositionDegreesDriver;
 		nt::NetworkTableEntry targetWristPositionDegreesDriver;
+		nt::NetworkTableEntry targetArmPositionDegreesArmWrist;
+		nt::NetworkTableEntry targetWristPositionDegreesArmWrist;
 		nt::NetworkTableEntry checkArmManualDriver;
 		nt::NetworkTableEntry checkWristManualDriver;
 		nt::NetworkTableEntry checkArmManualArmWrist;

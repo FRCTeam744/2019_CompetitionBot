@@ -153,6 +153,7 @@ void Arm::UpdateArmAndWristInManual(bool arm, bool wrist)
 
 void Arm::RunIntake(double input)
 {
+    std::cout << "Intake input: " << input << std::endl;
     intake->Set(motorcontrol::ControlMode::PercentOutput, input);
 }
 
@@ -160,9 +161,10 @@ void Arm::RunIntake(double input)
 //Work in Progress
 void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
+    armTargetPositionShuffle = targetPosition;
     isInHatchMode = !isInBallMode;
     std::cout << "Target pos" << targetPosition << std::endl;
-    currentArmPos = armEncoder->GetPosition();
+    currentArmPos = targetPosition; //TODO: CHANGE THIS BACK!!! armEncoder->GetPosition();
     currentWristPos = wristEncoder->GetPosition();
 
     areWheelsVeryDown = (currentWristPos > 60 || currentWristPos < -60);
@@ -300,6 +302,7 @@ double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool i
 // void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
 void Arm::MoveWristToPosition(double wristTargetPosition)
 {
+    wristTargetPositionShuffle = wristTargetPosition;
     double wristTargetRelativeToArm = armEncoder->GetPosition() - wristTargetPosition;
 
     frc::SmartDashboard::PutNumber("Wrist Target Position", wristTargetPosition);
@@ -365,16 +368,19 @@ void Arm::PrintArmShuffleInfo()
     // //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkWristModePreComp, isInHatchMode);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristModeArmWrist, isInHatchMode);
 
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->targetWristPositionDegreesDriver, wristTargetPositionShuffle);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->targetArmPositionDegreesDriver, armTargetPositionShuffle);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->targetWristPositionDegreesArmWrist, wristTargetPositionShuffle);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->targetArmPositionDegreesArmWrist, armTargetPositionShuffle);
+
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->armVelocityArmWrist, armEncoder->GetVelocity());
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->armVelocityErrorArmWrist, 15 - armEncoder->GetVelocity());
 
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkArmManualDriver, isArmInManual);
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristManualDriver, isWristInManual);
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkArmManualArmWrist, isArmInManual);
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristManualArmWrist, isWristInManual);
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkArmManualPreComp, isArmInManual);
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkWristManualPreComp, isWristInManual);
-
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkArmManualDriver, isArmInManual);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristManualDriver, isWristInManual);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkArmManualArmWrist, isArmInManual);
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristManualArmWrist, isWristInManual);
+   
     //frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
     //frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
     // frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());

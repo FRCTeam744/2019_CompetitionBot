@@ -56,9 +56,14 @@ bool OI::GetAutoDriveForward()
     return leftStick->GetRawButton(8);
 }
 
-bool OI::GetDriveByLimelight()
+bool OI::GetDriveByLimelightPickup()
 {
     return rightStick->GetRawButton(2);
+}
+
+bool OI::GetDriveByLimelightPlace()
+{
+    return rightStick->GetRawButton(4);
 }
 
 bool OI::SwitchGears()
@@ -167,7 +172,7 @@ double OI::GetWristInput()
     }
 
     frc::SmartDashboard::PutNumber("Wrist Control Output", wristPowerOutput);
-    return wristPowerOutput; 
+    return wristPowerOutput;
 }
 
 double OI::GetIntakeInput()
@@ -311,10 +316,10 @@ double OI::GetTargetArmPosition()
             isWristInManual = false;
             isInBallPickup = true;
         }
-        
 
         //if DPAD RIGHT released
-        if(xbox->GetPOV(0) != DPAD_RIGHT && wasDPADRightPressed) { 
+        if (xbox->GetPOV(0) != DPAD_RIGHT && wasDPADRightPressed)
+        {
             targetArmPosition = BACK_MID_BALL_POSITION;
             isArmInManual = false;
             isWristInManual = false;
@@ -338,7 +343,8 @@ double OI::GetTargetArmPosition()
             isInBallPickup = false;
         }
 
-        if (xbox->GetBumper(LEFT_HAND)){
+        if (xbox->GetBumper(LEFT_HAND))
+        {
             targetArmPosition = NEUTRAL_ARM_POSITION;
             isArmInManual = false;
             isWristInManual = false;
@@ -408,7 +414,8 @@ double OI::GetTargetArmPosition()
             isWristInManual = false;
         }
 
-        if (xbox->GetBumper(LEFT_HAND)){
+        if (xbox->GetBumper(LEFT_HAND))
+        {
             targetArmPosition = NEUTRAL_ARM_POSITION;
             isArmInManual = false;
             isWristInManual = false;
@@ -423,7 +430,8 @@ void OI::SetTargetArmPosition(double targetArmPos)
     targetArmPosition = targetArmPos;
 }
 
-bool OI::IsInCargoShipMode () {
+bool OI::IsInCargoShipMode()
+{
     return xbox->GetBButton() || xbox->GetPOV(0) == DPAD_RIGHT;
 }
 
@@ -550,7 +558,8 @@ bool OI::AlsoLEDButtonPressed()
     return rightStick->GetRawButton(3);
 }
 
-bool OI::GetStopLLMove() {
+bool OI::GetStopLLMove()
+{
     return leftStick->GetRawButton(12);
 }
 
@@ -567,19 +576,23 @@ double OI::GetArmFFVoltage()
     return armFFVoltage;
 }
 
-bool OI::GetIsArmInDefenseMode(){
+bool OI::GetIsArmInDefenseMode()
+{
     // std::cout << "Button 7 working" << std::endl;
-    if (leftStick->GetRawButton(9)){
+    if (leftStick->GetRawButton(9))
+    {
         isArmInDefenseMode = false;
     }
-    else if (leftStick->GetRawButton(10)){
+    else if (leftStick->GetRawButton(10))
+    {
         isArmInDefenseMode = true;
     }
     frc::SmartDashboard::PutBoolean("isArmInDefenseMode", isArmInDefenseMode);
     return isArmInDefenseMode;
 }
 
-void OI::SetArmWristInManual(bool isArmManual, bool isWristManual){
+void OI::SetArmWristInManual(bool isArmManual, bool isWristManual)
+{
     isArmInManual = isArmManual;
     isWristInManual = isWristManual;
 }
