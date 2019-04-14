@@ -32,8 +32,11 @@ void Robot::RobotInit()
   m_chooser.SetDefaultOption(kAutoRunTeleop, kAutoRunTeleop);
   m_chooser.AddOption("Right Cargo Autonomous", kAutoHatchRightCargo);
   m_chooser.AddOption("Left Cargo Autonomous", kAutoHatchLeftCargo);
-  m_chooser.AddOption("Right Rocket Autonomous", kAutoHatchRightRocket);
-  m_chooser.AddOption("Left Rocket Autonomous", kAutoHatchLeftRocket);
+  m_chooser.AddOption("Low Right Rocket Autonomous", kAutoHatchLowRightRocket);
+  m_chooser.AddOption("Low Left Rocket Autonomous", kAutoHatchLowLeftRocket);
+  m_chooser.AddOption("High Right Rocket Autonomous", kAutoHatchHighRightRocket);
+  m_chooser.AddOption("High Left Rocket Autonomous", kAutoHatchHighLeftRocket);
+  m_chooser.AddOption("TEST Path", kAutoTest);
   //frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
   frc::Shuffleboard::GetTab("DriverView").Add("Auto Modes", m_chooser).WithWidget(frc::BuiltInWidgets::kComboBoxChooser);
   //frc::Shuffleboard::GetTab("DriverView").Add()
@@ -91,7 +94,7 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
-    std::cout << "Auto Init" << std::endl;
+    std::cout << "Auto Init Start Here" << std::endl;
 
   if (isShufflePopulated == false)
   {
@@ -166,7 +169,7 @@ void Robot::AutonomousInit()
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
-  else if (m_autoSelected == kAutoHatchRightRocket)
+  else if (m_autoSelected == kAutoTest)
   {
     oi->SetArmWristInManual(false, false);
     arm->UpdateArmAndWristInManual(false, false);
@@ -180,7 +183,7 @@ void Robot::AutonomousInit()
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
-  else if (m_autoSelected == kAutoHatchLeftRocket)
+  else if (m_autoSelected == kAutoHatchHighLeftRocket)
   {
     oi->SetArmWristInManual(false, false);
     arm->UpdateArmAndWristInManual(false, false);
@@ -189,15 +192,52 @@ void Robot::AutonomousInit()
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
 
-    // autoPathNames.push_back("LeftPlatformToLeftFrontRocketMid");
-    // autoPathDirections.push_back(drivetrain->FORWARD);
-    // autoArmPresets.push_back(oi->FRONT_MID_HATCH_POSITION);
+    autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
+    autoPathDirections.push_back(drivetrain->REVERSE);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    //autoPathNames.push_back("LeftStationToLeftFrontRocket"); //high on opposite side
+    //autoPathDirections.push_back(drivetrain->FORWARD);
+    //autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
+
+    drivetrain->FollowPathInit(autoPathNames.at(path_count));
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    auto_state = FOLLOW_PATH_STATE;
+  }
+  else if (m_autoSelected == kAutoHatchLowLeftRocket)
+  {
+    oi->SetArmWristInManual(false, false);
+    arm->UpdateArmAndWristInManual(false, false);
+
+    autoPathNames.push_back("LeftPlatformToLeftFrontRocket");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
     autoPathNames.push_back("LeftFrontRocketToLeftLoadingStation");
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
 
-    autoPathNames.push_back("LeftStationToLeftFrontRocket");
+    //autoPathNames.push_back("LeftStationToLeftFrontRocket"); //high on opposite side
+    //autoPathDirections.push_back(drivetrain->FORWARD);
+    //autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
+
+    drivetrain->FollowPathInit(autoPathNames.at(path_count));
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    auto_state = FOLLOW_PATH_STATE;
+  }
+  else if(m_autoSelected == kAutoHatchHighRightRocket)
+  {
+//autoPathNames.push_back(""); //make right rocket path
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
+
+    drivetrain->FollowPathInit(autoPathNames.at(path_count));
+    arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
+    auto_state = FOLLOW_PATH_STATE;
+  }
+  else if(m_autoSelected == kAutoHatchLowRightRocket)
+  {
+    //autoPathNames.push_back("");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
@@ -205,6 +245,7 @@ void Robot::AutonomousInit()
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
+
   else if (m_autoSelected == kAutoRunTeleop)
   {
     TeleopPeriodic();
@@ -230,11 +271,23 @@ void Robot::AutonomousPeriodic()
   {
     AutoStateMachine();
   }
-  else if (m_autoSelected == kAutoHatchRightRocket)
+  else if (m_autoSelected == kAutoHatchHighRightRocket)
   {
     AutoStateMachine();
   }
-  else if (m_autoSelected == kAutoHatchLeftRocket)
+  else if (m_autoSelected == kAutoHatchLowRightRocket)
+  {
+    AutoStateMachine();
+  }
+  else if (m_autoSelected == kAutoHatchHighLeftRocket)
+  {
+    AutoStateMachine();
+  }
+  else if (m_autoSelected == kAutoHatchLowLeftRocket)
+  {
+    AutoStateMachine();
+  }
+  else if (m_autoSelected == kAutoTest)
   {
     AutoStateMachine();
   }

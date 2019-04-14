@@ -56,9 +56,14 @@ private:
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoHatchRightCargo = "Place 2 Hatches on the Right Cargo Ship";
   const std::string kAutoHatchLeftCargo = "Place 2 Hatches on the Left Cargo Ship";
-  const std::string kAutoHatchRightRocket = "Place 2 Hatches on the Right Rocket";
-  const std::string kAutoHatchLeftRocket = "Place 2 Hatches on the Left Rocket";
+  const std::string kAutoTest = "TEST";
+  // const std::string kAutoHatchLeftRocket = "Place 2 Hatches on the Left Rocket";
   const std::string kAutoRunTeleop = "Run Teleop Rather Than Autonomous";
+  const std::string kAutoHatchHighRightRocket = "Place 2 Hatches on High Right Rocket";
+  const std::string kAutoHatchLowRightRocket = "Place 2 Hatches on Low Right Rocket";
+  const std::string kAutoHatchHighLeftRocket = "Place 2 Hatches on High Left Rocket";
+  const std::string kAutoHatchLowLeftRocket = "Place 2 Hatches on Low Left Rocket";
+
   std::string m_autoSelected;
 
   Drivetrain *drivetrain;
