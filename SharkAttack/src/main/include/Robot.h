@@ -96,7 +96,7 @@ private:
   const double TOGGLE_HATCH_DELAY = 0.5;
 
   frc::Timer *armMoveDelayTimer;
-  const double ARM_MOVE_DELAY = 1.5; //was 3.0
+  const double ARM_MOVE_DELAY = 1.0; //was 3.0
 
   frc::Timer *backupDelayTimer;
   const double BACKUP_AUTO_DELAY = .25;
