@@ -67,9 +67,6 @@ class OI
 
 	double GetArmFFVoltage();
 
-	bool LEDButtonPressed();
-	bool AlsoLEDButtonPressed();
-
 	bool GetIsArmInDefenseMode();
 
 	// bool SetArmFrontHigh();

@@ -456,7 +456,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     }
     std::cout << " wantToNotMove," << wantToNotMove << std::endl;
 
-    if (abs(distanceError) < 5 && abs(angleError) < ALLOWED_ANGLE_ERROR_LL)
+    if (abs(distanceError) < 2 && abs(angleError) < ALLOWED_ANGLE_ERROR_LL)
     {
         if (isBallMode)
         {
