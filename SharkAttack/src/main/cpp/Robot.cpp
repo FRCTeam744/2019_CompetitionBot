@@ -91,6 +91,8 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
+    std::cout << "Auto Init" << std::endl;
+
   if (isShufflePopulated == false)
   {
     shufflemanager->ShuffleInit();

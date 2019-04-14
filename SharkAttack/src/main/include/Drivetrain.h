@@ -222,6 +222,7 @@ class Drivetrain
 	const double FEET_TO_NU = 1.0 / NU_TO_FEET;
 	const double SECONDS_TO_100MS = 10;
 	const double CONVERT_100MS_TO_SECONDS = 0.1;
+	const double PATH_CUTOFF_TIME = 0.5; //adjustable
 
 	const double MAX_TALON_OUTPUT = 1023.0; //instead of 0-100% power it is now 0-1023'%' where 1023 is the new 100%
 

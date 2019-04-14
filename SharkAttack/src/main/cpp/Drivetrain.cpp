@@ -203,7 +203,7 @@ void Drivetrain::FollowPathInit(std::string pathName)
 
 bool Drivetrain::FollowPath(bool isReverse)
 {
-    if (follow_path_counter < left_trajectory_length)
+    if (follow_path_counter < (left_trajectory_length - PATH_CUTOFF_TIME/0.02)) //adjust if needed 
     {
         // std::cout << "leftHeading: " << leftTrajectory[follow_path_counter].heading << std::endl;
         // std::cout << "rightHeading: " << rightTrajectory[follow_path_counter].heading << std::endl;
