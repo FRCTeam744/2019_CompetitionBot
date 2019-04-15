@@ -262,11 +262,12 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     {
         if (isInLLDrive)
         {
-            limelightFront->PutNumber("pipeline", DRIVER_PIPELINE);
-            limelightBack->PutNumber("pipeline", DRIVER_PIPELINE);
+            // limelightFront->PutNumber("pipeline", DRIVER_PIPELINE);
+            // limelightBack->PutNumber("pipeline", DRIVER_PIPELINE);
         }
         isInLLDrive = false;
         wantToDriveHatchInPlace = false;
+        isTargetAcquired = false;
         return false;
     }
     double currentTime = angleDGainTimer->Get();

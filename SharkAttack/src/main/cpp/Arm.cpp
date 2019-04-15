@@ -153,7 +153,7 @@ void Arm::UpdateArmAndWristInManual(bool arm, bool wrist)
 
 void Arm::RunIntake(double input)
 {
-    std::cout << "Intake input: " << input << std::endl;
+  //  std::cout << "Intake input: " << input << std::endl;
     intake->Set(motorcontrol::ControlMode::PercentOutput, input);
 }
 
@@ -163,7 +163,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
 {
     armTargetPositionShuffle = targetPosition;
     isInHatchMode = !isInBallMode;
-    std::cout << "Target pos" << targetPosition << std::endl;
+   // std::cout << "Target pos" << targetPosition << std::endl;
     currentArmPos = targetPosition; //TODO: CHANGE THIS BACK!!! armEncoder->GetPosition();
     currentWristPos = wristEncoder->GetPosition();
 
