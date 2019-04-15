@@ -248,10 +248,10 @@ class Drivetrain
 	int counter = 0;
 
 	const double DESIRED_DISTANCE_INCHES = 22;									//desired distance from target
-	const double kP_DIST_FPS = -.15;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
+	const double kP_DIST_FPS = -.2;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
 	const double kP_NU_PER_100MS = kP_DIST_FPS * FEET_TO_NU * SECONDS_TO_100MS; //Converted from FPS estimate above to NU/100ms that the talon can use
 	const double LL_DISTANCE_PER_5FEET_FRONT = 100.0;
-	const double LL_DISTANCE_PER_5FEET_BACK = 100.0;
+	const double LL_DISTANCE_PER_5FEET_BACK = 80.0;
 	const double kP_DIST_FPS_BACK = -kP_DIST_FPS * (LL_DISTANCE_PER_5FEET_FRONT / LL_DISTANCE_PER_5FEET_BACK);
 	const double LIMELIGHT_HEIGHT_INCHES = 45;
 	const double LIMELIGHT_ANGLE_FRONT = 26.0;

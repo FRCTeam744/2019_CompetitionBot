@@ -58,17 +58,18 @@ bool OI::GetAutoDriveForward()
 
 bool OI::GetDriveByLimelightPickup()
 {
-    return rightStick->GetRawButton(2);
+    return leftStick->GetRawButton(1);
 }
 
 bool OI::GetDriveByLimelightPlace()
 {
-    return rightStick->GetRawButton(4);
+    return rightStick->GetRawButton(1);
 }
 
 bool OI::SwitchGears()
 {
-    if (leftStick->GetRawButtonPressed(1))
+    //low left stick button 2
+    if (leftStick->GetRawButtonPressed(2))
     {
         isHighGear = false;
         //frc::SmartDashboard::PutBoolean("isHighGear", false);
@@ -76,7 +77,9 @@ bool OI::SwitchGears()
         // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, "isHighGear", isHighGear);
         return true;
     }
-    if (rightStick->GetRawButtonPressed(1))
+
+    //high right stick button 2
+    if (rightStick->GetRawButtonPressed(2))
     {
         isHighGear = true;
         //frc::SmartDashboard::PutBoolean("isHighGear", true);
@@ -546,16 +549,6 @@ std::tuple<bool, std::string, double> OI::SetLimelight()
     }
 
     return std::make_tuple(false, "", 0.0);
-}
-
-bool OI::LEDButtonPressed()
-{
-    return leftStick->GetRawButton(3);
-}
-
-bool OI::AlsoLEDButtonPressed()
-{
-    return rightStick->GetRawButton(3);
 }
 
 bool OI::GetStopLLMove()
