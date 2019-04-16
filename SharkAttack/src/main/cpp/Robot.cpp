@@ -542,7 +542,10 @@ void Robot::TeleopPeriodic()
       ToggleGrippersTimer++;
       if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
       {
-        drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+        if(!oi->GetPlacingMode()) //not in ball mode, aka if is in hatch mode
+        {
+          drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+        }
       }
     }
   }
@@ -560,14 +563,17 @@ void Robot::TeleopPeriodic()
       ToggleGrippersTimer++;
       if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
       {
-        drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+        if(!oi->GetPlacingMode()) //not in ball mode, aka if is in hatch mode
+        {
+          drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+        }
       }
     }
   }
 
   if (isLLFinished)
   {
-    arm->RunIntake(-.2); //Close grippers
+    arm->RunIntake(AUTO_RELEASE_SPEED); //Close grippers
   }
   //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
   arm->ManualRotateArm(oi->GetArmInput());
