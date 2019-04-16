@@ -540,7 +540,7 @@ void Robot::TeleopPeriodic()
     {
       arm->CheckHatchGripper(true); //Close grippers
       ToggleGrippersTimer++;
-      if (ToggleGrippersTimer > 30)
+      if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
       {
         drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
       }
@@ -558,7 +558,7 @@ void Robot::TeleopPeriodic()
     {
       arm->CheckHatchGripper(false); //Open grippers
       ToggleGrippersTimer++;
-      if (ToggleGrippersTimer > 30)
+      if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
       {
         drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
       }
