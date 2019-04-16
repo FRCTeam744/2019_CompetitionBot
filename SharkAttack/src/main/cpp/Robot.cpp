@@ -355,26 +355,77 @@ void Robot::AutoStateMachine()
     //drive by limelight
     GetDesiredLLDistances(autoArmPresets.at(path_count));
     drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
-    bool isLLDriveDone = drivetrain->AutoDrive(true, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
+    bool isLLFinished = drivetrain->AutoDrive(true, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
+
+    if (isLLFinished == false)
+    {
+      arm->CheckHatchGripper(autoIsGripperClosed); //Keep grippers in desired state grippers
+      ToggleGrippersTimer = 0;
+      lowestArmAngle = arm->GetCurrentArmPosition();
+    }
+    if (isLLFinished) //toggle gripper, move back and switch states
+    {
+      arm->CheckHatchGripper(!autoIsGripperClosed); //Toggle Grippers
+      ToggleGrippersTimer++;
+      if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER) // move backwards
+      {
+        drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+
+        //keep arm at lowest position seen
+        if (abs(arm->GetCurrentArmPosition()) < abs(lowestArmAngle))
+        {
+          lowestArmAngle = arm->GetCurrentArmPosition();
+        }
+        arm->MoveArmToPosition(lowestArmAngle, false, false, false);
+
+        oi->SetTargetArmPosition(lowestArmAngle);
+        oi->SetPlacingMode(false);
+      }
+      if(ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER + 30) 
+      {
+        //update path counter
+        path_count++;
+        //if no more paths, go to teleop
+        std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
+        if (path_count >= autoPathNames.size())
+        {
+          auto_state = TELEOP_STATE;
+        }
+        else //otherwise, initialize next path, reset arm move timer, and go to path follow state
+        {
+          //update autoIsGripperClosed
+          autoIsGripperClosed = !autoIsGripperClosed;
+          //init new paths
+          drivetrain->FollowPathInit(autoPathNames.at(path_count));
+          armMoveDelayTimer->Reset();
+          armMoveDelayTimer->Start();
+          std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
+
+          drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
+          //change state
+          auto_state = FOLLOW_PATH_STATE;
+        }
+      }
+    }
 
     //if done with drive by ll
-    if (isLLDriveDone)
-    {
-      std::cout << "Drive by LL Done" << std::endl;
+    // if (isLLDriveDone)
+    // {
+    //   std::cout << "Drive by LL Done" << std::endl;
 
-      //Toggle Hatch Panel Gripper
-      autoIsGripperClosed = !autoIsGripperClosed;
-      std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
-      arm->CheckHatchGripper(autoIsGripperClosed);
-      std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
+    //   //Toggle Hatch Panel Gripper
+    //   autoIsGripperClosed = !autoIsGripperClosed;
+    //   std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
+    //   arm->CheckHatchGripper(autoIsGripperClosed);
+    //   std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
 
-      //start and reset timer to wait for hatch mechanism to grip/release
-      hatchDelayTimer->Reset();
-      hatchDelayTimer->Start();
+    //   //start and reset timer to wait for hatch mechanism to grip/release
+    //   hatchDelayTimer->Reset();
+    //   hatchDelayTimer->Start();
 
-      //switch state
-      auto_state = DELAY_STATE;
-    }
+    //   //switch state
+    //   auto_state = DELAY_STATE;
+    // }
   }
   break;
   case DELAY_STATE:

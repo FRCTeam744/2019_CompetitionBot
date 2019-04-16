@@ -130,4 +130,7 @@ private:
   double lowestArmAngle;
 
   int ToggleGrippersTimer = 0;
+
+  double TIME_TO_MOVE_BACKWARDS = 0.4;
+  int LOOPS_TO_MOVE_BACKWARDS   = TIME_TO_MOVE_BACKWARDS/0.02;
 };
