@@ -131,6 +131,6 @@ private:
 
   int ToggleGrippersTimer = 0;
 
-  double TIME_TO_MOVE_BACKWARDS = 0.4;
-  int LOOPS_TO_MOVE_BACKWARDS   = TIME_TO_MOVE_BACKWARDS/0.02;
+  double TIME_TO_TOGGLE_GRIPPER = 0.4;
+  double LOOPS_TO_TOGGLE_GRIPPER   = TIME_TO_TOGGLE_GRIPPER/0.02;
 };
