@@ -275,11 +275,11 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     //drive hatch into place, and skip LL code if you've gotten near the target
     if (wantToDriveHatchInPlace)
     {
-        if (hatchPlaceTimer->Get() > 0.4)
+        if (hatchPlaceTimer->Get() > 0.15) //Was 0.4, suggested change by Sebastian, chanegd by Robert
         {
             if (StopMotorsTimer == 0)
             {
-                StopMotors();
+                //StopMotors();
                 StopMotorsTimer++;
             }
             return true;
