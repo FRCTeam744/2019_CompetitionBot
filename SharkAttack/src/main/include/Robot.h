@@ -134,5 +134,5 @@ private:
   const double TIME_TO_TOGGLE_GRIPPER = 0.4;
   const double LOOPS_TO_TOGGLE_GRIPPER   = TIME_TO_TOGGLE_GRIPPER/0.02;
 
-  const double AUTO_RELEASE_SPEED = -0.2;
+  const double AUTO_RELEASE_SPEED = 0.6;
 };

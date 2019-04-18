@@ -94,7 +94,7 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
-    std::cout << "Auto Init Start Here" << std::endl;
+  std::cout << "Auto Init Start Here" << std::endl;
 
   if (isShufflePopulated == false)
   {
@@ -225,9 +225,9 @@ void Robot::AutonomousInit()
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
-  else if(m_autoSelected == kAutoHatchHighRightRocket)
+  else if (m_autoSelected == kAutoHatchHighRightRocket)
   {
-//autoPathNames.push_back(""); //make right rocket path
+    //autoPathNames.push_back(""); //make right rocket path
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
 
@@ -235,7 +235,7 @@ void Robot::AutonomousInit()
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
     auto_state = FOLLOW_PATH_STATE;
   }
-  else if(m_autoSelected == kAutoHatchLowRightRocket)
+  else if (m_autoSelected == kAutoHatchLowRightRocket)
   {
     //autoPathNames.push_back("");
     autoPathDirections.push_back(drivetrain->FORWARD);
@@ -381,7 +381,7 @@ void Robot::AutoStateMachine()
         oi->SetTargetArmPosition(lowestArmAngle);
         oi->SetPlacingMode(false);
       }
-      if(ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER + 30) 
+      if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER + 30)
       {
         //update path counter
         path_count++;
@@ -528,44 +528,47 @@ void Robot::TeleopPeriodic()
   // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
   bool isLLFinished = drivetrain->AutoDrive((oi->GetDriveByLimelightPickup() || oi->GetDriveByLimelightPlace()), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
   // bool isLLFinishedPlace = drivetrain->AutoDrive(oi->GetDriveByLimelightPlace(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
-  
-  if (oi->GetDriveByLimelightPickup())
+
+  if (!oi->GetPlacingMode()) //not in ball mode, aka if is in hatch mode
   {
-    if (isLLFinished == false)
+    if (oi->GetDriveByLimelightPickup())
     {
-      arm->CheckHatchGripper(false); //Open grippers
-      ToggleGrippersTimer = 0;
-    }
-    if (isLLFinished)
-    {
-      arm->CheckHatchGripper(true); //Close grippers
-      ToggleGrippersTimer++;
-      if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
+      if (isLLFinished == false)
       {
-        if(!oi->GetPlacingMode()) //not in ball mode, aka if is in hatch mode
+        arm->CheckHatchGripper(false); //Open grippers
+        ToggleGrippersTimer = 0;
+      }
+      if (isLLFinished)
+      {
+        arm->CheckHatchGripper(true); //Close grippers
+        ToggleGrippersTimer++;
+        if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
         {
-          drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+          if (!oi->GetPlacingMode()) //not in ball mode, aka if is in hatch mode
+          {
+            drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+          }
         }
       }
     }
-  }
 
-  if (oi->GetDriveByLimelightPlace())
-  {
-    if (isLLFinished == false)
+    if (oi->GetDriveByLimelightPlace())
     {
-      arm->CheckHatchGripper(true); //Close grippers
-      ToggleGrippersTimer = 0;
-    }
-    if (isLLFinished)
-    {
-      arm->CheckHatchGripper(false); //Open grippers
-      ToggleGrippersTimer++;
-      if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
+      if (isLLFinished == false)
       {
-        if(!oi->GetPlacingMode()) //not in ball mode, aka if is in hatch mode
+        arm->CheckHatchGripper(true); //Close grippers
+        ToggleGrippersTimer = 0;
+      }
+      if (isLLFinished)
+      {
+        arm->CheckHatchGripper(false); //Open grippers
+        ToggleGrippersTimer++;
+        if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
         {
-          drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+          if (!oi->GetPlacingMode()) //not in ball mode, aka if is in hatch mode
+          {
+            drivetrain->AutoDriveBackwards(true, true); //Move backwards automatically
+          }
         }
       }
     }
