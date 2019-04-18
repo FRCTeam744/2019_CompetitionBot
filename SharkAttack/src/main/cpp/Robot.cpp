@@ -131,7 +131,7 @@ void Robot::AutonomousInit()
     oi->SetArmWristInManual(false, false);
     arm->UpdateArmAndWristInManual(false, false);
 
-    autoPathNames.push_back("CenterPlatformToRightShip");
+    autoPathNames.push_back("CenterPlatformToLeftFrontCargo");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
@@ -139,7 +139,7 @@ void Robot::AutonomousInit()
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
 
-    autoPathNames.push_back("RightStationToSecondHatch");
+    autoPathNames.push_back("RightStationToRightCargo1");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
@@ -153,7 +153,7 @@ void Robot::AutonomousInit()
     oi->SetArmWristInManual(false, false);
     arm->UpdateArmAndWristInManual(false, false);
 
-    autoPathNames.push_back("CenterPlatformToLeftShip");
+    autoPathNames.push_back("CenterPlatformToLeftFrontCargo");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
@@ -161,7 +161,7 @@ void Robot::AutonomousInit()
     autoPathDirections.push_back(drivetrain->REVERSE);
     autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
 
-    autoPathNames.push_back("LeftStationToSecondHatch");
+    autoPathNames.push_back("LeftStationToLeftCargo1");
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
@@ -227,7 +227,18 @@ void Robot::AutonomousInit()
   }
   else if (m_autoSelected == kAutoHatchHighRightRocket)
   {
-    //autoPathNames.push_back(""); //make right rocket path
+    oi->SetArmWristInManual(false, false);
+    arm->UpdateArmAndWristInManual(false, false);
+
+    autoPathNames.push_back("RightPlatformToRightFrontRocket");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
+
+    autoPathNames.push_back("RightFrontRocketToRightStation");
+    autoPathDirections.push_back(drivetrain->REVERSE);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    autoPathNames.push_back("RightStationToRightBackRocket"); //high on opposite side
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_HIGH_HATCH_POSITION);
 
@@ -237,7 +248,18 @@ void Robot::AutonomousInit()
   }
   else if (m_autoSelected == kAutoHatchLowRightRocket)
   {
-    //autoPathNames.push_back("");
+    oi->SetArmWristInManual(false, false);
+    arm->UpdateArmAndWristInManual(false, false);
+
+    autoPathNames.push_back("RightPlatformToRightFrontRocket");
+    autoPathDirections.push_back(drivetrain->FORWARD);
+    autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
+
+    autoPathNames.push_back("RightFrontRocketToRightStation");
+    autoPathDirections.push_back(drivetrain->REVERSE);
+    autoArmPresets.push_back(oi->BACK_LOW_HATCH_POSITION);
+
+    autoPathNames.push_back("RightStationToRightBackRocket"); //high on opposite side
     autoPathDirections.push_back(drivetrain->FORWARD);
     autoArmPresets.push_back(oi->FRONT_LOW_HATCH_POSITION);
 
