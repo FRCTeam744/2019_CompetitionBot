@@ -44,7 +44,7 @@ class Fourbar{
         double rotationsSinceRetractTripped;
         double rotationsAtRetractTripped;
 
-        const double DESIRED_MM_TO_HOME = 0.53;
+        const double DESIRED_MM_TO_HOME = 0.73;
         const double GEAR_RATIO = 3.0;
         const double MM_PER_REVOLUTIONS = 2.0;
         const double ROTATIONS_TO_HOME = DESIRED_MM_TO_HOME * GEAR_RATIO / MM_PER_REVOLUTIONS;
