@@ -93,10 +93,10 @@ class Drivetrain
 	// const double INTERCEPT_MID_BALL_BACK = 14.86;
 
 	//Pipelines
-	const double HATCH_LOW_HIGH_FINAL_PIPELINE = 4;						   //was 0
+	const double HATCH_LOW_HIGH_FINAL_PIPELINE = 1; //vision	  //was 4
 	const double HATCH_MID_FINAL_PIPELINE = HATCH_LOW_HIGH_FINAL_PIPELINE; //was 2
 	const double BALL_CARGO_SHIP_PIPELINE = HATCH_LOW_HIGH_FINAL_PIPELINE; //6;
-	const double DRIVER_PIPELINE = 1;
+	const double DRIVER_PIPELINE = 4; //was 1
 
 	//Distances
 	//Front
