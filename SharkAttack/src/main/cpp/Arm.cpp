@@ -240,7 +240,7 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
     // std::cout << "isArmInManual" << isArmInManual << std::endl;
     if (!isArmInManual)
     {
-        std::cout << "Set arm reference: " << targetPosition << std::endl;
+        // std::cout << "Set arm reference: " << targetPosition << std::endl;
         armPID->SetReference(targetPosition, rev::ControlType::kPosition, 0, FFVoltage);
     }
 
@@ -330,14 +330,14 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
 void Arm::OpenHatchGripper()
 {
     hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
-    std::cout << "Open Hatch Gripper" << std::endl;
+    // std::cout << "Open Hatch Gripper" << std::endl;
     isHatchGripperClosed = false;
 }
 
 void Arm::CloseHatchGripper()
 {
     hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
-    std::cout << "Close Hatch Gripper" << std::endl;
+    // std::cout << "Close Hatch Gripper" << std::endl;
     isHatchGripperClosed = true;
 }
 
@@ -351,7 +351,7 @@ void Arm::CheckHatchGripper(bool isClosed)
     {
         wantHatchGripperClosed = false;
     }
-    std::cout << "wantHatchGripperClosed: " << wantHatchGripperClosed << std::endl;
+    // std::cout << "wantHatchGripperClosed: " << wantHatchGripperClosed << std::endl;
 }
 
 void Arm::PrintArmShuffleInfo()
@@ -405,8 +405,8 @@ void Arm::PrintArmInfotoConsole()
         compPrintCount++;
         if (compPrintCount > 1000)
         {
-            std::cout << "Arm Amps Left: " << leftArm->GetOutputCurrent();
-            std::cout << "Arm Amps Right: " << rightArm->GetOutputCurrent();
+            // std::cout << "Arm Amps Left: " << leftArm->GetOutputCurrent();
+            // std::cout << "Arm Amps Right: " << rightArm->GetOutputCurrent();
             compPrintCount = 0;
         }
         else
@@ -414,8 +414,8 @@ void Arm::PrintArmInfotoConsole()
             printCount++;
             if (printCount > 30)
             {
-                std::cout << "Arm Amps Testing Left: " << leftArm->GetOutputCurrent();
-                std::cout << "Arm Amps Testing Right: " << rightArm->GetOutputCurrent();
+                // std::cout << "Arm Amps Testing Left: " << leftArm->GetOutputCurrent();
+                // std::cout << "Arm Amps Testing Right: " << rightArm->GetOutputCurrent();
                 printCount = 0;
             }
         }
@@ -463,7 +463,7 @@ void Arm::SetToMatchMode()
     rightArm->SetClosedLoopRampRate(RAMP_RATE_FIELD);
     leftArm->SetClosedLoopRampRate(RAMP_RATE_FIELD);
     armPID->SetOutputRange(MIN_POWER_ARM_FIELD, MAX_POWER_ARM_FIELD);
-    std::cout << "Set to Match Mode is working " << std::endl;
+    // std::cout << "Set to Match Mode is working " << std::endl;
 }
 
 void Arm::ToggleDefenseMode(bool wantsDefenseMode) {

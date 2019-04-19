@@ -35,7 +35,7 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
     // rightDriveVision = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     // leftDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     // rightDrivePreComp = ShuffleManager::PreCompTab->Add("Ft-Sec-Right", 0.0).GetEntry();
-    checkDriveTrainGearDriver = ShuffleManager::DriverTab->Add("In High Gear?", false).GetEntry(); //temp false 
+    checkDriveTrainGearDriver = ShuffleManager::DriverTab->Add("In High Gear?", true).GetEntry(); //temp false 
     // speedErrorLeftPreComp = ShuffleManager::PreCompTab->Add("Speed Error Left", 0.0).GetEntry();
     // speedErrorRightPreComp = ShuffleManager::PreCompTab->Add("Speed Error Right", 0.0).GetEntry();    
     checkArmManualArmWrist = ShuffleManager::ArmWristTab->Add("Arm in Manual?", true).GetEntry();

@@ -161,6 +161,7 @@ class Drivetrain
 	double rightPower = 0.0;
 	double desiredRightFPS = 3.0;
 	double desiredLeftFPS = 3.0;
+	bool driveTrainGearShuffle = true;
 
 	double realRightSpeedNUPer100ms = 0.0;
 	double realLeftSpeedNUPer100ms = 0.0;

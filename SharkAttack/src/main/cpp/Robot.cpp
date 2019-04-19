@@ -20,7 +20,7 @@ void Robot::RobotInit()
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
-  // led = LED::GetInstance();
+  led = LED::GetInstance();
   hatchDelayTimer = new frc::Timer();
   armMoveDelayTimer = new frc::Timer();
   periodTimeRemaining = new frc::Timer();
@@ -94,7 +94,10 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
-  std::cout << "Auto Init Start Here" << std::endl;
+  // std::cout << "Auto Init Start Here" << std::endl;
+
+  
+  led->LEDsOff();
 
   if (isShufflePopulated == false)
   {
@@ -110,7 +113,7 @@ void Robot::AutonomousInit()
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   //     kAutoNameDefault);
-  std::cout << "Auto selected: " << m_autoSelected << std::endl;
+  // std::cout << "Auto selected: " << m_autoSelected << std::endl;
   path_count = 0;
   autoIsGripperClosed = true;
   armMoveDelayTimer->Reset();
@@ -361,7 +364,7 @@ void Robot::AutoStateMachine()
     bool isPathDone = drivetrain->FollowPath(autoPathDirections[path_count]);
     if (isPathDone)
     {
-      std::cout << "Path is done, switch to DRIVE_BY_LL" << std::endl;
+      // std::cout << "Path is done, switch to DRIVE_BY_LL" << std::endl;
       auto_state = DRIVE_BY_LL_STATE;
     }
   }
@@ -408,7 +411,7 @@ void Robot::AutoStateMachine()
         //update path counter
         path_count++;
         //if no more paths, go to teleop
-        std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
+        // std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
         if (path_count >= autoPathNames.size())
         {
           auto_state = TELEOP_STATE;
@@ -421,7 +424,7 @@ void Robot::AutoStateMachine()
           drivetrain->FollowPathInit(autoPathNames.at(path_count));
           armMoveDelayTimer->Reset();
           armMoveDelayTimer->Start();
-          std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
+          // std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
 
           drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
           //change state
@@ -457,7 +460,7 @@ void Robot::AutoStateMachine()
     {
       path_count++;
       //if no more paths, go to teleop
-      std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
+      // std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
       if (path_count >= autoPathNames.size())
       {
         auto_state = TELEOP_STATE;
@@ -470,7 +473,7 @@ void Robot::AutoStateMachine()
         armMoveDelayTimer->Start();
         backupDelayTimer->Reset();
         backupDelayTimer->Start();
-        std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
+        // std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
 
         drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
         auto_state = FOLLOW_PATH_STATE;
@@ -480,7 +483,7 @@ void Robot::AutoStateMachine()
     else
     {
       arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
-      std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
+      // std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
     }
   }
   break;
@@ -490,7 +493,7 @@ void Robot::AutoStateMachine()
     {
       path_count++;
       //if no more paths, go to teleop
-      std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
+      // std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
       if (path_count >= autoPathNames.size())
       {
         auto_state = TELEOP_STATE;
@@ -501,7 +504,7 @@ void Robot::AutoStateMachine()
         drivetrain->FollowPathInit(autoPathNames.at(path_count));
         armMoveDelayTimer->Reset();
         armMoveDelayTimer->Start();
-        std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
+        // std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
 
         drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
         auto_state = FOLLOW_PATH_STATE;
@@ -513,7 +516,7 @@ void Robot::AutoStateMachine()
     {
       arm->MoveArmToPosition(lowestArmAngle, false, false, false);
       drivetrain->AutoDriveBackwards(false, true);
-      std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
+      // std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
     }
   }
   break;
@@ -526,6 +529,8 @@ void Robot::AutoStateMachine()
 
 void Robot::TeleopInit()
 {
+  isBeforeMatch = false;
+
   if (isShufflePopulated == false)
   {
     shufflemanager->ShuffleInit();
@@ -536,7 +541,7 @@ void Robot::TeleopInit()
 
 void Robot::TeleopPeriodic()
 {
-  // led->IsHatchOpen(arm->GetIsGripperGripped(), oi->GetDriveByLimelight());
+  led->IsHatchOpen(arm->GetIsGripperGripped(), (oi->GetDriveByLimelightPlace() || oi->GetDriveByLimelightPickup()));
 
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
@@ -647,15 +652,15 @@ void Robot::DisabledPeriodic()
     isShufflePopulated = true;
   }
 
-  // if (isBeforeMatch)
-  // {
-  //   led->StartUp();
-  // }
+  if (isBeforeMatch)
+  {
+    led->StartUp();
+  }
 
-  // if (!isBeforeMatch)
-  // {
-  //   led->ShutDown();
-  // }
+  if (!isBeforeMatch)
+  {
+    led->ShutDown();
+  }
 
   // std::cout << "DisabledPeriodic running" << std::endl;
   // std::cout << "hasSetUpForMatch: " << hasSetUpForMatch << std::endl;

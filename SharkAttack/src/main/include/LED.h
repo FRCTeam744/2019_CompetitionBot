@@ -7,6 +7,7 @@
 #pragma once
 
 #include <frc/SerialPort.h>
+#include <frc/DigitalOutput.h>
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -34,6 +35,8 @@ class LED {
         LED();
 
         frc::SerialPort *arduino;
+
+        frc::DigitalOutput *byte1, *byte2, *byte3, *byte4;
         
 
 };

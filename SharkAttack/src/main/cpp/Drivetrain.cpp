@@ -124,6 +124,9 @@ void Drivetrain::PrintDriveShuffleInfo()
     frc::SmartDashboard::PutNumber("Right Speed FPS", rightDashboardSpeed);
     frc::SmartDashboard::PutNumber("Left Speed FPS", leftDashboardSpeed);
 
+    ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkDriveTrainGearDriver, driveTrainGearShuffle);
+
+
     // frc::SmartDashboard::PutNumber("NU-100ms Left", leftBack->GetSelectedSensorVelocity(0));
     // frc::SmartDashboard::PutNumber("NU-100ms Right", rightBack->GetSelectedSensorVelocity(0));
     // frc::SmartDashboard::PutNumber("Target Area", targetArea);
@@ -161,7 +164,7 @@ std::string Drivetrain::get_trajectory_file(std::string name)
     frc::filesystem::GetDeployDirectory(path);
     wpi::sys::path::append(path, "paths", name + ".pf1.csv");
 
-    std::cout << "Path: " << path << std::endl;
+    // std::cout << "Path: " << path << std::endl;
     if (!wpi::sys::fs::exists(path))
     {
         throw std::runtime_error("Path " + std::string(path.c_str()) + " does not exist!");
@@ -455,7 +458,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
             overrideEnabled = true;
         }
     }
-    std::cout << " wantToNotMove," << wantToNotMove << std::endl;
+    // std::cout << " wantToNotMove," << wantToNotMove << std::endl;
 
     if (abs(distanceError) < 2 && abs(angleError) < ALLOWED_ANGLE_ERROR_LL)
     {
@@ -527,6 +530,7 @@ double Drivetrain::LimelightGet(std::string key)
 
 void Drivetrain::CheckSwitchGears(bool isHighGear)
 {
+    driveTrainGearShuffle = isHighGear;
 
     if (isHighGear)
     {
@@ -563,8 +567,8 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
         {
             desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;
         }
-        std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
-        std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
+        // std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
+        // std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
 
         leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
         rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
@@ -604,8 +608,8 @@ void Drivetrain::AutoDriveBackwards(bool isBut, bool isVelocityControl)
         {
             desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;
         }
-        std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
-        std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
+        // std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
+        // std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
 
         leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
         rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);

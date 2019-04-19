@@ -336,7 +336,7 @@ double OI::GetTargetArmPosition()
             isInBallPickup = false;
         }
         wasDPADRightPressed = xbox->GetPOV(0) == DPAD_RIGHT;
-        std::cout << "Was DPAD Right Pressed: " << wasDPADRightPressed << std::endl;
+        // std::cout << "Was DPAD Right Pressed: " << wasDPADRightPressed << std::endl;
 
         if (xbox->GetPOV(0) == DPAD_DOWN)
         {
@@ -368,7 +368,7 @@ double OI::GetTargetArmPosition()
 
         if (xbox->GetBButton())
         {
-            std::cout << "B Button Pressed, target position FRONT_MID_HATCH_POSITION" << std::endl;
+            // std::cout << "B Button Pressed, target position FRONT_MID_HATCH_POSITION" << std::endl;
             targetArmPosition = FRONT_MID_HATCH_POSITION;
             isArmInManual = false;
             isWristInManual = false;
@@ -397,7 +397,7 @@ double OI::GetTargetArmPosition()
 
         if (xbox->GetPOV(0) == DPAD_RIGHT)
         {
-            std::cout << "DPAD RIGHT pressed, target position BACK_MID_HATCH_POSITION" << std::endl;
+            // std::cout << "DPAD RIGHT pressed, target position BACK_MID_HATCH_POSITION" << std::endl;
             targetArmPosition = BACK_MID_HATCH_POSITION;
             isArmInManual = false;
             isWristInManual = false;
