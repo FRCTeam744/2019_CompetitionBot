@@ -100,7 +100,8 @@ Drivetrain::Drivetrain()
     prevT = 0;
 
     //Gyro
-    ahrs = new AHRS(SerialPort::Port::kUSB);
+    // ahrs = new AHRS(SerialPort::Port::kUSB);
+    ahrs = new AHRS(SPI::Port::kMXP);
 }
 
 //Public Methods

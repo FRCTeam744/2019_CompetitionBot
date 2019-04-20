@@ -34,8 +34,8 @@ class ShuffleManager {
 		//Drivetrain.cpp
 		nt::NetworkTableEntry leftDriveVision;
 		nt::NetworkTableEntry rightDriveVision;
-		// nt::NetworkTableEntry leftDrivePreComp;
-		// nt::NetworkTableEntry rightDrivePreComp;
+		// nt::NetworkTableEntry leftDriveDriver;
+		// nt::NetworkTableEntry rightDriveDriver;
 		nt::NetworkTableEntry headingVision;
 		nt::NetworkTableEntry skewVision;
 		nt::NetworkTableEntry currentDistanceInchesVision;
