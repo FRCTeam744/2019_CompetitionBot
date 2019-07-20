@@ -100,15 +100,6 @@ void Fourbar::FourbarHome(bool homingBut){
 }
 
 void Fourbar::UpdateFourbarSpeed() {
-    
-    // frc::SmartDashboard::PutBoolean("extended switch", IsExtendedTripped());
-    // frc::SmartDashboard::PutBoolean("retracted switch", IsRetractedTripped());
-//    if(isInitialized == false){
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Extended Switch", IsExtendedTripped());
-    // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->FourbarTab, "Retracted Switch", IsRetractedTripped());
-  //      isInitialized = true;
-  //  }
-
     newSpeed = frc::SmartDashboard::GetNumber("fourbarSpeed", 0.1);
     if (fourbarSpeed != newSpeed){
         fourbarSpeed = newSpeed;

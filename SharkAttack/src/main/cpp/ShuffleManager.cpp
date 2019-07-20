@@ -20,9 +20,14 @@ ShuffleManager *ShuffleManager::GetInstance(){
 ShuffleManager::ShuffleManager(){
 
 }
-//printing methods are all in Robot.cpp/RobotPeriodic: drivetrain->PrintDriveShuffleInfo(); fourbar->PrintFourbarShuffleInfo(); arm->PrintArmShuffleInfo(); 
+//printing methods are all in Robot.cpp/RobotPeriodic:
+//drivetrain->PrintDriveShuffleInfo()
+//fourbar->PrintFourbarShuffleInfo()
+//arm->PrintArmShuffleInfo(); 
 
-void ShuffleManager::ShuffleInit(){ //variables were declared in .h, giving them values/initializing them here
+void ShuffleManager::ShuffleInit(){
+//variables were declared in .h, giving them values/initializing them here
+//letting variables accress the tabs in SB
     DriverTab = &frc::Shuffleboard::GetTab("DriverView");
     //PreCompTab = &frc::Shuffleboard::GetTab("Pre-Comp Check");
     ArmWristTab = &frc::Shuffleboard::GetTab("Arm&Wrist Debug");
@@ -30,7 +35,8 @@ void ShuffleManager::ShuffleInit(){ //variables were declared in .h, giving them
     FourbarTab = &frc::Shuffleboard::GetTab("Fourbar Testing");
 }
 
-void ShuffleManager::VariableInit(){ //variables were declared in .h, giving them values/initializing them here
+//variables were declared in .h, giving them values/initializing them here
+void ShuffleManager::VariableInit(){
     // leftDriveVision = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     // rightDriveVision = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     // leftDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
@@ -102,10 +108,12 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
     }
 }
 
+//precaution in case floats are used
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, float val){
     if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
        if(tab == DriverTab){
-        var.SetDouble((double)val); //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+        //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+        var.SetDouble((double)val);
        }
     }
     else
@@ -117,7 +125,8 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, int val){
     if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
        if(tab == DriverTab){
-        var.SetDouble((double)val); //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+        //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+        var.SetDouble((double)val);
        }
     }
     else

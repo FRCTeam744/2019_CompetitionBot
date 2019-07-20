@@ -90,8 +90,6 @@ Arm::Arm()
     //Initialize values for arm movement state machine
     isArmInBack = false;
     isArmSwitchingSides = false;
-    isArmMoving = false;
-    isWristMoving = false;
     isArmInDefenseMode = false;
 }
 
@@ -337,19 +335,19 @@ void Arm::CloseHatchGripper()
     isHatchGripperClosed = true;
 }
 
-void Arm::CheckHatchGripper(bool isClosed)
+void Arm::SetDesiredHatchGripperState(bool wantClosed)
 {
-    if (isClosed)
+    if (wantClosed)
     {
         wantHatchGripperClosed = true;
     }
-    else if (!isClosed)
+    else if (!wantClosed)
     {
         wantHatchGripperClosed = false;
     }
-    // std::cout << "wantHatchGripperClosed: " << wantHatchGripperClosed << std::endl;
 }
 
+//commented out lines are functional, preferences of drive team
 void Arm::PrintArmShuffleInfo()
 {
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->leftArmCurrentArmWrist, leftArm->GetOutputCurrent());
@@ -373,65 +371,20 @@ void Arm::PrintArmShuffleInfo()
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristManualDriver, isWristInManual);
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkArmManualArmWrist, isArmInManual);
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristManualArmWrist, isWristInManual);
-   
-    //frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
-    //frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
-    // frc::SmartDashboard::PutNumber("Left Arm Current", leftArm->GetOutputCurrent());
-    // frc::SmartDashboard::PutNumber("Right Arm Current", rightArm->GetOutputCurrent());
-
-    // frc::SmartDashboard::PutBoolean("IsArmInManual", isArmInManual);
-    // frc::SmartDashboard::PutBoolean("IsWristInManual", isWristInManual); //these
 
     frc::SmartDashboard::PutBoolean("Is Gripper Closed", isHatchGripperClosed);
-
     frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
-    // frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
-    // frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
 }
-
-void Arm::PrintArmInfotoConsole()
-{
-    if (frc::DriverStation::GetInstance().IsFMSAttached() == true)
-    {
-        compPrintCount++;
-        if (compPrintCount > 1000)
-        {
-            // std::cout << "Arm Amps Left: " << leftArm->GetOutputCurrent();
-            // std::cout << "Arm Amps Right: " << rightArm->GetOutputCurrent();
-            compPrintCount = 0;
-        }
-        else
-        {
-            printCount++;
-            if (printCount > 30)
-            {
-                // std::cout << "Arm Amps Testing Left: " << leftArm->GetOutputCurrent();
-                // std::cout << "Arm Amps Testing Right: " << rightArm->GetOutputCurrent();
-                printCount = 0;
-            }
-        }
-    }
-}
-
-// double Arm::GetMAX_FF_GAIN()
-// {
-//     return MAX_FF_GAIN;
-// }
-
-// void Arm::SetMAX_FF_GAIN(double ArmFFVoltage)
-// {
-//     MAX_FF_GAIN = ArmFFVoltage;
-// }
 
 void Arm::SetToMatchMode()
 {
     rightArm->SetClosedLoopRampRate(RAMP_RATE_FIELD);
     leftArm->SetClosedLoopRampRate(RAMP_RATE_FIELD);
     armPID->SetOutputRange(MIN_POWER_ARM_FIELD, MAX_POWER_ARM_FIELD);
-    // std::cout << "Set to Match Mode is working " << std::endl;
 }
 
+//not used on robot, but functional
 void Arm::ToggleDefenseMode(bool wantsDefenseMode) {
     if(wantsDefenseMode && !isArmInDefenseMode) {
         leftArm->SetIdleMode(BRAKE);
@@ -452,7 +405,7 @@ void Arm::ToggleDefenseMode(bool wantsDefenseMode) {
         armPID->SetD(D_GAIN_ARM);
         armPID->SetI(I_GAIN_ARM);
         armPID->SetIZone(I_ZONE_ARM);
-        // armPID->SetFF(ARM_FF_GAIN_DEFNSE);        
+        // armPID->SetFF(ARM_FF_GAIN_DEFNSE);
         isArmInDefenseMode = false;
     }
 }

@@ -30,11 +30,39 @@ class Arm
 public:
   static Arm *GetInstance();
 
+  /**
+    @brief Controls the arm from a manual input, without PID control
+    @param manualArmPower The amount of power in percent output to set the arm motors to
+    When in the arm is in manual mode, this method is responsible for taking the motor input value 
+    and setting it to the arm motors.  
+  */
   void ManualRotateArm(double manualArmPower);
+
+  /**
+    @brief Controls the wrist from a manual input, without PID control
+    @param manualWristPower The amount of power in percent output to set the wrist motor to
+    When in the wrist is in manual mode, this method is responsible for taking the motor input value 
+    and setting it to the wrist motor.
+  */
   void ManualRotateWrist(double manualWristPower);
+
+  /**
+    @brief run the ball intake motors
+    @param intakeSpeed The amount of power in percent output to set the ball intake motor to
+    Sets the ball intake motors to the given input speed.
+  */
   void RunIntake(double intakeSpeed);
+  /**
+    @brief 
+    @param targetPosition
+    @param isInBallMode
+    @param isInBallPickup
+    @param isInCargoShipMode
+    
+    
+  */
   void MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode); //Degrees
-  void CheckHatchGripper(bool isClosed);
+  void SetDesiredHatchGripperState(bool wantClosed);
   void SetArmToBrake();
   void SetArmToCoast();
   void SetToMatchMode();
@@ -43,13 +71,9 @@ public:
   void UpdateArmAndWristInManual(bool arm, bool wrist);
 
   void PrintArmShuffleInfo();
-  void PrintArmInfotoConsole();
   void ToggleDefenseMode(bool isArmInDefenseMode);
 
   bool GetIsGripperGripped();
-
-  double GetMAX_FF_GAIN();
-  void SetMAX_FF_GAIN(double ArmFFVoltage);
 
 private:
   static Arm *s_instance;
@@ -58,7 +82,16 @@ private:
   
   void MoveWristToPosition(double wristTargetPosition); //Degrees
   double FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode);
+  
+  /**
+    @brief Opens hatch gripper
+  */
   void OpenHatchGripper();
+  
+  /**
+    @brief Closes hatch gripper
+  
+  */
   void CloseHatchGripper();
 
   //Private Objects
@@ -72,9 +105,7 @@ private:
 
   frc::DoubleSolenoid *hatchGripper;
 
-  frc::PowerDistributionPanel *pdp;
-
-  //Instance Variables
+  //Instance Variables - state of arm/wrist
   bool hasBall = false;
   bool isArmInManual;
   bool isWristInManual;
@@ -90,8 +121,6 @@ private:
 
   bool isArmInBack;
   bool isArmSwitchingSides;
-  bool isArmMoving;
-  bool isWristMoving;
   bool isInHatchMode = true;
   bool isHatchGripperClosed = true;
   bool wantHatchGripperClosed = true;
@@ -108,6 +137,7 @@ private:
   double currentArmPos;
   double currentWristPos;
 
+  //----------------------------------CONSTANTS-------------------------------------------
   //CAN Motor IDs
   const int LEFT_ARM_ID = 42;
   const int RIGHT_ARM_ID = 43;
@@ -115,12 +145,11 @@ private:
   const int RIGHT_WRIST_ID = 45; 
   const int INTAKE_ID = 46;
 
+  //Gripper Solenoid IDs
   const int SOLENOID_FORWARD = 2;
   const int SOLENOID_REVERSE = 3;
 
-  const int INTAKE_PDP_PORT = 10;
-  const double INTAKE_MAX_CURRENT = 40.0;
-
+  //Arm/Wrist Current Limits
   const int ARM_CURRENT_LIMIT = 40;
   const int WRIST_CURRENT_LIMIT = 10;
 
