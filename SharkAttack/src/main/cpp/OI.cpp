@@ -21,7 +21,6 @@ OI *OI::GetInstance()
 // Constructor
 OI::OI()
 {
-
     preferences = frc::Preferences::GetInstance();
 
     //Intantiates the controller objects for the drivers

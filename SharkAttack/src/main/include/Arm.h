@@ -4,6 +4,14 @@
 
 /*----------------------------------------------------------------------------------*/
 
+/** doxygen example
+    @brief Returns best target based on current planks.
+    @param num_Robots Number of robots in game.
+    @return The robot with best current plank.
+    Loops through the robots in current state to find the robot with the highest
+    value plank. Returns this robot if found, otherwise returns an empty Robot.
+*/
+
 #pragma once
 #include <ctre/Phoenix.h>
 #include <rev/CANSparkMax.h>
@@ -22,9 +30,9 @@ class Arm
 public:
   static Arm *GetInstance();
 
-  void ManualRotateArm(double input);
-  void ManualRotateWrist(double input);
-  void RunIntake(double input);
+  void ManualRotateArm(double manualArmPower);
+  void ManualRotateWrist(double manualWristPower);
+  void RunIntake(double intakeSpeed);
   void MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode); //Degrees
   void CheckHatchGripper(bool isClosed);
   void SetArmToBrake();
@@ -33,8 +41,6 @@ public:
   double GetCurrentArmPosition();
 
   void UpdateArmAndWristInManual(bool arm, bool wrist);
-
-  void ManualCalibrateArm();
 
   void PrintArmShuffleInfo();
   void PrintArmInfotoConsole();
@@ -49,15 +55,14 @@ private:
   static Arm *s_instance;
   Arm();
 
+  
   void MoveWristToPosition(double wristTargetPosition); //Degrees
   double FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode);
-  bool GetArmLimitSwitch();
-  bool GetWristLimitSwitch();
   void OpenHatchGripper();
   void CloseHatchGripper();
 
   //Private Objects
-  rev::CANSparkMax *leftArm, *rightArm, *leftWrist;
+  rev::CANSparkMax *leftArm, *rightArm, *wrist;
   VictorSPX *intake;
 
   rev::CANEncoder *armEncoder;
@@ -65,17 +70,11 @@ private:
   rev::CANPIDController *armPID;
   rev::CANPIDController *wristPID;
 
-  frc::DigitalInput *armLimitSwitch;
-  frc::DigitalInput *wristLimitSwitch;
-
   frc::DoubleSolenoid *hatchGripper;
 
   frc::PowerDistributionPanel *pdp;
 
   //Instance Variables
-  bool wasArmLimitSwitchTripped;
-  bool wasWristLimitSwitchTripped;
-
   bool hasBall = false;
   bool isArmInManual;
   bool isWristInManual;
@@ -110,11 +109,14 @@ private:
   double currentWristPos;
 
   //CAN Motor IDs
-  const int LEFT_ARM_ID = 42;    //42 is actual, was changed for testing. Change back
-  const int RIGHT_ARM_ID = 43;   //43 is actual
-  const int LEFT_WRIST_ID = 44;  //44 is actual
-  const int RIGHT_WRIST_ID = 45; //45 is actual, was changed for testing. Change back
+  const int LEFT_ARM_ID = 42;
+  const int RIGHT_ARM_ID = 43;
+  const int LEFT_WRIST_ID = 44;
+  const int RIGHT_WRIST_ID = 45; 
   const int INTAKE_ID = 46;
+
+  const int SOLENOID_FORWARD = 2;
+  const int SOLENOID_REVERSE = 3;
 
   const int INTAKE_PDP_PORT = 10;
   const double INTAKE_MAX_CURRENT = 40.0;

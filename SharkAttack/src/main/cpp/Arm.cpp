@@ -25,19 +25,16 @@ Arm::Arm()
     //Initialize Arm Objects
     leftArm = new rev::CANSparkMax(LEFT_ARM_ID, BRUSHLESS);
     rightArm = new rev::CANSparkMax(RIGHT_ARM_ID, BRUSHLESS);
-    leftWrist = new rev::CANSparkMax(LEFT_WRIST_ID, BRUSHLESS);
+    wrist = new rev::CANSparkMax(LEFT_WRIST_ID, BRUSHLESS);
     intake = new VictorSPX(INTAKE_ID);
 
-    hatchGripper = new frc::DoubleSolenoid(2, 3);
-
-    armLimitSwitch = new frc::DigitalInput(2);
-    wristLimitSwitch = new frc::DigitalInput(3);
+    hatchGripper = new frc::DoubleSolenoid(SOLENOID_FORWARD, SOLENOID_REVERSE);
 
     armEncoder = new rev::CANEncoder(*rightArm);
     armPID = new rev::CANPIDController(*rightArm);
 
-    wristEncoder = new rev::CANEncoder(*leftWrist);
-    wristPID = new rev::CANPIDController(*leftWrist);
+    wristEncoder = new rev::CANEncoder(*wrist);
+    wristPID = new rev::CANPIDController(*wrist);
 
     //ARM PositionPID SETUP
     rightArm->SetClosedLoopRampRate(RAMP_RATE_PIT);
@@ -48,14 +45,11 @@ Arm::Arm()
     armPID->SetI(I_GAIN_ARM);
     armPID->SetIZone(I_ZONE_ARM);
     armPID->SetFF(ARM_FF_GAIN);
-
     armPID->SetOutputRange(MIN_POWER_ARM_PIT, MAX_POWER_ARM_PIT);
 
     //WRIST PositionPID SETUP
     wristPID->SetP(P_GAIN_WRIST);
     wristPID->SetD(D_GAIN_WRIST);
-
-    // pdp = new frc::PowerDistributionPanel(0);
 
     //Set the Conversion Factor for Encoder output to read Degrees
     armEncoder->SetPositionConversionFactor(ARM_DEGREES_PER_MOTOR_ROTATION);
@@ -66,7 +60,7 @@ Arm::Arm()
     //Set arm Sparks invertions
     leftArm->SetInverted(false); //this one doesnt matter bc it is a follower
     rightArm->SetInverted(false);
-    leftWrist->SetInverted(true);
+    wrist->SetInverted(true);
 
     intake->SetInverted(false);
 
@@ -75,29 +69,25 @@ Arm::Arm()
     //Set to brake or coast
     leftArm->SetIdleMode(BRAKE);
     rightArm->SetIdleMode(COAST);
-    leftWrist->SetIdleMode(BRAKE);
+    wrist->SetIdleMode(BRAKE);
     intake->SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
 
     //Set Current Limits to not kill the Neos
     leftArm->SetSmartCurrentLimit(ARM_CURRENT_LIMIT);
     rightArm->SetSmartCurrentLimit(ARM_CURRENT_LIMIT);
-    leftWrist->SetSmartCurrentLimit(WRIST_CURRENT_LIMIT);
+    wrist->SetSmartCurrentLimit(WRIST_CURRENT_LIMIT);
 
-    //SetFollowers
-    // rightArm->Follow(*leftArm, false);
-    // rightWrist->Follow(*leftWrist, false);
-
-    wasArmLimitSwitchTripped = true;
-    wasWristLimitSwitchTripped = true;
-
+    //Initialize arm/wrist starting state
     isArmInManual = true;
     isWristInManual = true;
     previousTargetPosition = 0.0;
     previousTargetWristPosition = 0.0;
 
+    //default encoder position when robot starts
     armEncoder->SetPosition(0.0);
     wristEncoder->SetPosition(0.0);
 
+    //Initialize values for arm movement state machine
     isArmInBack = false;
     isArmSwitchingSides = false;
     isArmMoving = false;
@@ -106,83 +96,84 @@ Arm::Arm()
 }
 
 //Public Methods
-void Arm::ManualRotateArm(double input)
+void Arm::ManualRotateArm(double manualArmPower)
 {
-    frc::SmartDashboard::PutNumber("Arm Control Input", input);
-    //ShuffleManager
-    if (input != 0.0)
+    frc::SmartDashboard::PutNumber("Arm Control Input", manualArmPower);
+    if (manualArmPower != 0.0)
     {
         isArmInManual = true;
-        // std::cout << "set arm to manual 1" <<std::endl;
-        rightArm->Set(input);
+        rightArm->Set(manualArmPower);
     }
-    if (input == 0.0 && isArmInManual)
+    if (manualArmPower == 0.0 && isArmInManual)
     {
-        rightArm->Set(input);
+        rightArm->Set(manualArmPower);
     }
-    double leftVoltage = (input * leftArm->GetBusVoltage());
-    double rightVoltage = (input * rightArm->GetBusVoltage());
+    double leftVoltage = (manualArmPower * leftArm->GetBusVoltage());
+    double rightVoltage = (manualArmPower * rightArm->GetBusVoltage());
     frc::SmartDashboard::PutNumber("Arm Voltage Left", leftVoltage);
     frc::SmartDashboard::PutNumber("Arm Voltage Right", rightVoltage);
 }
 
-void Arm::ManualRotateWrist(double input)
+void Arm::ManualRotateWrist(double manualWristPower)
 {
-    if (input != 0.0)
+    if (manualWristPower != 0.0)
     {
         isWristInManual = true;
-        leftWrist->Set(input);
+        wrist->Set(manualWristPower);
     }
-    if (input == 0.0 && isWristInManual)
+    if (manualWristPower == 0.0 && isWristInManual)
     {
-        leftWrist->Set(input);
+        wrist->Set(manualWristPower);
     }
 }
 
-double Arm::GetCurrentArmPosition() {
+double Arm::GetCurrentArmPosition()
+{
     return armEncoder->GetPosition();
 }
 
 void Arm::UpdateArmAndWristInManual(bool arm, bool wrist)
 {
     isArmInManual = arm;
-    // std::cout << "set arm to manual 2" <<std::endl;
-
     isWristInManual = wrist;
 }
 
-void Arm::RunIntake(double input)
+void Arm::RunIntake(double intakeSpeed)
 {
-  //  std::cout << "Intake input: " << input << std::endl;
-    intake->Set(motorcontrol::ControlMode::PercentOutput, input);
+    intake->Set(motorcontrol::ControlMode::PercentOutput, intakeSpeed);
 }
 
 //Parameter: targetPosition -> Given final position in degrees for arm
-//Work in Progress
 void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
+    //defining variables for ShuffleManager
     armTargetPositionShuffle = targetPosition;
     isInHatchMode = !isInBallMode;
-   // std::cout << "Target pos" << targetPosition << std::endl;
+
+    //Getting arm/wrist positions
     currentArmPos = armEncoder->GetPosition();
     currentWristPos = wristEncoder->GetPosition();
 
+    //defining the state of the arm system
     areWheelsVeryDown = (currentWristPos > 60 || currentWristPos < -60);
     willArmEnterDZ = ((currentArmPos < -ARM_DANGERZONE && targetPosition > -ARM_DANGERZONE) || (currentArmPos > ARM_DANGERZONE && targetPosition < ARM_DANGERZONE));
     areWheelsUp = (currentWristPos < 1.0 && currentWristPos > -1.0);
     isArmInDZ = (currentArmPos > -ARM_DANGERZONE && currentArmPos < ARM_DANGERZONE);
-    // std::cout << "isArmInDZ: " << isArmInDZ << std::endl;
     isArmGoingToBack = (targetPosition < 0);
 
+    //Calculate the voltage FeedForward to linearize the system for PID control        
     FFVoltage = MAX_FF_GAIN * (sin(currentArmPos * M_PI / 180));
     frc::SmartDashboard::PutNumber("FFVoltage", FFVoltage);
-
-     if(isArmInDefenseMode) {
+    
+    //Move wrist to neutral position if in defense mode
+    if(isArmInDefenseMode) {
         targetPosition = 0.0;
         MoveWristToPosition(WRIST_NEUTRAL);
         CloseHatchGripper();
     }
-
+    //If the arm is in the danger zone, move wrist to neutral
+    //and close hatch gripper. If wheels are "very down", switch
+    //arm/wrist control to manual (something is wrong).
     else if (isArmInDZ)
     {
         if (!isHatchGripperClosed)
@@ -193,8 +184,6 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
         if (areWheelsVeryDown)
         {
             isArmInManual = true;
-            // std::cout << "set arm to manual 3" <<std::endl;
-
             isWristInManual = true;
         }
         else if (areWheelsUp)
@@ -207,6 +196,9 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
             MoveWristToPosition(WRIST_NEUTRAL);
         }
     }
+    //If the arm will enter the Danger Zone, close the hatch gripper and
+    //move the wrist to neutral. And if wrist is not neutral yet, 
+    //set the arm target position to the arm_checkpoint on the current side
     else if (willArmEnterDZ)
     {
         if (!isHatchGripperClosed)
@@ -217,16 +209,19 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
 
         if (!areWheelsUp)
         {
+            //returns the value of ARM_CHECKPOINT with the sign of currentArmPos
             targetPosition = copysign(ARM_CHECKPOINT, currentArmPos);
         }
     }
+    //if arm is outside of frame perimeter, on the correct side
+    //move arm and to final position, and hatch gripper to desired position
     else if (!isArmInDZ && !willArmEnterDZ)
     {
-        if (isHatchGripperClosed == true && wantHatchGripperClosed == false)
+        if (isHatchGripperClosed && !wantHatchGripperClosed)
         {
             OpenHatchGripper();
         }
-        else if (isHatchGripperClosed == false && wantHatchGripperClosed == true)
+        else if (!isHatchGripperClosed && wantHatchGripperClosed)
         {
             CloseHatchGripper();
         }
@@ -237,28 +232,31 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
         MoveWristToPosition(FindWristFinalPosition(isArmGoingToBack, isInBallMode, isInBallPickup, isInCargoShipMode));
     }
 
-    // std::cout << "isArmInManual" << isArmInManual << std::endl;
+    //If arm is not in manual, set the target for the pid to move towards.
     if (!isArmInManual)
     {
-        // std::cout << "Set arm reference: " << targetPosition << std::endl;
         armPID->SetReference(targetPosition, rev::ControlType::kPosition, 0, FFVoltage);
     }
-
-    if (isInBallMode == true)
+    
+    //if in ball pickup mode and gripper is closed/gripped, set gripper desired state to open/release    
+    if (isInBallMode)
     {
         wasInBallMode = true;
         if (isHatchGripperClosed)
         {
-            // OpenHatchGripper();
+            //desired state
             wantHatchGripperClosed = false;
         }
     }
+    //if switching to hatch mode, set gripper desired state to closed/gripped
     else if (!isInBallMode && wasInBallMode){
         wantHatchGripperClosed = true;
         wasInBallMode = false;
     }
 }
 
+//returns desired preset wrist position in degrees, based on the current mode
+//to be used in MoveWristToPosition
 double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode)
 {
     if (isInBallMode && !isArmGoingToBack && isInCargoShipMode)
@@ -299,7 +297,6 @@ double Arm::FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool i
     }
 }
 
-// void Arm::MoveWristToPosition(double wristCurrentPosition, double armCurrentPosition)
 void Arm::MoveWristToPosition(double wristTargetPosition)
 {
     wristTargetPositionShuffle = wristTargetPosition;
@@ -309,6 +306,7 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
 
     frc::SmartDashboard::PutNumber("Wrist Position Error", wristEncoder->GetPosition() - wristTargetPosition);
 
+    //if the gripper is closed/gripped, do not allow wrist to bang hatch into the arm
     if (wantHatchGripperClosed)
     {
         if (wristTargetRelativeToArm > WRIST_HATCH_LIMIT)
@@ -320,7 +318,7 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
             wristTargetPosition = (currentArmPos - (-WRIST_HATCH_LIMIT));
         }
     }
-
+    //If wrist is not in manual, set the target for the pid to move towards.
     if (!isWristInManual)
     {
         wristPID->SetReference(wristTargetPosition, rev::ControlType::kPosition);
@@ -330,14 +328,12 @@ void Arm::MoveWristToPosition(double wristTargetPosition)
 void Arm::OpenHatchGripper()
 {
     hatchGripper->Set(frc::DoubleSolenoid::Value::kForward);
-    // std::cout << "Open Hatch Gripper" << std::endl;
     isHatchGripperClosed = false;
 }
 
 void Arm::CloseHatchGripper()
 {
     hatchGripper->Set(frc::DoubleSolenoid::Value::kReverse);
-    // std::cout << "Close Hatch Gripper" << std::endl;
     isHatchGripperClosed = true;
 }
 
@@ -359,13 +355,10 @@ void Arm::PrintArmShuffleInfo()
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->leftArmCurrentArmWrist, leftArm->GetOutputCurrent());
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->rightArmCurrentArmWrist, rightArm->GetOutputCurrent());
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->armEncoderDriver, armEncoder->GetPosition());
-    // //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->armEncoderPreComp, armEncoder->GetPosition());
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->wristEncoderDriver, wristEncoder->GetPosition());
-    // //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->wristEncoderPreComp, wristEncoder->GetPosition());
 
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkHatchGripperDriver, isHatchGripperClosed);
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->checkWristModeDriver, isInHatchMode);
-    // //ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->PreCompTab, ShuffleManager::GetInstance()->checkWristModePreComp, isInHatchMode);
     // ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, ShuffleManager::GetInstance()->checkWristModeArmWrist, isInHatchMode);
 
     ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->targetWristPositionDegreesDriver, wristTargetPositionShuffle);
@@ -395,7 +388,6 @@ void Arm::PrintArmShuffleInfo()
     frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
     // frc::SmartDashboard::PutNumber("Arm Speed Degrees Per Sec", armEncoder->GetVelocity());
     // frc::SmartDashboard::PutNumber("Arm Velocity Error", 15 - armEncoder->GetVelocity());
-    // \huffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->ArmWristTab, "Left Arm Current", leftArm->GetOutputCurrent());
 }
 
 void Arm::PrintArmInfotoConsole()
@@ -420,32 +412,6 @@ void Arm::PrintArmInfotoConsole()
             }
         }
     }
-}
-
-void Arm::ManualCalibrateArm()
-{
-    //     if (!GetArmLimitSwitch())
-    //     {
-    //         wasArmLimitSwitchTripped = false;
-    //     }
-    //     else if (GetArmLimitSwitch() && !wasArmLimitSwitchTripped && armEncoder->GetVelocity() < 0 && armEncoder->GetVelocity() > CALIBRATION_SPEED)
-    //     {
-    //         armEncoder->SetPosition(LIMIT_SWITCH_OFFSET);
-    //     }
-    //     else
-    //     {
-    //         wasArmLimitSwitchTripped = true;
-    //     }
-}
-
-bool Arm::GetArmLimitSwitch()
-{
-    return !armLimitSwitch->Get();
-}
-
-bool Arm::GetWristLimitSwitch()
-{
-    return !wristLimitSwitch->Get();
 }
 
 // double Arm::GetMAX_FF_GAIN()
