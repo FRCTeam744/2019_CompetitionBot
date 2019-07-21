@@ -97,7 +97,7 @@ void Robot::AutonomousInit()
 
   if (isShufflePopulated == false)
   {
-    shufflemanager->ShuffleInit();
+    shufflemanager->TabInit();
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }
@@ -529,7 +529,7 @@ void Robot::TeleopInit()
 
   if (isShufflePopulated == false)
   {
-    shufflemanager->ShuffleInit();
+    shufflemanager->TabInit();
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }
@@ -642,7 +642,7 @@ void Robot::DisabledPeriodic()
 {
   if (isShufflePopulated == false)
   {
-    shufflemanager->ShuffleInit();
+    shufflemanager->TabInit();
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }
