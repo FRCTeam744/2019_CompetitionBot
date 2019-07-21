@@ -23,24 +23,27 @@ public:
   static Arm *GetInstance();
 
   /**
-    @brief Controls the arm from a manual input, without PID control
-    @param manualArmPower The amount of power in percent output to set the arm motors to
+    @brief Controls the arm from a manual input, without PID control.
+    @param manualArmPower The amount of power in percent output to set the arm motors to.
+
     When in the arm is in manual mode, this method is responsible for taking the motor input value 
     and setting it to the arm motors.  
   */
   void ManualRotateArm(double manualArmPower);
 
   /**
-    @brief Controls the wrist from a manual input, without PID control
-    @param manualWristPower The amount of power in percent output to set the wrist motor to
+    @brief Controls the wrist from a manual input, without PID control.
+    @param manualWristPower The amount of power in percent output to set the wrist motor to.
+
     When in the wrist is in manual mode, this method is responsible for taking the motor input value 
     and setting it to the wrist motor.
   */
   void ManualRotateWrist(double manualWristPower);
 
   /**
-    @brief run the ball intake motors
-    @param intakeSpeed The amount of power in percent output to set the ball intake motor to
+    @brief run the ball intake motors.
+    @param intakeSpeed The amount of power in percent output to set the ball intake motor to.
+    
     Sets the ball intake motors to the given input speed.
   */
   void RunIntake(double intakeSpeed);
@@ -51,6 +54,7 @@ public:
     @param isInBallMode whether or not the arm/wrist is in ball or hatch mode
     @param isInBallPickup whether or not the arm/wrist is in ball pickup mode
     @param isInCargoShipMode whether or not the arm/wrist is in cargo ship mode
+
     Keeps track of the wrist and arm together to ensure safe movement of the entire system from position to position.
     For example, the wrist is moved to the neautral position if the arm will pass through the danger zone,
     the arm will go to a position outside the dangerzone if the wrist is not in a neutral position yet and the arm wants to pass through,
@@ -61,6 +65,7 @@ public:
   /**
     @brief setter method for the desired gripper state
     @param wantClosed the desired state of the gripper
+
     Setter method for the desired gripper state. true is for closed/gripped, false if for open/released
   */
   void SetDesiredHatchGripperState(bool wantClosed);
@@ -68,6 +73,7 @@ public:
   /**
     @brief getter method for the current arm position in degrees.
     @return the current arm position in degrees
+
     Getter method for the current arm position in degrees.
   */
   double GetCurrentArmPosition();
@@ -76,12 +82,14 @@ public:
     @brief setter method for whether or not the arm and wrist are in manual or auto
     @param arm Arm manual/auto state. true to set to manual, false to set to auto
     @param wrist Wrist manual/auto state. true to set to manual, false to set to auto
+ 
     Setter method for whether or not the arm and wrist are in manual or auto
   */
   void UpdateArmAndWristInManual(bool arm, bool wrist);
 
   /**
     @brief Print arm related shuffleboard info.
+
     Print arm related shuffleboard info. Many commented out and commented in things for easy changes.
   */
   void PrintArmShuffleInfo();
@@ -89,6 +97,7 @@ public:
   /**
     @brief setter method for arm in defense mode.
     @param wantsDefenseMode whether or not you want defense mode. True for wanting defense mode. False for not wanting defense mode.
+
     Setter method for arm in defense mode.
   */
   void ToggleDefenseMode(bool wantsDefenseMode);
@@ -96,6 +105,7 @@ public:
   /**
     @brief getter method for whether or not the gripper is currently open or closed (gripped or released).
     @return true if the gripper is gripper/closed, false if it's released/open.
+
     Getter method for whether or not the gripper is currently open or closed (gripped or released).
   */
   bool GetIsGripperGripped();
@@ -107,6 +117,7 @@ private:
   /**
     @brief Set wrist position reference for the wristPID controller.
     @param wristTargetPosition The degrees of the desired wrist position, relative to the robot frame.
+
     Set wrist position reference for the wristPID controller, taking into account that the wrist cannot 
     move beyond a certain angle relative to the arm.
   */
@@ -118,6 +129,7 @@ private:
     @param isInBallMode True if in ball mode. False if in hatch mode.
     @param isInBallPickup True if wanting to pickup the ball. False otherwise.
     @param isInCargoShipMode True if in cargo ship mode. False otherwise.
+
     Depending on these four modes, the final wrist will be in one of the several preset positions.
     For example, if in hatch mode and going to the front, 
     the final wrist will be to face the hatch gripper to the front of the robot. 
@@ -126,12 +138,14 @@ private:
   
   /**
     @brief Opens hatch gripper
+
     Opens hatch gripper and sets isHatchGripperClosed member variable to keep track of gripper state.
   */
   void OpenHatchGripper();
   
   /**
     @brief Closes hatch gripper
+
     Closes hatch gripper and sets isHatchGripperClosed member variable to keep track of gripper state.
   */
   void CloseHatchGripper();
