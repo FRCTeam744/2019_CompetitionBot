@@ -80,16 +80,12 @@ Arm::Arm()
     //Initialize arm/wrist starting state
     isArmInManual = true;
     isWristInManual = true;
-    previousTargetPosition = 0.0;
-    previousTargetWristPosition = 0.0;
 
     //default encoder position when robot starts
     armEncoder->SetPosition(0.0);
     wristEncoder->SetPosition(0.0);
 
-    //Initialize values for arm movement state machine
-    isArmInBack = false;
-    isArmSwitchingSides = false;
+    //Initialize defense mode
     isArmInDefenseMode = false;
 }
 
@@ -159,7 +155,9 @@ void Arm::MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInB
     isArmInDZ = (currentArmPos > -ARM_DANGERZONE && currentArmPos < ARM_DANGERZONE);
     isArmGoingToBack = (targetPosition < 0);
 
-    //Calculate the voltage FeedForward to linearize the system for PID control        
+    //Calculate the voltage FeedForward to linearize the system for PID control
+    //MAX_FF_GAIN is the voltage to hold the arm at 90 degrees (paralell to the floor)
+    //FFVoltage = MAX_FF_GAIN*sin(angle of the arm)
     FFVoltage = MAX_FF_GAIN * (sin(currentArmPos * M_PI / 180));
     frc::SmartDashboard::PutNumber("FFVoltage", FFVoltage);
     
@@ -375,13 +373,6 @@ void Arm::PrintArmShuffleInfo()
     frc::SmartDashboard::PutBoolean("Is Gripper Closed", isHatchGripperClosed);
     frc::SmartDashboard::PutNumber("Arm Encoder", armEncoder->GetPosition());
     frc::SmartDashboard::PutNumber("Wrist Encoder", wristEncoder->GetPosition());
-}
-
-void Arm::SetToMatchMode()
-{
-    rightArm->SetClosedLoopRampRate(RAMP_RATE_FIELD);
-    leftArm->SetClosedLoopRampRate(RAMP_RATE_FIELD);
-    armPID->SetOutputRange(MIN_POWER_ARM_FIELD, MAX_POWER_ARM_FIELD);
 }
 
 //not used on robot, but functional
