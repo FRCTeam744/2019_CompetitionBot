@@ -624,7 +624,7 @@ void Robot::TeleopPeriodic()
 
   if (oi->SwitchGears())
   {
-    drivetrain->CheckSwitchGears(oi->GetIsHighGear());
+    drivetrain->SetGearShifter(oi->GetIsHighGear());
   }
 
   if (oi->SwitchGripper())

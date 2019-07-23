@@ -30,8 +30,8 @@ Drivetrain::Drivetrain()
     rightMid = new TalonSRX(RIGHT_MID_ID);
     rightBack = new TalonSRX(RIGHT_BACK_ID);
 
-    //Initialize Double Solenoid
-    gearShifter = new frc::Solenoid(0);
+    //Initialize Solenoids
+    gearShifter = new frc::Solenoid(GEAR_SHIFTER_ID);
 
     //Initialize Timer for end of LL drive
     hatchPlaceTimer = new frc::Timer();
@@ -73,6 +73,7 @@ Drivetrain::Drivetrain()
     leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
     rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
 
+    //initialize auto versus manual driving state
     isInAutoDrive = false;
     isInLLDrive = false;
 
@@ -90,8 +91,12 @@ Drivetrain::Drivetrain()
     rightMid->ConfigOpenloopRamp(talonRampRate);
     rightBack->ConfigOpenloopRamp(talonRampRate);
 
+    //state of whether or not a target is acquired 
     isTargetAcquired = false;
 
+    //initialize variables that change depending on position the arm is in for LL tracking
+    //x and z change based on front and back, low, middle, high and ball/hatch
+    //slope, intercept and crosshair angle is different for frint and back cameras
     xDesiredInches = 0;
     zDesiredInches = 36;
     slopeForAngleCalc = 0.0;
@@ -100,7 +105,7 @@ Drivetrain::Drivetrain()
     prevT = 0;
 
     //Gyro
-    // ahrs = new AHRS(SerialPort::Port::kUSB);
+    // ahrs = new AHRS(SerialPort::Port::kUSB); //was in USB port, bad idea, don't do this
     ahrs = new AHRS(SPI::Port::kMXP);
 }
 
@@ -161,11 +166,11 @@ void Drivetrain::PrintDriveShuffleInfo()
 
 std::string Drivetrain::get_trajectory_file(std::string name)
 {
+    //append full path to the file name input to the method
     wpi::SmallString<256> path;
     frc::filesystem::GetDeployDirectory(path);
     wpi::sys::path::append(path, "paths", name + ".pf1.csv");
 
-    // std::cout << "Path: " << path << std::endl;
     if (!wpi::sys::fs::exists(path))
     {
         throw std::runtime_error("Path " + std::string(path.c_str()) + " does not exist!");
@@ -175,6 +180,7 @@ std::string Drivetrain::get_trajectory_file(std::string name)
 
 int Drivetrain::get_trajectory(std::string name, Segment *traj_out)
 {
+    //put the contents of the file with the name 'name' into the traj_out variable
     FILE *fp = fopen(get_trajectory_file(name).c_str(), "r");
     int len = pathfinder_deserialize_csv(fp, traj_out);
     fclose(fp);
@@ -200,6 +206,7 @@ void Drivetrain::AutonomousInit()
 
 void Drivetrain::FollowPathInit(std::string pathName)
 {
+    //calls methods to deserialize and set trajectories for the left and right side of the drivetrain
     left_trajectory_length = get_trajectory(pathName + ".right", leftTrajectory);  //This is supposed to be flipped! This is a bug in FRC's libraries
     right_trajectory_length = get_trajectory(pathName + ".left", rightTrajectory); //This is supposed to be flipped! This is a bug in FRC's libraries
     follow_path_counter = 0;
@@ -207,30 +214,30 @@ void Drivetrain::FollowPathInit(std::string pathName)
 
 bool Drivetrain::FollowPath(bool isReverse)
 {
+    //continue following path while the path is not almost finished
+    //cut off early to save time by not stopping before tracking with the Limelight
     if (follow_path_counter < (left_trajectory_length - PATH_CUTOFF_TIME/0.02)) //adjust if needed 
     {
-        // std::cout << "leftHeading: " << leftTrajectory[follow_path_counter].heading << std::endl;
-        // std::cout << "rightHeading: " << rightTrajectory[follow_path_counter].heading << std::endl;
-
         double leftVelocity = 0;
         double rightVelocity = 0;
 
         double gyro_heading = ahrs->GetYaw();
         double desired_heading = r2d(leftTrajectory[follow_path_counter].heading);
 
+        //flip sides and sign of velocity and adjust angle if the path is meant to be driven backwards
         if (isReverse)
         {
             leftVelocity = -1 * rightTrajectory[follow_path_counter].velocity;
             rightVelocity = -1 * leftTrajectory[follow_path_counter].velocity;
-            // turn *= -1;
             desired_heading -= 180;
         }
-        else
+        else //otherwise, retreive velocity normally, no angle adjustment
         {
             leftVelocity = leftTrajectory[follow_path_counter].velocity;
             rightVelocity = rightTrajectory[follow_path_counter].velocity;
         }
 
+        //Calculate angle error
         double angle_difference = desired_heading - gyro_heading;
         frc::SmartDashboard::PutNumber("Follow Path Desired Heading", desired_heading);
         angle_difference = std::fmod(angle_difference, 360.0);
@@ -240,11 +247,13 @@ bool Drivetrain::FollowPath(bool isReverse)
         }
         frc::SmartDashboard::PutNumber("Follow Path Angle Error", angle_difference);
 
-        double turn = 0.1 * angle_difference; //was -0.002
-        frc::SmartDashboard::PutNumber("Follow Path Turn", turn);
+        //calculate adjustment to velocity serpoint based on error in angle
+        double turnAdjustment = 0.1 * angle_difference; //was -0.002
+        frc::SmartDashboard::PutNumber("Follow Path Turn Adjustment", turnAdjustment);
 
-        leftBack->Set(ControlMode::Velocity, ((leftVelocity + turn) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)); //in feet/s
-        rightBack->Set(ControlMode::Velocity, ((rightVelocity - turn) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS));
+        //Set velocities from the trajectory velocity +/- turn adjustment for the drivetrains's velocity PID to handle
+        leftBack->Set(ControlMode::Velocity, ((leftVelocity + turnAdjustment) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS)); //in feet/s
+        rightBack->Set(ControlMode::Velocity, ((rightVelocity - turnAdjustment) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS));
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightMid->Set(ControlMode::Follower, RIGHT_BACK_ID);
         leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
@@ -253,6 +262,7 @@ bool Drivetrain::FollowPath(bool isReverse)
         follow_path_counter++;
         return false;
     }
+    //stop motors when finished running trajectory
     else
     {
         StopMotors();
@@ -262,43 +272,35 @@ bool Drivetrain::FollowPath(bool isReverse)
 
 bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove)
 {
-    if (!wantLimelight) //when not limelight tracking
+    //when not limelight tracking, reset LL drive state variables and return
+    if (!wantLimelight) 
     {
-        if (isInLLDrive)
-        {
-            // limelightFront->PutNumber("pipeline", DRIVER_PIPELINE);
-            // limelightBack->PutNumber("pipeline", DRIVER_PIPELINE);
-        }
         isInLLDrive = false;
         wantToDriveHatchInPlace = false;
         isTargetAcquired = false;
         return false;
     }
-    double currentTime = angleDGainTimer->Get();
 
-    //drive hatch into place, and skip LL code if you've gotten near the target
+    double currentTime = angleDGainTimer->Get();
+    //drive hatch into place, and skip LL code if you've gotten near the target and want to drive the hatch forward
     if (wantToDriveHatchInPlace)
     {
-        if (hatchPlaceTimer->Get() > 0.15) //Was 0.4, suggested change by Sebastian, chanegd by Robert
+        //Drive forward to push hatch panel in place, then return true
+        if (hatchPlaceTimer->Get() > LL_HATCH_PLACE_TIMER) 
         {
-            if (StopMotorsTimer == 0)
-            {
-                //StopMotors();
-                StopMotorsTimer++;
-            }
             return true;
         }
         else
         {
-            StopMotorsTimer = 0;
             AutoDriveForward(false, true);
             return false;
         }
     }
 
-    if (!isInLLDrive) //init pipelines
+    //init pipelines
+    if (!isInLLDrive) 
     {
-        //set limelight pipeline and turn on leds, once
+        //set limelight pipeline, happens once because of isInLLDrive
         if (isFront)
         {
             limelightFront->PutNumber("pipeline", pipelineNumber);
@@ -310,6 +312,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         isInLLDrive = true;
     }
 
+    //get data from front LL, if the arm is in front
     if (isFront)
     {
         tv = limelightFront->GetNumber("tv", 0.0);
@@ -337,7 +340,6 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         {
             isTargetAcquired = true;
             overrideEnabled = false;
-            counter = 0;
             limelightFront->PutNumber("pipeline", pipelineNumber);
             accumAngleError = 0;
             prevDistanceError = 100;
@@ -372,7 +374,6 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         {
             isTargetAcquired = true;
             overrideEnabled = false;
-            counter = 0;
             limelightBack->PutNumber("pipeline", pipelineNumber);
             accumAngleError = 0;
             prevDistanceError = 100;
@@ -382,6 +383,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         }
     }
 
+    //set variables that are dependent on front/back and (not implemented) low/high target
     double p_dist_loop = 0;
     double targetHeight = TARGET_LOW_HEIGHT_INCHES;
     double limelightAngle = LIMELIGHT_ANGLE_FRONT;
@@ -396,13 +398,17 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         kP_DIST = kP_DIST_FPS_BACK;
         limelightAngle = LIMELIGHT_ANGLE_BACK;
     }
+
+    //calcualte current distance from target
     double currentDistanceInches = (LIMELIGHT_HEIGHT_INCHES - targetHeight) / tan((limelightAngle + crosshairAngle - targetOffsetAngle_Vertical) * (M_PI / 180)); //current distance from target
     frc::SmartDashboard::PutNumber("current distance", currentDistanceInches);
     frc::SmartDashboard::PutNumber("zDesiredInches", zDesiredInches);
+    
+    //calculate desired angle of target in the image and the angle error form that desired angle
     double desiredAngle = targetOffsetAngle_Vertical * slopeForAngleCalc + interceptForAngleCalc;
     double angleError = targetOffsetAngle_Horizontal - desiredAngle;
 
-    //I Gain component
+    //I Gain component - accumulated error
     if (abs(angleError) < I_ZONE_ANGLE)
     {
         accumAngleError += angleError;
@@ -412,9 +418,10 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         accumAngleError = 0;
     }
 
-    //D Gain component
+    //D Gain component - change in error over time
     double slopeError = (angleError - prevAngleError) / (currentTime - prevT);
 
+    //Debugging prints to smart dashboard
     frc::SmartDashboard::PutNumber("Desired Angle", desiredAngle);
     frc::SmartDashboard::PutNumber("Angle Error", angleError);
 
@@ -422,11 +429,15 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     frc::SmartDashboard::PutNumber("Slope", slopeForAngleCalc);
     frc::SmartDashboard::PutNumber("Crosshair Angle", crosshairAngle);
 
-    adjust = kP_ANGLE * angleError + kI_ANGLE * accumAngleError - kD_ANGLE * slopeError;
-    frc::SmartDashboard::PutNumber("Adjust", adjust);
+    //Total PID Angle adjustment factor calculation
+    angleErrorAdjustmentValue_LLTracking = kP_ANGLE * angleError + kI_ANGLE * accumAngleError - kD_ANGLE * slopeError;
+    frc::SmartDashboard::PutNumber("angleErrorAdjustmentValue_LLTracking", angleErrorAdjustmentValue_LLTracking);
 
+    //Calculate error in distance from the target, and the P control input value
     double distanceError = (zDesiredInches - currentDistanceInches);
     p_dist_loop = kP_DIST * distanceError;
+
+    //ensure robot will not be asked to go over a set maximum speed
     if (p_dist_loop > LL_MAX_FEET_PER_SEC)
     {
         p_dist_loop = LL_MAX_FEET_PER_SEC;
@@ -436,9 +447,12 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         p_dist_loop = -LL_MAX_FEET_PER_SEC;
     }
 
-    desiredLeftFPS = p_dist_loop + adjust;
-    desiredRightFPS = p_dist_loop - adjust;
+    //add distance P control to angle error PID adjustment to get 
+    //velocities for input to the drivetrain velocity PID controller 
+    desiredLeftFPS = p_dist_loop + angleErrorAdjustmentValue_LLTracking;
+    desiredRightFPS = p_dist_loop - angleErrorAdjustmentValue_LLTracking;
 
+    //Debugging SmartDaashboard prints
     frc::SmartDashboard::PutNumber("Desired FPS Left", desiredLeftFPS);
     frc::SmartDashboard::PutNumber("Desired FPS Right", desiredRightFPS);
     frc::SmartDashboard::PutNumber("Distance Error", distanceError);
@@ -451,23 +465,26 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
     // std::cout << " PrevDist," << prevDistance;
     // std::cout << " PrevAngle," << prevAngle;
 
-    if (abs(prevDistanceError) < 10 && abs(prevAngleError) < 5)
+    //If close to the target, and you see a large jump, set overrideEnabled to stop tracking
+    if (abs(prevDistanceError) < DISTANCE_WITHIN_NO_JUMPS_LL && abs(prevAngleError) < ANGLE_WITHIN_NO_JUMPS_LL)
     {                                                        //close to target{
-        if (abs(currentDistanceInches - prevDistance) > 5 || //sudden jump in target
-            abs(prevAngle - targetOffsetAngle_Horizontal) > 5)
+        if (abs(currentDistanceInches - prevDistance) > MAX_JUMP_DISTANCE_ALLOWED || //sudden jump in target
+            abs(prevAngle - targetOffsetAngle_Horizontal) > MAX_JUMP_ANGLE_ALLOWED)
         {
             overrideEnabled = true;
         }
     }
-    // std::cout << " wantToNotMove," << wantToNotMove << std::endl;
 
-    if (abs(distanceError) < 2 && abs(angleError) < ALLOWED_ANGLE_ERROR_LL)
+    //If close enough to target, stop tracking
+    if (abs(distanceError) < ALLOWED_DISTANCE_ERROR_LL && abs(angleError) < ALLOWED_ANGLE_ERROR_LL)
     {
+        //if in ball mode, just stop and return that you are done
         if (isBallMode)
         {
             StopMotors();
             return true;
         }
+        //if in hatch mode, start the reset the timer and set the flag to drive the hatch into place
         else
         {
             wantToDriveHatchInPlace = true;
@@ -476,11 +493,13 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         }
     }
 
+    //If for whatever reason we're not moving, don't set velocities, but instead stop motor
     if (wantToNotMove || overrideEnabled)
     {
         frc::SmartDashboard::PutString("test string", "I am in want to not move");
         StopMotors();
     }
+    // otherwise, send calculated velocities to drivetrain velocity PID controller
     else
     {
         leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
@@ -491,6 +510,7 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
         rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
     }
 
+    //update the previous values of distance and angle, their errors, and time
     prevDistance = currentDistanceInches;
     prevAngle = targetOffsetAngle_Horizontal;
     prevDistanceError = distanceError;
@@ -501,9 +521,11 @@ bool Drivetrain::AutoDrive(bool wantLimelight, double leftTank, double rightTank
 
 void Drivetrain::TankDrive(double leftValue, double rightValue)
 {
-    // m_follower_notifier.Stop();
+    //  Comment these in for demo-ing
     //  leftValue = leftValue*0.5;
     //  rightValue = rightValue*0.5;
+
+    //if not driving automatically, set the values to the drivetrain here
     if (!isInAutoDrive && !isInLLDrive)
     {
         leftBack->Set(ControlMode::PercentOutput, leftValue);
@@ -529,26 +551,27 @@ double Drivetrain::LimelightGet(std::string key)
     return limelightFront->GetNumber(key, 0.0);
 }
 
-void Drivetrain::CheckSwitchGears(bool isHighGear)
+void Drivetrain::SetGearShifter(bool isHighGear)
 {
+    //for shuffleboard output
     driveTrainGearShuffle = isHighGear;
 
+    //if wanting high gear, set to high gear
     if (isHighGear)
     {
         gearShifter->Set(false);
     }
+    //otherwise, set to low gear
     else if (!isHighGear)
     {
         gearShifter->Set(true);
     }
 }
 
-void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
+void Drivetrain::AutoDriveForward(bool isTestPercentOut, bool isVelocityControl)
 {
-
-    double testPercentOut = frc::SmartDashboard::GetNumber("Test PercentOut Speed", 0.5);
-
-    if (isBut && !isVelocityControl)
+    //if wanting to automatically give a percent output, use the one defined
+    if (isTestPercentOut && !isVelocityControl)
     {
         isInAutoDrive = true;
 
@@ -559,17 +582,16 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
         leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
     }
+    //if wanting to drive with velocity control in the direction of the arm
     else if (isVelocityControl)
     {
         isInAutoDrive = true;
 
-        desiredLeftFPS = desiredRightFPS = 2.5; //Was 5.0, changed by rObErT
+        desiredLeftFPS = desiredRightFPS = AUTO_VELOCITY_CONTROL_DRIVE_SPEED;
         if (!isFront)
         {
             desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;
         }
-        // std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
-        // std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
 
         leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
         rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
@@ -584,12 +606,10 @@ void Drivetrain::AutoDriveForward(bool isBut, bool isVelocityControl)
     }
 }
 
-void Drivetrain::AutoDriveBackwards(bool isBut, bool isVelocityControl)
+void Drivetrain::AutoDriveBackwards(bool isTestPercentOut, bool isVelocityControl)
 {
-
-    // double testPercentOut = frc::SmartDashboard::GetNumber("Test PercentOut Speed", 0.5);
-
-    if (isBut && !isVelocityControl)
+    //if wanting to automatically give a percent output, use the one defined
+    if (isTestPercentOut && !isVelocityControl)
     {
         isInAutoDrive = true;
 
@@ -600,18 +620,17 @@ void Drivetrain::AutoDriveBackwards(bool isBut, bool isVelocityControl)
         leftFront->Set(ControlMode::Follower, LEFT_BACK_ID);
         rightFront->Set(ControlMode::Follower, RIGHT_BACK_ID);
     }
+    //if wanting to drive with velocity control in the opposite direction of the arm
     else if (isVelocityControl)
     {
         isInAutoDrive = true;
 
-        desiredLeftFPS = desiredRightFPS = -2.5; //Was 5.0, changed by rObErT
+        desiredLeftFPS = desiredRightFPS = -AUTO_VELOCITY_CONTROL_DRIVE_SPEED;
         if (!isFront)
         {
             desiredLeftFPS = desiredRightFPS = -desiredLeftFPS;
         }
-        // std::cout << "Desired NU per 100MS: " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
-        // std::cout << "kFeedforwardGain " << (desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS) << std::endl;
-
+        
         leftBack->Set(ControlMode::Velocity, desiredLeftFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS); //in feet/s
         rightBack->Set(ControlMode::Velocity, desiredRightFPS * FEET_TO_NU * CONVERT_100MS_TO_SECONDS);
         leftMid->Set(ControlMode::Follower, LEFT_BACK_ID);
@@ -627,6 +646,7 @@ void Drivetrain::AutoDriveBackwards(bool isBut, bool isVelocityControl)
 
 void Drivetrain::IsTargetNotAcquired(double leftTank, double rightTank)
 {
+    //used to reenable tank drive within LL tracking while no target is in view
     isInLLDrive = false;
     TankDrive(leftTank, rightTank);
     isInLLDrive = true;
@@ -637,7 +657,6 @@ void Drivetrain::SetDesiredLLDistances(double xDesiredInches, double zDesiredInc
 {
     this->xDesiredInches = xDesiredInches;
     this->zDesiredInches = zDesiredInches;
-    //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
 }
 
 void Drivetrain::SetSlopeInterceptForAngleCalc(double slope, double intercept)

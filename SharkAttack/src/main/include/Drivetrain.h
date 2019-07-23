@@ -37,9 +37,9 @@ class Drivetrain
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightSet(std::tuple<bool, std::string, double>);
 	double LimelightGet(std::string key);
-	void CheckSwitchGears(bool isHighGear);
-	void AutoDriveForward(bool isBut, bool isVelocityControl);
-	void AutoDriveBackwards(bool isBut, bool isVelocityControl);
+	void SetGearShifter(bool isHighGear);
+	void AutoDriveForward(bool isTestPercentOut, bool isVelocityControl);
+	void AutoDriveBackwards(bool isTestPercentOut, bool isVelocityControl);
 	void SetDesiredLLDistances(double xDesiredInches, double zDesiredInches);
 	void SetIsFrontLL(bool isFront);
 	void AutoDriveLL(bool wantLimelight, double leftTank, double rightTank);
@@ -152,8 +152,7 @@ class Drivetrain
 	const int LEFT_BACK_ID = 26;
 
 	//DoubleSolenoid gearShirter forward and reverse channels
-	const int LOW_GEAR = 0;
-	const int HIGH_GEAR = 1;
+	const int GEAR_SHIFTER_ID = 0;
 
 	double leftDashboardSpeed = 0.0;
 	double rightDashboardSpeed = 0.0;
@@ -193,7 +192,7 @@ class Drivetrain
 	double prevYaw;
 	const double alpha = 0.02 / (0.06 + 0.02);
 
-	double adjust = 0.0;
+	double angleErrorAdjustmentValue_LLTracking = 0.0;
 
 	double currentDistanceInches = 0.0;
 
@@ -236,6 +235,7 @@ class Drivetrain
 	//const double RADIUS_INCHES = 3.0;
 	const double TEST_PERCENT_OUTPUT = 0.5;  //this is the percent output we used to test the feed forward gain
 	const double MEASURED_SPEED_NU = 2300.0; //this is the result of the test above in NU/100ms
+	const double AUTO_VELOCITY_CONTROL_DRIVE_SPEED = 2.5;
 
 	//PID control limelight
 	const double kP_THETA_DESIRED = -2;
@@ -246,7 +246,6 @@ class Drivetrain
 	const double START_FILTERING_JUMPS = 15;
 	bool isTargetAcquired;
 
-	int counter = 0;
 
 	const double DESIRED_DISTANCE_INCHES = 22;									//desired distance from target
 	const double kP_DIST_FPS = -.2;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
@@ -264,7 +263,13 @@ class Drivetrain
 	const double kD_ANGLE = -0.03; 		//FOR ANGLE CORRECTION TODO
 	const double I_ZONE_ANGLE = 3;  //degrees
 
-	const double ALLOWED_ANGLE_ERROR_LL = 2;
+	const double ALLOWED_ANGLE_ERROR_LL = 2; //degrees
+	const double ALLOWED_DISTANCE_ERROR_LL = 2; //calculated inches
+
+	const double ANGLE_WITHIN_NO_JUMPS_LL = 5; //degrees
+	const double DISTANCE_WITHIN_NO_JUMPS_LL = 10; //calculated inches
+	const double MAX_JUMP_ANGLE_ALLOWED = 5; //degrees
+	const double MAX_JUMP_DISTANCE_ALLOWED = 5; //calculated inches
 
 	const double MIN_COMMAND = 0.23;
 
@@ -300,7 +305,5 @@ class Drivetrain
 	//Gyro
 	AHRS *ahrs;
 
-	// frc::Notifier m_follower_notifier;
-
-	int StopMotorsTimer = 0;
+	const double LL_HATCH_PLACE_TIMER = 0.15; //Was 0.4, suggested change by Sebastian, chanegd by Robert
 };
