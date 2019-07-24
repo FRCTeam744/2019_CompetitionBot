@@ -12,9 +12,28 @@
 class Fourbar{
     public:
         static Fourbar* GetInstance();  
+
+        /**
+			@brief Triggers the speed controller for the fourbar
+			@param tab Specified tab that the variable is displayed on
+			@param var Name of the NetworkTableEntry. Naming convention of [Variable_Descriptor][Intended_Tab_Name] must match the tab name, for both organization's sake and assuring there are no duplication errors
+		*/
         void ExtendOrRetract(bool extendBut, bool retractBut);
+
+        /**
+			@brief Basic print statement for fourbar speed
+        */
         void UpdateFourbarSpeed();
+
+		/**
+			@brief Sets fourbar to home position?
+			@param homingBut ??
+		*/
         void FourbarHome(bool homingBut);
+
+    	/**
+			@brief Print method for Fourbar SB data. Called in Robot.cpp to print to ShuffleBoard
+		*/
         void PrintFourbarShuffleInfo();
         
     private:
@@ -23,7 +42,14 @@ class Fourbar{
 
         Fourbar(); 
 
+		/**
+			@brief Organizer for updatable SB data. Is grouped within a method called in Robot.cpp in order to print to ShuffleBoard
+	    */
         bool IsExtendedTripped();
+
+        /**
+			@brief Organizer for updatable SB data. Is grouped within a method called in Robot.cpp in order to print to ShuffleBoard
+	    */
         bool IsRetractedTripped();
 
         bool isInitialized = false;
