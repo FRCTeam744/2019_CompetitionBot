@@ -24,6 +24,9 @@ class OI
 {
 	//TODO: Go through each button and assign variable in cpp file in functions
   public:
+  /**
+   * 
+   */
 	static OI *GetInstance();
 
 	bool GetAutoDriveForward();
