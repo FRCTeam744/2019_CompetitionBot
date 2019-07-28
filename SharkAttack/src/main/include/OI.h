@@ -24,17 +24,45 @@ class OI
 {
 	//TODO: Go through each button and assign variable in cpp file in functions
   public:
-  /**
-   * 
-   */
 	static OI *GetInstance();
+	/**
+    @brief Gets button input. Either drive forward at test speed or drive whichever side the arm is facing.
 
+    Either drive forward at test speed or drive whichever side the arm is facing.
+  	*/
 	bool GetAutoDriveForward();
+	/**
+	 @brief Gets the button input for the pickup of hatches by the limelight
+	 
+	 Gets the button input for the pickup of hatches by the limelight
+	 */
 	bool GetDriveByLimelightPickup();
+	/**
+	 @brief Gets the button input for the placement of hatches by the limelight
+	 
+	 Gets the button input for the placement of hatches by the limelight
+	 */
 	bool GetDriveByLimelightPlace();
 
+	/**
+	 @brief Switches gear for transition
+	 @return Either switch gears or don't
+
+	 Switches gear if button that is pressed is for the opposite gear.
+	 */
 	bool SwitchGears();
+	
+	/**
+	  @brief Returns if the transmition is in high gear.
+
+	  Returns if the transmition is in high gear.
+	*/
 	bool GetIsHighGear();
+	/**
+    @brief Gets button input. Either drive forward at test speed or drive whichever side the arm is facing.
+
+    Either drive forward at test speed or drive whichever side the arm is facing.
+  	*/
 	bool GetVelocityTest();
 
 	bool SwitchGripper();
