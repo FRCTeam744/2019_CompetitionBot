@@ -26,62 +26,54 @@ class OI
   public:
 	static OI *GetInstance();
 
-	void SwitchDriveMode();
+	bool GetAutoDriveForward();
+	bool GetDriveByLimelightPickup();
+	bool GetDriveByLimelightPlace();
+
 	bool SwitchGears();
 	bool GetIsHighGear();
-
 	bool GetVelocityTest();
 
 	bool SwitchGripper();
 	bool GetIsGripperClosed();
-	void PrintToSmartDashboard(double encoderValue);
+
+	double GetArmInput();
+	double GetWristInput();
+	double GetIntakeInput();
+
+	bool GetPlacingMode();
+	void SetPlacingMode(bool isInBallMode);
+
+	bool GetIsInBallPickup();
+	bool GetIsArmInManual();
+	bool GetIsWristInManual();
 
 	double GetLeftDriveInput();
 	double GetRightDriveInput();
 
-	bool GetAutoDriveForward();
-	bool GetDriveByLimelightPickup();
-	bool GetDriveByLimelightPlace();
-	bool GetStopLLMove();
-	bool IsInCargoShipMode();
-
-	double GetArmInput();
-	double GetWristInput();
-	double GetArmEncoder();
-	double GetWristEncoder();
-	double GetIntakeInput();
-	double GetTargetArmPosition();
-	void SetTargetArmPosition(double targetArmPosition);
-	double GetTargetWristPosition();
-
-	bool GetPlacingMode();
-	void SetPlacingMode(bool isInBallMode);
-	bool GetIsInBallPickup();
-	bool GetIsArmInManual();
-	bool GetIsWristInManual();
-	void SetArmWristInManual(bool isArmManual, bool isWristManual);
+	void PrintToSmartDashboard(double encoderValue);
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();
 	bool GetFourbarHome();
 
+	double GetTargetArmPosition();
+	void SetTargetArmPosition(double targetArmPosition);
+
+	bool IsInCargoShipMode();
+
+	double GetTargetWristPosition();
+
+	std::tuple<bool, std::string, double> SetLimelight();
+
+	bool GetStopLLMove();
 	double GetArmFFVoltage();
 
-	bool GetIsArmInDefenseMode();
-
-	// bool SetArmFrontHigh();
-	// bool SetArmFrontMid();
-	// bool SetArmFrontLow();
-	// bool SetArmFrontBallPickup();
-	// bool SetArmBackHigh();
-	// bool SetArmBackMid();
-	// bool SetArmBackLow();
-	// bool SetArmBackBallPickup();
+	void SetArmWristInManual(bool isArmManual, bool isWristManual);
 
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	//void PutOnShuffleboardInOI();
 
-	std::tuple<bool, std::string, double> SetLimelight();
 
 	//TARGET HEIGHTS IN INCHES (USE THESE FOR CALCULATION NOT FOR SETTING)
 	const double HIGH_HATCH_HEIGHT = 67.0;
@@ -197,7 +189,6 @@ class OI
 	bool isArmInManual;
 	bool isWristInManual;
 	bool isInCargoShipMode;
-	bool isArmInDefenseMode;
 
 	double armFFVoltage;
 
