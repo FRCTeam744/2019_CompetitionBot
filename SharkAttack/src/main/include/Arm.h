@@ -4,14 +4,6 @@
 
 /*----------------------------------------------------------------------------------*/
 
-/** doxygen example
-    @brief Returns best target based on current planks.
-    @param num_Robots Number of robots in game.
-    @return The robot with best current plank.
-    Loops through the robots in current state to find the robot with the highest
-    value plank. Returns this robot if found, otherwise returns an empty Robot.
-*/
-
 #pragma once
 #include <ctre/Phoenix.h>
 #include <rev/CANSparkMax.h>
@@ -30,35 +22,132 @@ class Arm
 public:
   static Arm *GetInstance();
 
+  /**
+    @brief Controls the arm from a manual input, without PID control.
+    @param manualArmPower The amount of power in percent output to set the arm motors to.
+
+    When in the arm is in manual mode, this method is responsible for taking the motor input value 
+    and setting it to the arm motors.  
+  */
   void ManualRotateArm(double manualArmPower);
+
+  /**
+    @brief Controls the wrist from a manual input, without PID control.
+    @param manualWristPower The amount of power in percent output to set the wrist motor to.
+
+    When in the wrist is in manual mode, this method is responsible for taking the motor input value 
+    and setting it to the wrist motor.
+  */
   void ManualRotateWrist(double manualWristPower);
+
+  /**
+    @brief run the ball intake motors.
+    @param intakeSpeed The amount of power in percent output to set the ball intake motor to.
+    
+    Sets the ball intake motors to the given input speed.
+  */
   void RunIntake(double intakeSpeed);
+
+  /**
+    @brief high level movement of the arm/wrist system together to the desired position.
+    @param targetPosition desired arm position in degrees. (0 is stowed, positive is forward, negative is backwards)
+    @param isInBallMode whether or not the arm/wrist is in ball or hatch mode
+    @param isInBallPickup whether or not the arm/wrist is in ball pickup mode
+    @param isInCargoShipMode whether or not the arm/wrist is in cargo ship mode
+
+    Keeps track of the wrist and arm together to ensure safe movement of the entire system from position to position.
+    For example, the wrist is moved to the neautral position if the arm will pass through the danger zone,
+    the arm will go to a position outside the dangerzone if the wrist is not in a neutral position yet and the arm wants to pass through,
+    the gripper is updated for swinging through the dangerzone, etc, etc.
+  */
   void MoveArmToPosition(double targetPosition, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode); //Degrees
-  void CheckHatchGripper(bool isClosed);
-  void SetArmToBrake();
-  void SetArmToCoast();
-  void SetToMatchMode();
+  
+  /**
+    @brief setter method for the desired gripper state
+    @param wantClosed the desired state of the gripper
+
+    Setter method for the desired gripper state. true is for closed/gripped, false if for open/released
+  */
+  void SetDesiredHatchGripperState(bool wantClosed);
+
+  /**
+    @brief getter method for the current arm position in degrees.
+    @return the current arm position in degrees
+
+    Getter method for the current arm position in degrees.
+  */
   double GetCurrentArmPosition();
 
+  /**
+    @brief setter method for whether or not the arm and wrist are in manual or auto
+    @param arm Arm manual/auto state. true to set to manual, false to set to auto
+    @param wrist Wrist manual/auto state. true to set to manual, false to set to auto
+ 
+    Setter method for whether or not the arm and wrist are in manual or auto
+  */
   void UpdateArmAndWristInManual(bool arm, bool wrist);
 
+  /**
+    @brief Print arm related shuffleboard info.
+
+    Print arm related shuffleboard info. Many commented out and commented in things for easy changes.
+  */
   void PrintArmShuffleInfo();
-  void PrintArmInfotoConsole();
-  void ToggleDefenseMode(bool isArmInDefenseMode);
 
+  /**
+    @brief setter method for arm in defense mode.
+    @param wantsDefenseMode whether or not you want defense mode. True for wanting defense mode. False for not wanting defense mode.
+
+    Setter method for arm in defense mode.
+  */
+  void ToggleDefenseMode(bool wantsDefenseMode);
+
+  /**
+    @brief getter method for whether or not the gripper is currently open or closed (gripped or released).
+    @return true if the gripper is gripper/closed, false if it's released/open.
+
+    Getter method for whether or not the gripper is currently open or closed (gripped or released).
+  */
   bool GetIsGripperGripped();
-
-  double GetMAX_FF_GAIN();
-  void SetMAX_FF_GAIN(double ArmFFVoltage);
 
 private:
   static Arm *s_instance;
   Arm();
 
-  
+  /**
+    @brief Set wrist position reference for the wristPID controller.
+    @param wristTargetPosition The degrees of the desired wrist position, relative to the robot frame.
+
+    Set wrist position reference for the wristPID controller, taking into account that the wrist cannot 
+    move beyond a certain angle relative to the arm.
+  */
   void MoveWristToPosition(double wristTargetPosition); //Degrees
+
+  /**
+    @brief Figure out the final desired wrist position depending on the mode of the arm/wrist system
+    @param isGoingToBack True if the final arm position in the back of the robot. False otherwise. 
+    @param isInBallMode True if in ball mode. False if in hatch mode.
+    @param isInBallPickup True if wanting to pickup the ball. False otherwise.
+    @param isInCargoShipMode True if in cargo ship mode. False otherwise.
+
+    Depending on these four modes, the final wrist will be in one of the several preset positions.
+    For example, if in hatch mode and going to the front, 
+    the final wrist will be to face the hatch gripper to the front of the robot. 
+  */
   double FindWristFinalPosition(bool isGoingToBack, bool isInBallMode, bool isInBallPickup, bool isInCargoShipMode);
+  
+  /**
+    @brief Opens hatch gripper
+
+    Opens hatch gripper and sets isHatchGripperClosed member variable to keep track of gripper state.
+  */
   void OpenHatchGripper();
+  
+  /**
+    @brief Closes hatch gripper
+
+    Closes hatch gripper and sets isHatchGripperClosed member variable to keep track of gripper state.
+  */
   void CloseHatchGripper();
 
   //Private Objects
@@ -72,26 +161,14 @@ private:
 
   frc::DoubleSolenoid *hatchGripper;
 
-  frc::PowerDistributionPanel *pdp;
-
-  //Instance Variables
-  bool hasBall = false;
+  //Instance Variables - state of arm/wrist
   bool isArmInManual;
   bool isWristInManual;
-  double previousTargetPosition;
-  double previousTargetWristPosition;
   double wristTargetPositionShuffle;
   double armTargetPositionShuffle;
 
   double FFVoltage = 0.0;
 
-  int compPrintCount = 0;
-  int printCount = 0;
-
-  bool isArmInBack;
-  bool isArmSwitchingSides;
-  bool isArmMoving;
-  bool isWristMoving;
   bool isInHatchMode = true;
   bool isHatchGripperClosed = true;
   bool wantHatchGripperClosed = true;
@@ -108,6 +185,7 @@ private:
   double currentArmPos;
   double currentWristPos;
 
+  //----------------------------------CONSTANTS-------------------------------------------
   //CAN Motor IDs
   const int LEFT_ARM_ID = 42;
   const int RIGHT_ARM_ID = 43;
@@ -115,16 +193,15 @@ private:
   const int RIGHT_WRIST_ID = 45; 
   const int INTAKE_ID = 46;
 
+  //Gripper Solenoid IDs
   const int SOLENOID_FORWARD = 2;
   const int SOLENOID_REVERSE = 3;
 
-  const int INTAKE_PDP_PORT = 10;
-  const double INTAKE_MAX_CURRENT = 40.0;
-
+  //Arm/Wrist Current Limits - amps
   const int ARM_CURRENT_LIMIT = 40;
   const int WRIST_CURRENT_LIMIT = 10;
 
-  //Wrist Positions
+  //Wrist Positions - degrees
   const int WRIST_BALL_FRONT = -65;
   const int WRIST_HATCH_FRONT = 90;
   const int WRIST_BALL_BACK = 65;
@@ -134,11 +211,6 @@ private:
   const int WRIST_BALL_PICKUP_BACK = 190;
   const int WRIST_CARGO_SHIP_FRONT = -130;
   const int WRIST_CARGO_SHIP_BACK = 130;
-
-  //Tunables
-  const double HOLD_BALL_SPEED = 0.05;
-  const double CALIBRATION_SPEED = 3000.0;
-  const double LIMIT_SWITCH_OFFSET = 5.0;
 
   //ARM "NO ROTATE ZONE" ANGLE
   const double ARM_DANGERZONE = 22;

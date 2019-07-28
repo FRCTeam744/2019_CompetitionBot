@@ -37,12 +37,8 @@ void Robot::RobotInit()
   m_chooser.AddOption("High Right Rocket Autonomous", kAutoHatchHighRightRocket);
   m_chooser.AddOption("High Left Rocket Autonomous", kAutoHatchHighLeftRocket);
   m_chooser.AddOption("TEST Path", kAutoTest);
-  //frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
   frc::Shuffleboard::GetTab("DriverView").Add("Auto Modes", m_chooser).WithWidget(frc::BuiltInWidgets::kComboBoxChooser);
-  //frc::Shuffleboard::GetTab("DriverView").Add()
-
   frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
-
   frc::SmartDashboard::PutNumber("wristEncoder", 0.1);
 
   drivetrain->RobotInit();
@@ -100,14 +96,14 @@ void Robot::AutonomousInit()
 
   if (isShufflePopulated == false)
   {
-    shufflemanager->ShuffleInit();
+    shufflemanager->TabInit();
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }
 
   isBeforeMatch = false;
   drivetrain->AutonomousInit();
-  arm->CheckHatchGripper(true);
+  arm->SetDesiredHatchGripperState(true);
 
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
@@ -383,13 +379,13 @@ void Robot::AutoStateMachine()
 
     if (isLLFinished == false)
     {
-      arm->CheckHatchGripper(autoIsGripperClosed); //Keep grippers in desired state grippers
+      arm->SetDesiredHatchGripperState(autoIsGripperClosed); //Keep grippers in desired state grippers
       ToggleGrippersTimer = 0;
       lowestArmAngle = arm->GetCurrentArmPosition();
     }
     if (isLLFinished) //toggle gripper, move back and switch states
     {
-      arm->CheckHatchGripper(!autoIsGripperClosed); //Toggle Grippers
+      arm->SetDesiredHatchGripperState(!autoIsGripperClosed); //Toggle Grippers
       ToggleGrippersTimer++;
       if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER) // move backwards
       {
@@ -440,7 +436,7 @@ void Robot::AutoStateMachine()
     //   //Toggle Hatch Panel Gripper
     //   autoIsGripperClosed = !autoIsGripperClosed;
     //   std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
-    //   arm->CheckHatchGripper(autoIsGripperClosed);
+    //   arm->SetDesiredHatchGripperState(autoIsGripperClosed);
     //   std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
 
     //   //start and reset timer to wait for hatch mechanism to grip/release
@@ -532,7 +528,7 @@ void Robot::TeleopInit()
 
   if (isShufflePopulated == false)
   {
-    shufflemanager->ShuffleInit();
+    shufflemanager->TabInit();
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }
@@ -544,7 +540,6 @@ void Robot::TeleopPeriodic()
 
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
-  arm->PrintArmInfotoConsole();
   // frc::SmartDashboard::PutNumber("sampleEncoder Value: ", sampleEncoder->GetRaw()); //Testing
   // std::cout << "sampleEncoder Value: " << sampleEncoder->GetRaw() << std::endl;
 
@@ -561,12 +556,12 @@ void Robot::TeleopPeriodic()
     {
       if (isLLFinished == false)
       {
-        arm->CheckHatchGripper(false); //Open grippers
+        arm->SetDesiredHatchGripperState(false); //Open grippers
         ToggleGrippersTimer = 0;
       }
       if (isLLFinished)
       {
-        arm->CheckHatchGripper(true); //Close grippers
+        arm->SetDesiredHatchGripperState(true); //Close grippers
         ToggleGrippersTimer++;
         if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
         {
@@ -582,12 +577,12 @@ void Robot::TeleopPeriodic()
     {
       if (isLLFinished == false)
       {
-        arm->CheckHatchGripper(true); //Close grippers
+        arm->SetDesiredHatchGripperState(true); //Close grippers
         ToggleGrippersTimer = 0;
       }
       if (isLLFinished)
       {
-        arm->CheckHatchGripper(false); //Open grippers
+        arm->SetDesiredHatchGripperState(false); //Open grippers
         ToggleGrippersTimer++;
         if (ToggleGrippersTimer > LOOPS_TO_TOGGLE_GRIPPER)
         {
@@ -628,12 +623,12 @@ void Robot::TeleopPeriodic()
 
   if (oi->SwitchGears())
   {
-    drivetrain->CheckSwitchGears(oi->GetIsHighGear());
+    drivetrain->SetGearShifter(oi->GetIsHighGear());
   }
 
   if (oi->SwitchGripper())
   {
-    arm->CheckHatchGripper(oi->GetIsGripperClosed());
+    arm->SetDesiredHatchGripperState(oi->GetIsGripperClosed());
   }
 }
 
@@ -646,7 +641,7 @@ void Robot::DisabledPeriodic()
 {
   if (isShufflePopulated == false)
   {
-    shufflemanager->ShuffleInit();
+    shufflemanager->TabInit();
     shufflemanager->VariableInit();
     isShufflePopulated = true;
   }

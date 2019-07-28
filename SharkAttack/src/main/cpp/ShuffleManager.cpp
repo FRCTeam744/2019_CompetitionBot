@@ -18,11 +18,15 @@ ShuffleManager *ShuffleManager::GetInstance(){
 }
 
 ShuffleManager::ShuffleManager(){
-
 }
-//printing methods are all in Robot.cpp/RobotPeriodic: drivetrain->PrintDriveShuffleInfo(); fourbar->PrintFourbarShuffleInfo(); arm->PrintArmShuffleInfo(); 
 
-void ShuffleManager::ShuffleInit(){ //variables were declared in .h, giving them values/initializing them here
+//printing methods are all in Robot.cpp/RobotPeriodic:
+//drivetrain->PrintDriveShuffleInfo()
+//fourbar->PrintFourbarShuffleInfo()
+//arm->PrintArmShuffleInfo();
+
+//GetTab("Tab_Name") is what creates a new tab for SB to display
+void ShuffleManager::TabInit(){
     DriverTab = &frc::Shuffleboard::GetTab("DriverView");
     //PreCompTab = &frc::Shuffleboard::GetTab("Pre-Comp Check");
     ArmWristTab = &frc::Shuffleboard::GetTab("Arm&Wrist Debug");
@@ -30,12 +34,18 @@ void ShuffleManager::ShuffleInit(){ //variables were declared in .h, giving them
     FourbarTab = &frc::Shuffleboard::GetTab("Fourbar Testing");
 }
 
-void ShuffleManager::VariableInit(){ //variables were declared in .h, giving them values/initializing them here
+//Takes NetworkTableEntries from ShuffleManager.h and initializes them with placeholders based on needed variable type
+//The proper variable will be passed in to the OnShfl in Drivetrain.cpp, Fourbar.cpp, or Arm.cpp in respective methods (see above)
+//and updated by the various print methods being called in Robot.cpp
+
+//NOTE: commented out variables are functional. The list is tailored for our drive team or debugging
+//so the NetworkTable isn't cluttered with empty variables
+void ShuffleManager::VariableInit(){
     // leftDriveVision = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     // rightDriveVision = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
     // leftDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Left", 0.0).GetEntry();
     // rightDriveDriver = ShuffleManager::DriverTab->Add("Ft-Sec-Right", 0.0).GetEntry();
-    checkDriveTrainGearDriver = ShuffleManager::DriverTab->Add("In High Gear?", true).GetEntry(); //temp false 
+    checkDriveTrainGearDriver = ShuffleManager::DriverTab->Add("In High Gear?", true).GetEntry();
     // speedErrorLeftPreComp = ShuffleManager::PreCompTab->Add("Speed Error Left", 0.0).GetEntry();
     // speedErrorRightPreComp = ShuffleManager::PreCompTab->Add("Speed Error Right", 0.0).GetEntry();    
     checkArmManualArmWrist = ShuffleManager::ArmWristTab->Add("Arm in Manual?", true).GetEntry();
@@ -91,23 +101,31 @@ void ShuffleManager::VariableInit(){ //variables were declared in .h, giving the
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, double val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+    //negates everything on other tabs when FMS is connected - bandwidth and Rio CPU issues can happen if duplicate variables on multiple tabs update every 200ms
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){
        if(tab == DriverTab){
-        var.SetDouble(val); //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+        //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+        var.SetDouble(val);
        }
     }
+    //functions as normal when in the lab or at demos
     else
     {
         var.SetDouble(val);
     }
 }
 
+//precaution in case floats are used
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, float val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+    //negates everything on other tabs when FMS is connected - bandwidth and Rio CPU issues can happen if duplicate variables on multiple tabs update every 200ms
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){
        if(tab == DriverTab){
-        var.SetDouble((double)val); //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+        //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+        //"setFloat" doesn't exist, so cast into double first
+        var.SetDouble((double)val);
        }
     }
+    //functions as normal when in the lab or at demos
     else
     {
         var.SetDouble((double)val);
@@ -115,11 +133,15 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, int val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
-       if(tab == DriverTab){
-        var.SetDouble((double)val); //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+    //negates everything on other tabs when FMS is connected - bandwidth and Rio CPU issues can happen if duplicate variables on multiple tabs update every 200ms
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){
+        if(tab == DriverTab){
+        //setDouble changes the 0.0 based on whatever parameter val is set to in the other cpp file
+        //"setInt" doesn't exist, so cast into double first
+        var.SetDouble((double)val);
        }
     }
+    //functions as normal when in the lab or at demos
     else
     {
         var.SetDouble((double)val);
@@ -127,11 +149,14 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
 }
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, const char* val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+    //negates everything on other tabs when FMS is connected - bandwidth and Rio CPU issues can happen if duplicate variables on multiple tabs update every 200ms
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){
        if(tab == DriverTab){
-        var.SetString(val); //setString changes based on whatever parameter val is set to in the other cpp file
+       //setString changes based on whatever parameter val is set to in the other cpp file
+       var.SetString(val); 
        }
     }
+    //functions as normal when in the lab or at demos
     else
     {
         var.SetString(val);
@@ -140,11 +165,14 @@ void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var
 
 
 void ShuffleManager::OnShfl(frc::ShuffleboardTab *tab, nt::NetworkTableEntry var, bool val){
-    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){ //negates everything on other tabs when FMS is connected
+    //negates everything on other tabs when FMS is connected - bandwidth and Rio CPU issues can happen if duplicate variables on multiple tabs update every 200ms
+    if(frc::DriverStation::GetInstance().IsFMSAttached() == true){
        if(tab == DriverTab){
-        var.SetBoolean(val); //setBoolean. Basic setup is using the original values of var in their .h files, change in printing method when needed 
+        //setBoolean changes the inital true or false from VariableInit() based on what val is set to in the other cpp file
+        var.SetBoolean(val);
        }
     }
+    //functions as normal when in the lab or at demos
     else
     {
         var.SetBoolean(val);
