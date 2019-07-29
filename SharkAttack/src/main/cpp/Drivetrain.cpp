@@ -62,34 +62,34 @@ Drivetrain::Drivetrain()
     rightBack->SetSensorPhase(true);
 
     //Config for the Talon internal PID loop for speedControl
-    leftBack->Config_kF(0, kFeedForwardGain, talonTimeout);
-    rightBack->Config_kF(0, kFeedForwardGain, talonTimeout);
-    leftBack->Config_kP(0, kP_SPEED, talonTimeout);
-    rightBack->Config_kP(0, kP_SPEED, talonTimeout);
-    leftBack->Config_kD(0, kD_SPEED_LEFT, talonTimeout);
-    rightBack->Config_kD(0, kD_SPEED_RIGHT, talonTimeout);
-    leftBack->Config_kI(0, kI_SPEED, talonTimeout);
-    rightBack->Config_kI(0, kI_SPEED, talonTimeout);
-    leftBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
-    rightBack->Config_IntegralZone(0, kI_ZONE, talonTimeout);
+    leftBack->Config_kF(0, kFF_SPEED, TALON_TIMEOUT);
+    rightBack->Config_kF(0, kFF_SPEED, TALON_TIMEOUT);
+    leftBack->Config_kP(0, kP_SPEED, TALON_TIMEOUT);
+    rightBack->Config_kP(0, kP_SPEED, TALON_TIMEOUT);
+    leftBack->Config_kD(0, kD_SPEED_LEFT, TALON_TIMEOUT);
+    rightBack->Config_kD(0, kD_SPEED_RIGHT, TALON_TIMEOUT);
+    leftBack->Config_kI(0, kI_SPEED, TALON_TIMEOUT);
+    rightBack->Config_kI(0, kI_SPEED, TALON_TIMEOUT);
+    leftBack->Config_IntegralZone(0, kI_ZONE, TALON_TIMEOUT);
+    rightBack->Config_IntegralZone(0, kI_ZONE, TALON_TIMEOUT);
 
     //initialize auto versus manual driving state
     isInAutoDrive = false;
     isInLLDrive = false;
 
     //Config for Talon Loop Ramp Rates in seconds
-    leftFront->ConfigClosedloopRamp(talonRampRate);
-    leftMid->ConfigClosedloopRamp(talonRampRate);
-    leftBack->ConfigClosedloopRamp(talonRampRate);
-    rightFront->ConfigClosedloopRamp(talonRampRate);
-    rightMid->ConfigClosedloopRamp(talonRampRate);
-    rightBack->ConfigClosedloopRamp(talonRampRate);
-    leftFront->ConfigOpenloopRamp(talonRampRate);
-    leftMid->ConfigOpenloopRamp(talonRampRate);
-    leftBack->ConfigOpenloopRamp(talonRampRate);
-    rightFront->ConfigOpenloopRamp(talonRampRate);
-    rightMid->ConfigOpenloopRamp(talonRampRate);
-    rightBack->ConfigOpenloopRamp(talonRampRate);
+    leftFront->ConfigClosedloopRamp(TALON_RAMP_RATE);
+    leftMid->ConfigClosedloopRamp(TALON_RAMP_RATE);
+    leftBack->ConfigClosedloopRamp(TALON_RAMP_RATE);
+    rightFront->ConfigClosedloopRamp(TALON_RAMP_RATE);
+    rightMid->ConfigClosedloopRamp(TALON_RAMP_RATE);
+    rightBack->ConfigClosedloopRamp(TALON_RAMP_RATE);
+    leftFront->ConfigOpenloopRamp(TALON_RAMP_RATE);
+    leftMid->ConfigOpenloopRamp(TALON_RAMP_RATE);
+    leftBack->ConfigOpenloopRamp(TALON_RAMP_RATE);
+    rightFront->ConfigOpenloopRamp(TALON_RAMP_RATE);
+    rightMid->ConfigOpenloopRamp(TALON_RAMP_RATE);
+    rightBack->ConfigOpenloopRamp(TALON_RAMP_RATE);
 
     //state of whether or not a target is acquired 
     isTargetAcquired = false;
@@ -185,11 +185,6 @@ int Drivetrain::get_trajectory(std::string name, Segment *traj_out)
     int len = pathfinder_deserialize_csv(fp, traj_out);
     fclose(fp);
     return len;
-}
-
-double Drivetrain::pathfinder_follow_encoder(Segment s, int trajectory_length)
-{
-    return s.velocity;
 }
 
 void Drivetrain::RobotInit()

@@ -25,15 +25,80 @@ class Drivetrain
   public:
 	static Drivetrain *GetInstance();
 
+	/**
+    @brief Appends the path to the file name to get the full path to the trajectory file.
+    @param name The file name of the trajectory file.
+	@return The full path of the trajectory file
+
+    Appends the path to the file name to get the full path to the trajectory file.
+	*/
 	std::string get_trajectory_file(std::string name);
+	
+	/**
+    @brief Takes the trajectory in the file with the name "name" and sets it to the traj_out variable.
+    @param name The file name of the trajectory file.
+	@param trajout The buffer that stores the current trajectory.
+	@return len Returns the length of the trajectory, in discrete timesteps.
+
+	Takes the trajectory in the file with the name "name" and sets it to the traj_out variable.	
+	*/
 	int get_trajectory(std::string name, Segment *traj_out);
-	double pathfinder_follow_encoder(Segment s, int trajectory_length);
+	
+	/**
+	 * @brief Initialization of certain variables for the Drivetrain.
+	 * 
+	 * Initializes the DGain timer for LL tracking, and the prevT value.
+	 */
 	void RobotInit();
+
+	/**
+	 * @brief Initialization of variables for autonomous.
+	 * 
+	 * Zeros the yaw angle for auto driving purposes.
+	 */
 	void AutonomousInit();
+
+	
+	/**
+	 * @brief Initialize the trajectory buffers for the left and right sides.
+	 * @param pathName the name of the path file to initialize.
+	 * 
+	 * Takes the trajectories from the files and sets them to the correct buffers.
+	 */
 	void FollowPathInit(std::string pathName);
+
+	/**
+	 * @brief Executes the following of the path loaded into the trajectory buffers
+	 * @param isReverse if true, follow the path in reverse, if false, follow forward
+	 * @return returns true when finished with the trajectory.
+	 * 
+	 * Trajectory following, flips and reverses the sign of the velocity inputs if reverse.
+	 * Angle adjustment based on NavX gyroscope feedback.
+	 * Handles cutting off the trajectory early to save time in sandstorm.
+	 */
 	bool FollowPath(bool isReverse);
+
+	/**
+	 * @brief Drive by LL to track the vision target.
+	 * @param wantLimelight whehter or not limelight tracking is desired right now
+	 * @param leftTank the value of the left drive joystick, for driving when no target is in view
+	 * @param rightTank the value of the right drive joystick, for driving when no target is in view
+	 * @param isBallMode whether or not the arm is in ball mode
+	 * @param wantToNotMove true if you want to run the limelight code, without moving the drivetrain.
+	 * @return returns true when finished with tracking the vision target, false otherwise
+	 * 
+	 * Drives to the correct spot relative to the vision target.
+	 */
 	bool AutoDrive(bool wantLimelight, double leftTank, double rightTank, bool isBallMode, bool wantToNotMove);
+	
+	/**
+	 * @brief Print various Drivetrain info to shuffle board
+	 * 
+	 * Print various Drivetrain info to shuffle board
+	 */
 	void PrintDriveShuffleInfo();
+
+
 	void TankDrive(double leftValue, double rightValue);
 	void LimelightSet(std::tuple<bool, std::string, double>);
 	double LimelightGet(std::string key);
@@ -122,9 +187,6 @@ class Drivetrain
 	void IsTargetNotAcquired(double leftTank, double rightTank);
 
 	//Private Instance Objects
-
-	bool isInitialized = false;
-
 	//left back and right back encoder used for drivetrain
 	//left front and right front encoder used for arm and wrist respectively
 	TalonSRX *leftFront;
@@ -136,10 +198,11 @@ class Drivetrain
 
 	frc::Solenoid *gearShifter;
 
+	//Various Timers
 	frc::Timer *hatchPlaceTimer;
-
 	frc::Timer *angleDGainTimer;
 
+	//Limelights
 	std::shared_ptr<NetworkTable> limelightFront;
 	std::shared_ptr<NetworkTable> limelightBack;
 
@@ -156,46 +219,23 @@ class Drivetrain
 
 	double leftDashboardSpeed = 0.0;
 	double rightDashboardSpeed = 0.0;
-	double leftPower = 0.0;
-	double rightPower = 0.0;
 	double desiredRightFPS = 3.0;
 	double desiredLeftFPS = 3.0;
 	bool driveTrainGearShuffle = true;
 
-	double realRightSpeedNUPer100ms = 0.0;
-	double realLeftSpeedNUPer100ms = 0.0;
-
+	//LL data variables
 	double targetOffsetAngle_Horizontal;
 	double targetOffsetAngle_Vertical;
 	double currentArea;
 	double targetSkew;
 	double tv;
 	double actualPipeline;
-	double tx0;
-	double ty0;
-	double tx1;
-	double ty1;
-	double tx2;
-	double ty2;
-	std::vector<double> limelightPose;
-	std::vector<double> rawXBuffer;
-	std::vector<double> rawYBuffer;
-	std::vector<double> rawZBuffer;
-	std::vector<double> rawRollBuffer;
-	std::vector<double> rawPitchBuffer;
-	std::vector<double> rawYawBuffer;
-	double prevX;
-	double prevY;
-	double prevZ;
-	double prevRoll;
-	double prevPitch;
-	double prevYaw;
-	const double alpha = 0.02 / (0.06 + 0.02);
-
+	
 	double angleErrorAdjustmentValue_LLTracking = 0.0;
 
 	double currentDistanceInches = 0.0;
 
+	//LL tracking variables
 	double xDesiredInches;
 	double zDesiredInches;
 	bool isInAutoDrive;
@@ -222,8 +262,7 @@ class Drivetrain
 	const double FEET_TO_NU = 1.0 / NU_TO_FEET;
 	const double SECONDS_TO_100MS = 10;
 	const double CONVERT_100MS_TO_SECONDS = 0.1;
-	const double PATH_CUTOFF_TIME = 0.25; //adjustable
-
+	
 	const double MAX_TALON_OUTPUT = 1023.0; //instead of 0-100% power it is now 0-1023'%' where 1023 is the new 100%
 
 	//Field Measurements
@@ -238,16 +277,8 @@ class Drivetrain
 	const double AUTO_VELOCITY_CONTROL_DRIVE_SPEED = 2.5;
 
 	//PID control limelight
-	const double kP_THETA_DESIRED = -2;
-	const double LL_FRONT_THETA_OFFSET = 15;
-	const double LL_FRONT_X_OFFSET = 12.5;
-	const double kP_FORWARD = 0; //.2 / 10;
-	const double kP_THETA = 0;   //.2 / 30;
-	const double START_FILTERING_JUMPS = 15;
 	bool isTargetAcquired;
 
-
-	const double DESIRED_DISTANCE_INCHES = 22;									//desired distance from target
 	const double kP_DIST_FPS = -.2;											//Estimate this value by seeing at what percent of the distance you want the speed to be in FPS
 	const double kP_NU_PER_100MS = kP_DIST_FPS * FEET_TO_NU * SECONDS_TO_100MS; //Converted from FPS estimate above to NU/100ms that the talon can use
 	const double LL_DISTANCE_PER_5FEET_FRONT = 100.0;
@@ -257,6 +288,7 @@ class Drivetrain
 	const double LIMELIGHT_ANGLE_FRONT = 26.0;
 	const double LIMELIGHT_ANGLE_BACK = 25.0;
 	// const double CROSSHAIR_ANGLE = 6.5; //17.3
+	const double PATH_CUTOFF_TIME = 0.25; //adjustable
 
 	const double kP_ANGLE = 0.23;   //FOR ANGLE CORRECTION TODO
 	const double kI_ANGLE = 0;//0.0030; //FOR ANGLE CORRECTION TODO
@@ -271,9 +303,7 @@ class Drivetrain
 	const double MAX_JUMP_ANGLE_ALLOWED = 5; //degrees
 	const double MAX_JUMP_DISTANCE_ALLOWED = 5; //calculated inches
 
-	const double MIN_COMMAND = 0.23;
-
-	//Constants for the PID of talon
+	//Constants for the PID speed control built in to the Talon
 	const double kP_SPEED = 0.2;						 //FOR SPEED CONTROL
 	const double kD_SPEED_RIGHT = kP_SPEED * 20.0 * 1.0; //USE 1.0 VALUE TO CALIBRATE
 	const double kD_SPEED_LEFT = kP_SPEED * 20.0 * 1.0;  //FOR SPEED CONTROL
@@ -281,19 +311,16 @@ class Drivetrain
 	const double kI_SPEED = kP_SPEED / 100.0;
 	const double kI_ZONE = (.5 * 2.0) * FEET_TO_NU * CONVERT_100MS_TO_SECONDS;
 
-	double kFeedForwardGain = (TEST_PERCENT_OUTPUT * MAX_TALON_OUTPUT) / MEASURED_SPEED_NU;
+	const double kFF_SPEED = (TEST_PERCENT_OUTPUT * MAX_TALON_OUTPUT) / MEASURED_SPEED_NU;
 
-	const double talonTimeout = 10; //number of ms before the talon stops trying to configure a specific value
+	const double TALON_TIMEOUT = 10; //number of ms before the talon stops trying to configure a specific value
 
 	//Talon Loop Ramp Rates in seconds
-	const double talonRampRate = 0.0;
+	const double TALON_RAMP_RATE = 0.0;
 
 	const double LL_MAX_FEET_PER_SEC = 3.5;
 
 	//Pathfinding
-	EncoderFollower m_left_follower;
-	EncoderFollower m_right_follower;
-
 	Segment leftTrajectory[750];
 	Segment rightTrajectory[750];
 
