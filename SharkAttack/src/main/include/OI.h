@@ -25,63 +25,86 @@ class OI
 	//TODO: Go through each button and assign variable in cpp file in functions
   public:
 	static OI *GetInstance();
+	/**
+    @brief Gets button input. Either drive forward at test speed or drive whichever side the arm is facing.
 
-	void SwitchDriveMode();
+    Either drive forward at test speed or drive whichever side the arm is facing.
+  	*/
+	bool GetAutoDriveForward();
+	/**
+	 @brief Gets the button input for the pickup of hatches by the limelight
+	 
+	 Gets the button input for the pickup of hatches by the limelight
+	 */
+	bool GetDriveByLimelightPickup();
+	/**
+	 @brief Gets the button input for the placement of hatches by the limelight
+	 
+	 Gets the button input for the placement of hatches by the limelight
+	 */
+	bool GetDriveByLimelightPlace();
+
+	/**
+	 @brief Switches gear for transition
+	 @return Either switch gears or don't
+
+	 Switches gear if button that is pressed is for the opposite gear.
+	 */
 	bool SwitchGears();
-	bool GetIsHighGear();
+	
+	/**
+	  @brief Returns if the transmition is in high gear.
 
+	  Returns if the transmition is in high gear.
+	*/
+	bool GetIsHighGear();
+	/**
+    @brief Gets button input. Either drive forward at test speed or drive whichever side the arm is facing.
+
+    Either drive forward at test speed or drive whichever side the arm is facing.
+  	*/
 	bool GetVelocityTest();
 
 	bool SwitchGripper();
 	bool GetIsGripperClosed();
-	void PrintToSmartDashboard(double encoderValue);
+
+	double GetArmInput();
+	double GetWristInput();
+	double GetIntakeInput();
+
+	bool GetPlacingMode();
+	void SetPlacingMode(bool isInBallMode);
+
+	bool GetIsInBallPickup();
+	bool GetIsArmInManual();
+	bool GetIsWristInManual();
 
 	double GetLeftDriveInput();
 	double GetRightDriveInput();
 
-	bool GetAutoDriveForward();
-	bool GetDriveByLimelightPickup();
-	bool GetDriveByLimelightPlace();
-	bool GetStopLLMove();
-	bool IsInCargoShipMode();
-
-	double GetArmInput();
-	double GetWristInput();
-	double GetArmEncoder();
-	double GetWristEncoder();
-	double GetIntakeInput();
-	double GetTargetArmPosition();
-	void SetTargetArmPosition(double targetArmPosition);
-	double GetTargetWristPosition();
-
-	bool GetPlacingMode();
-	void SetPlacingMode(bool isInBallMode);
-	bool GetIsInBallPickup();
-	bool GetIsArmInManual();
-	bool GetIsWristInManual();
-	void SetArmWristInManual(bool isArmManual, bool isWristManual);
+	void PrintToSmartDashboard(double encoderValue);
 
 	bool GetFourbarExtend();
 	bool GetFourbarRetract();
 	bool GetFourbarHome();
 
+	double GetTargetArmPosition();
+	void SetTargetArmPosition(double targetArmPosition);
+
+	bool IsInCargoShipMode();
+
+	double GetTargetWristPosition();
+
+	std::tuple<bool, std::string, double> SetLimelight();
+
+	bool GetStopLLMove();
 	double GetArmFFVoltage();
 
-	bool GetIsArmInDefenseMode();
-
-	// bool SetArmFrontHigh();
-	// bool SetArmFrontMid();
-	// bool SetArmFrontLow();
-	// bool SetArmFrontBallPickup();
-	// bool SetArmBackHigh();
-	// bool SetArmBackMid();
-	// bool SetArmBackLow();
-	// bool SetArmBackBallPickup();
+	void SetArmWristInManual(bool isArmManual, bool isWristManual);
 
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	//void PutOnShuffleboardInOI();
 
-	std::tuple<bool, std::string, double> SetLimelight();
 
 	//TARGET HEIGHTS IN INCHES (USE THESE FOR CALCULATION NOT FOR SETTING)
 	const double HIGH_HATCH_HEIGHT = 67.0;
@@ -197,7 +220,6 @@ class OI
 	bool isArmInManual;
 	bool isWristInManual;
 	bool isInCargoShipMode;
-	bool isArmInDefenseMode;
 
 	double armFFVoltage;
 

@@ -74,7 +74,6 @@ void Robot::RobotPeriodic()
 
   // arm->SetMAX_FF_GAIN(oi->GetArmFFVoltage());
 
-  // arm->ToggleDefenseMode(oi->GetIsArmInDefenseMode());
 }
 
 /**

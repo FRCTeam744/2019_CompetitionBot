@@ -28,6 +28,7 @@ OI::OI()
     rightStick = new frc::Joystick(1);
     xbox = new frc::XboxController(2);
 
+    //State variables
     isHighGear = true;
     isGripperClosed = true;
     isInBallMode = false;
@@ -36,7 +37,6 @@ OI::OI()
     isArmInManual = true;
     isWristInManual = true;
     isInCargoShipMode = false;
-    // isArmInDefenseMode = false;
 
     //Caps the camera quality to allow for driver vision
     // camera = frc::CameraServer::GetInstance()->StartAutomaticCapture();
@@ -49,7 +49,6 @@ OI::OI()
 }
 
 //Public Methods
-
 bool OI::GetAutoDriveForward()
 {
     return leftStick->GetRawButton(8);
@@ -67,7 +66,7 @@ bool OI::GetDriveByLimelightPlace()
 
 bool OI::SwitchGears()
 {
-    //low left stick button 2
+    //Low left stick button 2
     if (leftStick->GetRawButtonPressed(2))
     {
         isHighGear = false;
@@ -77,7 +76,7 @@ bool OI::SwitchGears()
         return true;
     }
 
-    //high right stick button 2
+    //High right stick button 2
     if (rightStick->GetRawButtonPressed(2))
     {
         isHighGear = true;
@@ -566,21 +565,6 @@ double OI::GetArmFFVoltage()
     }
 
     return armFFVoltage;
-}
-
-bool OI::GetIsArmInDefenseMode()
-{
-    // std::cout << "Button 7 working" << std::endl;
-    if (leftStick->GetRawButton(9))
-    {
-        isArmInDefenseMode = false;
-    }
-    else if (leftStick->GetRawButton(10))
-    {
-        isArmInDefenseMode = true;
-    }
-    frc::SmartDashboard::PutBoolean("isArmInDefenseMode", isArmInDefenseMode);
-    return isArmInDefenseMode;
 }
 
 void OI::SetArmWristInManual(bool isArmManual, bool isWristManual)
