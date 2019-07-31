@@ -98,20 +98,127 @@ class Drivetrain
 	 */
 	void PrintDriveShuffleInfo();
 
-
+	/**
+	 * @brief Method for executing tank drive.
+	 * @param leftValue the value to input to the left side of the drivetrian
+	 * @param rightValue the value to input to the right side of the dirvetrain
+	 * 
+	 * Set the drivetrain to drive by tankdrive when it is not auto driving or driving via limelight. 
+	 */ 
 	void TankDrive(double leftValue, double rightValue);
+
+	/**
+	 * @brief Sets values for properties of the front limelight
+	 * @param data tuple containing: whether or not to set the property, the key of the property being set, and the value to set
+	 * 
+	 * Sets values for properties of the front limelight.
+	 */ 
 	void LimelightSet(std::tuple<bool, std::string, double>);
+
+	/**
+	 * @brief Gets the value of a certain property for the front limelight.
+	 * @param key the key of the property to get the current value of.
+	 * 
+	 * Gets the value of a certain property for the front limelight.
+	 */ 
 	double LimelightGet(std::string key);
+
+	/**
+	 * @brief Sets the gear shifter solenoid to high or low gear.
+	 * @param isHighGear true if setting to high gear, false if setting to low gear
+	 * 
+	 * Sets the gear shifter solenoid to high or low gear.
+	 */ 
 	void SetGearShifter(bool isHighGear);
+
+	/**
+	 * @brief Either drives at a given percent output or at a given velocity in the direction of the arm.
+	 * @param isTestPercentOut true if wanting to drive with a constant percent output.
+	 * @param isVelocityControl true if wanting to drive with a certain velocity in the same direction as the arm side.
+	 * 
+	 * Either drives at a given percent output or at a given velocity in the direction of the arm.
+	 * TEST_PERCENT_OUT contains the percent output to drive at when in that mode.
+	 * AUTO_VELOCITY_CONTROL_DRIVE_SPEED contains the speed to drive at when in velocity mode. 
+	 */ 
 	void AutoDriveForward(bool isTestPercentOut, bool isVelocityControl);
+	
+	/**
+	 * @brief Either drives at a given percent output or at a given velocity in the opposite direction of the arm.
+	 * @param isTestPercentOut true if wanting to drive with a constant percent output.
+	 * @param isVelocityControl true if wanting to drive with a certain velocity in the opposite direction as the arm side.
+	 * 
+	 * Either drives at a given percent output or at a given velocity in the opposite direction of the arm.
+	 * TEST_PERCENT_OUT contains the percent output to drive at when in that mode.
+	 * AUTO_VELOCITY_CONTROL_DRIVE_SPEED contains the speed to drive at when in velocity mode. 
+	 */ 
 	void AutoDriveBackwards(bool isTestPercentOut, bool isVelocityControl);
+	
+	//The following are setter methods for LL tracking parameters. These change based on the position of the arm.
+	/**
+	 * @brief Set desired x and z distance setpoints in calculated "inches" for LL tracking. Changes based on arm position.
+	 * @param xDesiredInches the desired x inches (or side to side) inches to end at when LL tracking
+	 * @param zDesiredInches the desired z inches (or how far away) inches to end at when LL tracking
+	 * 
+	 * Set desired x and z distance setpoints in calculated "inches." These change based on the arm position.
+	 * In actuality, the xDesiredInches is more of an angle measurement, but this value is always 0 anyways.
+	 */ 
 	void SetDesiredLLDistances(double xDesiredInches, double zDesiredInches);
+	
+	/**
+	 * @brief Set whether or not the arm is in the front, used for LL tracking. Changes based on arm position.
+	 * @param isFront true if the arm is in the front of the robot, false if it's in the back
+	 * 
+	 * whether or not the arm is in the front, used for LL tracking. Changes based on arm position.
+	 * A position of 0 defaults to the front.
+	 */ 
 	void SetIsFrontLL(bool isFront);
-	void AutoDriveLL(bool wantLimelight, double leftTank, double rightTank);
-	// void PutOnShuffleboard();
+
+	/**
+	 * @brief Set slope and intercept for line to follow when LL tracking. Changes based on arm position.
+	 * @param slope the calculated slope of the line, dy/dx where dy and dx are in units of angle from the crosshair
+	 * @param intercept the dy value when dx=0
+	 * 
+	 * Because the Limelights are mounted offset from the arm, and at an obscure angle, 
+	 * the tracking of the target moves left to right as the robot approaches the target.
+	 * The slope and intercept are used to describe the line that the target follows, 
+	 * as it moves closer to the target while lined up to score.
+	 * While the robot drives forward, the setpoitn angle is being constantly adjusted to 
+	 * follow this line. 
+	 * 
+	 * While written in a way that line (slope/intercept) could be set for each individual arm position,
+	 * it ended up only needing a different slope/intercept for the front and back limelight.
+	 */ 
 	void SetSlopeInterceptForAngleCalc(double slope, double intercept);
+
+	/**
+	 * @brief Set crosshair angle for use in calculating distance from the target. Changes based on arm position.
+	 * @param crosshairAngle the vertical deviation of the corsshair, in units of angle, from the center of the image 
+	 * 
+	 * The vertical (dy) deviation of the crosshair from the center point of the image for the pipeline in use. 
+	 * This is used in the calculation of the horizontal distance of the robot from the target.
+	 *  
+	 * While written in a way that line crosshair angle could be set for each individual arm position,
+	 * it ended up only needing a different crosshair angle for the front and back limelight, as there was 
+	 * only 1 pipeline in use for tracking per side. 
+	 */ 
 	void SetCrosshairAngle(double crosshairAngle);
+	
+	/**
+	 * @brief Sets the pipeline for use in LL tracking. Changes based on arm position.
+	 * @param pipelineNumber the number assigned to the pipeline in the LL GUI. 
+	 * 
+	 * Sets the pipeline for use in LL tracking.
+	 * 
+	 * Only 1 pipeline ended up being used, and due to a strange lag in intaking light when switching pipelines,
+	 * eventually we set the LLs to only stay in their tracking pipelines. And only 1 pipeline was needed on each side. 
+	 */
 	void SetPipelineNumber(int pipelineNumber);
+
+	/**
+	 * @brief Stops drivetrain motors.
+	 * 
+	 * Sets the percent output of all drivetrain motors to 0.
+	 */ 
 	void StopMotors();
 
 	//measured crosshair angles
@@ -184,6 +291,14 @@ class Drivetrain
 	static Drivetrain *s_instance;
 
 	Drivetrain();
+	/**
+	 * @brief What to do in LL tracking if the target is not acquired.
+	 * @param leftTank the value for the left side of the drivetrain
+	 * @param rightTank the value for the right side of the drivetrain
+	 * 
+	 * Temporarily turn of the isInLLDrive flag, and runs the TankDrive method.
+	 * Sets isTargetAcquired to false.
+	 */ 
 	void IsTargetNotAcquired(double leftTank, double rightTank);
 
 	//Private Instance Objects
