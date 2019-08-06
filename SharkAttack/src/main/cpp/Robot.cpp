@@ -16,19 +16,23 @@ static void VisionThread()
 
 void Robot::RobotInit()
 {
+  //set up instances of different robot subsystems
   drivetrain = Drivetrain::GetInstance();
   oi = OI::GetInstance();
   arm = Arm::GetInstance();
   fourbar = Fourbar::GetInstance();
   led = LED::GetInstance();
+  shufflemanager = ShuffleManager::GetInstance();
+
+  //initiate various timers
   hatchDelayTimer = new frc::Timer();
   armMoveDelayTimer = new frc::Timer();
   periodTimeRemaining = new frc::Timer();
   backupDelayTimer = new frc::Timer();
 
   isBeforeMatch = true;
-  shufflemanager = ShuffleManager::GetInstance();
-
+  
+  //Set up auto chooser
   m_chooser.SetDefaultOption(kAutoRunTeleop, kAutoRunTeleop);
   m_chooser.AddOption("Right Cargo Autonomous", kAutoHatchRightCargo);
   m_chooser.AddOption("Left Cargo Autonomous", kAutoHatchLeftCargo);
@@ -38,21 +42,9 @@ void Robot::RobotInit()
   m_chooser.AddOption("High Left Rocket Autonomous", kAutoHatchHighLeftRocket);
   m_chooser.AddOption("TEST Path", kAutoTest);
   frc::Shuffleboard::GetTab("DriverView").Add("Auto Modes", m_chooser).WithWidget(frc::BuiltInWidgets::kComboBoxChooser);
-  frc::SmartDashboard::PutNumber("fourbarSpeed", 0.1);
-  frc::SmartDashboard::PutNumber("wristEncoder", 0.1);
 
+  //RoboInit calls done here
   drivetrain->RobotInit();
-
-  // std::thread vision(VisionThread);
-  // vision.detach();
-
-  //Testing
-  // frc::Encoder *sampleEncoder = new frc::Encoder(0, 1, false, frc::Encoder::EncodingType::k4X);
-  // sampleEncoder->SetMaxPeriod(.1);
-  // sampleEncoder->SetMinRate(10);
-  // sampleEncoder->SetDistancePerPulse(5);
-  // sampleEncoder->SetReverseDirection(true);
-  // sampleEncoder->SetSamplesToAverage(7);
 }
 
 /**
@@ -65,14 +57,13 @@ void Robot::RobotInit()
  */
 void Robot::RobotPeriodic()
 {
+  //functions that are called regardless of the robot state
   fourbar->UpdateFourbarSpeed();
   drivetrain->LimelightSet(oi->SetLimelight());
   drivetrain->PrintDriveShuffleInfo();
   fourbar->PrintFourbarShuffleInfo();
   arm->PrintArmShuffleInfo();
-  PrintMatchTimeToShuffle();
-
-  // arm->SetMAX_FF_GAIN(oi->GetArmFFVoltage());
+  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->periodMatchTimeFMS, periodTimeRemaining->GetMatchTime());
 
 }
 
@@ -89,11 +80,9 @@ void Robot::RobotPeriodic()
  */
 void Robot::AutonomousInit()
 {
-  // std::cout << "Auto Init Start Here" << std::endl;
-
-  
   led->LEDsOff();
 
+  //populate the shuffle board once after startup
   if (isShufflePopulated == false)
   {
     shufflemanager->TabInit();
@@ -106,9 +95,6 @@ void Robot::AutonomousInit()
   arm->SetDesiredHatchGripperState(true);
 
   m_autoSelected = m_chooser.GetSelected();
-  // m_autoSelected = SmartDashboard::GetString("Auto Selector",
-  //     kAutoNameDefault);
-  // std::cout << "Auto selected: " << m_autoSelected << std::endl;
   path_count = 0;
   autoIsGripperClosed = true;
   armMoveDelayTimer->Reset();
@@ -116,7 +102,6 @@ void Robot::AutonomousInit()
   backupDelayTimer->Reset();
   backupDelayTimer->Start();
 
-  periodTimeRemaining->GetMatchTime();
 
   autoPathNames.clear();
   autoPathDirections.clear();
@@ -124,6 +109,7 @@ void Robot::AutonomousInit()
 
   lowestArmAngle = oi->FRONT_HIGH_HATCH_POSITION + 10;
 
+  //add the correct path names, directions and arm heights for the various autos
   if (m_autoSelected == kAutoHatchRightCargo)
   {
     oi->SetArmWristInManual(false, false);
@@ -276,13 +262,9 @@ void Robot::AutonomousInit()
   }
 }
 
-void Robot::PrintMatchTimeToShuffle()
-{
-  ShuffleManager::GetInstance()->OnShfl(ShuffleManager::GetInstance()->DriverTab, ShuffleManager::GetInstance()->periodMatchTimeFMS, periodTimeRemaining->GetMatchTime());
-}
-
 void Robot::AutonomousPeriodic()
 {
+  //Decide what to do if running auto
   if (m_autoSelected == kAutoHatchRightCargo)
   {
     AutoStateMachine();
@@ -329,16 +311,15 @@ void Robot::AutoStateMachine()
     auto_state = TELEOP_STATE;
   }
 
+  //autononomous state machine, which has two steps
+  //1. follow path and 2. execute a LL tracking sequence 
   switch (auto_state)
   {
   case FOLLOW_PATH_STATE:
   {
-    // std::cout << "FOLLOW PATH STATE, path_count: " << path_count << std::endl;
     //if arm delay timer is finished, move arm
     if (armMoveDelayTimer->Get() > ARM_MOVE_DELAY)
     {
-      // std::cout << "Can move arm, moving to: " << autoArmPresets.at(path_count) << std::endl;
-
       arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
       oi->SetTargetArmPosition(autoArmPresets.at(path_count));
       oi->SetPlacingMode(false);
@@ -359,19 +340,15 @@ void Robot::AutoStateMachine()
     bool isPathDone = drivetrain->FollowPath(autoPathDirections[path_count]);
     if (isPathDone)
     {
-      // std::cout << "Path is done, switch to DRIVE_BY_LL" << std::endl;
       auto_state = DRIVE_BY_LL_STATE;
     }
   }
   break;
   case DRIVE_BY_LL_STATE:
   {
-    // std::cout << "DRIVE_BY_LL STATE, path_count: " << path_count << std::endl;
-
     //keep active control of arm at current path preset
     arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
-    // std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
-
+    
     //drive by limelight
     GetDesiredLLDistances(autoArmPresets.at(path_count));
     drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
@@ -406,7 +383,6 @@ void Robot::AutoStateMachine()
         //update path counter
         path_count++;
         //if no more paths, go to teleop
-        // std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
         if (path_count >= autoPathNames.size())
         {
           auto_state = TELEOP_STATE;
@@ -419,99 +395,12 @@ void Robot::AutoStateMachine()
           drivetrain->FollowPathInit(autoPathNames.at(path_count));
           armMoveDelayTimer->Reset();
           armMoveDelayTimer->Start();
-          // std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
-
+          
           drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
           //change state
           auto_state = FOLLOW_PATH_STATE;
         }
       }
-    }
-
-    //if done with drive by ll
-    // if (isLLDriveDone)
-    // {
-    //   std::cout << "Drive by LL Done" << std::endl;
-
-    //   //Toggle Hatch Panel Gripper
-    //   autoIsGripperClosed = !autoIsGripperClosed;
-    //   std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
-    //   arm->SetDesiredHatchGripperState(autoIsGripperClosed);
-    //   std::cout << "auto is gripper closed: " << autoIsGripperClosed << std::endl;
-
-    //   //start and reset timer to wait for hatch mechanism to grip/release
-    //   hatchDelayTimer->Reset();
-    //   hatchDelayTimer->Start();
-
-    //   //switch state
-    //   auto_state = DELAY_STATE;
-    // }
-  }
-  break;
-  case DELAY_STATE:
-  {
-    //if done waiting for hatch gripper to move
-    if (hatchDelayTimer->Get() > TOGGLE_HATCH_DELAY)
-    {
-      path_count++;
-      //if no more paths, go to teleop
-      // std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
-      if (path_count >= autoPathNames.size())
-      {
-        auto_state = TELEOP_STATE;
-      }
-      //otherwise, initialize next path, reset arm move timer, and go to path follow state
-      else
-      {
-        drivetrain->FollowPathInit(autoPathNames.at(path_count));
-        armMoveDelayTimer->Reset();
-        armMoveDelayTimer->Start();
-        backupDelayTimer->Reset();
-        backupDelayTimer->Start();
-        // std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
-
-        drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
-        auto_state = FOLLOW_PATH_STATE;
-        lowestArmAngle = arm->GetCurrentArmPosition();
-      }
-    }
-    else
-    {
-      arm->MoveArmToPosition(autoArmPresets.at(path_count), false, false, false);
-      // std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
-    }
-  }
-  break;
-  case BACKUP_STATE:
-  {
-    if (backupDelayTimer->Get() > BACKUP_AUTO_DELAY)
-    {
-      path_count++;
-      //if no more paths, go to teleop
-      // std::cout << "Paths Size: " << autoPathNames.size() << std::endl;
-      if (path_count >= autoPathNames.size())
-      {
-        auto_state = TELEOP_STATE;
-      }
-      //otherwise, initialize next path, reset arm move timer, and go to path follow state
-      else
-      {
-        drivetrain->FollowPathInit(autoPathNames.at(path_count));
-        armMoveDelayTimer->Reset();
-        armMoveDelayTimer->Start();
-        // std::cout << "Init next path, reset armMoveDelayTimer" << autoIsGripperClosed << std::endl;
-
-        drivetrain->AutoDrive(false, oi->GetLeftDriveInput(), oi->GetRightDriveInput(), false, false);
-        auto_state = FOLLOW_PATH_STATE;
-        lowestArmAngle = arm->GetCurrentArmPosition();
-        arm->MoveArmToPosition(lowestArmAngle, false, false, false);
-      }
-    }
-    else
-    {
-      arm->MoveArmToPosition(lowestArmAngle, false, false, false);
-      drivetrain->AutoDriveBackwards(false, true);
-      // std::cout << "moving arm to: " << autoArmPresets.at(path_count) << std::endl;
     }
   }
   break;
@@ -526,6 +415,7 @@ void Robot::TeleopInit()
 {
   isBeforeMatch = false;
 
+  //populate the shuffle board once after startup
   if (isShufflePopulated == false)
   {
     shufflemanager->TabInit();
@@ -540,18 +430,16 @@ void Robot::TeleopPeriodic()
 
   arm->UpdateArmAndWristInManual(oi->GetIsArmInManual(), oi->GetIsWristInManual());
 
-  // frc::SmartDashboard::PutNumber("sampleEncoder Value: ", sampleEncoder->GetRaw()); //Testing
-  // std::cout << "sampleEncoder Value: " << sampleEncoder->GetRaw() << std::endl;
-
+  
   drivetrain->AutoDriveForward(oi->GetAutoDriveForward(), oi->GetVelocityTest());
   GetDesiredLLDistances(oi->GetTargetArmPosition());
   drivetrain->SetDesiredLLDistances(xDesiredInches, zDesiredInches);
-  // drivetrain->AutoDriveLL(oi->GetDriveByLimelight(), oi->GetLeftDriveInput(), oi->GetRightDriveInput());
   bool isLLFinished = drivetrain->AutoDrive((oi->GetDriveByLimelightPickup() || oi->GetDriveByLimelightPlace()), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
-  // bool isLLFinishedPlace = drivetrain->AutoDrive(oi->GetDriveByLimelightPlace(), oi->GetLeftDriveInput(), oi->GetRightDriveInput(), oi->GetPlacingMode(), oi->GetStopLLMove());
 
+  //Hatch Mode Limelight Arm/Gripper and backup of drivetrain control
   if (!oi->GetPlacingMode()) //not in ball mode, aka if is in hatch mode
   {
+    //control the arm/gripper and backup of drive during auto LL pickup
     if (oi->GetDriveByLimelightPickup())
     {
       if (isLLFinished == false)
@@ -573,6 +461,7 @@ void Robot::TeleopPeriodic()
       }
     }
 
+    //control the arm/gripper and backup of drive during auto LL placing 
     if (oi->GetDriveByLimelightPlace())
     {
       if (isLLFinished == false)
@@ -595,37 +484,35 @@ void Robot::TeleopPeriodic()
     }
   }
 
+  //Run wheels to eject ball when limelight tracking is finished
   if (isLLFinished)
   {
-    arm->RunIntake(AUTO_RELEASE_SPEED); //Close grippers
+    arm->RunIntake(AUTO_RELEASE_SPEED); 
   }
-  //std::cout << "zDesiredInches: " << zDesiredInches << std::endl;
-  arm->ManualRotateArm(oi->GetArmInput());
-  arm->ManualRotateWrist(oi->GetWristInput());
-  arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode(), oi->GetIsInBallPickup(), oi->IsInCargoShipMode());
-  //arm->MoveWristToPosition(oi->GetTargetWristPosition());
-  //std::cout << "Arm Position: " << arm->GetArmEncoderValue() << std::endl;
-
-  //std::cout << "Target Position: " << oi->GetTargetPosition() << std::endl;
-  if (!isLLFinished)
+  else //Otherwise manually control the ball intake wheels 
   {
     arm->RunIntake(oi->GetIntakeInput());
   }
 
-  if (oi->GetTargetArmPosition() != oi->NEUTRAL_ARM_POSITION)
-  {
-  }
+  //Manual and automatic control of the arm and wrist
+  arm->ManualRotateArm(oi->GetArmInput());
+  arm->ManualRotateWrist(oi->GetWristInput());
+  arm->MoveArmToPosition(oi->GetTargetArmPosition(), oi->GetPlacingMode(), oi->GetIsInBallPickup(), oi->IsInCargoShipMode());
 
+  //Call the fourbar functions
   fourbar->ExtendOrRetract(oi->GetFourbarExtend(), oi->GetFourbarRetract());
   fourbar->FourbarHome(oi->GetFourbarHome());
 
+  //Manual tank drive call
   drivetrain->TankDrive(oi->GetLeftDriveInput(), oi->GetRightDriveInput());
 
+  //Call to gear shifters
   if (oi->SwitchGears())
   {
     drivetrain->SetGearShifter(oi->GetIsHighGear());
   }
 
+  //Call to manually changing the hatch gripper
   if (oi->SwitchGripper())
   {
     arm->SetDesiredHatchGripperState(oi->GetIsGripperClosed());
@@ -639,6 +526,7 @@ void Robot::DisabledInit()
 
 void Robot::DisabledPeriodic()
 {
+  //populate the shuffle board once after startup
   if (isShufflePopulated == false)
   {
     shufflemanager->TabInit();
@@ -646,27 +534,17 @@ void Robot::DisabledPeriodic()
     isShufflePopulated = true;
   }
 
+  //set the startup animation if before the match in disabled
   if (isBeforeMatch)
   {
     led->StartUp();
   }
 
+  //set the shutdown animation if after the match in disabled
   if (!isBeforeMatch)
   {
     led->ShutDown();
   }
-
-  // std::cout << "DisabledPeriodic running" << std::endl;
-  // std::cout << "hasSetUpForMatch: " << hasSetUpForMatch << std::endl;
-  // if (hasSetUpForMatch == false)
-  // {
-  //   //Speed things up
-  //   if ((oi->GetFakeFMSConnected() == true))
-  //   {
-  //     arm->SetToMatchMode();
-  //     hasSetUpForMatch = true;
-  //   }
-  // }
 }
 
 void Robot::TestPeriodic()
@@ -782,6 +660,8 @@ void Robot::GetDesiredLLDistances(double armTargetPosition)
     drivetrain->SetCrosshairAngle(drivetrain->CROSSHAIR_TY_ANGLE_LOW_HIGH_HATCH_BACK);
     drivetrain->SetPipelineNumber(drivetrain->HATCH_LOW_HIGH_FINAL_PIPELINE);
   }
+
+  //set arm isFront based on the arm target position 
   if (armTargetPosition >= 0)
   {
     drivetrain->SetIsFrontLL(true);

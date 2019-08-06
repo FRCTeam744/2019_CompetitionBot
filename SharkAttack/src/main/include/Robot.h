@@ -43,10 +43,34 @@ public:
   void DisabledInit() override;
   void DisabledPeriodic() override;
   void TestPeriodic() override;
+  
+  /**
+   * @brief Updates the parameters for the LL tracking dependant on the arm position.
+   * @param armTargetPosition The desired position of the arm.
+   * 
+   * Updates the xDesiredInches and zDesiredInches, which are the distances from the target
+   * in "inches" calcualted by the Limelight. x is side to side, and is always 0, currently.
+   * z is how far back from the target.
+   * 
+   * The slope and intercept for the line that the target should move along the image.
+   * 
+   * Also sets the pipeline number (which is now being ignored, as this won't change during the match) 
+   */
   void GetDesiredLLDistances(double armTargetPosition);
-  void AutoStateMachine();
-  void PrintMatchTimeToShuffle();
 
+  /**
+   * @brief runs the autonomous state machine, following paths and driving by limelight to the target.
+   * 
+   * autononomous state machine, which has two steps
+   * 
+   * 1. follow path
+   * 
+   * 2. execute a LL tracking sequence
+   * 
+   * when finished, or canceled, go to running teleopPeriodic.
+   */ 
+  void AutoStateMachine();
+  
   double xDesiredInches;
   double zDesiredInches;
 
@@ -57,7 +81,6 @@ private:
   const std::string kAutoHatchRightCargo = "Place 2 Hatches on the Right Cargo Ship";
   const std::string kAutoHatchLeftCargo = "Place 2 Hatches on the Left Cargo Ship";
   const std::string kAutoTest = "TEST";
-  // const std::string kAutoHatchLeftRocket = "Place 2 Hatches on the Left Rocket";
   const std::string kAutoRunTeleop = "Run Teleop Rather Than Autonomous";
   const std::string kAutoHatchHighRightRocket = "Place 2 Hatches on High Right Rocket";
   const std::string kAutoHatchLowRightRocket = "Place 2 Hatches on Low Right Rocket";
@@ -108,25 +131,12 @@ private:
 
   frc::Timer *periodTimeRemaining;
 
-  // std::vector<std::string> autoPathNames;
-  // std::vector<bool> autoPathDirections;
-  // std::vector<double> autoArmPresets;
 
   //TEST AUTO
   std::vector<std::string> autoPathNames;
   std::vector<bool> autoPathDirections;
-  // = {drivetrain->FORWARD, drivetrain->REVERSE};
   std::vector<double> autoArmPresets;
-  // = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
 
-  //CARGO SHIP RIGHT
-  // const int CARGO_SHIP_RIGHT_AUTO_STEPS = 4;
-  // std::string cargoShipRightPaths[CARGO_SHIP_RIGHT_AUTO_STEPS]
-  //             = {"TestPath", "TestPath", "TestPath", "TestPath"};
-  // bool   cargoShipRightPathDirections[CARGO_SHIP_RIGHT_AUTO_STEPS]
-  //             = {drivetrain->FORWARD, drivetrain->REVERSE, drivetrain->FORWARD, drivetrain->REVERSE};
-  // double cargoShipRightArmPresets[CARGO_SHIP_RIGHT_AUTO_STEPS]
-  //             = {oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION, oi->FRONT_LOW_HATCH_POSITION, oi->BACK_LOW_HATCH_POSITION};
   double lowestArmAngle;
 
   int ToggleGrippersTimer = 0;

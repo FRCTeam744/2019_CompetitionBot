@@ -25,7 +25,7 @@ public:
   /**
     @brief Controls the arm from a manual input, without PID control.
     @param manualArmPower The amount of power in percent output to set the arm motors to.
-
+    
     When in the arm is in manual mode, this method is responsible for taking the motor input value 
     and setting it to the arm motors.  
   */
