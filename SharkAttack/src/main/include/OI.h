@@ -58,6 +58,7 @@ class OI
 	  Returns if the transmition is in high gear.
 	*/
 	bool GetIsHighGear();
+
 	/**
     @brief Gets button input. Either drive forward at test speed or drive whichever side the arm is facing.
 
@@ -65,42 +66,180 @@ class OI
   	*/
 	bool GetVelocityTest();
 
+	/**
+    @brief Switches the gripper mode to either open or closed (gripped or released respectively)
+	@returns Returns switched value of true when gripper is closed, false when open.
+
+    Switches the gripper mode to either open or closed (gripped or released respectively)
+  	*/
 	bool SwitchGripper();
+
+	/**
+    @brief Get method that returns whether the gripper is closed or not
+	@returns The gripper state (closed/open or gripped/released respectively)
+
+    Get method that returns whether the gripper is closed or not
+  	*/
 	bool GetIsGripperClosed();
 
+	/**
+    @brief Switches arm control to manual when joystick is moved significantly
+	@returns Power given to arm based on joystick movements.
+
+	Switches arm control to manual when joystick is moved significantly
+  	*/
 	double GetArmInput();
+
+	/**
+    @brief Switches wrist control to manual when joystick is moved significantly
+	@returns Power given to arm based on joystick movements.
+
+	Switches arm control to manual when joystick is moved significantly. Otherwise
+	the arm is in auto
+  	*/
 	double GetWristInput();
+
+	/**
+    @brief Return an intake power on trigger pull
+	@returns Return a double of intake power (left trigger intakes, right pushes out)
+
+	Return an intake power on trigger pull on xbox controller
+  	*/
 	double GetIntakeInput();
 
+	/**
+    @brief Left joystick pressed, hatch mode. Right joystick pressed, ball mode
+	@returns If the robot is in ball mode
+
+	If left joystick pressed, switch into hatch mode. If right joystick is pressed, switch into ball mode.
+  	*/
 	bool GetPlacingMode();
+
+	/**
+    @brief Set whether the arm is in ball mode or hatch mode
+
+	Set whether the arm is in ball mode or hatch mode
+  	*/
 	void SetPlacingMode(bool isInBallMode);
 
+	/**
+    @brief Returns if arm is in ball pickup mode
+	@returns Whether arm is in ball pickup mode
+
+	Returns if arm is in ball pickup mode
+  	*/
 	bool GetIsInBallPickup();
+
+	/**
+    @brief Returns if arm is in manual control mode
+	@returns Returns if arm is in manual control mode
+
+	Returns if arm is in manual control mode
+  	*/
 	bool GetIsArmInManual();
+
+	/**
+    @brief Returns if wrist is in manual control mode
+	@returns Returns if wrist is in manual control mode
+
+	Returns if wrist is in manual control mode
+  	*/
 	bool GetIsWristInManual();
 
+	/**
+    @brief Inverts left stick value and returns the output
+	@returns Returns the inverted value of the stick input
+
+	Joysticks natively give out negative values when going forward, so adding the negative corrects it
+  	*/
 	double GetLeftDriveInput();
+
+	/**
+    @brief Inverts right stick value and returns the output
+	@returns Returns the inverted value of the stick input
+
+	Joysticks natively give out negative values when going forward, so adding the negative corrects it
+  	*/
 	double GetRightDriveInput();
 
-	void PrintToSmartDashboard(double encoderValue);
+	/**
+    @brief Returns if the Fourbar extend button is pressed
+	@returns Returns whether the Fourbar extend button is pressed
 
+	Returns whether the Fourbar extend button is pressed
+  	*/
 	bool GetFourbarExtend();
+
+	/**
+    @brief Returns if the Fourbar extend button is pressed
+	@returns Returns whether the Fourbar extend button is pressed
+
+	Returns whether the Fourbar extend button is pressed
+  	*/
 	bool GetFourbarRetract();
+	/**
+    @brief Returns if the Fourbar retract button is pressed
+	@returns Returns whether the Fourbar retract button is pressed
+
+	Returns whether the Fourbar retract button is pressed
+  	*/
 	bool GetFourbarHome();
 
+	/**
+    @brief State machine that checks all buttons and changes the current state of the arm
+	@returns The target arm position that the arm will move towards
+
+	State machine that checks all buttons and changes the current state of the arm
+  	*/
 	double GetTargetArmPosition();
+
+	/**
+    @brief Sets a target arm position for the arm to move towards
+
+	Sets a target arm position for the arm to move towards
+  	*/
 	void SetTargetArmPosition(double targetArmPosition);
 
+	/**
+    @brief Returns if the robot is in cargo ship mode
+	@returns If Xbox B Button is pressed or xbox DPad right is pressed
+
+	Returns if the robot is in cargo ship mode
+  	*/
 	bool IsInCargoShipMode();
 
+	/**
+    @brief State machine that checks all buttons and changes the current state of the wrist
+	@returns The target wrist position that the wrist will move towards
+
+	State machine that checks all buttons and changes the current state of the wrist
+  	*/
 	double GetTargetWristPosition();
 
-	std::tuple<bool, std::string, double> SetLimelight();
+	/**
+    @brief checks left joystick's button press to stop the limelight
+	@returns left stick button pressed to stop the limelights auto
 
+	checks left joystick's button press to stop the limelight
+  	*/
 	bool GetStopLLMove();
+
+	/**
+    @brief returns the voltage for the FeedForward
+	@returns Feed Forward Voltage
+
+	returns the voltage for the FeedForward
+  	*/
 	double GetArmFFVoltage();
 
+	/**
+    @brief Sets Arm and Wrist manual mode
+
+	Sets Arm and Wrist manual mode
+  	*/
 	void SetArmWristInManual(bool isArmManual, bool isWristManual);
+
+	std::tuple<bool, std::string, double> SetLimelight();
 
 	// void SwitchLED_Mode(Drivetrain drivetrain);
 	//void PutOnShuffleboardInOI();

@@ -226,19 +226,13 @@ bool OI::GetIsWristInManual()
     return isWristInManual;
 }
 
-//Joysticks natively give out negative values when going forward, so adding the negative corrects it
 double OI::GetLeftDriveInput()
 {
     return -(leftStick->GetY());
 }
-
 double OI::GetRightDriveInput()
 {
     return -(rightStick->GetY());
-}
-
-void OI::PrintToSmartDashboard(double encoderValue)
-{
 }
 
 bool OI::GetFourbarExtend()
@@ -527,28 +521,6 @@ double OI::GetTargetWristPosition()
     return targetWristPosition;
 }
 
-std::tuple<bool, std::string, double> OI::SetLimelight()
-{
-    if (leftStick->GetRawButtonPressed(5))
-    {
-        return std::make_tuple(true, "ledMode", 0.0);
-    }
-    else if (leftStick->GetRawButtonPressed(10))
-    {
-        return std::make_tuple(true, "ledMode", 1.0);
-    }
-    else if (leftStick->GetRawButtonPressed(6))
-    {
-        return std::make_tuple(true, "pipeline", 0.0);
-    }
-    else if (leftStick->GetRawButtonPressed(9))
-    {
-        return std::make_tuple(true, "pipeline", 1.0);
-    }
-
-    return std::make_tuple(false, "", 0.0);
-}
-
 bool OI::GetStopLLMove()
 {
     return leftStick->GetRawButton(12);
@@ -571,4 +543,26 @@ void OI::SetArmWristInManual(bool isArmManual, bool isWristManual)
 {
     isArmInManual = isArmManual;
     isWristInManual = isWristManual;
+}
+
+std::tuple<bool, std::string, double> OI::SetLimelight()
+{
+    if (leftStick->GetRawButtonPressed(5))
+    {
+        return std::make_tuple(true, "ledMode", 0.0);
+    }
+    else if (leftStick->GetRawButtonPressed(10))
+    {
+        return std::make_tuple(true, "ledMode", 1.0);
+    }
+    else if (leftStick->GetRawButtonPressed(6))
+    {
+        return std::make_tuple(true, "pipeline", 0.0);
+    }
+    else if (leftStick->GetRawButtonPressed(9))
+    {
+        return std::make_tuple(true, "pipeline", 1.0);
+    }
+
+    return std::make_tuple(false, "", 0.0);
 }
