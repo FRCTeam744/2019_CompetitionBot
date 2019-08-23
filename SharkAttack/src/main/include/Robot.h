@@ -31,6 +31,9 @@
 #include "ShuffleManager.h"
 #include <frc/Encoder.h>
 
+/**
+ @brief Class to call methods from the various subsystems at the correct time. Handles most interactions between subsystems.
+ */
 class Robot : public frc::TimedRobot
 {
 public:

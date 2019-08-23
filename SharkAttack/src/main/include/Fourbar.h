@@ -9,6 +9,9 @@
 
 #include "ShuffleManager.h"
 
+/**
+ @brief Class to handle all control of the fourbar.
+ */
 class Fourbar{
     public:
         static Fourbar* GetInstance();  

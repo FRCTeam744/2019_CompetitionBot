@@ -20,6 +20,9 @@
 
 #include "ShuffleManager.h"
 
+/**
+ @brief Class to handle all assignment and reading of buttons and joysticks from the driver station.
+ */
 class OI
 {
 	//TODO: Go through each button and assign variable in cpp file in functions

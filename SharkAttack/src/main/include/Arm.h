@@ -17,6 +17,9 @@
 
 #include "ShuffleManager.h"
 
+/**
+ @brief Class to handle all control of the arm and wrist.
+ */
 class Arm
 {
 public:

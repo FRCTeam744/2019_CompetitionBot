@@ -19,6 +19,9 @@
 #include <pathfinder-frc.h>
 #include "AHRS.h"
 
+/**
+ @brief Class to handle all control of the drivetrain.
+ */
 class Drivetrain
 {
 

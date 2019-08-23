@@ -18,6 +18,9 @@
 #include "networktables/NetworkTableEntry.h"
 #include "networktables/NetworkTableInstance.h"
 
+/**
+ @brief Class to handle all shuffleboard data writing.
+ */
 class ShuffleManager {
 
     public:
