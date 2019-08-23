@@ -30,13 +30,13 @@ The full results for this competition season can be found at our [The Blue Allia
 * automatic stop at max extensions
 * automatic homing feature
 
-#### Driver Station/Operator Interface
+##### Driver Station/Operator Interface
 * Smart Dashboard used for testing of features
 * ShuffleBoard used for in competition dashboard, relaying important robot and field info 
 * 2-joystick, tank-style inputs for driving
 * x-box controller for arm-presets and fourbar extention
 
-#### LEDs:
+##### LEDs:
 * Used to relay robot state information to drivers (such as front and back or if auto-driving), without having to look down at the driver station
 
 ![](sharky.gif)
