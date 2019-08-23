@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['d_5fgain_5farm',['D_GAIN_ARM',['../class_arm.html#a19b79a12013bb252f1de109d8fc7b2c1',1,'Arm']]],
+  ['d_5fgain_5farm_5fdefense',['D_GAIN_ARM_DEFENSE',['../class_arm.html#a2b0d2964870367a1511862531ccd2540',1,'Arm']]],
+  ['d_5fgain_5fwrist',['D_GAIN_WRIST',['../class_arm.html#a887d07b676cdfb775279bd7c1dacc79a',1,'Arm']]],
+  ['deadzone_5fadjustor',['DEADZONE_ADJUSTOR',['../class_o_i.html#a7626c21c5946e18217c4e599ad496420',1,'OI']]],
+  ['degrees_5fper_5farm_5frevolution',['DEGREES_PER_ARM_REVOLUTION',['../class_arm.html#ae928cd92ebf69cdc1083cc84fdf9d989',1,'Arm']]],
+  ['desired_5fmm_5fto_5fhome',['DESIRED_MM_TO_HOME',['../class_fourbar.html#a0360292e75485fc609d12380e11f740c',1,'Fourbar']]],
+  ['desiredleftfps',['desiredLeftFPS',['../class_drivetrain.html#a1b7e90105c7e9ae55c067fe299325752',1,'Drivetrain']]],
+  ['desiredrightfps',['desiredRightFPS',['../class_drivetrain.html#af30af7f181cc878540ff6dc0a9c22807',1,'Drivetrain']]],
+  ['distance_5fwithin_5fno_5fjumps_5fll',['DISTANCE_WITHIN_NO_JUMPS_LL',['../class_drivetrain.html#a5f429a0ff81a98985f2018daa851f5bb',1,'Drivetrain']]],
+  ['dpad_5fdown',['DPAD_DOWN',['../class_o_i.html#a71fecbf8bf05833bedca3ed64c8ed0ca',1,'OI']]],
+  ['dpad_5fleft',['DPAD_LEFT',['../class_o_i.html#a739a3e7244fbe14b482ae75694362edf',1,'OI']]],
+  ['dpad_5fright',['DPAD_RIGHT',['../class_o_i.html#ab9a5086f02f621adb3ddc1d43beef76a',1,'OI']]],
+  ['dpad_5fup',['DPAD_UP',['../class_o_i.html#a89ad7183c336129e8ec077f868d0f5d5',1,'OI']]],
+  ['driver_5fpipeline',['DRIVER_PIPELINE',['../class_drivetrain.html#a00193159a30ef65ac06102daf4d0b270',1,'Drivetrain']]],
+  ['drivertab',['DriverTab',['../class_shuffle_manager.html#a8162024cc061cdb76bb382d3efd27b5f',1,'ShuffleManager']]],
+  ['drivetrain',['drivetrain',['../class_robot.html#a6cc54d2085c4735f72195a9f7105af4c',1,'Robot']]],
+  ['drivetraingearshuffle',['driveTrainGearShuffle',['../class_drivetrain.html#a0409d22610bba6a22535ddb548570815',1,'Drivetrain']]]
+];
