@@ -14,7 +14,7 @@ The full results for this competition season can be found at our [The Blue Allia
 
 ##### Drivetrain:
 * Tank style drive, with PIDF speed control on both drive sides, for use in vision tracking and autonomous driving.
-* NAvX gyro correction of driveing when in autonomous path following mode.
+* NAvX gyro correction of driving when in autonomous path following mode.
 * Limelight camera used for feedback to track drivetrain to reflective targets for automatic hatch panel and cargo pick-up and placement
 * PID control on distance and angle for vision tracking
 
